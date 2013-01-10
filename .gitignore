@@ -1,0 +1,8 @@
+bin/*
+.project
+.settings/*
+*.tar.gz
+*.swp
+Launcher2.java
+.metadata/*
+.dropbox
