@@ -135,14 +135,9 @@ public class TestSuite
 		//TestSuite ts = new TestSuite("kaufman.txt");
 		//TestSuite ts = new TestSuite("silent-but-deadly");
 		
-		//Evaluator<State3> e1 = new SuperEvalS3V2();
-		//Evaluator<State3> e1 = new SuperEvalS3V4();
-		//Evaluator<State3> e1 = new SuperEvalS3V3();
-		//Evaluator<State3> e1 = new EvalS3();
-		
 		Evaluator2<State4> e2 =
-				new SuperEvalS4V7();
-				//new EvalS4();
+				//new SuperEvalS4V7();
+				new EvalS4();
 				//new TestEval();
 		
 		// s3 evaluator
@@ -169,11 +164,11 @@ public class TestSuite
 		//	20		16		242			1 sec
 		
 
-		
+		//9/10 on raw eval for 218/230 respectively
 		
 		int solved = 0;
-		for(int i = 0; i < ts.positions.size(); i++)
-		//for(int i = 298; i == 298; i++)
+		//for(int i = 0; i < ts.positions.size(); i++)
+		for(int i = 298; i == 298; i++)
 		{
 			System.out.println(ts.positions.get(i));
 			System.out.println("best move: " + ts.bestMoves.get(i));
@@ -184,11 +179,11 @@ public class TestSuite
 			
 			Search2<State4> search =
 					//new SearchS4V21qzit(16, s, e2, 20);
-					new SearchS4V22qzit(25, s, e2, 20);
+					new SearchS4V22qzit(20, s, e2, 20);
 			
 			int[] move = new int[4];
 			
-			search.getMove(move, player, 1*1000);
+			search.getMove(move, player, 50*1000);
 			//search.getMove(move, player);
 			
 			String[] bests = ts.bestMoves.get(i).split(" ");

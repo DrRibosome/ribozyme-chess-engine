@@ -210,6 +210,7 @@ public final class SearchS4V22qzit implements Search2<State4>{
 		stats.nodesSearched++;
 		
 		if(s.isDraw()){
+			//m.put2(s.zkey(), 0, 0, depth, ZMap.CUTOFF_TYPE_EXACT);
 			return 0;
 		} if(s.pieceCounts[player][State4.PIECE_TYPE_KING] == 0){
 			return -88888;
@@ -322,6 +323,7 @@ public final class SearchS4V22qzit implements Search2<State4>{
 		genMoves(player, s, ml, m, false);
 		final int length = ml.length;
 		if(length == 0){ //no moves, draw
+			m.put2(s.zkey(), 0, 0, depth, ZMap.CUTOFF_TYPE_EXACT);
 			return 0;
 		}
 		isort(pieceMasks, moves, ranks, length);
@@ -337,16 +339,20 @@ public final class SearchS4V22qzit implements Search2<State4>{
 		//final long enemy = s.pieces[1-player]|s.enPassante;
 		final long zkey = s.zkey(); //for testing purposes
 		
+		boolean firstRun = true;
+		boolean hasMove = false;
 		for(int i = 0; i < length && !cutoffSearch; i++){
 			for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
 				
 				final long encoding = s.executeMove(player, pieceMasks[i], movesTemp&-movesTemp);
 				this.e.processMove(encoding);
-				
+
+				hasMove = hasMove || (s.kings[player] & pieceMasks[i]) == 0; //other piece move
 				if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
 					//king in check after move
 					g = -88888;
 				} else{
+					hasMove = hasMove || (s.kings[player] & pieceMasks[i]) != 0; //non-check king move
 					final boolean pvMove = tteMove && i==0;
 					final boolean isCapture = MoveEncoder.getTakenType(encoding) != State4.PIECE_TYPE_EMPTY;
 					final boolean inCheck = ml.kingAttacked[player];
@@ -363,22 +369,20 @@ public final class SearchS4V22qzit implements Search2<State4>{
 					
 					if(fullSearch){
 						//descend negascout style
-						g = -recurse(1-player, -(alpha+1), -alpha, depth-1, pv && i == 0, false, stackIndex+1);
+						g = -recurse(1-player, -(alpha+1), -alpha, depth-1, pvMove, false, stackIndex+1);
 						if(alpha < g && g < beta && i != 0){
-							g = -recurse(1-player, -beta, -alpha, depth-1, pv && i == 0, false, stackIndex+1);
+							g = -recurse(1-player, -beta, -alpha, depth-1, pvMove, false, stackIndex+1);
 						}
 					}
 				}
 				s.undoMove();
 				this.e.undoMove(encoding);
+				assert zkey == s.zkey(); //keys should be unchanged after undo
 				
-				
-				
-				assert zkey == s.zkey();
-				
-				if(i == 0 || g > bestScore){
+				if(firstRun || g > bestScore){
 					bestScore = g;
 					bestMove = encoding;
+					firstRun = false;
 				}
 				
 				if(g > alpha){
@@ -394,6 +398,13 @@ public final class SearchS4V22qzit implements Search2<State4>{
 			}
 		}
 		
+		if(!hasMove){
+			//no moves except king into death - draw
+			bestMove = 0;
+			bestScore = 0;
+			cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
+		}
+		
 		if(!cutoffSearch)
 				m.put2(s.zkey(), bestMove, bestScore, depth, cutoffFlag);
 		return bestScore;
@@ -403,6 +414,7 @@ public final class SearchS4V22qzit implements Search2<State4>{
 		stats.nodesSearched++;
 		
 		if(s.isDraw()){
+			//m.put2(s.zkey(), 0, 0, depth, ZMap.CUTOFF_TYPE_EXACT);
 			return 0;
 		} if(s.pieceCounts[player][State4.PIECE_TYPE_KING] == 0){
 			return -77777;
@@ -418,7 +430,7 @@ public final class SearchS4V22qzit implements Search2<State4>{
 		final long[] moves = stack[stackIndex].moves; //moves available to piece (can be multiple)
 		final int[] ranks = stack[stackIndex].ranks; //move ranking
 		
-		ZMap.Entry e = m.get(s.zkey());
+		final ZMap.Entry e = m.get(s.zkey());
 		if(e != null){
 			stats.hashHits++;
 			if(e.depth >= depth){ //check depth on hash entry greater than or equal to current
@@ -559,10 +571,8 @@ public final class SearchS4V22qzit implements Search2<State4>{
 		ml.upTakes[State4.PIECE_TYPE_BISHOP] = ml.upTakes[State4.PIECE_TYPE_KNIGHT];
 		ml.upTakes[State4.PIECE_TYPE_PAWN] = s.pieces[1-player];
 		
-		//quiece = quiece && !ml.kingAttacked[player];
-		
 		if(ml.kingAttacked[player]){
-			long kingMoves = State4.getKingMoves(player, s.pieces, s.kings[player])|State4.getCastleMoves(player, s);
+			long kingMoves = State4.getKingMoves(player, s.pieces, s.kings[player]);
 			recordMoves(player, State4.PIECE_TYPE_KING, s.kings[player], kingMoves, ml, s, m, false);
 		}
 		

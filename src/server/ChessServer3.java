@@ -143,7 +143,7 @@ public class ChessServer3 extends WebSocketServer
 				}
 				else
 				{*/
-					searcher.getMove(move, botPlayer, 950);
+					searcher.getMove(move, botPlayer, 800);
 				//}
 				movedWaiting = true;
 				currentMove = "" + (char)('a' + move[0]) + (move[1]+1) + (char)('a' + move[2]) + (move[3]+1);
