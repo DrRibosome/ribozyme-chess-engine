@@ -141,9 +141,16 @@ public class TestSuite
 				new EvalS4();
 				//new TestEval();
 		
+		//	eval v7
 		//	1 sec time control
 		//	version	depth	correct		notes
-		//	20		16		242			
+		//	20		16		242		
+		//	23		20		238
+		
+
+		//	piece score only, 1 sec time control
+		//	version	depth	correct		notes
+		//	23		20		251
 		
 
 		//9/10 on raw eval for 218/230 respectively

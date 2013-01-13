@@ -359,7 +359,7 @@ public final class SearchS4V23qzit implements Search2<State4>{
 					final boolean givesCheck = !ml.kingAttacked[1-player] && State4.isAttacked2(BitUtil.lsbIndex(s.kings[1-player]), player, s);
 					boolean fullSearch = false;
 					
-					if(depth > 2 && !pvMove && !isCapture && !inCheck && !givesCheck){ //LMR search (incorrect, but better than correct??)
+					if(depth > 2 && !pvMove && !isCapture && !inCheck && !givesCheck){
 						int reducedDepth = depth/2;
 						g = -recurse(1-player, -(alpha+1), -alpha, reducedDepth, false, false, stackIndex+1);
 						fullSearch = g > alpha;
@@ -390,7 +390,6 @@ public final class SearchS4V23qzit implements Search2<State4>{
 					if(g >= beta){
 						if(!cutoffSearch)
 							m.put2(s.zkey(), encoding, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
-						//return beta;
 						return g;
 					}
 					cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
@@ -420,8 +419,8 @@ public final class SearchS4V23qzit implements Search2<State4>{
 			return -77777;
 		} else if(depth < -qply){
 			stats.forcedQuietCutoffs++;
-			//return alpha; //qply bottomed out, return bad value
-			return beta+1; //qply bottomed out, return bad value
+			//return beta+1; //qply bottomed out, return bad value
+			return beta; //qply bottomed out, return bad value
 		}
 
 		
@@ -569,7 +568,7 @@ public final class SearchS4V23qzit implements Search2<State4>{
 		ml.upTakes[State4.PIECE_TYPE_ROOK] = ml.upTakes[State4.PIECE_TYPE_QUEEN]|s.rooks[1-player];
 		ml.upTakes[State4.PIECE_TYPE_KNIGHT] = ml.upTakes[State4.PIECE_TYPE_ROOK]|s.knights[1-player]|s.bishops[1-player];
 		ml.upTakes[State4.PIECE_TYPE_BISHOP] = ml.upTakes[State4.PIECE_TYPE_KNIGHT];
-		ml.upTakes[State4.PIECE_TYPE_PAWN] = s.pieces[1-player] & ~s.pawns[1-player];
+		ml.upTakes[State4.PIECE_TYPE_PAWN] = s.pieces[1-player];
 		
 		if(ml.kingAttacked[player]){
 			long kingMoves = State4.getKingMoves(player, s.pieces, s.kings[player]);
@@ -582,14 +581,14 @@ public final class SearchS4V23qzit implements Search2<State4>{
 		queens &= queens-1;
 		recordMoves(player, State4.PIECE_TYPE_QUEEN, queens,
 				State4.getQueenMoves(player, s.pieces, queens), ml, s, m, quiece);
-		/*queens &= queens-1;
+		queens &= queens-1;
 		if(queens != 0){
 			while(queens != 0){
 				recordMoves(player, State4.PIECE_TYPE_QUEEN, queens,
-						State4.getQueenMoves(player, s.pieces, queens), queenMoveRank, queenTakeRank, queenQtakeMask, ml, s, m);
+						State4.getQueenMoves(player, s.pieces, queens), ml, s, m, quiece);
 				queens &= queens-1;
 			}
-		}*/
+		}
 
 		long rooks = s.rooks[player];
 		recordMoves(player, State4.PIECE_TYPE_ROOK, rooks,
@@ -625,21 +624,32 @@ public final class SearchS4V23qzit implements Search2<State4>{
 		final long[] pieces = ml.pieceMasks;
 		final long[] moves = ml.moves;
 		final int[] ranks = ml.ranks;
-		
+
+		//pawn movement promotions
+		for(long tempPawnMoves = pawnMoves[2]&Masks.pawnPromotionMask[player]; tempPawnMoves != 0; tempPawnMoves&=tempPawnMoves-1){
+			long moveMask = tempPawnMoves&-tempPawnMoves;
+			long pawnMask = player == 0? moveMask>>>pawnOffset[2]: moveMask<<pawnOffset[2];
+			pieces[w] = pawnMask;
+			moves[w] = moveMask;
+			ranks[w] = 2;
+			w++;
+		}
+		//pawn takes
 		for(int i = 0; i < 2; i++){
 			for(long tempPawnMoves = pawnMoves[i]; tempPawnMoves != 0; tempPawnMoves&=tempPawnMoves-1){
 				long moveMask = tempPawnMoves&-tempPawnMoves;
 				long pawnMask = player == 0? moveMask>>>pawnOffset[i]: moveMask<<pawnOffset[i];
 				pieces[w] = pawnMask;
 				moves[w] = moveMask;
-				ranks[w] = 3;
+				ranks[w] = (moveMask & Masks.pawnPromotionMask[player]) == 0? 3: 1;
 				w++;
 			}
 		}
-		
 		if(!quiece){
+			//non-promoting pawn movement
 			for(int i = 2; i < 4; i++){
-				for(long tempPawnMoves = pawnMoves[i]; tempPawnMoves != 0; tempPawnMoves&=tempPawnMoves-1){
+				for(long tempPawnMoves = pawnMoves[i]&~Masks.pawnPromotionMask[player];
+						tempPawnMoves != 0; tempPawnMoves&=tempPawnMoves-1){
 					long moveMask = tempPawnMoves&-tempPawnMoves;
 					long pawnMask = player == 0? moveMask>>>pawnOffset[i]: moveMask<<pawnOffset[i];
 					pieces[w] = pawnMask;
@@ -648,21 +658,9 @@ public final class SearchS4V23qzit implements Search2<State4>{
 					w++;
 				}
 			}
-		} else{
-			//consider pawn promotions on quiescent search
-			pawnMoves[2] &= Masks.pawnPromotionMask[player];
-			for(long tempPawnMoves = pawnMoves[2]; tempPawnMoves != 0; tempPawnMoves&=tempPawnMoves-1){
-				long moveMask = tempPawnMoves&-tempPawnMoves;
-				long pawnMask = player == 0? moveMask>>>pawnOffset[2]: moveMask<<pawnOffset[2];
-				pieces[w] = pawnMask;
-				moves[w] = moveMask;
-				ranks[w] = 3;
-				w++;
-			}
 		}
 		ml.length = w;
 
-		
 		if(!ml.kingAttacked[player]){
 			long kingMoves = State4.getKingMoves(player, s.pieces, s.kings[player])|State4.getCastleMoves(player, s);
 			recordMoves(player, State4.PIECE_TYPE_KING, s.kings[player], kingMoves, ml, s, m, quiece);
