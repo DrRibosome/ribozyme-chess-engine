@@ -8,7 +8,7 @@ import util.board4.ZMap;
 import ai.modularAI2.Evaluator2;
 import ai.modularAI2.Search2;
 
-public final class SearchS4V23qzit implements Search2<State4>{
+public final class SearchS4V23qzitExt implements Search2<State4>{
 	public final static class SearchStat{
 		public long nodesSearched;
 		public long searchTime;
@@ -49,7 +49,7 @@ public final class SearchS4V23qzit implements Search2<State4>{
 	
 	private boolean cutoffSearch = false;
 	
-	public SearchS4V23qzit(int ply, State4 s, Evaluator2<State4> e, int hashSize){
+	public SearchS4V23qzitExt(int ply, State4 s, Evaluator2<State4> e, int hashSize){
 		this.s = s;
 		this.e = e;
 		this.maxPly = ply;
@@ -90,7 +90,7 @@ public final class SearchS4V23qzit implements Search2<State4>{
 			}
 			
 			//System.out.println("starting depth "+i);
-			score = recurse(player, alpha, beta, i, true, true, 0);
+			score = recurse(player, alpha, beta, i, 0, true, true, 0);
 			
 			
 			if(score <= alpha && !cutoffSearch){
@@ -102,12 +102,12 @@ public final class SearchS4V23qzit implements Search2<State4>{
 					alpha = beta;
 					beta = temp;
 				}
-				score = recurse(player, alpha, beta, i, true, true, 0);
+				score = recurse(player, alpha, beta, i, 0, true, true, 0);
 				if((score <= alpha || score >= beta)  && !cutoffSearch){
 					//System.out.println("double fail");
 					alpha = min;
 					beta = max;
-					score = recurse(player, alpha, beta, i, true, true, 0);
+					score = recurse(player, alpha, beta, i, 0, true, true, 0);
 				}
 			} else if(score >= beta && !cutoffSearch){
 				//System.out.println("search failed high, researching");
@@ -118,12 +118,12 @@ public final class SearchS4V23qzit implements Search2<State4>{
 					alpha = beta;
 					beta = temp;
 				}
-				score = recurse(player, alpha, beta, i, true, true, 0);
+				score = recurse(player, alpha, beta, i, 0, true, true, 0);
 				if((score <= alpha || score >= beta)  && !cutoffSearch){
 					//System.out.println("double fail");
 					alpha = min;
 					beta = max;
-					score = recurse(player, alpha, beta, i, true, true, 0);
+					score = recurse(player, alpha, beta, i, 0, true, true, 0);
 				}
 			}
 			if(m.get(s.zkey()) != null && m.get(s.zkey()).encoding != 0 && !cutoffSearch){
@@ -205,7 +205,7 @@ public final class SearchS4V23qzit implements Search2<State4>{
 	 * @param quiesce
 	 * @return
 	 */
-	private double recurse(int player, double alpha, double beta, int depth,
+	private double recurse(int player, double alpha, double beta, int depth, double ext,
 			boolean pv, boolean rootNode, int stackIndex){
 		stats.nodesSearched++;
 		
@@ -214,7 +214,7 @@ public final class SearchS4V23qzit implements Search2<State4>{
 			return 0;
 		} if(s.pieceCounts[player][State4.PIECE_TYPE_KING] == 0){
 			return -88888;
-		} else if(depth <= 0){
+		} else if(depth <= -ext){
 			/*final boolean inCheck = State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
 			if(!inCheck){
 				return qsearch(player, alpha, beta, 0, stackIndex);
@@ -275,7 +275,7 @@ public final class SearchS4V23qzit implements Search2<State4>{
 			
 			stack[stackIndex+1].skipNullMove = true;
 			s.nullMove();
-			double n = -recurse(1-player, -beta, -alpha, depth-r, pv, rootNode, stackIndex+1);
+			double n = -recurse(1-player, -beta, -alpha, depth-r, ext, pv, rootNode, stackIndex+1);
 			//double n = -recurse(1-player, -(beta+1), -beta, depth-r, pv, rootNode, stackIndex+1);
 			s.undoNullMove();
 			stack[stackIndex+1].skipNullMove = false;
@@ -292,7 +292,7 @@ public final class SearchS4V23qzit implements Search2<State4>{
 				stats.nullMoveVerifications++;
 				//verification search
 				stack[stackIndex+1].skipNullMove = true;
-				double v = recurse(player, alpha, beta, depth-r, pv, rootNode, stackIndex+1);
+				double v = recurse(player, alpha, beta, depth-r, ext, pv, rootNode, stackIndex+1);
 				stack[stackIndex+1].skipNullMove = false;
 				if(v >= beta){
 					stats.nullMoveCutoffs++;
@@ -306,7 +306,7 @@ public final class SearchS4V23qzit implements Search2<State4>{
 		if(!tteMove && depth >= (pv? 5: 8) && (pv || (!ml.kingAttacked[player] && lazyEval+256 >= beta))){
 			int d = pv? depth-2: depth/2;
 			stack[stackIndex+1].skipNullMove = true;
-			recurse(player, alpha, beta, d, pv, rootNode, stackIndex+1);
+			recurse(player, alpha, beta, d, ext, pv, rootNode, stackIndex+1);
 			stack[stackIndex+1].skipNullMove = false;
 			ZMap.Entry temp = null;
 			if((temp = m.get(s.zkey())) != null && temp.encoding != 0){
@@ -358,10 +358,11 @@ public final class SearchS4V23qzit implements Search2<State4>{
 					final boolean inCheck = ml.kingAttacked[player];
 					final boolean givesCheck = !ml.kingAttacked[1-player] && State4.isAttacked2(BitUtil.lsbIndex(s.kings[1-player]), player, s);
 					boolean fullSearch = false;
+					double newExt = ext + (givesCheck? .25: 0);
 					
 					if(depth > 2 && !pvMove && !isCapture && !inCheck && !givesCheck){
 						int reducedDepth = depth/2;
-						g = -recurse(1-player, -(alpha+1), -alpha, reducedDepth, false, false, stackIndex+1);
+						g = -recurse(1-player, -(alpha+1), -alpha, reducedDepth, newExt, false, false, stackIndex+1);
 						fullSearch = g > alpha;
 					} else{
 						fullSearch = true;
@@ -369,9 +370,9 @@ public final class SearchS4V23qzit implements Search2<State4>{
 					
 					if(fullSearch){
 						//descend negascout style
-						g = -recurse(1-player, -(alpha+1), -alpha, depth-1, pvMove, false, stackIndex+1);
+						g = -recurse(1-player, -(alpha+1), -alpha, depth-1, newExt, pvMove, false, stackIndex+1);
 						if(alpha < g && g < beta && i != 0){
-							g = -recurse(1-player, -beta, -alpha, depth-1, pvMove, false, stackIndex+1);
+							g = -recurse(1-player, -beta, -alpha, depth-1, newExt, pvMove, false, stackIndex+1);
 						}
 					}
 				}

@@ -8,7 +8,7 @@ import util.board4.ZMap;
 import ai.modularAI2.Evaluator2;
 import ai.modularAI2.Search2;
 
-public final class SearchS4V23qzit implements Search2<State4>{
+public final class SearchS4V23qzitM implements Search2<State4>{
 	public final static class SearchStat{
 		public long nodesSearched;
 		public long searchTime;
@@ -49,7 +49,7 @@ public final class SearchS4V23qzit implements Search2<State4>{
 	
 	private boolean cutoffSearch = false;
 	
-	public SearchS4V23qzit(int ply, State4 s, Evaluator2<State4> e, int hashSize){
+	public SearchS4V23qzitM(int ply, State4 s, Evaluator2<State4> e, int hashSize){
 		this.s = s;
 		this.e = e;
 		this.maxPly = ply;
@@ -74,64 +74,34 @@ public final class SearchS4V23qzit implements Search2<State4>{
 		e.initialize(s);
 		
 		long bestMove = 0;
-		double score = 0;
+		double score = e.eval(s, player);
 		
 		final double max = 90000;
 		final double min = -90000;
-		
-		for(int i = 1; i <= maxPly && !cutoffSearch; i++){
-			s.resetHistory();
-			double alpha = i <= 3? min: score-200/i;
-			double beta = i <= 3? max: score+200/i;
-			if(alpha > beta){
-				double temp = alpha;
-				alpha = beta;
-				beta = temp;
-			}
-			
-			//System.out.println("starting depth "+i);
-			score = recurse(player, alpha, beta, i, true, true, 0);
-			
-			
-			if(score <= alpha && !cutoffSearch){
-				//System.out.println("search failed low, researching");
-				alpha = score-150;
-				beta = score+5;
-				if(alpha > beta){
-					double temp = alpha;
-					alpha = beta;
-					beta = temp;
+
+		double g = score;
+		for(int a = 1; a < maxPly; a++){
+			double lower = min;
+			double upper = max;
+			double b;
+			while(lower < upper){
+				if(g == lower){
+					b = g+1;
+				} else{
+					b = g;
 				}
-				score = recurse(player, alpha, beta, i, true, true, 0);
-				if((score <= alpha || score >= beta)  && !cutoffSearch){
-					//System.out.println("double fail");
-					alpha = min;
-					beta = max;
-					score = recurse(player, alpha, beta, i, true, true, 0);
-				}
-			} else if(score >= beta && !cutoffSearch){
-				//System.out.println("search failed high, researching");
-				alpha = score-5;
-				beta = score+150;
-				if(alpha > beta){
-					double temp = alpha;
-					alpha = beta;
-					beta = temp;
-				}
-				score = recurse(player, alpha, beta, i, true, true, 0);
-				if((score <= alpha || score >= beta)  && !cutoffSearch){
-					//System.out.println("double fail");
-					alpha = min;
-					beta = max;
-					score = recurse(player, alpha, beta, i, true, true, 0);
+				g = recurse(player, -(b+1), b, a, true, true, 0);
+				if(g < b){
+					upper = g;
+				} else{
+					lower = g;
 				}
 			}
 			if(m.get(s.zkey()) != null && m.get(s.zkey()).encoding != 0 && !cutoffSearch){
 				bestMove = m.get(s.zkey()).encoding;
-				System.out.println("pv "+i+": ["+score+"] "+getPV(player, s, "", 0, i));
+				System.out.println("pv "+a+": ["+g+"] "+getPV(player, s, "", 0, a));
 			}
 		}
-
 		
 		long[] move = new long[1];
 		move[0] = bestMove;
@@ -369,10 +339,10 @@ public final class SearchS4V23qzit implements Search2<State4>{
 					
 					if(fullSearch){
 						//descend negascout style
-						g = -recurse(1-player, -(alpha+1), -alpha, depth-1, pvMove, false, stackIndex+1);
-						if(alpha < g && g < beta && i != 0){
+						//g = -recurse(1-player, -(alpha+1), -alpha, depth-1, pvMove, false, stackIndex+1);
+						//if(alpha < g && g < beta && i != 0){
 							g = -recurse(1-player, -beta, -alpha, depth-1, pvMove, false, stackIndex+1);
-						}
+						//}
 					}
 				}
 				s.undoMove();
@@ -496,10 +466,10 @@ public final class SearchS4V23qzit implements Search2<State4>{
 					//king in check after move
 					g = -77777;
 				} else{
-					g = -qsearch(1-player, -(alpha+1), -alpha, depth-1, stackIndex+1);
-					if(alpha < g && g < beta && i != 0){
+					//g = -qsearch(1-player, -(alpha+1), -alpha, depth-1, stackIndex+1);
+					//if(alpha < g && g < beta && i != 0){
 						g = -qsearch(1-player, -beta, -alpha, depth-1, stackIndex+1);
-					}
+					//}
 				}
 				s.undoMove();
 				this.e.undoMove(encoding);

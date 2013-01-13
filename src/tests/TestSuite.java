@@ -6,17 +6,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import search.SearchS4V22qzit;
-import search.SearchS4V23qzit;
+import search.SearchS4V24qzit;
 import util.AlgebraicNotation2;
 import util.board4.Debug;
 import util.board4.State4;
 import ai.modularAI2.Evaluator2;
 import ai.modularAI2.Search2;
 import customAI.evaluators.board4.EvalS4;
-import customAI.evaluators.board4.SuperEvalS4V7;
-import customAI.searchers.board4.SearchS4V21qzit;
-import eval.TestEval;
 
 public class TestSuite
 {
@@ -147,38 +143,49 @@ public class TestSuite
 		//	20		16		242		
 		//	23		20		238
 		
-
+		//	eval v7
+		//	10 sec time control
+		//	version	depth	correct		notes
+		//	20		50		267
+		
 		//	piece score only, 1 sec time control
 		//	version	depth	correct		notes
 		//	23		20		251
 		
+		//	piece score only
+		//	10 sec time control
+		//	version	depth	correct		notes
+		//	20		50		273
+		
 
 		//9/10 on raw eval for 218/230 respectively
 		
+		final int[] move = new int[4];
 		int solved = 0;
 		for(int i = 0; i < ts.positions.size(); i++)
-		//for(int i = 298; i == 298; i++)
+		//for(int i = 1; i == 1; i++)
 		{
 			System.out.println(ts.positions.get(i));
 			System.out.println("best move: " + ts.bestMoves.get(i));
 			System.out.println("side to move: " + ts.turnList.get(i));
 			
 			State4 s = ts.positions.get(i);
-			int player = ts.turnList.get(i);
-			
-			Search2<State4> search =
+
+			final Search2<State4> search =
 					//new SearchS4V21qzit(16, s, e2, 20);
 					//new SearchS4V22qzit(20, s, e2, 20);
-					new SearchS4V23qzit(20, s, e2, 20);
+					//new SearchS4V23qzit(20, s, e2, 20);
+					//new SearchS4V23qzitExt(20, s, e2, 20);
+					//new SearchS4V23qzitM(50, s, e2, 20);
+					new SearchS4V24qzit(20, s, e2, 20);
 			
-			int[] move = new int[4];
+			final int player = ts.turnList.get(i);
 			
 			search.getMove(move, player, 1*1000);
 			//search.getMove(move, player);
 			
 			String[] bests = ts.bestMoves.get(i).split(" ");
-			for(int j = 0; j < bests.length; j++)
-			{
+			for(int j = 0; j < bests.length; j++){
 				int[] best = AlgebraicNotation2.getPos(player, bests[j], s);
 				System.out.println("best = "+best[0]+" -> "+best[1]);
 				if(best[0]%8 == move[0] && best[0]/8 == move[1] && best[1]%8 == move[2] && best[1]/8 == move[3]){
@@ -192,5 +199,4 @@ public class TestSuite
 		
 		System.out.println("total solved = "+solved);
 	}
-
 }

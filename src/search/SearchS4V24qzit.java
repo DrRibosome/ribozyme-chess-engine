@@ -8,7 +8,8 @@ import util.board4.ZMap;
 import ai.modularAI2.Evaluator2;
 import ai.modularAI2.Search2;
 
-public final class SearchS4V23qzit implements Search2<State4>{
+@Deprecated
+public final class SearchS4V24qzit implements Search2<State4>{
 	public final static class SearchStat{
 		public long nodesSearched;
 		public long searchTime;
@@ -24,6 +25,8 @@ public final class SearchS4V23qzit implements Search2<State4>{
 	}
 	
 	final MoveList[] stack;
+	/** special move list for the root node*/
+	final MoveList rootml = new MoveList();
 	
 	private final static class MoveList{
 		private final static int defSize = 128;
@@ -36,6 +39,7 @@ public final class SearchS4V23qzit implements Search2<State4>{
 		public final long[] upTakes = new long[7];
 		
 		public boolean skipNullMove = false;
+		public boolean probing = false;
 	}
 	
 	private final static int[] pawnOffset = new int[]{9,7,8,16};
@@ -49,7 +53,7 @@ public final class SearchS4V23qzit implements Search2<State4>{
 	
 	private boolean cutoffSearch = false;
 	
-	public SearchS4V23qzit(int ply, State4 s, Evaluator2<State4> e, int hashSize){
+	public SearchS4V24qzit(int ply, State4 s, Evaluator2<State4> e, int hashSize){
 		this.s = s;
 		this.e = e;
 		this.maxPly = ply;
@@ -194,17 +198,6 @@ public final class SearchS4V23qzit implements Search2<State4>{
 		cutoffSearch = true;
 	}
 	
-	/**
-	 * recurse and search
-	 * @param player
-	 * @param depth current depth
-	 * @param alpha
-	 * @param beta
-	 * @param softMaxDepth max depth, can be increased by extensions
-	 * @param hardMaxDepth hard max depth, search cuts off here regardless of soft max depth value
-	 * @param quiesce
-	 * @return
-	 */
 	private double recurse(int player, double alpha, double beta, int depth,
 			boolean pv, boolean rootNode, int stackIndex){
 		stats.nodesSearched++;
@@ -331,14 +324,53 @@ public final class SearchS4V23qzit implements Search2<State4>{
 
 		
 		double g = alpha;
-		//double g = evalSet? eval: alpha;
+		
+		if(1==1 || rootNode){
+			for(int i = 0; i < length && !cutoffSearch; i++){
+				for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
+					final long encoding = s.executeMove(player, pieceMasks[i], movesTemp&-movesTemp);
+					this.e.processMove(encoding);
+					if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
+						//king in check after move
+						g = -88888;
+					} else{
+						g = -recurse(1-player, -beta, -alpha, 2, false, false, stackIndex+1);
+						//g = -qsearch(1-player, -beta, -alpha, 0, stackIndex+1);
+					}
+					/*ZMap.Entry temp = m.get(s.zkey());
+					if(temp != null && !rootNode){
+						stats.hashHits++;
+						if(temp.depth >= depth){ //check depth on hash entry greater than or equal to current
+							if(temp.cutoffType == ZMap.CUTOFF_TYPE_UPPER && !pv){
+								if(temp.score <= alpha){
+									return alpha;
+								} else if(temp.score < beta){
+									beta = temp.score;
+								}
+							} else if(temp.cutoffType == ZMap.CUTOFF_TYPE_LOWER && !pv){
+								if(temp.score >= beta){
+									return beta;
+								} else if(temp.score > alpha){
+									alpha = temp.score;
+								}
+							} else if(temp.cutoffType == ZMap.CUTOFF_TYPE_EXACT){
+								//exact score
+								return temp.score;
+							}
+						}
+					}*/
+					s.undoMove();
+					this.e.undoMove(encoding);
+				}
+			}
+			//isort(pieceMasks, moves, ranks, length);
+		}
+
+		final long zkey = s.zkey(); //for testing purposes
+		g = alpha;
 		long bestMove = 0;
 		double bestScore = 0;
 		int cutoffFlag = ZMap.CUTOFF_TYPE_UPPER;
-		
-		//final long enemy = s.pieces[1-player]|s.enPassante;
-		final long zkey = s.zkey(); //for testing purposes
-		
 		boolean firstRun = true;
 		boolean hasMove = false;
 		for(int i = 0; i < length && !cutoffSearch; i++){
