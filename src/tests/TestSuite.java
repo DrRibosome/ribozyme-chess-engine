@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import search.SearchS4V22qzit;
+import search.SearchS4V23qzit;
 import util.AlgebraicNotation2;
 import util.board4.Debug;
 import util.board4.State4;
@@ -140,35 +141,16 @@ public class TestSuite
 				new EvalS4();
 				//new TestEval();
 		
-		// s3 evaluator
+		//	1 sec time control
 		//	version	depth	correct		notes
-		//	9		4		126
-		//	9		7		224			took hours to complete
-		//	14		4		80
-		//	14		7		137
-		//	14		8		155
-		//	14		12		187
-		//	14		12		172			piece score only
-		//	15		8		155
-		//	14t		16		95			1 sec time controls
-		//	14t		16		135			1 sec time controls, piece score only
-		//  14t		16		155         10 sec time control fat eval
-		//  14t		16					10 sec time control piece score eval
-		//  14t		16		163			10 sec time control v5 eval
-		//	15		16		153			800 ms TC, eval V5
-		//  15		16		192			10 sec TC eval V5
-		//	16		20		170			1 sec TC
-		//	17		16		199			1 sec TC
-		//	19		16		245			1 sec TC
-		//  19		50		268			10 sec TC piece score eval
-		//	20		16		242			1 sec
+		//	20		16		242			
 		
 
 		//9/10 on raw eval for 218/230 respectively
 		
 		int solved = 0;
-		//for(int i = 0; i < ts.positions.size(); i++)
-		for(int i = 298; i == 298; i++)
+		for(int i = 0; i < ts.positions.size(); i++)
+		//for(int i = 298; i == 298; i++)
 		{
 			System.out.println(ts.positions.get(i));
 			System.out.println("best move: " + ts.bestMoves.get(i));
@@ -179,11 +161,12 @@ public class TestSuite
 			
 			Search2<State4> search =
 					//new SearchS4V21qzit(16, s, e2, 20);
-					new SearchS4V22qzit(20, s, e2, 20);
+					//new SearchS4V22qzit(20, s, e2, 20);
+					new SearchS4V23qzit(20, s, e2, 20);
 			
 			int[] move = new int[4];
 			
-			search.getMove(move, player, 50*1000);
+			search.getMove(move, player, 1*1000);
 			//search.getMove(move, player);
 			
 			String[] bests = ts.bestMoves.get(i).split(" ");
