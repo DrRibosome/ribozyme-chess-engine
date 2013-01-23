@@ -1,8 +1,10 @@
-package search;
+package search.search26;
 
 import java.io.FileWriter;
 import java.io.IOException;
 
+import search.Search3;
+import search.SearchStat;
 import util.board4.BitUtil;
 import util.board4.Masks;
 import util.board4.MoveEncoder;

@@ -13,8 +13,8 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import search.Search3;
-import search.SearchS4V26;
 import search.SearchStat;
+import search.search26.SearchS4V26;
 import util.AlgebraicNotation2;
 import util.SuperBook;
 import util.board4.State4;
