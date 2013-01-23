@@ -1,4 +1,4 @@
-package search;
+package search.search27;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -107,6 +107,8 @@ public final class SearchS4V27 implements Search3<State4>{
 				}
 			}
 		}
+		stack[0].killer[0] = 0;
+		stack[1].killer[1] = 0;
 		
 		long bestMove = 0;
 		double score = 0;
@@ -452,6 +454,27 @@ public final class SearchS4V27 implements Search3<State4>{
 				ranks[w++] = tteMoveRank;
 			}
 		}
+		
+		if(!pv && stack[stackIndex-1].killer[0] != 0){
+			final long[] k = stack[stackIndex-1].killer;
+			s.executeMove(player, k[0]);
+			if(!State4.isAttacked2(BitUtil.lsbIndex(s.kings[1-player]), player, s)){
+				pieceMasks[w] = 1L<<MoveEncoder.getPos1(k[0]);
+				moves[w] = 1L<<MoveEncoder.getPos2(k[0]);
+				ranks[w++] = killerMoveRank;
+			}
+			s.undoMove();
+			if(k[1] != 0){
+				s.executeMove(player, k[0]);
+				if(!State4.isAttacked2(BitUtil.lsbIndex(s.kings[1-player]), player, s)){
+					pieceMasks[w] = 1L<<MoveEncoder.getPos1(k[0]);
+					moves[w] = 1L<<MoveEncoder.getPos2(k[0]);
+					ranks[w++] = killerMoveRank;
+				}
+				s.undoMove();
+			}
+		}
+		
 
 		//move generation
 		ml.length = w;
@@ -463,7 +486,6 @@ public final class SearchS4V27 implements Search3<State4>{
 		}
 		isort(pieceMasks, moves, ranks, length);
 		
-
 		
 		double g = alpha;
 		//double g = evalSet? eval: alpha;
@@ -532,7 +554,7 @@ public final class SearchS4V27 implements Search3<State4>{
 				if(alpha >= beta && hasMove){
 					if(!cutoffSearch){
 						m.put2(s.zkey(), bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
-						if(!pv){
+						if(!pv && MoveEncoder.getTakenType(bestMove) != State4.PIECE_TYPE_EMPTY){ //non-take move
 							final MoveList prev = stack[stackIndex-1]; //will exist because root is pv
 							if(prev.killer[0] != bestMove){
 								prev.killer[1] = prev.killer[0];
