@@ -13,8 +13,8 @@ import util.board4.ZMap;
 import ai.modularAI2.Evaluator2;
 
 /** modified to record various features of the search with play*/
-public final class SearchS4V26 implements Search3<State4>{
-	public final static class SearchStat26 extends SearchStat{
+public final class SearchS4V27 implements Search3<State4>{
+	public final static class SearchStat27 extends SearchStat{
 		public long hashHits;
 		/** scores returned from quiet search without bottoming out*/
 		public long forcedQuietCutoffs;
@@ -41,12 +41,13 @@ public final class SearchS4V26 implements Search3<State4>{
 		public final boolean[] kingAttacked = new boolean[2];
 		public final long[] upTakes = new long[7];
 		public boolean skipNullMove = false;
+		public final long[] killer = new long[2];
 	}
 	
 	private final static int[] pawnOffset = new int[]{9,7,8,16};
 	
 	private final State4 s;
-	private final SearchStat26 stats = new SearchStat26();
+	private final SearchStat27 stats = new SearchStat27();
 	private final Evaluator2<State4> e;
 	private final int qply = 8;
 	private final ZMap m;
@@ -54,10 +55,12 @@ public final class SearchS4V26 implements Search3<State4>{
 	
 	/** stores history heuristic information*/
 	private final int[][][] history = new int[2][64][64];
+	private final static int tteMoveRank = -1;
+	private final static int killerMoveRank = 0;
 	
 	private boolean cutoffSearch = false;
 	
-	public SearchS4V26(int maxDepth, State4 s, Evaluator2<State4> e, int hashSize, boolean record){
+	public SearchS4V27(int maxDepth, State4 s, Evaluator2<State4> e, int hashSize, boolean record){
 		this.s = s;
 		this.e = e;
 		m = new ZMap(hashSize);
@@ -77,7 +80,7 @@ public final class SearchS4V26 implements Search3<State4>{
 		}
 	}
 	
-	public SearchStat26 getStats(){
+	public SearchStat27 getStats(){
 		return stats;
 	}
 	
@@ -360,7 +363,7 @@ public final class SearchS4V26 implements Search3<State4>{
 		final ZMap.Entry e = m.get(s.zkey());
 		boolean tteMove = false;
 		
-		if(e != null && !rootNode){
+		if(e != null){
 			stats.hashHits++;
 			if(e.depth >= depth){ //check depth on hash entry greater than or equal to current
 				if(e.cutoffType == ZMap.CUTOFF_TYPE_UPPER && !pv){
@@ -380,14 +383,13 @@ public final class SearchS4V26 implements Search3<State4>{
 					return e.score;
 				}
 			}
-		}
-		
-		if(e != null && e.encoding != 0){
-			long encoding = e.encoding;
-			pieceMasks[w] = 1L<<MoveEncoder.getPos1(encoding);
-			moves[w] = 1L<<MoveEncoder.getPos2(encoding);
-			ranks[w++] = 0;
-			tteMove = true;
+			if(e.encoding != 0){
+				long encoding = e.encoding;
+				pieceMasks[w] = 1L<<MoveEncoder.getPos1(encoding);
+				moves[w] = 1L<<MoveEncoder.getPos2(encoding);
+				ranks[w++] = tteMoveRank;
+				tteMove = true;
+			}
 		}
 		
 		final MoveList ml = stack[stackIndex];
@@ -447,7 +449,7 @@ public final class SearchS4V26 implements Search3<State4>{
 				long encoding = temp.encoding;
 				pieceMasks[w] = 1L<<MoveEncoder.getPos1(encoding);
 				moves[w] = 1L<<MoveEncoder.getPos2(encoding);
-				ranks[w++] = 0;
+				ranks[w++] = tteMoveRank;
 			}
 		}
 
@@ -528,8 +530,16 @@ public final class SearchS4V26 implements Search3<State4>{
 					cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
 				}
 				if(alpha >= beta && hasMove){
-					if(!cutoffSearch)
+					if(!cutoffSearch){
 						m.put2(s.zkey(), bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
+						if(!pv){
+							final MoveList prev = stack[stackIndex-1]; //will exist because root is pv
+							if(prev.killer[0] != bestMove){
+								prev.killer[1] = prev.killer[0];
+							}
+							prev.killer[0] = bestMove;
+						}
+					}
 					return g;
 				}
 			}
