@@ -6,13 +6,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import search.SearchS4V24qzit;
+import search.Search3;
+import search.SearchS4V26;
+import search.SearchStat;
 import util.AlgebraicNotation2;
 import util.board4.Debug;
 import util.board4.State4;
 import ai.modularAI2.Evaluator2;
-import ai.modularAI2.Search2;
 import customAI.evaluators.board4.EvalS4;
+import customAI.evaluators.board4.SuperEvalS4V8;
 
 public class TestSuite
 {
@@ -133,8 +135,9 @@ public class TestSuite
 		//TestSuite ts = new TestSuite("silent-but-deadly");
 		
 		Evaluator2<State4> e2 =
+				new SuperEvalS4V8();
 				//new SuperEvalS4V7();
-				new EvalS4();
+				//new EvalS4();
 				//new TestEval();
 		
 		//	eval v7
@@ -142,11 +145,12 @@ public class TestSuite
 		//	version	depth	correct		notes
 		//	20		16		242		
 		//	23		20		238
+		//	26		50		254
 		
-		//	eval v7
 		//	10 sec time control
-		//	version	depth	correct		notes
-		//	20		50		267
+		//	version	depth	correct		eval	notes
+		//	20		50		267			7
+		//	26		50		270			8
 		
 		//	piece score only, 1 sec time control
 		//	version	depth	correct		notes
@@ -158,12 +162,21 @@ public class TestSuite
 		//	20		50		273
 		
 
-		//9/10 on raw eval for 218/230 respectively
+		//first 50 test, eval v7
+		//	nodes search		time		nodes/sec
+		//	90770221			46447		1954275
+		
+		//hard promblems	notes
+		//	40				might be finding a late mate
+		//	1
+		//	40-50			misses many problems through here
 		
 		final int[] move = new int[4];
 		int solved = 0;
-		for(int i = 0; i < ts.positions.size(); i++)
-		//for(int i = 1; i == 1; i++)
+		SearchStat agg = new SearchStat(); //search stat aggregator
+		//for(int i = 0; i < ts.positions.size(); i++)
+		//for(int i = 40; i < 50; i++)
+		for(int i = 1; i == 1; i++)
 		{
 			System.out.println(ts.positions.get(i));
 			System.out.println("best move: " + ts.bestMoves.get(i));
@@ -171,32 +184,61 @@ public class TestSuite
 			
 			State4 s = ts.positions.get(i);
 
-			final Search2<State4> search =
-					//new SearchS4V21qzit(16, s, e2, 20);
-					//new SearchS4V22qzit(20, s, e2, 20);
-					//new SearchS4V23qzit(20, s, e2, 20);
-					//new SearchS4V23qzitExt(20, s, e2, 20);
-					//new SearchS4V23qzitM(50, s, e2, 20);
-					new SearchS4V24qzit(20, s, e2, 20);
+			final Search3<State4> search =
+					new SearchS4V26(50, s, e2, 20, false);
 			
 			final int player = ts.turnList.get(i);
 			
-			search.getMove(move, player, 1*1000);
-			//search.getMove(move, player);
+			search(search, player, 50, 100*1000, move);
+			agg(search.getStats(), agg);
 			
 			String[] bests = ts.bestMoves.get(i).split(" ");
 			for(int j = 0; j < bests.length; j++){
 				int[] best = AlgebraicNotation2.getPos(player, bests[j], s);
 				System.out.println("best = "+best[0]+" -> "+best[1]);
-				if(best[0]%8 == move[0] && best[0]/8 == move[1] && best[1]%8 == move[2] && best[1]/8 == move[3]){
+				if(best[0] == move[0] && best[1] == move[1]){
 					solved++;
 					break;
 				}
 			}
 			
 			System.out.println("solved total = "+solved+" / "+(i+1)+"\n");
+			System.out.println("total nodes searched = "+agg.nodesSearched);
+			System.out.println("total search time = "+agg.searchTime);
+			System.out.println("nodes/sec = "+(agg.nodesSearched/(agg.searchTime/1000.)));
+			
+			
 		}
 		
 		System.out.println("total solved = "+solved);
+	}
+	
+	private static void agg(SearchStat src, SearchStat agg){
+		agg.nodesSearched += src.nodesSearched;
+		agg.searchTime += src.searchTime;
+	}
+	
+	private static void search(final Search3<?> s, final int player,
+			final int maxPly, final int searchTime, final int[] move){
+		Thread t = new Thread(){
+			public void run(){
+				s.search(player, move, maxPly);
+			}
+		};
+		t.setDaemon(true);
+		t.start();
+		long start = System.currentTimeMillis();
+		while(t.isAlive() && System.currentTimeMillis()-start < searchTime){
+			try{
+				Thread.sleep(30);
+			} catch(InterruptedException e){}
+		}
+		
+		s.cutoffSearch();
+		while(t.isAlive()){
+			try{
+				t.join();
+			} catch(InterruptedException e){}
+		}
 	}
 }
