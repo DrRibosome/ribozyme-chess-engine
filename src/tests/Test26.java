@@ -24,7 +24,6 @@ public class Test26 {
 		boards.add(OldPositions.queenSac2);
 		boards.add(OldPositions.bishopSack);
 		boards.add(OldPositions.queenKingFork);
-		boards.add(OldPositions.rookSack);
 		
 		final int maxPly = 8;
 		SearchStat agg = new SearchStat();

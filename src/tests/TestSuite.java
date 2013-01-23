@@ -145,7 +145,7 @@ public class TestSuite
 		//	version	depth	correct		notes
 		//	20		16		242		
 		//	23		20		238
-		//	26		50		254
+		//	26		50		260
 		
 		//	10 sec time control
 		//	version	depth	correct		eval	notes
@@ -174,9 +174,9 @@ public class TestSuite
 		final int[] move = new int[4];
 		int solved = 0;
 		SearchStat agg = new SearchStat(); //search stat aggregator
-		//for(int i = 0; i < ts.positions.size(); i++)
+		for(int i = 0; i < ts.positions.size(); i++)
 		//for(int i = 40; i < 50; i++)
-		for(int i = 1; i == 1; i++)
+		//for(int i = 1; i == 1; i++)
 		{
 			System.out.println(ts.positions.get(i));
 			System.out.println("best move: " + ts.bestMoves.get(i));
@@ -189,7 +189,7 @@ public class TestSuite
 			
 			final int player = ts.turnList.get(i);
 			
-			search(search, player, 50, 100*1000, move);
+			search(search, player, 50, 1*1000, move);
 			agg(search.getStats(), agg);
 			
 			String[] bests = ts.bestMoves.get(i).split(" ");

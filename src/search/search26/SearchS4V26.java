@@ -20,6 +20,7 @@ public final class SearchS4V26 implements Search3<State4>{
 		public long forcedQuietCutoffs;
 		public long nullMoveVerifications;
 		public long nullMoveCutoffs;
+		public long nullMoveFailLow;
 		/** scores seen pes ply*/
 		public double[] scores;
 		
@@ -226,6 +227,7 @@ public final class SearchS4V26 implements Search3<State4>{
 		}
 		
 		stats.searchTime = System.currentTimeMillis()-stats.searchTime;
+		System.out.println(stats.nullMoveFailLow);
 		//System.out.println(pos1+" -> "+pos2);
 		//System.out.println("final score = "+score);
 		/*System.out.println("total nodes searched = "+stats.nodesSearched);
@@ -409,7 +411,8 @@ public final class SearchS4V26 implements Search3<State4>{
 			stack[stackIndex+1].skipNullMove = false;
 			
 			if(n >= beta){
-				if(n == 88888 || n == 77777){
+				//if(n == 88888 || n == 77777){
+				if(n >= 70000){
 					n = beta;
 				}
 				if(depth < 6){
@@ -428,6 +431,8 @@ public final class SearchS4V26 implements Search3<State4>{
 					//m.put2(s.zkey(), 0, n, depth, ZMap.CUTOFF_TYPE_LOWER);
 					return n;
 				}
+			} else if(n <= alpha){
+				stats.nullMoveFailLow++;
 			}
 		}
 
@@ -483,14 +488,14 @@ public final class SearchS4V26 implements Search3<State4>{
 					g = -88888;
 				} else{
 					hasMove = hasMove || (s.kings[player] & pieceMasks[i]) != 0; //non-check king move
-					final boolean pvMove = tteMove && i==0;
+					final boolean pvMove = pv && i==0;
 					final boolean isCapture = MoveEncoder.getTakenType(encoding) != State4.PIECE_TYPE_EMPTY;
 					final boolean inCheck = ml.kingAttacked[player];
 					final boolean givesCheck = !ml.kingAttacked[1-player] && State4.isAttacked2(BitUtil.lsbIndex(s.kings[1-player]), player, s);
 					boolean fullSearch = false;
 					
 					if(depth > 2 && !pvMove && !isCapture && !inCheck && !givesCheck){
-						int reducedDepth = depth/2;
+						int reducedDepth = pv? depth-2: depth/2;
 						g = -recurse(1-player, -(alpha+1), -alpha, reducedDepth, false, false, stackIndex+1);
 						fullSearch = g > alpha;
 					} else{
@@ -500,13 +505,13 @@ public final class SearchS4V26 implements Search3<State4>{
 					if(fullSearch){
 						//descend negascout style
 						if(!pvMove){
-						//if(i!=0){
-							g = -recurse(1-player, -(alpha+1), -alpha, depth-1, pvMove, false, stackIndex+1);
+						//if(i != 0){
+							g = -recurse(1-player, -(alpha+1), -alpha, depth-1, false, false, stackIndex+1);
 							if(alpha < g && g < beta && i != 0){
-								g = -recurse(1-player, -beta, -alpha, depth-1, pvMove, false, stackIndex+1);
+								g = -recurse(1-player, -beta, -alpha, depth-1, pv, false, stackIndex+1);
 							}
 						} else{
-							g = -recurse(1-player, -beta, -alpha, depth-1, pvMove, false, stackIndex+1);
+							g = -recurse(1-player, -beta, -alpha, depth-1, pv, false, stackIndex+1);
 						}
 					}
 				}
