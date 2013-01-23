@@ -3,8 +3,8 @@ package tests;
 import java.util.ArrayList;
 import java.util.List;
 
+import search.SearchS4V26;
 import search.SearchStat;
-import search.search26.SearchS4V26;
 import util.OldPositions;
 import util.board4.Debug;
 import util.board4.State4;

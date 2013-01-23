@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import search.Search3;
+import search.SearchS4V26;
 import search.SearchStat;
-import search.search26.SearchS4V26;
 import util.AlgebraicNotation2;
 import util.board4.Debug;
 import util.board4.State4;
