@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import search.Search3;
 import search.SearchS4V26;
+import search.SearchS4V27;
 import search.SearchStat;
 import util.AlgebraicNotation2;
 import util.board4.Debug;
@@ -140,19 +141,20 @@ public class TestSuite
 				//new EvalS4();
 				//new TestEval();
 		
-		//	eval v7
+		//	super eval
 		//	1 sec time control
 		//	version	depth	correct		notes
-		//	20		16		242		
-		//	23		20		238
-		//	26		50		260
+		//	20		16		242			eval v7
+		//	23		20		238			eval v7
+		//	26		50		260			eval v8
 		
 		//	10 sec time control
 		//	version	depth	correct		eval	notes
 		//	20		50		267			7
 		//	26		50		270			8
 		
-		//	piece score only, 1 sec time control
+		//	piece score only
+		//	1 sec time control
 		//	version	depth	correct		notes
 		//	23		20		251
 		
@@ -185,7 +187,8 @@ public class TestSuite
 			State4 s = ts.positions.get(i);
 
 			final Search3<State4> search =
-					new SearchS4V26(50, s, e2, 20, false);
+					//new SearchS4V26(50, s, e2, 20, false);
+					new SearchS4V27(50, s, e2, 20, false);
 			
 			final int player = ts.turnList.get(i);
 			

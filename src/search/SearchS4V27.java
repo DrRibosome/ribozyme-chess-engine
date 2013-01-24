@@ -1,4 +1,4 @@
-package search.search27;
+package search;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -341,7 +341,6 @@ public final class SearchS4V27 implements Search3<State4>{
 	private double recurse(int player, double alpha, double beta, int depth,
 			boolean pv, boolean rootNode, int stackIndex){
 		stats.nodesSearched++;
-		
 		if(s.isDraw()){
 			//m.put2(s.zkey(), 0, 0, depth, ZMap.CUTOFF_TYPE_EXACT);
 			return 0;
@@ -397,6 +396,8 @@ public final class SearchS4V27 implements Search3<State4>{
 		final MoveList ml = stack[stackIndex];
 		ml.kingAttacked[player] = State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
 		ml.kingAttacked[1-player] = State4.isAttacked2(BitUtil.lsbIndex(s.kings[1-player]), player, s);
+		ml.killer[0] = 0;
+		ml.killer[1] = 0;
 		
 		//null move pruning (hashes result, but might not be sound)
 		boolean hasNonPawnMaterial = s.pieceCounts[player][0]-s.pieceCounts[player][State4.PIECE_TYPE_PAWN] > 1;
@@ -455,23 +456,24 @@ public final class SearchS4V27 implements Search3<State4>{
 			}
 		}
 		
-		if(!pv && stack[stackIndex-1].killer[0] != 0){
+		//load killer moves if we have them
+		if(stackIndex != 0 && stack[stackIndex-1].killer[0] != 0){
 			final long[] k = stack[stackIndex-1].killer;
-			s.executeMove(player, k[0]);
-			if(!State4.isAttacked2(BitUtil.lsbIndex(s.kings[1-player]), player, s)){
-				pieceMasks[w] = 1L<<MoveEncoder.getPos1(k[0]);
-				moves[w] = 1L<<MoveEncoder.getPos2(k[0]);
+			pieceMasks[w] = 1L<<MoveEncoder.getPos1(k[0]);
+			moves[w] = 1L<<MoveEncoder.getPos2(k[0]);
+			if((moves[w] & s.pieces[1-player]) == 0 &&
+					(pieceMasks[w] & s.pieces[player]) != 0 &&
+					!State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
 				ranks[w++] = killerMoveRank;
 			}
-			s.undoMove();
 			if(k[1] != 0){
-				s.executeMove(player, k[0]);
-				if(!State4.isAttacked2(BitUtil.lsbIndex(s.kings[1-player]), player, s)){
-					pieceMasks[w] = 1L<<MoveEncoder.getPos1(k[0]);
-					moves[w] = 1L<<MoveEncoder.getPos2(k[0]);
+				pieceMasks[w] = 1L<<MoveEncoder.getPos1(k[1]);
+				moves[w] = 1L<<MoveEncoder.getPos2(k[1]);
+				if((moves[w] & s.pieces[1-player]) == 0 &&
+						(pieceMasks[w] & s.pieces[player]) != 0 &&
+						!State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
 					ranks[w++] = killerMoveRank;
 				}
-				s.undoMove();
 			}
 		}
 		
@@ -554,9 +556,11 @@ public final class SearchS4V27 implements Search3<State4>{
 				if(alpha >= beta && hasMove){
 					if(!cutoffSearch){
 						m.put2(s.zkey(), bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
-						if(!pv && MoveEncoder.getTakenType(bestMove) != State4.PIECE_TYPE_EMPTY){ //non-take move
-							final MoveList prev = stack[stackIndex-1]; //will exist because root is pv
-							if(prev.killer[0] != bestMove){
+						if(stackIndex != 0 && bestMove != 0 &&
+								MoveEncoder.getTakenType(bestMove) == State4.PIECE_TYPE_EMPTY &&
+								MoveEncoder.isEnPassanteTake(bestMove) == 0){
+							final MoveList prev = stack[stackIndex-1];
+							if(!MoveEncoder.positionsEqual(prev.killer[0], bestMove)){
 								prev.killer[1] = prev.killer[0];
 							}
 							prev.killer[0] = bestMove;
