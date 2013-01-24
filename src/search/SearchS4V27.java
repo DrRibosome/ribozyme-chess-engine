@@ -499,19 +499,18 @@ public final class SearchS4V27 implements Search3<State4>{
 		final long zkey = s.zkey(); //for testing purposes
 		
 		boolean firstRun = true;
-		boolean hasMove = false;
+		boolean hasMove = ml.kingAttacked[player];
 		for(int i = 0; i < length && !cutoffSearch; i++){
 			for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
 				
 				final long encoding = s.executeMove(player, pieceMasks[i], movesTemp&-movesTemp);
 				this.e.processMove(encoding);
 
-				hasMove = hasMove || (s.kings[player] & pieceMasks[i]) == 0; //other piece move
 				if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
 					//king in check after move
 					g = -88888;
 				} else{
-					hasMove = hasMove || (s.kings[player] & pieceMasks[i]) != 0; //non-check king move
+					hasMove = true;
 					final boolean pvMove = pv && i==0;
 					final boolean isCapture = MoveEncoder.getTakenType(encoding) != State4.PIECE_TYPE_EMPTY;
 					final boolean inCheck = ml.kingAttacked[player];

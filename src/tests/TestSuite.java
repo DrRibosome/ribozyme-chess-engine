@@ -177,8 +177,8 @@ public class TestSuite
 		int solved = 0;
 		SearchStat agg = new SearchStat(); //search stat aggregator
 		for(int i = 0; i < ts.positions.size(); i++)
-		//for(int i = 40; i < 50; i++)
-		//for(int i = 1; i == 1; i++)
+		//for(int i = 210; i < 260; i++)
+		//for(int i = 0; i == 0; i++)
 		{
 			System.out.println(ts.positions.get(i));
 			System.out.println("best move: " + ts.bestMoves.get(i));
