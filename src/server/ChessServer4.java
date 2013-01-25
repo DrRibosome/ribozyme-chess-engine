@@ -13,7 +13,7 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import search.Search3;
-import search.SearchS4V26;
+import search.SearchS4V27;
 import search.SearchStat;
 import util.AlgebraicNotation2;
 import util.SuperBook;
@@ -116,7 +116,8 @@ public class ChessServer4 extends WebSocketServer
 					processedMoves = new ArrayList<String>();
 					searcher =
 							//new SearchS4V25qzit(16, s, e, 20);
-							new SearchS4V26(16, s, e, 20, true);
+							//new SearchS4V26(16, s, e, 20, true);
+							new SearchS4V27(16, s, e, 20, true);
 					movedWaiting = false;
 					ourTurn = false;
 					resettable = false;

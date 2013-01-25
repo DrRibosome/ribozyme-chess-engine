@@ -136,9 +136,9 @@ public class TestSuite
 		//TestSuite ts = new TestSuite("silent-but-deadly");
 		
 		Evaluator2<State4> e2 =
-				new SuperEvalS4V8();
+				//new SuperEvalS4V8();
 				//new SuperEvalS4V7();
-				//new EvalS4();
+				new EvalS4();
 				//new TestEval();
 		
 		//	super eval
@@ -152,6 +152,7 @@ public class TestSuite
 		//	version	depth	correct		eval	notes
 		//	20		50		267			7
 		//	26		50		270			8
+		//	27		50		280			8
 		
 		//	piece score only
 		//	1 sec time control
@@ -162,6 +163,7 @@ public class TestSuite
 		//	10 sec time control
 		//	version	depth	correct		notes
 		//	20		50		273
+		//	27		50		284
 		
 
 		//first 50 test, eval v7
@@ -178,7 +180,7 @@ public class TestSuite
 		SearchStat agg = new SearchStat(); //search stat aggregator
 		for(int i = 0; i < ts.positions.size(); i++)
 		//for(int i = 210; i < 260; i++)
-		//for(int i = 0; i == 0; i++)
+		//for(int i = 242; i == 242; i++)
 		{
 			System.out.println(ts.positions.get(i));
 			System.out.println("best move: " + ts.bestMoves.get(i));
@@ -192,7 +194,7 @@ public class TestSuite
 			
 			final int player = ts.turnList.get(i);
 			
-			search(search, player, 50, 1*1000, move);
+			search(search, player, 50, 10*1000, move);
 			agg(search.getStats(), agg);
 			
 			String[] bests = ts.bestMoves.get(i).split(" ");

@@ -41,7 +41,6 @@ public final class SearchS4V27 implements Search3<State4>{
 		public final boolean[] kingAttacked = new boolean[2];
 		public final long[] upTakes = new long[7];
 		public boolean skipNullMove = false;
-		public final long[] killer = new long[2];
 	}
 	
 	private final static int[] pawnOffset = new int[]{9,7,8,16};
@@ -54,9 +53,7 @@ public final class SearchS4V27 implements Search3<State4>{
 	private FileWriter f;
 	
 	/** stores history heuristic information*/
-	private final int[][][] history = new int[2][64][64];
 	private final static int tteMoveRank = -1;
-	private final static int killerMoveRank = 0;
 	
 	private boolean cutoffSearch = false;
 	
@@ -100,15 +97,6 @@ public final class SearchS4V27 implements Search3<State4>{
 		m.incSeq();
 		e.initialize(s);
 		cutoffSearch = false;
-		for(int w = 0; w < 2; w++){
-			for(int a = 0; a < 64; a++){
-				for(int q = 0; q < 64; q++){
-					history[w][a][q] >>>= 1;
-				}
-			}
-		}
-		stack[0].killer[0] = 0;
-		stack[1].killer[1] = 0;
 		
 		long bestMove = 0;
 		double score = 0;
@@ -396,8 +384,6 @@ public final class SearchS4V27 implements Search3<State4>{
 		final MoveList ml = stack[stackIndex];
 		ml.kingAttacked[player] = State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
 		ml.kingAttacked[1-player] = State4.isAttacked2(BitUtil.lsbIndex(s.kings[1-player]), player, s);
-		ml.killer[0] = 0;
-		ml.killer[1] = 0;
 		
 		//null move pruning (hashes result, but might not be sound)
 		boolean hasNonPawnMaterial = s.pieceCounts[player][0]-s.pieceCounts[player][State4.PIECE_TYPE_PAWN] > 1;
@@ -455,28 +441,6 @@ public final class SearchS4V27 implements Search3<State4>{
 				ranks[w++] = tteMoveRank;
 			}
 		}
-		
-		//load killer moves if we have them
-		if(stackIndex != 0 && stack[stackIndex-1].killer[0] != 0){
-			final long[] k = stack[stackIndex-1].killer;
-			pieceMasks[w] = 1L<<MoveEncoder.getPos1(k[0]);
-			moves[w] = 1L<<MoveEncoder.getPos2(k[0]);
-			if((moves[w] & s.pieces[1-player]) == 0 &&
-					(pieceMasks[w] & s.pieces[player]) != 0 &&
-					!State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
-				ranks[w++] = killerMoveRank;
-			}
-			if(k[1] != 0){
-				pieceMasks[w] = 1L<<MoveEncoder.getPos1(k[1]);
-				moves[w] = 1L<<MoveEncoder.getPos2(k[1]);
-				if((moves[w] & s.pieces[1-player]) == 0 &&
-						(pieceMasks[w] & s.pieces[player]) != 0 &&
-						!State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
-					ranks[w++] = killerMoveRank;
-				}
-			}
-		}
-		
 
 		//move generation
 		ml.length = w;
@@ -555,15 +519,6 @@ public final class SearchS4V27 implements Search3<State4>{
 				if(alpha >= beta && hasMove){
 					if(!cutoffSearch){
 						m.put2(s.zkey(), bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
-						if(stackIndex != 0 && bestMove != 0 &&
-								MoveEncoder.getTakenType(bestMove) == State4.PIECE_TYPE_EMPTY &&
-								MoveEncoder.isEnPassanteTake(bestMove) == 0){
-							final MoveList prev = stack[stackIndex-1];
-							if(!MoveEncoder.positionsEqual(prev.killer[0], bestMove)){
-								prev.killer[1] = prev.killer[0];
-							}
-							prev.killer[0] = bestMove;
-						}
 					}
 					return g;
 				}
@@ -580,6 +535,34 @@ public final class SearchS4V27 implements Search3<State4>{
 		if(!cutoffSearch)
 				m.put2(s.zkey(), bestMove, bestScore, depth, cutoffFlag);
 		return bestScore;
+	}
+	
+
+	
+	/** gets the moves for the non-pawn piece at the position of the pos mask. There must be a piece there*/
+	public static long indexMoves(int player, long posMask, State4 s){
+		assert posMask != 0;
+
+		final long p = posMask&-posMask;
+		assert (s.pieces[player] & p) != 0;
+		
+		final int type = s.mailbox[BitUtil.lsbIndex(posMask)];
+		assert type != State4.PIECE_TYPE_PAWN;
+		
+		switch(type){
+		case State4.PIECE_TYPE_BISHOP:
+			return State4.getBishopMoves(player, s.pieces, p);
+		case State4.PIECE_TYPE_KING:
+			return State4.getKingMoves(player, s.pieces, p);
+		case State4.PIECE_TYPE_ROOK:
+			return State4.getRookMoves(player, s.pieces, p);
+		case State4.PIECE_TYPE_QUEEN:
+			return State4.getQueenMoves(player, s.pieces, p);
+		case State4.PIECE_TYPE_KNIGHT:
+			return State4.getKnightMoves(player, s.pieces, p);
+		default:
+			return 0;
+		}
 	}
 	
 	private double qsearch(int player, double alpha, double beta, int depth, int stackIndex){
