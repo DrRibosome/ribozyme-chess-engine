@@ -12,8 +12,8 @@ import util.board4.State4;
 import util.board4.ZMap;
 import ai.modularAI2.Evaluator2;
 
-/** modified to record various features of the search with play*/
-public final class SearchS4V27 implements Search3<State4>{
+/** very similar to v27, slightly fewer nodes searched*/
+public final class SearchS4V28 implements Search3<State4>{
 	public final static class SearchStat27 extends SearchStat{
 		public long hashHits;
 		/** scores returned from quiet search without bottoming out*/
@@ -57,7 +57,7 @@ public final class SearchS4V27 implements Search3<State4>{
 	
 	private boolean cutoffSearch = false;
 	
-	public SearchS4V27(int maxDepth, State4 s, Evaluator2<State4> e, int hashSize, boolean record){
+	public SearchS4V28(int maxDepth, State4 s, Evaluator2<State4> e, int hashSize, boolean record){
 		this.s = s;
 		this.e = e;
 		m = new ZMap(hashSize);
@@ -70,7 +70,7 @@ public final class SearchS4V27 implements Search3<State4>{
 
 		if(record){
 			try{
-				f = new FileWriter("search25.stats", true);
+				f = new FileWriter("search27.stats", true);
 			} catch(IOException ex){
 				ex.printStackTrace();
 			}
@@ -176,6 +176,8 @@ public final class SearchS4V27 implements Search3<State4>{
 			if(i-1 < stats.scores.length){
 				stats.scores[i-1] = score;
 			}
+			if(score >= 80000 || score <= -80000)
+				break;
 		}
 		
 		if(f != null){
@@ -493,12 +495,20 @@ public final class SearchS4V27 implements Search3<State4>{
 						//descend negascout style
 						if(!pvMove){
 							g = -recurse(1-player, -(alpha+1), -alpha, depth-1, false, false, stackIndex+1);
-							if(alpha < g && g < beta && i != 0){
+							if(alpha < g && g < beta && pv){
 								g = -recurse(1-player, -beta, -alpha, depth-1, pv, false, stackIndex+1);
 							}
 						} else{
 							g = -recurse(1-player, -beta, -alpha, depth-1, pv, false, stackIndex+1);
 						}
+						/*if(alphaRaised || !pv){
+							g = -recurse(1-player, -(alpha+1), -alpha, depth-1, false, false, stackIndex+1);
+							if(alpha < g && g < beta && pv){
+								g = -recurse(1-player, -beta, -alpha, depth-1, pv, false, stackIndex+1);
+							}
+						} else{
+							g = -recurse(1-player, -beta, -alpha, depth-1, pv, false, stackIndex+1);
+						}*/
 					}
 				}
 				s.undoMove();

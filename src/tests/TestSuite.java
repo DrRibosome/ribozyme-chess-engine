@@ -7,14 +7,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import search.Search3;
-import search.SearchS4V26;
-import search.SearchS4V27;
+import search.SearchS4V28;
 import search.SearchStat;
 import util.AlgebraicNotation2;
 import util.board4.Debug;
 import util.board4.State4;
 import ai.modularAI2.Evaluator2;
-import customAI.evaluators.board4.EvalS4;
 import customAI.evaluators.board4.SuperEvalS4V8;
 
 public class TestSuite
@@ -136,9 +134,9 @@ public class TestSuite
 		//TestSuite ts = new TestSuite("silent-but-deadly");
 		
 		Evaluator2<State4> e2 =
-				//new SuperEvalS4V8();
+				new SuperEvalS4V8();
 				//new SuperEvalS4V7();
-				new EvalS4();
+				//new EvalS4();
 				//new TestEval();
 		
 		//	super eval
@@ -190,11 +188,11 @@ public class TestSuite
 
 			final Search3<State4> search =
 					//new SearchS4V26(50, s, e2, 20, false);
-					new SearchS4V27(50, s, e2, 20, false);
+					new SearchS4V28(50, s, e2, 20, false);
 			
 			final int player = ts.turnList.get(i);
 			
-			search(search, player, 50, 10*1000, move);
+			search(search, player, 50, 1*1000, move);
 			agg(search.getStats(), agg);
 			
 			String[] bests = ts.bestMoves.get(i).split(" ");
