@@ -13,7 +13,7 @@ import util.board4.ZMap;
 import ai.modularAI2.Evaluator2;
 
 /** very similar to v27, slightly fewer nodes searched*/
-public final class SearchS4V28 implements Search3<State4>{
+public final class SearchS4V28 implements Search3{
 	public final static class SearchStat27 extends SearchStat{
 		public long hashHits;
 		/** scores returned from quiet search without bottoming out*/

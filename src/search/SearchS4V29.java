@@ -3,8 +3,6 @@ package search;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import search.Search3;
-import search.SearchStat;
 import util.board4.BitUtil;
 import util.board4.Masks;
 import util.board4.MoveEncoder;
@@ -13,7 +11,7 @@ import util.board4.ZMap;
 import ai.modularAI2.Evaluator2;
 
 /** very similar to v27, slightly fewer nodes searched*/
-public final class SearchS4V29 implements Search3<State4>{
+public final class SearchS4V29 implements Search3{
 	public final static class SearchStat27 extends SearchStat{
 		public long hashHits;
 		/** scores returned from quiet search without bottoming out*/
@@ -71,7 +69,7 @@ public final class SearchS4V29 implements Search3<State4>{
 
 		if(record){
 			try{
-				f = new FileWriter("search27.stats", true);
+				f = new FileWriter("search29.stats", true);
 			} catch(IOException ex){
 				ex.printStackTrace();
 			}
@@ -337,11 +335,12 @@ public final class SearchS4V29 implements Search3<State4>{
 		stats.nodesSearched++;
 		
 		if(depth <= 0){
-			/*final boolean inCheck = State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
+			//dont descend into quiescent search until out of check
+			final boolean inCheck = State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
 			if(!inCheck){
 				return qsearch(player, alpha, beta, 0, stackIndex);
 			}
-			depth = 1;*/
+			depth = 1;
 			return qsearch(player, alpha, beta, 0, stackIndex);
 		}
 		
@@ -466,17 +465,17 @@ public final class SearchS4V29 implements Search3<State4>{
 		
 		boolean firstRun = true;
 		boolean hasMove = ml.kingAttacked[player];
-		boolean isDrawable = s.isDrawable(); //player can take a draw
 		for(int i = 0; i < length && !cutoffSearch; i++){
 			for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
 				
 				long encoding = s.executeMove(player, pieceMasks[i], movesTemp&-movesTemp);
 				this.e.processMove(encoding);
 				stack[stackIndex+1].prevMove = encoding;
+				boolean isDrawable = s.isDrawable(); //player can take a draw
 
 				if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
 					//king in check after move
-					g = -88888;
+					g = -88888+stackIndex+1;
 				} else{
 					hasMove = true;
 					final boolean pvMove = pv && i==0;

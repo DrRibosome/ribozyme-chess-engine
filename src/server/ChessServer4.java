@@ -41,7 +41,7 @@ public class ChessServer4 extends WebSocketServer
 	SuperBook book;
 	Random r;
 
-	Search3<State4> searcher;
+	Search3 searcher;
 
 	public ChessServer4(int port)
 	{
@@ -121,7 +121,7 @@ public class ChessServer4 extends WebSocketServer
 					searcher =
 							//new SearchS4V25qzit(16, s, e, 20);
 							//new SearchS4V26(16, s, e, 20, true);
-							new SearchS4V29(20, s, e, 20, true);
+							new SearchS4V29(50, s, e, 20, true);
 					movedWaiting = false;
 					ourTurn = false;
 					resettable = false;
@@ -207,7 +207,7 @@ public class ChessServer4 extends WebSocketServer
 						
 						//searcher.getMove(move, botPlayer, searchTime);
 						//searcher.search(botPlayer, move, searchTime);
-						search(searcher, botPlayer, 20, searchTime, move);
+						search(searcher, botPlayer, 50, searchTime, move);
 						SearchStat stats = searcher.getStats();
 						System.out.println("search time = "+stats.searchTime);
 					}
@@ -220,7 +220,7 @@ public class ChessServer4 extends WebSocketServer
 		}
 	}
 	
-	private static void search(final Search3<?> s, final int player,
+	private static void search(final Search3 s, final int player,
 			final int maxPly, final int searchTime, final int[] move){
 		Thread t = new Thread(){
 			public void run(){

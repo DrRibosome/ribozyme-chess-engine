@@ -1,9 +1,9 @@
-package tests;
+package tests.searchTests;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import search.SearchS4V27;
+import search.SearchS4V26;
 import search.SearchStat;
 import util.OldPositions;
 import util.board4.Debug;
@@ -12,7 +12,7 @@ import ai.modularAI2.Evaluator2;
 import customAI.evaluators.board4.SuperEvalS4V7;
 
 /** tests searchs on several sample boards and aggregates results*/
-public class Test27 {
+public class Test26 {
 	public static void main(String[] args){
 		
 		List<char[][]> boards = new ArrayList<char[][]>();
@@ -37,7 +37,7 @@ public class Test27 {
 					//new EvalS4();
 					//new TestEval();
 			
-			SearchS4V27 search = new SearchS4V27(maxPly, s, e1, 20, false);
+			SearchS4V26 search = new SearchS4V26(maxPly, s, e1, 20, false);
 			
 			search.search(State4.WHITE, new int[4], 8);
 			SearchStat stats = search.getStats();

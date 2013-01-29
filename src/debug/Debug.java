@@ -214,66 +214,6 @@ public class Debug {
 	}
 	
 	public static State4 loadConfig(char[][] c){
-		State4 s = new State4();
-		final long q = 1;
-		for(int i = 0; i < 64; i++){
-			int x = i%8;
-			int y = 7-i/8;
-			if(c[y][x] != ' '){
-				char piece = c[y][x];
-				int player = Character.toLowerCase(piece) == piece? 0: 1;
-				piece = Character.toLowerCase(piece);
-				switch (piece){
-				case 'p':
-					s.pawns[player] |= q<<i;
-					s.mailbox[i] = State4.PIECE_TYPE_PAWN;
-					s.pieceCounts[player][State4.PIECE_TYPE_PAWN]++;
-					s.pieceCounts[player][State4.PIECE_TYPE_EMPTY]++;
-					break;
-				case 'q':
-					s.queens[player] |= q<<i;
-					s.mailbox[i] = State4.PIECE_TYPE_QUEEN;
-					s.pieceCounts[player][State4.PIECE_TYPE_QUEEN]++;
-					s.pieceCounts[player][State4.PIECE_TYPE_EMPTY]++;
-					break;
-				case 'b':
-					s.bishops[player] |= q<<i;
-					s.mailbox[i] = State4.PIECE_TYPE_BISHOP;
-					s.pieceCounts[player][State4.PIECE_TYPE_BISHOP]++;
-					s.pieceCounts[player][State4.PIECE_TYPE_EMPTY]++;
-					break;
-				case 'r':
-					s.rooks[player] |= q<<i;
-					s.mailbox[i] = State4.PIECE_TYPE_ROOK;
-					s.pieceCounts[player][State4.PIECE_TYPE_ROOK]++;
-					s.pieceCounts[player][State4.PIECE_TYPE_EMPTY]++;
-					break;
-				case 'n':
-					s.knights[player] |= q<<i;
-					s.mailbox[i] = State4.PIECE_TYPE_KNIGHT;
-					s.pieceCounts[player][State4.PIECE_TYPE_KNIGHT]++;
-					s.pieceCounts[player][State4.PIECE_TYPE_EMPTY]++;
-					break;
-				case 'k':
-					s.kings[player] |= q<<i;
-					s.mailbox[i] = State4.PIECE_TYPE_KING;
-					s.pieceCounts[player][State4.PIECE_TYPE_KING]++;
-					s.pieceCounts[player][State4.PIECE_TYPE_EMPTY]++;
-					break;
-				}
-			}
-		}
-		
-		if(c.length == 9){
-			s.kingMoved[0] = c[8][0] == '1';
-			s.kingMoved[1] = c[8][1] == '1';
-			s.rookMoved[0][0] = c[8][2] == '1';
-			s.rookMoved[0][1] = c[8][3] == '1';
-			s.rookMoved[1][0] = c[8][4] == '1';
-			s.rookMoved[1][1] = c[8][5] == '1';
-		}
-		
-		s.collect();
-		return s;
+		return util.board4.Debug.loadConfig(c);
 	}
 }

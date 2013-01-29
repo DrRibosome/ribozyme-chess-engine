@@ -1,19 +1,19 @@
-package tests;
+package tests.searchTests;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import search.Search3;
-import search.SearchS4V29;
+import search.SearchS4V28;
 import search.SearchStat;
 import util.OldPositions;
 import util.board4.Debug;
 import util.board4.State4;
 import ai.modularAI2.Evaluator2;
-import customAI.evaluators.board4.EvalS4;
+import customAI.evaluators.board4.SuperEvalS4V7;
 
 /** tests searchs on several sample boards and aggregates results*/
-public class Test29 {
+public class Test28 {
 	public static void main(String[] args){
 		
 		List<char[][]> boards = new ArrayList<char[][]>();
@@ -34,11 +34,11 @@ public class Test29 {
 			
 			Evaluator2<State4> e1 = 
 					//new SuperEvalS4V6();
-					//new SuperEvalS4V7();
-					new EvalS4();
+					new SuperEvalS4V7();
+					//new EvalS4();
 					//new TestEval();
 			
-			Search3<State4> search = new SearchS4V29(maxPly, s, e1, 20, false);
+			Search3<State4> search = new SearchS4V28(maxPly, s, e1, 20, false);
 			
 			search.search(State4.WHITE, new int[4], 8);
 			SearchStat stats = search.getStats();

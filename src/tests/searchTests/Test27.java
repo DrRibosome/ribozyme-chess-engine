@@ -1,9 +1,10 @@
-package tests;
+package tests.searchTests;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import search.SearchS4V23qzit;
+import search.SearchS4V27;
+import search.SearchStat;
 import util.OldPositions;
 import util.board4.Debug;
 import util.board4.State4;
@@ -11,7 +12,7 @@ import ai.modularAI2.Evaluator2;
 import customAI.evaluators.board4.SuperEvalS4V7;
 
 /** tests searchs on several sample boards and aggregates results*/
-public class Test23 {
+public class Test27 {
 	public static void main(String[] args){
 		
 		List<char[][]> boards = new ArrayList<char[][]>();
@@ -24,8 +25,8 @@ public class Test23 {
 		boards.add(OldPositions.bishopSack);
 		boards.add(OldPositions.queenKingFork);
 		
-		final int maxPly = 6;
-		SearchS4V23qzit.SearchStat agg = new SearchS4V23qzit.SearchStat();
+		final int maxPly = 8;
+		SearchStat agg = new SearchStat();
 		
 		for(char[][] c: boards){
 			State4 s = Debug.loadConfig(c);
@@ -36,9 +37,10 @@ public class Test23 {
 					//new EvalS4();
 					//new TestEval();
 			
-			SearchS4V23qzit search = new SearchS4V23qzit(8, s, e1, 20);
+			SearchS4V27 search = new SearchS4V27(maxPly, s, e1, 20, false);
 			
-			SearchS4V23qzit.SearchStat stats = search.search(State4.WHITE, maxPly, new int[4]);
+			search.search(State4.WHITE, new int[4], 8);
+			SearchStat stats = search.getStats();
 			agg(stats, agg);
 			print(stats);
 			
@@ -53,15 +55,16 @@ public class Test23 {
 	}
 	
 	/** aggregate search stats together*/
-	private static void agg(SearchS4V23qzit.SearchStat s, SearchS4V23qzit.SearchStat agg){
-		agg.forcedQuietCutoffs += s.forcedQuietCutoffs;
-		agg.hashHits += s.hashHits;
+	private static void agg(SearchStat s, SearchStat agg){
+		//agg.forcedQuietCutoffs += s.forcedQuietCutoffs;
+		//agg.hashHits += s.hashHits;
 		agg.nodesSearched += s.nodesSearched;
 		agg.searchTime += s.searchTime;
 	}
 	
-	private static void print(SearchS4V23qzit.SearchStat s){
-		String t = ""+s.nodesSearched+" in "+s.searchTime+"ms (hash="+s.hashHits+", q-cuts="+s.forcedQuietCutoffs+")";
+	private static void print(SearchStat s){
+		//String t = ""+s.nodesSearched+" in "+s.searchTime+"ms (hash="+s.hashHits+", q-cuts="+s.forcedQuietCutoffs+")";
+		String t = ""+s.nodesSearched+" in "+s.searchTime+"ms";
 		System.out.println(t);
 	}
 }

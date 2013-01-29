@@ -13,6 +13,7 @@ import util.AlgebraicNotation2;
 import util.board4.Debug;
 import util.board4.State4;
 import ai.modularAI2.Evaluator2;
+import customAI.evaluators.board4.EvalS4;
 import customAI.evaluators.board4.SuperEvalS4V8;
 
 public class TestSuite
@@ -136,7 +137,7 @@ public class TestSuite
 		Evaluator2<State4> e2 =
 				new SuperEvalS4V8();
 				//new SuperEvalS4V7();
-				//new EvalS4();
+				new EvalS4();
 				//new TestEval();
 		
 		//	super eval
@@ -144,13 +145,13 @@ public class TestSuite
 		//	version	depth	correct		notes
 		//	20		16		242			eval v7
 		//	23		20		238			eval v7
-		//	26		50		260			eval v8
+		//	26		50		255			eval v8
 		
 		//	10 sec time control
 		//	version	depth	correct		eval	notes
 		//	20		50		267			7
 		//	26		50		270			8
-		//	27		50		280			8
+		//	27		50		280?		8
 		
 		//	piece score only
 		//	1 sec time control
@@ -186,7 +187,7 @@ public class TestSuite
 			
 			State4 s = ts.positions.get(i);
 
-			final Search3<State4> search =
+			final Search3 search =
 					//new SearchS4V26(50, s, e2, 20, false);
 					//new SearchS4V28(50, s, e2, 20, false);
 					new SearchS4V29(50, s, e2, 20, false);
@@ -222,7 +223,7 @@ public class TestSuite
 		agg.searchTime += src.searchTime;
 	}
 	
-	private static void search(final Search3<?> s, final int player,
+	private static void search(final Search3 s, final int player,
 			final int maxPly, final int searchTime, final int[] move){
 		Thread t = new Thread(){
 			public void run(){
