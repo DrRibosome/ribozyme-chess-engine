@@ -202,7 +202,7 @@ public final class SearchS4V24qzit implements Search2<State4>{
 			boolean pv, boolean rootNode, int stackIndex){
 		stats.nodesSearched++;
 		
-		if(s.isDraw()){
+		if(s.isDrawable()){
 			//m.put2(s.zkey(), 0, 0, depth, ZMap.CUTOFF_TYPE_EXACT);
 			return 0;
 		} if(s.pieceCounts[player][State4.PIECE_TYPE_KING] == 0){
@@ -444,7 +444,7 @@ public final class SearchS4V24qzit implements Search2<State4>{
 	private double qsearch(int player, double alpha, double beta, int depth, int stackIndex){
 		stats.nodesSearched++;
 		
-		if(s.isDraw()){
+		if(s.isDrawable()){
 			//m.put2(s.zkey(), 0, 0, depth, ZMap.CUTOFF_TYPE_EXACT);
 			return 0;
 		} if(s.pieceCounts[player][State4.PIECE_TYPE_KING] == 0){

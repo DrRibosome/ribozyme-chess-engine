@@ -1,7 +1,7 @@
 package debug;
 
 import search.Search3;
-import search.SearchS4V27;
+import search.SearchS4V28;
 import util.OldPositions;
 import util.board4.BitUtil;
 import util.board4.Masks;
@@ -28,22 +28,14 @@ public class Debug {
 		System.out.println(s);
 		
 		SuperEvalS4V8 e = new SuperEvalS4V8();
-		//e.traceEval(s, State4.WHITE);
+		e.traceEval(s, State4.WHITE);
 		
 		final int maxDepth = 15;
-		Search3<State4> search = new SearchS4V27(maxDepth, s, e, 20, false);
+		Search3<State4> search = new SearchS4V28(maxDepth, s, e, 20, false);
 		int[] move = new int[2];
 		search.search(State4.BLACK, move, maxDepth);
 		System.out.println("\n"+getMoveString(move, 0)+" -> "+getMoveString(move, 1));
 		
-		//test search for move and execute it
-		/*int player = State4.WHITE;
-		Search3<State4> search = new SearchS4V23qzit(15, s, e, 20);
-		int[] move = new int[4];
-		search.getMove(move, player);
-		System.out.println("\n"+getMoveString(move, 0)+" -> "+getMoveString(move, 2));
-		s.executeMove(player, move[0], move[1], move[2], move[3]);
-		System.out.println(s);*/
 		
 		//a.getMove(move);
 		//System.out.println(getMoveString(move, 0)+" -> "+getMoveString(move, 2));

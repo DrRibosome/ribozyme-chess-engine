@@ -1,4 +1,4 @@
-package search.windowTrainer;
+package tests.windowTrainer;
 
 import java.io.File;
 import java.io.IOException;

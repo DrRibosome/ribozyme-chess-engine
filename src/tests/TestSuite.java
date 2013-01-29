@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import search.Search3;
-import search.SearchS4V28;
+import search.SearchS4V29;
 import search.SearchStat;
 import util.AlgebraicNotation2;
 import util.board4.Debug;
@@ -188,7 +188,8 @@ public class TestSuite
 
 			final Search3<State4> search =
 					//new SearchS4V26(50, s, e2, 20, false);
-					new SearchS4V28(50, s, e2, 20, false);
+					//new SearchS4V28(50, s, e2, 20, false);
+					new SearchS4V29(50, s, e2, 20, false);
 			
 			final int player = ts.turnList.get(i);
 			

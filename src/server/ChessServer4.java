@@ -13,15 +13,19 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import search.Search3;
-import search.SearchS4V28;
+import search.SearchS4V29;
 import search.SearchStat;
 import util.AlgebraicNotation2;
-import util.SuperBook;
 import util.board4.State4;
+import util.opening.SuperBook;
 import ai.modularAI2.Evaluator2;
 import customAI.evaluators.board4.SuperEvalS4V8;
 
-
+/*
+char[] buf = "[{\"channel\":\"/service/user\",\"data\"\"basetime\":9000,\"timeinc\":0,\"rated\":true,\"color\":null,\"minrating\":800,\"maxrating\":2000,\"from\":\"drribosome\",\"sid\":\"gserv\",\"tid\":\"Challenge\"},\"id\":\"917\",\"clientId\":\"6lfamft3cpmoalbn91vyk8nnxb67hx\"}]".toCharArray();
+send to:
+live.chess.com/cometd
+*/
 public class ChessServer4 extends WebSocketServer
 {
 
@@ -117,7 +121,7 @@ public class ChessServer4 extends WebSocketServer
 					searcher =
 							//new SearchS4V25qzit(16, s, e, 20);
 							//new SearchS4V26(16, s, e, 20, true);
-							new SearchS4V28(16, s, e, 20, true);
+							new SearchS4V29(20, s, e, 20, true);
 					movedWaiting = false;
 					ourTurn = false;
 					resettable = false;
@@ -162,17 +166,17 @@ public class ChessServer4 extends WebSocketServer
 					boolean hasMoves = book.hasMoves();
 					boolean failed = false;
 					boolean skipped = true;
-					if(1==2){
+					if(1==1){
 						skipped = false;
 						try{
 							if(book.hasMoves()){
 								book.getMove(move);
 								System.out.println("tombookery: " + SuperBook.getMoveString(move));
-								try
-								{
-									Thread.sleep(50);
-								}
-								catch (InterruptedException e) {e.printStackTrace();}
+								move[0] = move[0]+8*move[1];
+								move[1] = move[2]+8*move[3];
+								try{
+									Thread.sleep(350);
+								} catch (InterruptedException e) {e.printStackTrace();}
 							}
 						} catch(Exception a){
 							a.printStackTrace();
@@ -180,8 +184,8 @@ public class ChessServer4 extends WebSocketServer
 						}
 					}
 					if(!hasMoves || failed || skipped){
-						//int offset = (int)(Math.random()*300-150);
-						int searchTime = 4270 < time[botPlayer]/53? 4270: time[botPlayer]/53;
+						//int searchTime = 4270 < time[botPlayer]/53? 4270: time[botPlayer]/53;
+						int searchTime = 8300 < time[botPlayer]/53? 8300: time[botPlayer]/53;
 						
 						
 						if(time[botPlayer] < 5000){ //5 sec left
@@ -190,16 +194,20 @@ public class ChessServer4 extends WebSocketServer
 							searchTime = 400;
 						} else if(time[botPlayer] < 14000){
 							searchTime = 670;
-						} else if(time[botPlayer] < 47000){
+						} else if(time[botPlayer] < 36000){
 							searchTime = 850;
 						} else if(time[botPlayer] < 51000){ //51 sec left
 							searchTime = 1040;
 						} else if(time[botPlayer] < 60000){
 							searchTime = 1200;
 						}
+						
+						
+						//searchTime = 4000;
+						
 						//searcher.getMove(move, botPlayer, searchTime);
 						//searcher.search(botPlayer, move, searchTime);
-						search(searcher, botPlayer, 16, searchTime, move);
+						search(searcher, botPlayer, 20, searchTime, move);
 						SearchStat stats = searcher.getStats();
 						System.out.println("search time = "+stats.searchTime);
 					}
