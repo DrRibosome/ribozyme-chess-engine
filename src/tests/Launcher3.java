@@ -44,6 +44,7 @@ public class Launcher3 {
 		
 		System.out.println(state);
 		
+		//while(state.kings[1-turn] > 0 && (state.queens[0] > 0)){
 		while(state.kings[1-turn] > 0 && (state.queens[0] > 0)){
 			System.out.println("moving player "+turn+"...");
 			search(l.get(turn), turn, maxDepth, maxTime, move);

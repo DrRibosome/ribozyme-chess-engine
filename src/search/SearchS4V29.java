@@ -618,13 +618,13 @@ public final class SearchS4V29 implements Search3{
 		
 		double g = alpha;
 		int cutoffFlag = ZMap.CUTOFF_TYPE_UPPER;
-		final boolean isDrawable = s.isDrawable();
 		final long zkey = s.zkey(); //for testing purposes
 		
 		for(int i = 0; i < length && !cutoffSearch; i++){
 			for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
 				long encoding = s.executeMove(player, pieceMasks[i], movesTemp&-movesTemp);
 				this.e.processMove(encoding);
+				final boolean isDrawable = s.isDrawable();
 				
 				if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
 					//king in check after move
@@ -644,7 +644,6 @@ public final class SearchS4V29 implements Search3{
 				} 
 				
 				assert zkey == s.zkey();
-				assert isDrawable == s.isDrawable();
 				
 				if(g > bestScore){
 					bestScore = g;
