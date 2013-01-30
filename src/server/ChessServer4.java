@@ -118,10 +118,16 @@ public class ChessServer4 extends WebSocketServer
 					book = new SuperBook();
 					book.init("millionBook.txt");
 					processedMoves = new ArrayList<String>();
+					
+					
 					searcher =
 							//new SearchS4V25qzit(16, s, e, 20);
 							//new SearchS4V26(16, s, e, 20, true);
 							new SearchS4V29(50, s, e, 20, true);
+					
+					
+					
+					
 					movedWaiting = false;
 					ourTurn = false;
 					resettable = false;
