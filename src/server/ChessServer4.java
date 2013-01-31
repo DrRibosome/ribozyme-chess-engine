@@ -13,8 +13,10 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import search.Search3;
-import search.SearchS4V29;
+import search.SearchS4V30;
 import search.SearchStat;
+import time.ListenableSearch;
+import time.TimerThread2;
 import util.AlgebraicNotation2;
 import util.board4.State4;
 import util.opening.SuperBook;
@@ -123,7 +125,8 @@ public class ChessServer4 extends WebSocketServer
 					searcher =
 							//new SearchS4V25qzit(16, s, e, 20);
 							//new SearchS4V26(16, s, e, 20, true);
-							new SearchS4V29(50, s, e, 20, true);
+							//new SearchS4V29(50, s, e, 20, true);
+							new SearchS4V30(50, s, e, 20, true);
 					
 					
 					
@@ -181,7 +184,7 @@ public class ChessServer4 extends WebSocketServer
 								move[0] = move[0]+8*move[1];
 								move[1] = move[2]+8*move[3];
 								try{
-									Thread.sleep(350);
+									Thread.sleep(300);
 								} catch (InterruptedException e) {e.printStackTrace();}
 							}
 						} catch(Exception a){
@@ -194,7 +197,7 @@ public class ChessServer4 extends WebSocketServer
 						int searchTime = 8300 < time[botPlayer]/53? 8300: time[botPlayer]/53;
 						
 						
-						if(time[botPlayer] < 5000){ //5 sec left
+						/*if(time[botPlayer] < 5000){ //5 sec left
 							searchTime = 300;
 						} else if(time[botPlayer] < 10000){
 							searchTime = 400;
@@ -206,14 +209,26 @@ public class ChessServer4 extends WebSocketServer
 							searchTime = 1040;
 						} else if(time[botPlayer] < 60000){
 							searchTime = 1200;
+						}*/
+						
+						if(time[botPlayer] < 10000){ //5 sec left
+							searchTime = time[botPlayer]/40;
+						} else if(time[botPlayer] < 19000){
+							searchTime = 630;
+						} else if(time[botPlayer] < 36000){
+							searchTime = 850;
+						} else if(time[botPlayer] < 53000){ //51 sec left
+							searchTime = 1040;
+						} else if(time[botPlayer] < 60000){
+							searchTime = 1200;
 						}
 						
 						
 						//searchTime = 4000;
 						
-						//searcher.getMove(move, botPlayer, searchTime);
-						//searcher.search(botPlayer, move, searchTime);
-						search(searcher, botPlayer, 50, searchTime, move);
+						//search(searcher, botPlayer, 20, searchTime, move);
+						TimerThread2.search((ListenableSearch)searcher, s, botPlayer, time[botPlayer], 0, move);
+						
 						SearchStat stats = searcher.getStats();
 						System.out.println("search time = "+stats.searchTime);
 					}

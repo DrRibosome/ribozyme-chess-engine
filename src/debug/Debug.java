@@ -1,7 +1,9 @@
 package debug;
 
 import search.Search3;
-import search.SearchS4V28;
+import search.SearchS4V29;
+import search.SearchS4V30;
+import time.TimerThread2;
 import util.OldPositions;
 import util.board4.BitUtil;
 import util.board4.Masks;
@@ -23,19 +25,20 @@ public class Debug {
 				{'0', '0', '1', '1', '1', '1', 'w'}
 		};
 
-		State4 s = loadConfig(OldPositions.draw1);
+		State4 s = loadConfig(c);
 		//State4 s = loadConfig(c1);
 		System.out.println(s);
 		
 		SuperEvalS4V8 e = new SuperEvalS4V8();
-		e.traceEval(s, State4.WHITE);
+		//e.traceEval(s, State4.WHITE);
 		
 		final int maxDepth = 15;
-		Search3<State4> search = new SearchS4V28(maxDepth, s, e, 20, false);
+		Search3 search = new SearchS4V29(maxDepth, s, e, 20, false);
 		int[] move = new int[2];
 		search.search(State4.BLACK, move, maxDepth);
 		System.out.println("\n"+getMoveString(move, 0)+" -> "+getMoveString(move, 1));
 		
+		TimerThread2.search(new SearchS4V30(maxDepth, s, e, 20, false), s, State4.WHITE, 1000*60*3, 0, move);
 		
 		//a.getMove(move);
 		//System.out.println(getMoveString(move, 0)+" -> "+getMoveString(move, 2));

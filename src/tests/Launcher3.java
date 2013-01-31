@@ -24,7 +24,7 @@ public class Launcher3 {
 		state.initialize();*/
 		//State4 state = Debug.loadConfig(OldPositions.queenKingMate);
 		//State4 state = Debug.loadConfig(OldPositions.queenRookKingMate);
-		State4 state = Debug.loadConfig(OldPositions.bishopKnightMate);
+		State4 state = Debug.loadConfig(OldPositions.bishopBishopMate);
 		
 		Evaluator2<State4> e1 =
 				new SuperEvalS4V8();
@@ -47,7 +47,8 @@ public class Launcher3 {
 		System.out.println(state);
 		
 		//while(state.kings[1-turn] > 0){
-		while(state.kings[1-turn] > 0 && (state.bishops[0] > 0 && state.knights[0] > 0)){
+		//while(state.kings[1-turn] > 0 && (state.bishops[0] > 0 && state.knights[0] > 0)){
+		while(state.kings[1-turn] > 0 && (state.pieceCounts[0][State4.PIECE_TYPE_BISHOP] == 2)){
 		//while(state.kings[1-turn] > 0 && (state.queens[0] > 0)){
 			System.out.println("moving player "+turn+"...");
 			search(l.get(turn), turn, maxDepth, maxTime, move);
