@@ -3,8 +3,8 @@ package tests.pvRecover;
 import search.SearchS4V25qzitRecord;
 import util.board4.MoveEncoder;
 import util.board4.State4;
-import ai.modularAI2.Evaluator2;
-import customAI.evaluators.board4.SuperEvalS4V7;
+import eval.Evaluator2;
+import eval.SuperEvalS4V7;
 
 /** test for recovering the pv*/
 public class Test25pv {

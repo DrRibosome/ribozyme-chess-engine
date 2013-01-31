@@ -10,11 +10,11 @@ import search.Search3;
 import search.SearchS4V29;
 import search.SearchStat;
 import util.AlgebraicNotation2;
-import util.board4.Debug;
 import util.board4.State4;
-import ai.modularAI2.Evaluator2;
-import customAI.evaluators.board4.EvalS4;
-import customAI.evaluators.board4.SuperEvalS4V8;
+import util.debug.Debug;
+import eval.EvalS4;
+import eval.Evaluator2;
+import eval.SuperEvalS4V8;
 
 public class TestSuite
 {

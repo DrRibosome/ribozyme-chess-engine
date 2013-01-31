@@ -3,12 +3,13 @@ package search;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import eval.Evaluator2;
+
 import util.board4.BitUtil;
 import util.board4.Masks;
 import util.board4.MoveEncoder;
 import util.board4.State4;
 import util.board4.ZMap;
-import ai.modularAI2.Evaluator2;
 
 /** very similar to v27, slightly fewer nodes searched*/
 public final class SearchS4V29 implements Search3{
@@ -872,4 +873,7 @@ public final class SearchS4V29 implements Search3{
 			}
 		}
 	}
+
+	@Override
+	public void setListener(SearchListener l) {}
 }

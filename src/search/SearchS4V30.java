@@ -3,17 +3,16 @@ package search;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import time.ListenableSearch;
-import time.SearchListener;
+import eval.Evaluator2;
+
 import util.board4.BitUtil;
 import util.board4.Masks;
 import util.board4.MoveEncoder;
 import util.board4.State4;
 import util.board4.ZMap;
-import ai.modularAI2.Evaluator2;
 
 /** very similar to v27, slightly fewer nodes searched*/
-public final class SearchS4V30 implements ListenableSearch{
+public final class SearchS4V30 implements Search3{
 	public final static class SearchStat27 extends SearchStat{
 		public long hashHits;
 		/** scores returned from quiet search without bottoming out*/
@@ -106,7 +105,7 @@ public final class SearchS4V30 implements ListenableSearch{
 		final double max = 90000;
 		final double min = -90000;
 		
-		System.out.println("searching with player = "+player);
+		//System.out.println("searching with player = "+player);
 		
 		for(int i = 1; (maxPly == -1 || i <= maxPly) && !cutoffSearch; i++){
 			s.resetHistory();

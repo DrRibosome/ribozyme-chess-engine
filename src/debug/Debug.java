@@ -8,7 +8,7 @@ import util.OldPositions;
 import util.board4.BitUtil;
 import util.board4.Masks;
 import util.board4.State4;
-import customAI.evaluators.board4.SuperEvalS4V8;
+import eval.SuperEvalS4V8;
 
 
 public class Debug {
@@ -217,6 +217,6 @@ public class Debug {
 	}
 	
 	public static State4 loadConfig(char[][] c){
-		return util.board4.Debug.loadConfig(c);
+		return util.debug.Debug.loadConfig(c);
 	}
 }

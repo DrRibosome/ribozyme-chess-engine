@@ -7,10 +7,10 @@ import search.Search3;
 import search.SearchS4V29;
 import search.SearchStat;
 import util.OldPositions;
-import util.board4.Debug;
 import util.board4.State4;
-import ai.modularAI2.Evaluator2;
-import customAI.evaluators.board4.EvalS4;
+import util.debug.Debug;
+import eval.Evaluator2;
+import eval.SuperEvalS4V8;
 
 /** tests searchs on several sample boards and aggregates results*/
 public class Test29 {
@@ -33,12 +33,9 @@ public class Test29 {
 			State4 s = Debug.loadConfig(c);
 			
 			Evaluator2<State4> e1 = 
-					//new SuperEvalS4V6();
-					//new SuperEvalS4V7();
-					new EvalS4();
-					//new TestEval();
+					new SuperEvalS4V8();
 			
-			Search3<State4> search = new SearchS4V29(maxPly, s, e1, 20, false);
+			Search3 search = new SearchS4V29(maxPly, s, e1, 20, false);
 			
 			search.search(State4.WHITE, new int[4], 8);
 			SearchStat stats = search.getStats();

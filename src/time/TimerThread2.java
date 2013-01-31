@@ -3,11 +3,12 @@ package time;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import search.Search3;
+import search.SearchListener;
 import util.board4.State4;
 
 public final class TimerThread2 extends Thread{
 	
-	private ListenableSearch search;
+	private Search3 search;
 	private State4 s;
 	private long time;
 	private long inc;
@@ -40,7 +41,7 @@ public final class TimerThread2 extends Thread{
 		}
 	};
 	
-	private TimerThread2(ListenableSearch search, State4 s, int player, long time, long inc, int[] moveStore) {
+	private TimerThread2(Search3 search, State4 s, int player, long time, long inc, int[] moveStore) {
 		setDaemon(true);
 		this.search = search;
 		this.s = s;
@@ -86,10 +87,7 @@ public final class TimerThread2 extends Thread{
 				currentPly = r.ply > currentPly? r.ply: currentPly;
 			}
 			
-			/*if(currentPly-lastpvChange > 8){
-				break;
-			}*/
-			if(currentPly-lastpvChange > 6 && currentPly > 8){
+			if(currentPly-lastpvChange+1 > 6 && currentPly > 8){
 				break;
 			}
 			
@@ -109,7 +107,7 @@ public final class TimerThread2 extends Thread{
 		}
 	}
 	
-	public static void search(ListenableSearch search, State4 s, int player, long time, long inc, int[] moveStore){
+	public static void search(Search3 search, State4 s, int player, long time, long inc, int[] moveStore){
 		TimerThread2 t = new TimerThread2(search, s, player, time, inc, moveStore);
 		t.start();
 		while(t.isAlive()){

@@ -3,6 +3,8 @@ package search;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import eval.Evaluator2;
+
 import search.Search3;
 import search.SearchStat;
 import util.board4.BitUtil;
@@ -10,7 +12,6 @@ import util.board4.Masks;
 import util.board4.MoveEncoder;
 import util.board4.State4;
 import util.board4.ZMap;
-import ai.modularAI2.Evaluator2;
 
 /** modified to record various features of the search with play*/
 public final class SearchS4V26 implements Search3{
@@ -828,4 +829,7 @@ public final class SearchS4V26 implements Search3{
 			}
 		}
 	}
+
+	@Override
+	public void setListener(SearchListener l) {}
 }

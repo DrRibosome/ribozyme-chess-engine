@@ -7,10 +7,10 @@ import search.Search3;
 import search.SearchS4V29;
 import util.OldPositions;
 import util.board2.State2;
-import util.board4.Debug;
 import util.board4.State4;
-import ai.modularAI2.Evaluator2;
-import customAI.evaluators.board4.SuperEvalS4V8;
+import util.debug.Debug;
+import eval.Evaluator2;
+import eval.SuperEvalS4V8;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move

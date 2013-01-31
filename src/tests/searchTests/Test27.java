@@ -6,10 +6,10 @@ import java.util.List;
 import search.SearchS4V27;
 import search.SearchStat;
 import util.OldPositions;
-import util.board4.Debug;
 import util.board4.State4;
-import ai.modularAI2.Evaluator2;
-import customAI.evaluators.board4.SuperEvalS4V7;
+import util.debug.Debug;
+import eval.Evaluator2;
+import eval.SuperEvalS4V7;
 
 /** tests searchs on several sample boards and aggregates results*/
 public class Test27 {

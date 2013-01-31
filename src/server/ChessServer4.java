@@ -15,13 +15,12 @@ import org.java_websocket.server.WebSocketServer;
 import search.Search3;
 import search.SearchS4V30;
 import search.SearchStat;
-import time.ListenableSearch;
 import time.TimerThread2;
 import util.AlgebraicNotation2;
 import util.board4.State4;
 import util.opening.SuperBook;
-import ai.modularAI2.Evaluator2;
-import customAI.evaluators.board4.SuperEvalS4V8;
+import eval.Evaluator2;
+import eval.SuperEvalS4V8;
 
 /*
 char[] buf = "[{\"channel\":\"/service/user\",\"data\"\"basetime\":9000,\"timeinc\":0,\"rated\":true,\"color\":null,\"minrating\":800,\"maxrating\":2000,\"from\":\"drribosome\",\"sid\":\"gserv\",\"tid\":\"Challenge\"},\"id\":\"917\",\"clientId\":\"6lfamft3cpmoalbn91vyk8nnxb67hx\"}]".toCharArray();
@@ -227,7 +226,7 @@ public class ChessServer4 extends WebSocketServer
 						//searchTime = 4000;
 						
 						//search(searcher, botPlayer, 20, searchTime, move);
-						TimerThread2.search((ListenableSearch)searcher, s, botPlayer, time[botPlayer], 0, move);
+						TimerThread2.search(searcher, s, botPlayer, time[botPlayer], 0, move);
 						
 						SearchStat stats = searcher.getStats();
 						System.out.println("search time = "+stats.searchTime);
