@@ -70,7 +70,6 @@ public final class TimerThread2 extends Thread{
 		t.setDaemon(true);
 		t.start();
 		
-		boolean pvChanged = false;
 		long move = 0;
 		int currentPly = 0;
 		int lastpvChange = 1;
@@ -80,7 +79,6 @@ public final class TimerThread2 extends Thread{
 			while(!plyq.isEmpty()){
 				PlySearchResult r = plyq.poll();
 				if(r.ply != 1 && r.move != move){// && currentPly < r.ply){
-					pvChanged = true;
 					lastpvChange = r.ply;
 					target += target*.15;
 				}
@@ -88,10 +86,10 @@ public final class TimerThread2 extends Thread{
 				currentPly = r.ply > currentPly? r.ply: currentPly;
 			}
 			
-			/*if(!pvChanged && currentPly > 8){
+			/*if(currentPly-lastpvChange > 8){
 				break;
 			}*/
-			if(currentPly-lastpvChange > 8){
+			if(currentPly-lastpvChange > 6 && currentPly > 8){
 				break;
 			}
 			
