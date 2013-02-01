@@ -58,15 +58,15 @@ public final class SearchS4V30 implements Search3{
 	
 	private boolean cutoffSearch = false;
 	
-	public SearchS4V30(int maxDepth, State4 s, Evaluator2<State4> e, int hashSize, boolean record){
+	public SearchS4V30(State4 s, Evaluator2<State4> e, int hashSize, boolean record){
 		this.s = s;
 		this.e = e;
 		m = new ZMap(hashSize);
-		stack = new MoveList[(maxDepth+qply)*2];
+		stack = new MoveList[128];
 		for(int i = 0; i < stack.length; i++){
 			stack[i] = new MoveList();
 		}
-		stats.scores = new double[64];
+		stats.scores = new double[128];
 		
 
 		if(record){

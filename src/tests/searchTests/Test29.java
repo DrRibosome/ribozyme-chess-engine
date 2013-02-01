@@ -8,9 +8,10 @@ import search.SearchS4V29;
 import search.SearchStat;
 import util.OldPositions;
 import util.board4.State4;
-import util.debug.Debug;
+import debug.Debug;
 import eval.Evaluator2;
 import eval.SuperEvalS4V8;
+
 
 /** tests searchs on several sample boards and aggregates results*/
 public class Test29 {

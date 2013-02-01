@@ -3,7 +3,7 @@ package debug;
 import search.Search3;
 import search.SearchS4V29;
 import search.SearchS4V30;
-import time.TimerThread2;
+import time.TimerThread3;
 import util.OldPositions;
 import util.board4.BitUtil;
 import util.board4.Masks;
@@ -38,7 +38,7 @@ public class Debug {
 		search.search(State4.BLACK, move, maxDepth);
 		System.out.println("\n"+getMoveString(move, 0)+" -> "+getMoveString(move, 1));
 		
-		TimerThread2.search(new SearchS4V30(maxDepth, s, e, 20, false), s, State4.WHITE, 1000*60*3, 0, move);
+		TimerThread3.search(new SearchS4V30(maxDepth, s, e, 20, false), s, State4.WHITE, 1000*60*3, 0, move);
 		
 		//a.getMove(move);
 		//System.out.println(getMoveString(move, 0)+" -> "+getMoveString(move, 2));

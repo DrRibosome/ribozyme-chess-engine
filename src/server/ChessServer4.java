@@ -15,7 +15,7 @@ import org.java_websocket.server.WebSocketServer;
 import search.Search3;
 import search.SearchS4V30;
 import search.SearchStat;
-import time.TimerThread2;
+import time.TimerThread3;
 import util.AlgebraicNotation2;
 import util.board4.State4;
 import util.opening.SuperBook;
@@ -27,9 +27,7 @@ char[] buf = "[{\"channel\":\"/service/user\",\"data\"\"basetime\":9000,\"timein
 send to:
 live.chess.com/cometd
 */
-public class ChessServer4 extends WebSocketServer
-{
-
+public class ChessServer4 extends WebSocketServer{
 	String prevBoard = "", currentMove = "";
 	boolean firstMove = true;
 	State4 s = new State4();
@@ -125,7 +123,7 @@ public class ChessServer4 extends WebSocketServer
 							//new SearchS4V25qzit(16, s, e, 20);
 							//new SearchS4V26(16, s, e, 20, true);
 							//new SearchS4V29(50, s, e, 20, true);
-							new SearchS4V30(50, s, e, 20, true);
+							new SearchS4V30(s, e, 20, true);
 					
 					
 					
@@ -192,42 +190,7 @@ public class ChessServer4 extends WebSocketServer
 						}
 					}
 					if(!hasMoves || failed || skipped){
-						//int searchTime = 4270 < time[botPlayer]/53? 4270: time[botPlayer]/53;
-						int searchTime = 8300 < time[botPlayer]/53? 8300: time[botPlayer]/53;
-						
-						
-						/*if(time[botPlayer] < 5000){ //5 sec left
-							searchTime = 300;
-						} else if(time[botPlayer] < 10000){
-							searchTime = 400;
-						} else if(time[botPlayer] < 14000){
-							searchTime = 670;
-						} else if(time[botPlayer] < 36000){
-							searchTime = 850;
-						} else if(time[botPlayer] < 51000){ //51 sec left
-							searchTime = 1040;
-						} else if(time[botPlayer] < 60000){
-							searchTime = 1200;
-						}*/
-						
-						if(time[botPlayer] < 10000){ //5 sec left
-							searchTime = time[botPlayer]/40;
-						} else if(time[botPlayer] < 19000){
-							searchTime = 630;
-						} else if(time[botPlayer] < 36000){
-							searchTime = 850;
-						} else if(time[botPlayer] < 53000){ //51 sec left
-							searchTime = 1040;
-						} else if(time[botPlayer] < 60000){
-							searchTime = 1200;
-						}
-						
-						
-						//searchTime = 4000;
-						
-						//search(searcher, botPlayer, 20, searchTime, move);
-						TimerThread2.search(searcher, s, botPlayer, time[botPlayer], 0, move);
-						
+						TimerThread3.search(searcher, s, botPlayer, time[botPlayer], 0, move);
 						SearchStat stats = searcher.getStats();
 						System.out.println("search time = "+stats.searchTime);
 					}
@@ -237,30 +200,6 @@ public class ChessServer4 extends WebSocketServer
 					conn.send(currentMove);
 				}
 			}
-		}
-	}
-	
-	private static void search(final Search3 s, final int player,
-			final int maxPly, final int searchTime, final int[] move){
-		Thread t = new Thread(){
-			public void run(){
-				s.search(player, move, maxPly);
-			}
-		};
-		t.setDaemon(true);
-		t.start();
-		long start = System.currentTimeMillis();
-		while(t.isAlive() && System.currentTimeMillis()-start < searchTime){
-			try{
-				Thread.sleep(30);
-			} catch(InterruptedException e){}
-		}
-		
-		s.cutoffSearch();
-		while(t.isAlive()){
-			try{
-				t.join();
-			} catch(InterruptedException e){}
 		}
 	}
 	
