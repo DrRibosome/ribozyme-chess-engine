@@ -11,7 +11,7 @@ import util.board4.MoveEncoder;
 import util.board4.State4;
 import util.board4.ZMap;
 
-public final class SearchS4V30 implements Search3{
+public final class SearchS4V31 implements Search3{
 	public final static class SearchStat27 extends SearchStat{
 		public long hashHits;
 		/** scores returned from quiet search without bottoming out*/
@@ -58,7 +58,7 @@ public final class SearchS4V30 implements Search3{
 	
 	private boolean cutoffSearch = false;
 	
-	public SearchS4V30(State4 s, Evaluator2<State4> e, int hashSize, boolean record){
+	public SearchS4V31(State4 s, Evaluator2<State4> e, int hashSize, boolean record){
 		this.s = s;
 		this.e = e;
 		m = new ZMap(hashSize);
@@ -511,6 +511,7 @@ public final class SearchS4V30 implements Search3{
 					
 					if(depth > 2 && !pvMove && !isCapture && !inCheck && !givesCheck){
 						int reducedDepth = pv? depth-2: depth/2;
+						//int reducedDepth = pv? depth-1: depth-2;
 						g = -recurse(1-player, -(alpha+1), -alpha, reducedDepth, false, false, stackIndex+1);
 						fullSearch = g > alpha;
 					} else{

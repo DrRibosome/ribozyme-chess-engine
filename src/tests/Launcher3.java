@@ -1,6 +1,7 @@
 package tests;
 
 import search.Search3;
+import search.SearchS4V29;
 import search.SearchS4V30;
 import time.TimerThread3;
 import util.board4.BitUtil;
@@ -29,8 +30,8 @@ public class Launcher3 {
 				new SuperEvalS4V8();
 		
 		final Search3[] search = new Search3[2];
-		search[0] = new SearchS4V30(state, e1, 20, false);
-		search[1] = new SearchS4V30(state, e2, 20, false);
+		search[1] = new SearchS4V29(128, state, e1, 20, false);
+		search[0] = new SearchS4V30(state, e2, 20, false);
 		
 		final long maxTime = 1*1000;
 		final int maxDepth = 20;
@@ -43,15 +44,7 @@ public class Launcher3 {
 		long[] time = new long[]{startTime, startTime};
 		final long inc = 0;
 		
-		//while(!isMate(turn, state)){
 		while(!isMate(turn, state) && time[turn] > 0){
-		//while(state.kings[1-turn] > 0 && (state.bishops[0] > 0 && state.knights[0] > 0)){
-		//while(state.kings[1-turn] > 0 && (state.pieceCounts[0][State4.PIECE_TYPE_BISHOP] == 2)){
-			/*System.out.println("moving player "+turn+"...");
-			search(l.get(turn), turn, maxDepth, maxTime, move);
-			if(move[0] == move[1]){
-				break;
-			}*/
 			
 			System.out.println("moving player "+turn);
 			System.out.println("time remaining = "+time[turn]);

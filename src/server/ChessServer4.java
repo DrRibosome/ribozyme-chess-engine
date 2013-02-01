@@ -190,7 +190,14 @@ public class ChessServer4 extends WebSocketServer{
 						}
 					}
 					if(!hasMoves || failed || skipped){
+						long t = System.currentTimeMillis();
 						TimerThread3.search(searcher, s, botPlayer, time[botPlayer], 0, move);
+						final long waitTime = 75;
+						if((t = System.currentTimeMillis()-t) < waitTime){
+							try{
+								Thread.sleep(waitTime-t);
+							} catch(InterruptedException e){}
+						}
 						SearchStat stats = searcher.getStats();
 						System.out.println("search time = "+stats.searchTime);
 					}

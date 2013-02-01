@@ -7,12 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import search.Search3;
-import search.SearchS4V29;
+import search.SearchS4V30;
 import search.SearchStat;
 import util.AlgebraicNotation2;
 import util.board4.State4;
 import util.debug.Debug;
-import eval.EvalS4;
 import eval.Evaluator2;
 import eval.SuperEvalS4V8;
 
@@ -130,14 +129,14 @@ public class TestSuite
 	
 	public static void main(String[] args)
 	{
-		TestSuite ts = new TestSuite("wac.txt");
+		//TestSuite ts = new TestSuite("wac.txt");
 		//TestSuite ts = new TestSuite("kaufman.txt");
-		//TestSuite ts = new TestSuite("silent-but-deadly");
+		TestSuite ts = new TestSuite("silent-but-deadly");
 		
 		Evaluator2<State4> e2 =
 				new SuperEvalS4V8();
 				//new SuperEvalS4V7();
-				new EvalS4();
+				//new EvalS4();
 				//new TestEval();
 		
 		//	super eval
@@ -146,6 +145,8 @@ public class TestSuite
 		//	20		16		242			eval v7
 		//	23		20		238			eval v7
 		//	26		50		255			eval v8
+		//	30		50		254			eval v8
+		//	31		50					eval v8
 		
 		//	10 sec time control
 		//	version	depth	correct		eval	notes
@@ -190,7 +191,7 @@ public class TestSuite
 			final Search3 search =
 					//new SearchS4V26(50, s, e2, 20, false);
 					//new SearchS4V28(50, s, e2, 20, false);
-					new SearchS4V29(50, s, e2, 20, false);
+					new SearchS4V30(s, e2, 20, false);
 			
 			final int player = ts.turnList.get(i);
 			

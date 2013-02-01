@@ -11,7 +11,6 @@ import util.board4.MoveEncoder;
 import util.board4.State4;
 import util.board4.ZMap;
 
-/** very similar to v27, slightly fewer nodes searched*/
 public final class SearchS4V29 implements Search3{
 	public final static class SearchStat27 extends SearchStat{
 		public long hashHits;

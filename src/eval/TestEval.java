@@ -33,28 +33,28 @@ public final class TestEval implements Evaluator2<State4>{
 		long[] queens = s.queens;
 		for(long q = queens[player]; q != 0; q&=q-1){
 			long moves = State4.getQueenMoves(player, s.pieces, q);
-			currentPotential[player] += BitUtil.getSetBitsCount(moves);
+			currentPotential[player] += BitUtil.getSetBits(moves);
 			maxPotential[player] += maxPotentials[State4.PIECE_TYPE_QUEEN];
 		}
 		
 		long[] rooks = s.rooks;
 		for(long q = rooks[player]; q != 0; q&=q-1){
 			long moves = State4.getRookMoves(player, s.pieces, q);
-			currentPotential[player] += BitUtil.getSetBitsCount(moves);
+			currentPotential[player] += BitUtil.getSetBits(moves);
 			maxPotential[player] += maxPotentials[State4.PIECE_TYPE_ROOK];
 		}
 		
 		long[] knights = s.knights;
 		for(long q = knights[player]; q != 0; q&=q-1){
 			long moves = State4.getKnightMoves(player, s.pieces, q);
-			currentPotential[player] += BitUtil.getSetBitsCount(moves) + 2;
+			currentPotential[player] += BitUtil.getSetBits(moves) + 2;
 			maxPotential[player] += maxPotentials[State4.PIECE_TYPE_KNIGHT] + 2;
 		}
 		
 		long[] bishops = s.bishops;
 		for(long q = bishops[player]; q != 0; q&=q-1){
 			long moves = State4.getBishopMoves(player, s.pieces, q);
-			currentPotential[player] += BitUtil.getSetBitsCount(moves);
+			currentPotential[player] += BitUtil.getSetBits(moves);
 			maxPotential[player] += maxPotentials[State4.PIECE_TYPE_BISHOP];
 		}
 	}

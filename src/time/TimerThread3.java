@@ -89,12 +89,13 @@ public final class TimerThread3 extends Thread{
 			
 			if(currentPly-lastpvChange+1 > 6 && currentPly > 8){
 				break;
+				//target -= target*.2;
 			}
 			
 			//handle adjustments from search failures
 			while(!q.isEmpty()){
 				int failType = q.poll();
-				double scale = failType == 1? .07: .12;
+				double scale = failType == 1? .07: .15;
 				target += -failType*target*scale;
 			}
 		}
