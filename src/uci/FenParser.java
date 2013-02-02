@@ -16,8 +16,8 @@ public class FenParser {
 		p.sideToMove = s[1].toLowerCase().charAt(0) == 'w'? 0: 1;
 		parseCastling(s[2], p.s);
 		parseEnPassant(s[3], p.s);
-		p.halfMoves = Integer.parseInt(s[4]);
-		p.fullMoves = Integer.parseInt(s[5]);
+		p.halfMoves = s[4].equals("-")? 0: Integer.parseInt(s[4]);
+		p.fullMoves = s[5].equals("-")? 0: Integer.parseInt(s[5]);
 		
 		return p;
 	}
@@ -107,7 +107,8 @@ public class FenParser {
 	}
 	
 	public static void main(String[] args){
-		String fen = "rnbqkbnr/1ppp2pp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1";
+		String fen = "8/8/Q4p1p/3p1K2/5Q2/4k2P/6P1/8 b - - - -";
+		System.out.println("fen = "+fen);
 		Position p = parse(fen);
 		System.out.println(p.s);
 		System.out.println("side to move = "+p.sideToMove);

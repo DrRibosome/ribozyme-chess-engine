@@ -1,13 +1,13 @@
 package tests;
 
 import search.Search3;
-import search.SearchS4V29;
-import search.SearchS4V30;
+import search.SearchS4V31;
 import time.TimerThread3;
 import util.board4.BitUtil;
 import util.board4.State4;
 import eval.Evaluator2;
 import eval.SuperEvalS4V8;
+import eval.expEvalV1.ExpEvalV1;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -24,17 +24,16 @@ public class Launcher3 {
 		//State4 state = Debug.loadConfig(OldPositions.bishopBishopMate);
 		
 		Evaluator2<State4> e1 =
-				new SuperEvalS4V8();
+				//new SuperEvalS4V8();
+				new ExpEvalV1();
 		
 		Evaluator2<State4> e2 = 
 				new SuperEvalS4V8();
+				//new ExpEvalV1();
 		
 		final Search3[] search = new Search3[2];
-		search[1] = new SearchS4V29(128, state, e1, 20, false);
-		search[0] = new SearchS4V30(state, e2, 20, false);
-		
-		final long maxTime = 1*1000;
-		final int maxDepth = 20;
+		search[0] = new SearchS4V31(state, e1, 20, false);
+		search[1] = new SearchS4V31(state, e2, 20, false);
 		
 		int[] move = new int[2];
 		int turn = State4.WHITE;

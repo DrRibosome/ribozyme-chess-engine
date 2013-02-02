@@ -6,6 +6,8 @@ import util.board4.State4;
 
 /** extracts board features*/
 public final class FeatureExtractor {
+	private final static int[] zeroi = new int[8];
+	
 	/**
 	 * feature set
 	 * <p>
@@ -13,18 +15,23 @@ public final class FeatureExtractor {
 	 * unused spots filled with bad values if there are not enough
 	 * pieces to fill the lists.
 	 */
-	public static class FeatureSet{
+	public final static class FeatureSet{
 		//pawn values
-		final int[] pawnRow = new int[8];
-		final int[] pawnCol = new int[8];
+		public final int[] pawnRow = new int[8];
+		public final int[] pawnCol = new int[8];
 		/** records passed pawns, 0 = not passed, 1 = passed*/
-		final long[] pawnPassed = new long[8];
+		public final long[] pawnPassed = new long[8];
 		/** records unopposed pawns, passed pawns not counted for this*/
-		final long[] pawnUnopposed = new long[8];
-		int doubledPawns;
+		public final long[] pawnUnopposed = new long[8];
+		/** total doubled pawns*/
+		public int doubledPawns;
+		/** total tripled pawns*/
+		public int tripledPawns;
+		/** total pawns in each col col*/
+		public final int[] pawnColCount = new int[8];
 		
 		/** mobility of minor and major pieces, cummulative mobility stored at index 0*/
-		final int[] mobility = new int[7];
+		public final int[] mobility = new int[7];
 	}
 	
 	public static void loadFeatures(FeatureSet f, final int player, final State4 s, boolean processPawns){
@@ -68,6 +75,9 @@ public final class FeatureExtractor {
 	
 	public static void processPawns(FeatureSet f, int player, State4 s){
 		f.doubledPawns = 0;
+		f.tripledPawns = 0;
+		System.arraycopy(zeroi, 0, f.pawnColCount, 0, 8);
+		
 		final int len = s.pieceCounts[player][State4.PIECE_TYPE_PAWN];
 		final long enemyPawns = s.pawns[1-player];
 		final long allied = s.pawns[player];
@@ -75,8 +85,18 @@ public final class FeatureExtractor {
 		for(long pawns = s.pawns[player]; a < len; pawns &= pawns-1, a++){
 			final long p = pawns&-pawns;
 			final int index = BitUtil.lsbIndex(p);
+			final int col = index%8;
 			f.pawnRow[a] = index/8;
-			f.pawnCol[a] = index%8;
+			f.pawnCol[a] = col;
+			
+			f.pawnColCount[col]++;
+			switch(f.pawnColCount[col]){
+			case 2:
+				f.doubledPawns++;
+			case 3:
+				f.doubledPawns--;
+				f.tripledPawns++;
+			}
 			
 			//passed and not behind an allied pawn
 			f.pawnPassed[a] = (1-BitUtil.isDef(Masks.passedPawnMasks[player][index] & enemyPawns)) *

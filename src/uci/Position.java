@@ -2,11 +2,11 @@ package uci;
 
 import util.board4.State4;
 
-public class Position {
-	int sideToMove;
-	State4 s;
-	int halfMoves;
-	int fullMoves;
+public final class Position {
+	public int sideToMove;
+	public State4 s;
+	public int halfMoves;
+	public int fullMoves;
 	
 	public static Position startPos(){
 		Position p = new Position();

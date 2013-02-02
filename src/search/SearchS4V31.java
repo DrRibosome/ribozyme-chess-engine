@@ -510,8 +510,8 @@ public final class SearchS4V31 implements Search3{
 					boolean fullSearch = false;
 					
 					if(depth > 2 && !pvMove && !isCapture && !inCheck && !givesCheck){
-						int reducedDepth = pv? depth-2: depth/2;
-						//int reducedDepth = pv? depth-1: depth-2;
+						//int reducedDepth = pv? depth-2: depth/2;
+						int reducedDepth = pv? depth-1: depth-2;
 						g = -recurse(1-player, -(alpha+1), -alpha, reducedDepth, false, false, stackIndex+1);
 						fullSearch = g > alpha;
 					} else{

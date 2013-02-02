@@ -7,13 +7,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import search.Search3;
-import search.SearchS4V30;
+import search.SearchS4V31;
 import search.SearchStat;
 import util.AlgebraicNotation2;
 import util.board4.State4;
 import util.debug.Debug;
+import eval.EvalS4;
 import eval.Evaluator2;
 import eval.SuperEvalS4V8;
+import eval.expEvalV1.ExpEvalV1;
+import eval.incrPieceScore.IncrementalPieceScore;
 
 public class TestSuite
 {
@@ -129,15 +132,15 @@ public class TestSuite
 	
 	public static void main(String[] args)
 	{
-		//TestSuite ts = new TestSuite("wac.txt");
+		TestSuite ts = new TestSuite("wac.txt");
 		//TestSuite ts = new TestSuite("kaufman.txt");
-		TestSuite ts = new TestSuite("silent-but-deadly");
+		//TestSuite ts = new TestSuite("silent-but-deadly");
 		
 		Evaluator2<State4> e2 =
-				new SuperEvalS4V8();
-				//new SuperEvalS4V7();
+				//new SuperEvalS4V8();
 				//new EvalS4();
-				//new TestEval();
+				//new IncrementalPieceScore();
+				new ExpEvalV1();
 		
 		//	super eval
 		//	1 sec time control
@@ -146,7 +149,7 @@ public class TestSuite
 		//	23		20		238			eval v7
 		//	26		50		255			eval v8
 		//	30		50		254			eval v8
-		//	31		50					eval v8
+		//	31		50		255			eval v8
 		
 		//	10 sec time control
 		//	version	depth	correct		eval	notes
@@ -165,22 +168,18 @@ public class TestSuite
 		//	20		50		273
 		//	27		50		284
 		
-
-		//first 50 test, eval v7
-		//	nodes search		time		nodes/sec
-		//	90770221			46447		1954275
-		
-		//hard promblems	notes
-		//	40				might be finding a late mate
-		//	1
-		//	40-50			misses many problems through here
+		// experimental eval, 1 sec, search v31
+		//	test		correct		version		notes
+		//	silent		25			1			piece score only gives 18
+		//	wac			252			1
+		//	kaufman		15			1			
 		
 		final int[] move = new int[4];
 		int solved = 0;
 		SearchStat agg = new SearchStat(); //search stat aggregator
 		for(int i = 0; i < ts.positions.size(); i++)
 		//for(int i = 210; i < 260; i++)
-		//for(int i = 242; i == 242; i++)
+		//for(int i = 1; i == 1; i++)
 		{
 			System.out.println(ts.positions.get(i));
 			System.out.println("best move: " + ts.bestMoves.get(i));
@@ -191,7 +190,7 @@ public class TestSuite
 			final Search3 search =
 					//new SearchS4V26(50, s, e2, 20, false);
 					//new SearchS4V28(50, s, e2, 20, false);
-					new SearchS4V30(s, e2, 20, false);
+					new SearchS4V31(s, e2, 20, false);
 			
 			final int player = ts.turnList.get(i);
 			
