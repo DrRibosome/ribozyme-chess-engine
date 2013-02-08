@@ -1,14 +1,11 @@
 package debug;
 
 import search.Search3;
-import search.SearchS4V29;
-import search.SearchS4V30;
-import time.TimerThread3;
-import util.OldPositions;
+import search.legacy.SearchS4V29;
 import util.board4.BitUtil;
 import util.board4.Masks;
 import util.board4.State4;
-import eval.SuperEvalS4V8;
+import eval.evalV8.SuperEvalS4V8;
 
 
 public class Debug {
@@ -24,12 +21,24 @@ public class Debug {
 				{'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
 				{'0', '0', '1', '1', '1', '1', 'w'}
 		};
+		char[][] c2 = new char[][]{
+				{'R', ' ', ' ', ' ', ' ', 'Q', ' ', ' '},
+				{'P', ' ', ' ', 'B', 'r', ' ', 'K', 'P'},
+				{' ', ' ', 'P', ' ', ' ', ' ', ' ', 'n'},
+				{' ', ' ', ' ', ' ', ' ', 'P', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', 'P', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'p', 'p', ' ', ' ', ' ', 'p', 'p', 'p'},
+				{'r', ' ', ' ', ' ', ' ', ' ', 'k', ' '},
+				{'0', '0', '1', '1', '1', '1', 'w'}
+		};
 
-		State4 s = loadConfig(c);
-		//State4 s = loadConfig(c1);
+		//State4 s = loadConfig(c);
+		State4 s = loadConfig(c2);
 		System.out.println(s);
 		
 		SuperEvalS4V8 e = new SuperEvalS4V8();
+		e.initialize(s);
 		//e.traceEval(s, State4.WHITE);
 		
 		final int maxDepth = 15;
@@ -38,7 +47,7 @@ public class Debug {
 		search.search(State4.BLACK, move, maxDepth);
 		System.out.println("\n"+getMoveString(move, 0)+" -> "+getMoveString(move, 1));
 		
-		TimerThread3.search(new SearchS4V30(maxDepth, s, e, 20, false), s, State4.WHITE, 1000*60*3, 0, move);
+		//TimerThread3.search(new SearchS4V30(maxDepth, s, e, 20, false), s, State4.WHITE, 1000*60*3, 0, move);
 		
 		//a.getMove(move);
 		//System.out.println(getMoveString(move, 0)+" -> "+getMoveString(move, 2));
@@ -217,6 +226,66 @@ public class Debug {
 	}
 	
 	public static State4 loadConfig(char[][] c){
-		return util.debug.Debug.loadConfig(c);
+		State4 s = new State4();
+		final long q = 1;
+		for(int i = 0; i < 64; i++){
+			int x = i%8;
+			int y = 7-i/8;
+			if(c[y][x] != ' '){
+				char piece = c[y][x];
+				int player = Character.toLowerCase(piece) == piece? 0: 1;
+				piece = Character.toLowerCase(piece);
+				switch (piece){
+				case 'p':
+					s.pawns[player] |= q<<i;
+					s.mailbox[i] = State4.PIECE_TYPE_PAWN;
+					s.pieceCounts[player][State4.PIECE_TYPE_PAWN]++;
+					s.pieceCounts[player][State4.PIECE_TYPE_EMPTY]++;
+					break;
+				case 'q':
+					s.queens[player] |= q<<i;
+					s.mailbox[i] = State4.PIECE_TYPE_QUEEN;
+					s.pieceCounts[player][State4.PIECE_TYPE_QUEEN]++;
+					s.pieceCounts[player][State4.PIECE_TYPE_EMPTY]++;
+					break;
+				case 'b':
+					s.bishops[player] |= q<<i;
+					s.mailbox[i] = State4.PIECE_TYPE_BISHOP;
+					s.pieceCounts[player][State4.PIECE_TYPE_BISHOP]++;
+					s.pieceCounts[player][State4.PIECE_TYPE_EMPTY]++;
+					break;
+				case 'r':
+					s.rooks[player] |= q<<i;
+					s.mailbox[i] = State4.PIECE_TYPE_ROOK;
+					s.pieceCounts[player][State4.PIECE_TYPE_ROOK]++;
+					s.pieceCounts[player][State4.PIECE_TYPE_EMPTY]++;
+					break;
+				case 'n':
+					s.knights[player] |= q<<i;
+					s.mailbox[i] = State4.PIECE_TYPE_KNIGHT;
+					s.pieceCounts[player][State4.PIECE_TYPE_KNIGHT]++;
+					s.pieceCounts[player][State4.PIECE_TYPE_EMPTY]++;
+					break;
+				case 'k':
+					s.kings[player] |= q<<i;
+					s.mailbox[i] = State4.PIECE_TYPE_KING;
+					s.pieceCounts[player][State4.PIECE_TYPE_KING]++;
+					s.pieceCounts[player][State4.PIECE_TYPE_EMPTY]++;
+					break;
+				}
+			}
+		}
+		
+		if(c.length == 9){
+			s.kingMoved[0] = c[8][0] == '1';
+			s.kingMoved[1] = c[8][1] == '1';
+			s.rookMoved[0][0] = c[8][2] == '1';
+			s.rookMoved[0][1] = c[8][3] == '1';
+			s.rookMoved[1][0] = c[8][4] == '1';
+			s.rookMoved[1][1] = c[8][5] == '1';
+		}
+		
+		s.collect();
+		return s;
 	}
 }

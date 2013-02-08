@@ -5,18 +5,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import search.Search3;
-import search.SearchS4V31;
+import search.SearchS4V32;
 import search.SearchStat;
 import util.AlgebraicNotation2;
 import util.board4.State4;
-import util.debug.Debug;
-import eval.EvalS4;
+import debug.Debug;
 import eval.Evaluator2;
-import eval.SuperEvalS4V8;
-import eval.expEvalV1.ExpEvalV1;
-import eval.incrPieceScore.IncrementalPieceScore;
+import eval.evalV8.SuperEvalS4V8;
 
 public class TestSuite
 {
@@ -136,13 +134,13 @@ public class TestSuite
 		//TestSuite ts = new TestSuite("kaufman.txt");
 		//TestSuite ts = new TestSuite("silent-but-deadly");
 		
-		Evaluator2<State4> e2 =
-				//new SuperEvalS4V8();
+		final Evaluator2<State4> e2 =
+				new SuperEvalS4V8();
 				//new EvalS4();
 				//new IncrementalPieceScore();
-				new ExpEvalV1();
+				//new ExpEvalV1();
 		
-		//	super eval
+		//	super eval, wac
 		//	1 sec time control
 		//	version	depth	correct		notes
 		//	20		16		242			eval v7
@@ -150,6 +148,11 @@ public class TestSuite
 		//	26		50		255			eval v8
 		//	30		50		254			eval v8
 		//	31		50		255			eval v8
+		
+		//	super eval, quiet positions
+		//	1 sec time
+		//	version	depth	correct
+		//	32		50		91
 		
 		//	10 sec time control
 		//	version	depth	correct		eval	notes
@@ -170,17 +173,29 @@ public class TestSuite
 		
 		// experimental eval, 1 sec, search v31
 		//	test		correct		version		notes
-		//	silent		25			1			piece score only gives 18
-		//	wac			252			1
-		//	kaufman		15			1			
+		//	silent		48			1			piece score only gives 18
+		//	wac			258			1
+		//	kaufman		14			1			
 		
 		final int[] move = new int[4];
 		int solved = 0;
 		SearchStat agg = new SearchStat(); //search stat aggregator
-		for(int i = 0; i < ts.positions.size(); i++)
-		//for(int i = 210; i < 260; i++)
-		//for(int i = 1; i == 1; i++)
-		{
+
+		List<Integer> puzzles = new ArrayList<Integer>();
+		//String missedString = "0, 1, 40, 45, 48, 54, 70, 73, 77, 86, 90, 91";
+		String missedString = "51, 73, 99, 162, 182, 188, 212, 229, 242, 273"; //missed on 1 min
+		//String missedString = "51, 73, 99, 162, 182, 229, 242, 273"; //10 min
+		for(String temp: missedString.split(",\\s+")){
+			puzzles.add(Integer.parseInt(temp));
+		}
+		
+		List<Integer> missed = new ArrayList<Integer>();
+		int count = 0;
+		
+		for(int i = 0; i < ts.positions.size(); i++){
+		//for(int i = 1; i == 1; i++){
+		//for(int i: puzzles){
+			count++;
 			System.out.println(ts.positions.get(i));
 			System.out.println("best move: " + ts.bestMoves.get(i));
 			System.out.println("side to move: " + ts.turnList.get(i));
@@ -188,9 +203,8 @@ public class TestSuite
 			State4 s = ts.positions.get(i);
 
 			final Search3 search =
-					//new SearchS4V26(50, s, e2, 20, false);
-					//new SearchS4V28(50, s, e2, 20, false);
-					new SearchS4V31(s, e2, 20, false);
+					new SearchS4V32(s, e2, 20, false);
+					//new SearchS4V34(s, e2, 20, false);
 			
 			final int player = ts.turnList.get(i);
 			
@@ -198,20 +212,27 @@ public class TestSuite
 			agg(search.getStats(), agg);
 			
 			String[] bests = ts.bestMoves.get(i).split(" ");
-			for(int j = 0; j < bests.length; j++){
+			boolean completed = false;
+			for(int j = 0; j < bests.length && !completed; j++){
 				int[] best = AlgebraicNotation2.getPos(player, bests[j], s);
 				System.out.println("best = "+best[0]+" -> "+best[1]);
 				if(best[0] == move[0] && best[1] == move[1]){
 					solved++;
-					break;
+					completed = true;
 				}
 			}
+			if(!completed){
+				missed.add(i);
+			}
+			System.out.println("branching factor = "+search.getStats().empBranchingFactor);
 			
-			System.out.println("solved total = "+solved+" / "+(i+1)+"\n");
+			System.out.println();
+			System.out.println("solved total = "+solved+" / "+count);
 			System.out.println("total nodes searched = "+agg.nodesSearched);
 			System.out.println("total search time = "+agg.searchTime);
 			System.out.println("nodes/sec = "+(agg.nodesSearched/(agg.searchTime/1000.)));
-			
+			System.out.println("avg emp branching factor = "+(agg.empBranchingFactor/count));
+			System.out.println("missed = "+missed);
 			
 		}
 		
@@ -221,6 +242,7 @@ public class TestSuite
 	private static void agg(SearchStat src, SearchStat agg){
 		agg.nodesSearched += src.nodesSearched;
 		agg.searchTime += src.searchTime;
+		agg.empBranchingFactor += src.empBranchingFactor;
 	}
 	
 	private static void search(final Search3 s, final int player,

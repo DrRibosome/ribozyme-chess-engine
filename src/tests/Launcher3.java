@@ -1,12 +1,12 @@
 package tests;
 
 import search.Search3;
-import search.SearchS4V31;
+import search.legacy.SearchS4V31;
 import time.TimerThread3;
 import util.board4.BitUtil;
 import util.board4.State4;
 import eval.Evaluator2;
-import eval.SuperEvalS4V8;
+import eval.evalV8.SuperEvalS4V8;
 import eval.expEvalV1.ExpEvalV1;
 
 /**

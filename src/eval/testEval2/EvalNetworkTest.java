@@ -1,10 +1,5 @@
 package eval.testEval2;
 
-import javax.rmi.CORBA.Tie;
-
-import util.board4.State4;
-import eval.Evaluator2;
-import eval.SuperEvalS4V8;
 
 public class EvalNetworkTest {
 	public static void main(String[] args){

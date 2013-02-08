@@ -1,4 +1,4 @@
-package openingBook;
+package util.png;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,19 +8,20 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public final class OpeningGen {
+public class PngLoader {
 	private final static Pattern gameSel = Pattern.compile("\\[.*?\\].*?(?:^\\s*$)(.+?)(?:^\\s*$)", Pattern.MULTILINE | Pattern.DOTALL);
 	private final static Pattern moveSel = Pattern.compile("\\d+\\.([a-zA-Z].+?)\\s+(?:([a-zA-Z].+?)\\s+)?", Pattern.DOTALL);
 	private final static Pattern outcomeSel = Pattern.compile("((?:1/2-1/2)|(?:1-0)|(?:0-1))$");
 	
-	private final static class Game{
-		List<String> moves;
-		String outcome;
-	}
-	
-	public static void main(String[] args) throws IOException{
-		
-		FileInputStream fis = new FileInputStream(new File("sample.pgn"));
+	/**
+	 * give a file with png games, process all games in the file online
+	 * @param f
+	 * @param p processor to offload game processing to
+	 * @return
+	 * @throws IOException
+	 */
+	public static void load(File f, PngProcessor p) throws IOException{
+		FileInputStream fis = new FileInputStream(f);
 		byte[] buff = new byte[16384];
 		int last;
 		String leftover = "";
@@ -29,7 +30,8 @@ public final class OpeningGen {
 			Matcher m = gameSel.matcher(s);
 			last = 0;
 			while(m.find()){
-				Game g = processMoves(m.group(1));
+				PngGame g = processMoves(m.group(1));
+				p.process(g);
 				last = m.end();
 			}
 			leftover = s.substring(last);
@@ -39,7 +41,7 @@ public final class OpeningGen {
 	}
 	
 	/** process a (move,outcome) block*/
-	public static Game processMoves(String moves){
+	public static PngGame processMoves(String moves){
 		System.out.println("moves:"+moves);
 		Matcher m = moveSel.matcher(moves);
 		List<String> l = new ArrayList<String>();
@@ -55,7 +57,7 @@ public final class OpeningGen {
 		String outcome = m.group(1);
 		System.out.println(outcome);
 		
-		Game g = new Game();
+		PngGame g = new PngGame();
 		g.moves = l;
 		g.outcome = outcome;
 		return g;

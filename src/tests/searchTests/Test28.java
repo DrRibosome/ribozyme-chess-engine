@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import search.Search3;
-import search.SearchS4V28;
 import search.SearchStat;
+import search.legacy.SearchS4V28;
 import util.OldPositions;
 import util.board4.State4;
-import util.debug.Debug;
+import debug.Debug;
 import eval.Evaluator2;
-import eval.SuperEvalS4V7;
+import eval.evalV8.SuperEvalS4V8;
 
 /** tests searchs on several sample boards and aggregates results*/
 public class Test28 {
@@ -33,10 +33,7 @@ public class Test28 {
 			State4 s = Debug.loadConfig(c);
 			
 			Evaluator2<State4> e1 = 
-					//new SuperEvalS4V6();
-					new SuperEvalS4V7();
-					//new EvalS4();
-					//new TestEval();
+					new SuperEvalS4V8();
 			
 			Search3 search = new SearchS4V28(maxPly, s, e1, 20, false);
 			

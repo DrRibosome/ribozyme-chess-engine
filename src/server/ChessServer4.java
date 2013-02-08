@@ -13,14 +13,14 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import search.Search3;
-import search.SearchS4V30;
+import search.SearchS4V32;
 import search.SearchStat;
 import time.TimerThread3;
 import util.AlgebraicNotation2;
 import util.board4.State4;
 import util.opening.SuperBook;
 import eval.Evaluator2;
-import eval.SuperEvalS4V8;
+import eval.evalV8.SuperEvalS4V8;
 
 /*
 char[] buf = "[{\"channel\":\"/service/user\",\"data\"\"basetime\":9000,\"timeinc\":0,\"rated\":true,\"color\":null,\"minrating\":800,\"maxrating\":2000,\"from\":\"drribosome\",\"sid\":\"gserv\",\"tid\":\"Challenge\"},\"id\":\"917\",\"clientId\":\"6lfamft3cpmoalbn91vyk8nnxb67hx\"}]".toCharArray();
@@ -123,7 +123,7 @@ public class ChessServer4 extends WebSocketServer{
 							//new SearchS4V25qzit(16, s, e, 20);
 							//new SearchS4V26(16, s, e, 20, true);
 							//new SearchS4V29(50, s, e, 20, true);
-							new SearchS4V30(s, e, 20, true);
+							new SearchS4V32(s, e, 20, true);
 					
 					
 					
@@ -200,6 +200,7 @@ public class ChessServer4 extends WebSocketServer{
 						}
 						SearchStat stats = searcher.getStats();
 						System.out.println("search time = "+stats.searchTime);
+						System.out.println("branching factor = "+stats.empBranchingFactor);
 					}
 					//searcher.getMove(move, botPlayer, 650);
 					movedWaiting = true;

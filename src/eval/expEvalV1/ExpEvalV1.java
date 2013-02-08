@@ -1,9 +1,10 @@
 package eval.expEvalV1;
 
+import util.board4.BitUtil;
+import util.board4.Masks;
 import util.board4.MoveEncoder;
 import util.board4.State4;
 import eval.Evaluator2;
-import eval.FeatureExtractor;
 
 public final class ExpEvalV1 implements Evaluator2<State4>{
 	private final static int[] zeroi7 = new int[7];
@@ -33,6 +34,7 @@ public final class ExpEvalV1 implements Evaluator2<State4>{
 		score += s.isCastled[player]*EvalConstantsV1.canCastleWeight;
 		score += s.pieceCounts[player][State4.PIECE_TYPE_BISHOP] == 2?
 				EvalConstantsV1.bishopPairWeight: 0;
+		score += knightEntropy(player, s);
 		
 		return score;
 	}
@@ -41,14 +43,37 @@ public final class ExpEvalV1 implements Evaluator2<State4>{
 		final int len = s.pieceCounts[player][State4.PIECE_TYPE_PAWN];
 		double m = 0;
 		for(int a = 0; a < len; a++){
-			m += EvalConstantsV1.pawnRowBonus[player][fset.pawnRow[a]];
 			m += EvalConstantsV1.unopposedPawnWeight*fset.pawnUnopposed[a];
 			m += EvalConstantsV1.passedPawnWeight*fset.pawnPassed[a];
+			if(fset.pawnPassed[a] != 0){
+				m += EvalConstantsV1.pawnRowBonus[player][fset.pawnRow[a]];
+				m += EvalConstantsV1.supportedPassedPawn * fset.supportedPawn[a];
+			} else{
+				//m += EvalConstantsV1.supportedPawn * fset.supportedPawn[a];
+			}
 		}
 		
 		m += EvalConstantsV1.doubledPawnsWeight*fset.doubledPawns;
 		m += EvalConstantsV1.tripledPawnsWeight*fset.tripledPawns;
 		
+		return m;
+	}
+	
+	private static double knightEntropy(int player, State4 s){
+		double m = 0;
+		for(long knights = s.knights[player]; knights != 0; knights &= knights-1){
+			final long k = knights & -knights;
+			final int index = BitUtil.lsbIndex(k);
+			final long attacked = s.pieces[1-player] & Masks.knightMoves[index];
+			final long count = BitUtil.getSetBits(attacked);
+			if(count <= 2){
+				m += EvalConstantsV1.knightEntropyWeight[0];
+			} else if(count <= 4){
+				m += EvalConstantsV1.knightEntropyWeight[1];
+			} else{
+				m += EvalConstantsV1.knightEntropyWeight[2];
+			}
+		}
 		return m;
 	}
 	
