@@ -1,4 +1,4 @@
-package util.board4;
+package state4;
 
 public final class MoveEncoder {
 	private final static long posMask = 0x3FL;

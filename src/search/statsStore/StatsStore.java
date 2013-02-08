@@ -1,6 +1,6 @@
 package search.statsStore;
 
-import util.board4.State4;
+import state4.State4;
 
 public class StatsStore {
 	/**

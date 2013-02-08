@@ -2,9 +2,9 @@ package debug;
 
 import search.Search3;
 import search.legacy.SearchS4V29;
-import util.board4.BitUtil;
-import util.board4.Masks;
-import util.board4.State4;
+import state4.BitUtil;
+import state4.Masks;
+import state4.State4;
 import eval.evalV8.SuperEvalS4V8;
 
 

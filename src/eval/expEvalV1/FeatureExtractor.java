@@ -1,8 +1,8 @@
 package eval.expEvalV1;
 
-import util.board4.BitUtil;
-import util.board4.Masks;
-import util.board4.State4;
+import state4.BitUtil;
+import state4.Masks;
+import state4.State4;
 
 /** extracts board features*/
 public final class FeatureExtractor {

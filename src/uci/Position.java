@@ -1,6 +1,6 @@
 package uci;
 
-import util.board4.State4;
+import state4.State4;
 
 public final class Position {
 	public int sideToMove;

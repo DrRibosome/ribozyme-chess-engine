@@ -1,7 +1,7 @@
 package eval;
 
-import util.board4.BitUtil;
-import util.board4.State4;
+import state4.BitUtil;
+import state4.State4;
 
 public final class TestEval implements Evaluator2<State4>{
 

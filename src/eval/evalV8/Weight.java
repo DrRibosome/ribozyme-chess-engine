@@ -1,6 +1,6 @@
 package eval.evalV8;
 
-import util.board4.State4;
+import state4.State4;
 
 public class Weight
 {

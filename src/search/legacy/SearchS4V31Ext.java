@@ -8,11 +8,11 @@ import eval.Evaluator2;
 import search.Search3;
 import search.SearchListener;
 import search.SearchStat;
-import util.board4.BitUtil;
-import util.board4.Masks;
-import util.board4.MoveEncoder;
-import util.board4.State4;
-import util.board4.ZMap;
+import state4.BitUtil;
+import state4.Masks;
+import state4.MoveEncoder;
+import state4.State4;
+import state4.ZMap;
 
 public final class SearchS4V31Ext implements Search3{
 	public final static class SearchStat27 extends SearchStat{

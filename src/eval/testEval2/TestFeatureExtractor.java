@@ -1,7 +1,7 @@
 package eval.testEval2;
 
-import util.board4.Masks;
-import util.board4.State4;
+import state4.Masks;
+import state4.State4;
 
 public final class TestFeatureExtractor {
 	

@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import util.board4.BitUtil;
-import util.board4.Masks;
+import state4.BitUtil;
+import state4.Masks;
 
 public class HashGenerator {
 	public final static int PIECE_TYPE_ROOK = 0;

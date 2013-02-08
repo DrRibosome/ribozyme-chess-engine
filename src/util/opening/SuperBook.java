@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import state4.State4;
 import util.AlgebraicNotation2;
-import util.board4.State4;
 
 public class SuperBook
 {

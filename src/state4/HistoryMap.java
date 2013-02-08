@@ -1,4 +1,4 @@
-package util.board4;
+package state4;
 
 /** records previously seen board states to detect 3-fold repition draws*/
 final class HistoryMap{

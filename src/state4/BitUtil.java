@@ -1,4 +1,4 @@
-package util.board4;
+package state4;
 
 public final class BitUtil {
 	private final static int[] debruijnIndex = new int[]{

@@ -1,4 +1,4 @@
-package util.board4;
+package state4;
 
 public final class ZMap {
 	public final static int CUTOFF_TYPE_EXACT = 0;

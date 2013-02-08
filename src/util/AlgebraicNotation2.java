@@ -3,8 +3,8 @@ package util;
 import java.util.HashMap;
 import java.util.Map;
 
-import util.board4.BitUtil;
-import util.board4.State4;
+import state4.BitUtil;
+import state4.State4;
 
 public final class AlgebraicNotation2 {
 	private final static boolean debug = false;

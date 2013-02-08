@@ -1,9 +1,9 @@
 package eval.expEvalV1;
 
-import util.board4.BitUtil;
-import util.board4.Masks;
-import util.board4.MoveEncoder;
-import util.board4.State4;
+import state4.BitUtil;
+import state4.Masks;
+import state4.MoveEncoder;
+import state4.State4;
 import eval.Evaluator2;
 
 public final class ExpEvalV1 implements Evaluator2<State4>{

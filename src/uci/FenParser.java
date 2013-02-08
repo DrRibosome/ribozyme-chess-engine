@@ -3,7 +3,7 @@ package uci;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import util.board4.State4;
+import state4.State4;
 
 public class FenParser {
 	public static Position parse(String fen){

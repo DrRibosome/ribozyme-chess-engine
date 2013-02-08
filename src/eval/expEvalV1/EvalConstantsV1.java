@@ -1,6 +1,6 @@
 package eval.expEvalV1;
 
-import util.board4.State4;
+import state4.State4;
 
 class EvalConstantsV1 {
 	//general weights

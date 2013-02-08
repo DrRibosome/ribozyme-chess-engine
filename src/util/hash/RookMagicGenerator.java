@@ -3,8 +3,8 @@ package util.hash;
 import java.util.Map;
 import java.util.Set;
 
-import util.board4.Masks;
-import util.board4.State4;
+import state4.Masks;
+import state4.State4;
 
 /** run to generate rook magics*/
 public class RookMagicGenerator {

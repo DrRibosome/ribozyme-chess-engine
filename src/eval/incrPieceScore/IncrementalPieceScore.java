@@ -1,8 +1,8 @@
 package eval.incrPieceScore;
 
 import eval.Evaluator2;
-import util.board4.MoveEncoder;
-import util.board4.State4;
+import state4.MoveEncoder;
+import state4.State4;
 
 /** raw piece score eval, appears to have very slight performance increase over
  * non-incremental piece score eval*/

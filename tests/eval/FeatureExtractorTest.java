@@ -4,9 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import state4.State4;
 import uci.FenParser;
 import uci.Position;
-import util.board4.State4;
 import eval.expEvalV1.FeatureExtractor;
 
 public class FeatureExtractorTest {

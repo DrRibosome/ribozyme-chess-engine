@@ -18,10 +18,10 @@ import static eval.evalV8.EvalWeights.kingDangerSquares;
 import static eval.evalV8.EvalWeights.kingDangerValues;
 import static eval.evalV8.EvalWeights.pieceSquareTables;
 import static eval.evalV8.EvalWeights.pieceValues;
-import util.board4.BitUtil;
-import util.board4.Masks;
-import util.board4.MoveEncoder;
-import util.board4.State4;
+import state4.BitUtil;
+import state4.Masks;
+import state4.MoveEncoder;
+import state4.State4;
 import eval.Evaluator2;
 /*
  * Changes from v7

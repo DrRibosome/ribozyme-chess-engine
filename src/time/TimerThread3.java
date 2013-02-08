@@ -4,7 +4,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import search.Search3;
 import search.SearchListener;
-import util.board4.State4;
+import state4.State4;
 
 public final class TimerThread3 extends Thread{
 	

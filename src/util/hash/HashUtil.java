@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import util.board4.BitUtil;
+import state4.BitUtil;
 
 public final class HashUtil {
 	/**

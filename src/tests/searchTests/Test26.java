@@ -5,8 +5,8 @@ import java.util.List;
 
 import search.SearchStat;
 import search.legacy.SearchS4V26;
+import state4.State4;
 import util.OldPositions;
-import util.board4.State4;
 import debug.Debug;
 import eval.Evaluator2;
 import eval.evalV8.SuperEvalS4V8;
