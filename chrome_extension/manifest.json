@@ -1,0 +1,13 @@
+{
+  "name": "Chess ai extension",
+  "version": "1.1",
+  "background": { "scripts": ["background.js"] },
+  "permissions": [
+    "tabs", "http://live.chess.com/*"
+  ],
+  "browser_action": {
+      "name": "Click to scan boards",
+      "default_icon": "icon1.png"
+  },
+  "manifest_version": 2
+}
