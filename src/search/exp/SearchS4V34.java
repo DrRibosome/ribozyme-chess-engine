@@ -11,7 +11,7 @@ import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
-import state4.ZMap;
+import util.zmap.ZMap;
 import eval.Evaluator2;
 
 public final class SearchS4V34 implements Search3{

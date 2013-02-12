@@ -1,4 +1,4 @@
-package util.hash;
+package util.magic;
 
 import java.util.Map;
 import java.util.Set;

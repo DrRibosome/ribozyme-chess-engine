@@ -292,6 +292,9 @@ public final class State4 {
 			else if(count1 >= 3) zkey ^= ZHash.appeared3;
 		}*/
 		
+		assert pieceMask != 0;
+		assert moveMask != 0;
+		assert player == 0 || player == 1;
 		assert (pieceMask & pieces[1-player]) == 0;
 		assert (moveMask & pieces[player]) == 0;
 		assert (pieces[player] & pieces[1-player]) == 0;
@@ -299,6 +302,10 @@ public final class State4 {
 		zkey ^= ZHash.turnChange;
 		int type = mailbox[pos1];
 		
+		/*if(type == 0){
+			System.out.println(pos1+" -> "+pos2);
+			System.out.println(this);
+		}*/
 		assert type != 0;
 		
 		zkey ^= ZHash.zhash[player][type][pos1] ^ ZHash.zhash[player][type][pos2];

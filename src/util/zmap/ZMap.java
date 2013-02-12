@@ -1,4 +1,4 @@
-package state4;
+package util.zmap;
 
 public final class ZMap {
 	public final static int CUTOFF_TYPE_EXACT = 0;

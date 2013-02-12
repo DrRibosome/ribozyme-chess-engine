@@ -12,7 +12,7 @@ import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
-import state4.ZMap;
+import util.zmap.ZMap;
 
 /** modified to record various features of the search with play*/
 public final class SearchS4V26 implements Search3{

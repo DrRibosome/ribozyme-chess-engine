@@ -12,7 +12,7 @@ import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
-import state4.ZMap;
+import util.zmap.ZMap;
 
 public final class SearchS4V30 implements Search3{
 	public final static class SearchStat27 extends SearchStat{

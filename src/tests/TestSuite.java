@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import search.Search3;
-import search.SearchS4V32;
+import search.SearchS4V32c;
 import search.SearchStat;
 import state4.State4;
 import util.AlgebraicNotation2;
@@ -193,9 +193,11 @@ public class TestSuite
 		int count = 0;
 		
 		for(int i = 0; i < ts.positions.size(); i++){
-		//for(int i = 1; i == 1; i++){
+		//for(int i = 17; i == 17; i++){
 		//for(int i: puzzles){
 			count++;
+			System.out.println("==================================");
+			System.out.println("problem "+i+":");
 			System.out.println(ts.positions.get(i));
 			System.out.println("best move: " + ts.bestMoves.get(i));
 			System.out.println("side to move: " + ts.turnList.get(i));
@@ -203,7 +205,7 @@ public class TestSuite
 			State4 s = ts.positions.get(i);
 
 			final Search3 search =
-					new SearchS4V32(s, e2, 20, false);
+					new SearchS4V32c(s, e2, 20, false);
 					//new SearchS4V34(s, e2, 20, false);
 			
 			final int player = ts.turnList.get(i);
@@ -225,6 +227,8 @@ public class TestSuite
 				missed.add(i);
 			}
 			System.out.println("branching factor = "+search.getStats().empBranchingFactor);
+			System.out.println("hash hits = "+search.getStats().hashHits+" ("+
+					(search.getStats().hashHits*1./search.getStats().nodesSearched)+")");
 			
 			System.out.println();
 			System.out.println("solved total = "+solved+" / "+count);
@@ -232,7 +236,9 @@ public class TestSuite
 			System.out.println("total search time = "+agg.searchTime);
 			System.out.println("nodes/sec = "+(agg.nodesSearched/(agg.searchTime/1000.)));
 			System.out.println("avg emp branching factor = "+(agg.empBranchingFactor/count));
+			System.out.println("avg hash hit rate = "+(agg.hashHits*1./agg.nodesSearched));
 			System.out.println("missed = "+missed);
+			System.out.println();
 			
 		}
 		
@@ -243,6 +249,7 @@ public class TestSuite
 		agg.nodesSearched += src.nodesSearched;
 		agg.searchTime += src.searchTime;
 		agg.empBranchingFactor += src.empBranchingFactor;
+		agg.hashHits += src.hashHits;
 	}
 	
 	private static void search(final Search3 s, final int player,

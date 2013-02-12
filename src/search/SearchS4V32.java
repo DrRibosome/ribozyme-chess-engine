@@ -9,11 +9,10 @@ import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
-import state4.ZMap;
+import util.zmap.ZMap;
 
 public final class SearchS4V32 implements Search3{
 	public final static class SearchStat27 extends SearchStat{
-		public long hashHits;
 		/** scores returned from quiet search without bottoming out*/
 		public long forcedQuietCutoffs;
 		public long nullMoveVerifications;

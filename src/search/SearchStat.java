@@ -6,4 +6,5 @@ public class SearchStat {
 	public double endScore;
 	/** empiricle branching factor*/
 	public double empBranchingFactor;
+	public long hashHits;
 }

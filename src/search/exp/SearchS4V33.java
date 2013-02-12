@@ -13,7 +13,7 @@ import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
-import state4.ZMap;
+import util.zmap.ZMap;
 
 @Deprecated
 public final class SearchS4V33 implements Search3{
