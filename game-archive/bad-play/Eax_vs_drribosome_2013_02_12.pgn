@@ -1,0 +1,18 @@
+[Event "Live Chess"]
+[Site "Chess.com"]
+[Date "2013.02.12"]
+[White "Eax"]
+[Black "drribosome"]
+[Result "1-0"]
+[WhiteElo "2194"]
+[BlackElo "2533"]
+[TimeControl "1|0"]
+[Termination "Eax won by checkmate"]
+
+1.e4 e5 2.d4 exd4 3.c3 d5 4.Qxd4 Nf6 5.exd5 Nxd5 6.Nf3 Nc6 7.Bb5 Qe7+ 8.Kf1 Qd7 9.Bxc6 Qxc6 10.Bg5 f6
+ 11.Bh4 Be6 12.Nbd2 Qb5+ 13.c4 Qa6 14.Re1 O-O-O 15.Rxe6 Qxe6 16.cxd5 Qa6+ 17.Qc4 Qxc4+ 18.Nxc4 b5 19.Ne3 g5 20.Bg3 Bc5
+ 21.h3 h5 22.a3 h4 23.Bh2 Bxe3 24.fxe3 Rxd5 25.Kf2 Kd7 26.Rc1 Rh7 27.Rxc7+ Kd8 28.Rxh7 a6 29.Nd4 Rd7 30.Nc6+ Kc8
+ 31.Rh8+ Kb7 32.Nb4 a5 33.Rb8+ Ka7 34.Nc6+ Ka6 35.Nd4 f5 36.Rxb5 Rxd4 37.Rxa5+ Kxa5 38.exd4 g4 39.Ke3 g3 40.Bg1 Ka4
+ 41.Kd3 f4 42.Kc4 f3 43.gxf3 Ka5 44.f4 Kb6 45.f5 Kc6 46.f6 Kd6 47.a4 Ke6 48.a5 Kxf6 49.a6 Ke6 50.a7 Kf6
+ 51.a8=Q Kf5 52.Qf3+ Kg5 53.Qg4+ Kf6 54.Qxh4+ Kg6 55.Qxg3+ Kh6 56.Qe3+ Kh7 57.d5 Kg6 58.d6 Kg7 59.d7 Kf6 60.d8=Q+ Kf5
+ 61.Qf8+ Kg6 62.Qg3+ Kh5 63.Qh8# 1-0
