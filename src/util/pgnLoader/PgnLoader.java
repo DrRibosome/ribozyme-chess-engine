@@ -1,4 +1,4 @@
-package util.png;
+package util.pgnLoader;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PngLoader {
+public class PgnLoader {
 	private final static Pattern gameSel = Pattern.compile("\\[.*?\\].*?(?:^\\s*$)(.+?)(?:^\\s*$)", Pattern.MULTILINE | Pattern.DOTALL);
 	private final static Pattern moveSel = Pattern.compile("\\d+\\.([a-zA-Z].+?)\\s+(?:([a-zA-Z].+?)\\s+)?", Pattern.DOTALL);
 	private final static Pattern outcomeSel = Pattern.compile("((?:1/2-1/2)|(?:1-0)|(?:0-1))$");
@@ -20,7 +20,7 @@ public class PngLoader {
 	 * @return
 	 * @throws IOException
 	 */
-	public static void load(File f, PngProcessor p) throws IOException{
+	public static void load(File f, PgnProcessor p) throws IOException{
 		FileInputStream fis = new FileInputStream(f);
 		byte[] buff = new byte[16384];
 		int last;
@@ -30,7 +30,7 @@ public class PngLoader {
 			Matcher m = gameSel.matcher(s);
 			last = 0;
 			while(m.find()){
-				PngGame g = processMoves(m.group(1));
+				PgnGame g = processMoves(m.group(1));
 				p.process(g);
 				last = m.end();
 			}
@@ -41,7 +41,7 @@ public class PngLoader {
 	}
 	
 	/** process a (move,outcome) block*/
-	public static PngGame processMoves(String moves){
+	public static PgnGame processMoves(String moves){
 		System.out.println("moves:"+moves);
 		Matcher m = moveSel.matcher(moves);
 		List<String> l = new ArrayList<String>();
@@ -57,7 +57,7 @@ public class PngLoader {
 		String outcome = m.group(1);
 		System.out.println(outcome);
 		
-		PngGame g = new PngGame();
+		PgnGame g = new PgnGame();
 		g.moves = l;
 		g.outcome = outcome;
 		return g;
