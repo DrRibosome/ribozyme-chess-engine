@@ -1,6 +1,5 @@
-package search.hash1;
+package search.exp.searchS4V32c;
 
-import util.cHash.Encoder;
 
 public final class EncoderV1 implements Encoder<StateDataV1>{
 	@Override
@@ -19,6 +18,7 @@ public final class EncoderV1 implements Encoder<StateDataV1>{
 		t.score = Double.longBitsToDouble(store[2]);
 		t.cutoffType = (int)store[3];
 		t.depth = (int)(store[3] >>> 32);
+		//System.out.println("depth = "+t.depth);
 	}
 
 	@Override

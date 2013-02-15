@@ -41,6 +41,7 @@ public class ChessServer4 extends WebSocketServer{
 	Random r;
 
 	Search3 searcher;
+	SearchStat agg;
 
 	public ChessServer4(int port)
 	{
@@ -118,11 +119,8 @@ public class ChessServer4 extends WebSocketServer{
 					book.init("millionBook.txt");
 					processedMoves = new ArrayList<String>();
 					
-					
+					agg = new SearchStat();
 					searcher =
-							//new SearchS4V25qzit(16, s, e, 20);
-							//new SearchS4V26(16, s, e, 20, true);
-							//new SearchS4V29(50, s, e, 20, true);
 							new SearchS4V32(s, e, 20, true);
 					
 					
@@ -137,7 +135,6 @@ public class ChessServer4 extends WebSocketServer{
 				{
 					if (processedMoves.size() <= i)
 					{
-						System.out.println(i);
 						// process move and add to arraylist
 						int[] move = AlgebraicNotation2.getPos(i%2, moveStrings[i], s);
 						//System.out.println("moving "+move[0]+" -> "+move[1]);
@@ -190,6 +187,7 @@ public class ChessServer4 extends WebSocketServer{
 						}
 					}
 					if(!hasMoves || failed || skipped){
+						System.out.println("searching state:\n"+s);
 						long t = System.currentTimeMillis();
 						TimerThread3.search(searcher, s, botPlayer, time[botPlayer], 0, move);
 						final long waitTime = 75;
@@ -201,6 +199,10 @@ public class ChessServer4 extends WebSocketServer{
 						SearchStat stats = searcher.getStats();
 						System.out.println("search time = "+stats.searchTime);
 						System.out.println("branching factor = "+stats.empBranchingFactor);
+						System.out.println("hash hit rate = "+(stats.hashHits*1./stats.nodesSearched));
+						agg(stats, agg);
+						System.out.println("avg hash hit rate = "+(agg.hashHits*1./agg.nodesSearched));
+						
 					}
 					//searcher.getMove(move, botPlayer, 650);
 					movedWaiting = true;
@@ -209,6 +211,13 @@ public class ChessServer4 extends WebSocketServer{
 				}
 			}
 		}
+	}
+	
+	private static void agg(SearchStat src, SearchStat agg){
+		agg.nodesSearched += src.nodesSearched;
+		agg.searchTime += src.searchTime;
+		agg.empBranchingFactor += src.empBranchingFactor;
+		agg.hashHits += src.hashHits;
 	}
 	
 	private static int getMilliSec(String time){

@@ -1,10 +1,13 @@
 package debug;
 
 import search.Search3;
-import search.legacy.SearchS4V29;
+import search.SearchS4V32;
+import search.exp.searchS4V32c.SearchS4V32c;
 import state4.BitUtil;
 import state4.Masks;
 import state4.State4;
+import uci.FenParser;
+import uci.Position;
 import eval.evalV8.SuperEvalS4V8;
 
 
@@ -33,19 +36,26 @@ public class Debug {
 				{'0', '0', '1', '1', '1', '1', 'w'}
 		};
 
+		//int player = State4.BLACK;
 		//State4 s = loadConfig(c);
-		State4 s = loadConfig(c2);
-		System.out.println(s);
+		//State4 s = loadConfig(c2);
 		
+		Position p = FenParser.parse("7r/p1pk4/5p2/1p1r2p1/7p/P3PN1P/1P3KPB/2R5 b - - - -");
+		State4 s = p.s;
+		int player = p.sideToMove;
+		
+		System.out.println(s);
 		SuperEvalS4V8 e = new SuperEvalS4V8();
 		e.initialize(s);
 		//e.traceEval(s, State4.WHITE);
 		
-		final int maxDepth = 15;
-		Search3 search = new SearchS4V29(maxDepth, s, e, 20, false);
+		final int maxDepth = 14;
+		Search3 search = new SearchS4V32c(s, e, 20, false);
 		int[] move = new int[2];
-		search.search(State4.BLACK, move, maxDepth);
+		search.search(player, move, maxDepth);
 		System.out.println("\n"+getMoveString(move, 0)+" -> "+getMoveString(move, 1));
+		System.out.println("hash hit rate = "+search.getStats().hashHits*1./search.getStats().nodesSearched);
+		System.out.println("nodes searched = "+search.getStats().nodesSearched);
 		
 		//TimerThread3.search(new SearchS4V30(maxDepth, s, e, 20, false), s, State4.WHITE, 1000*60*3, 0, move);
 		

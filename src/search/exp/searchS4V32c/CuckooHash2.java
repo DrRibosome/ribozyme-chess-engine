@@ -1,7 +1,8 @@
-package util.cHash;
+package search.exp.searchS4V32c;
 
-public abstract class CuckooHash <T> {
-	public final static class BasicCuckooHash <T> extends CuckooHash<T>{
+
+public abstract class CuckooHash2 <T> {
+	public final static class BasicCuckooHash <T> extends CuckooHash2<T>{
 		public BasicCuckooHash(Encoder<T> e, int size){
 			super(e, size);
 		}
@@ -22,11 +23,13 @@ public abstract class CuckooHash <T> {
 	
 	private final Encoder<T> e;
 	private final long[][] store;
+	private final long[][] storeAny;
 	protected final int size;
 	
-	public CuckooHash(Encoder<T> e, int size){
+	public CuckooHash2(Encoder<T> e, int size){
 		this.e = e;
 		store = new long[1<<size][e.requiredStoreSize()];
+		storeAny = new long[1<<size][e.requiredStoreSize()];
 		this.size = size;
 	}
 	
@@ -39,10 +42,41 @@ public abstract class CuckooHash <T> {
 			if(store[index2][0] == key){
 				e.encode(t, store[index2]);
 			} else{
-				final long[] temp = store[index2];
+				/*final long[] temp = store[index2];
 				store[index2] = store[index1];
 				store[index1] = temp;
-				e.encode(t, store[index1]);
+				e.encode(t, store[index1]);*/
+				
+				StateDataV1 s = (StateDataV1)t;
+				
+				int d1 = (int)(store[index1][3] >>> 32);
+				int d2 = (int)(store[index2][3] >>> 32);
+				if(s.depth >= d1 || s.depth >= d2){
+					if(d1 > d2){
+						e.encode(t, store[index2]);
+					} else{
+						e.encode(t, store[index1]);
+					}
+				} else{
+					put2(key, t);
+				}
+			}
+		}
+	}
+	
+	private void put2(final long key, final T t){
+		final int index1 = h1(key);
+		if(storeAny[index1][0] == key){
+			e.encode(t, storeAny[index1]);
+		} else{
+			final int index2 = h2(key);
+			if(storeAny[index2][0] == key){
+				e.encode(t, storeAny[index2]);
+			} else{
+				final long[] temp = storeAny[index2];
+				storeAny[index2] = storeAny[index1];
+				storeAny[index1] = temp;
+				e.encode(t, storeAny[index1]);
 			}
 		}
 	}

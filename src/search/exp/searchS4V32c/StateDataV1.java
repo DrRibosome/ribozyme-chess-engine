@@ -1,6 +1,6 @@
-package search.hash1;
+package search.exp.searchS4V32c;
 
-public final class StateDataV1 {
+public class StateDataV1 {
 	public final static int CUTOFF_TYPE_EXACT = 0;
 	public final static int CUTOFF_TYPE_UPPER = 1;
 	public final static int CUTOFF_TYPE_LOWER = 2;

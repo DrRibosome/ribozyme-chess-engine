@@ -1,4 +1,4 @@
-package util.cHash;
+package search.exp.searchS4V32c;
 
 public interface Encoder <T>{
 	/** encode the data in long[] store, first index MUST be the key*/

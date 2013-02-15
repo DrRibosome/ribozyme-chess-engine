@@ -1,7 +1,8 @@
 package tests;
 
 import search.Search3;
-import search.legacy.SearchS4V31;
+import search.SearchS4V32;
+import search.exp.searchS4V32c.SearchS4V32c;
 import state4.BitUtil;
 import state4.State4;
 import time.TimerThread3;
@@ -32,8 +33,8 @@ public class Launcher3 {
 				//new ExpEvalV1();
 		
 		final Search3[] search = new Search3[2];
-		search[0] = new SearchS4V31(state, e1, 20, false);
-		search[1] = new SearchS4V31(state, e2, 20, false);
+		search[0] = new SearchS4V32(state, e1, 20, false);
+		search[1] = new SearchS4V32c(state, e2, 20, false);
 		
 		int[] move = new int[2];
 		int turn = State4.WHITE;
@@ -43,7 +44,7 @@ public class Launcher3 {
 		long[] time = new long[]{startTime, startTime};
 		final long inc = 0;
 		
-		while(!isMate(turn, state) && time[turn] > 0){
+		while(state.pieceCounts[turn][State4.PIECE_TYPE_KING] != 0 && !isMate(turn, state) && time[turn] > 0){
 			
 			System.out.println("moving player "+turn);
 			System.out.println("time remaining = "+time[turn]);

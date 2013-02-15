@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import search.Search3;
-import search.SearchS4V32c;
 import search.SearchStat;
+import search.exp.searchS4V32c.SearchS4V32c;
 import state4.State4;
 import util.AlgebraicNotation2;
 import debug.Debug;
@@ -211,7 +211,9 @@ public class TestSuite
 			final int player = ts.turnList.get(i);
 			
 			search(search, player, 50, 1*1000, move);
-			agg(search.getStats(), agg);
+			if(i != 0){
+				agg(search.getStats(), agg);
+			}
 			
 			String[] bests = ts.bestMoves.get(i).split(" ");
 			boolean completed = false;

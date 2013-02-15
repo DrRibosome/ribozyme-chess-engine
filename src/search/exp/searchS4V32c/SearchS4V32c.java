@@ -1,15 +1,15 @@
-package search;
+package search.exp.searchS4V32c;
 
 import java.io.FileWriter;
 import java.io.IOException;
 
-import search.hash1.EncoderV1;
-import search.hash1.StateDataV1;
+import search.Search3;
+import search.SearchListener;
+import search.SearchStat;
 import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
-import util.cHash.CuckooHash;
 import eval.Evaluator2;
 
 public final class SearchS4V32c implements Search3{
@@ -541,8 +541,7 @@ public final class SearchS4V32c implements Search3{
 		final int[] ranks = stack[stackIndex].ranks; //move ranking
 
 		final long zkey = s.zkey();
-		boolean hashHashEntry = m.get(zkey, entry);
-		if(hashHashEntry){
+		if(m.get(zkey, entry)){
 			stats.hashHits++;
 			if(entry.depth >= depth){ //check depth on hash entry greater than or equal to current
 				if(entry.cutoffType == StateDataV1.CUTOFF_TYPE_UPPER){
