@@ -18,18 +18,23 @@ public final class CuckooHash2 {
 	
 	public void put(final long zkey, final StateData t){
 		//keep replacing until find an empty entry, entry with bad seq num, or entry with more limited depth
-		for(int q = 0; q < maxAttempts; q++){
-			final int index1 = h1(a, t.zkey, size);
-			StateData.swap(l[index1], t);
-			if(t.zkey == 0 || t.seq < l[index1].seq || t.depth < l[index1].depth){
-				return;
-			} else{
-				final int index2 = h2(b, t.zkey, size);
-				StateData.swap(l[index2], t);
-				if(t.zkey == 0 || t.seq < l[index2].seq || t.depth < l[index2].depth){
+		StateData entry = null;
+		if((entry = get(zkey)) == null){
+			for(int q = 0; q < maxAttempts; q++){
+				final int index1 = h1(a, t.zkey, size);
+				StateData.swap(l[index1], t);
+				if(t.zkey == 0 || t.seq < l[index1].seq || t.depth < l[index1].depth){
 					return;
+				} else{
+					final int index2 = h2(b, t.zkey, size);
+					StateData.swap(l[index2], t);
+					if(t.zkey == 0 || t.seq < l[index2].seq || t.depth < l[index2].depth){
+						return;
+					}
 				}
 			}
+		} else if(t.depth >  entry.depth){
+			StateData.swap(t, entry);
 		}
 	}
 	

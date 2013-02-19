@@ -1,14 +1,14 @@
 package util.hash;
 
-/** rough but working implementation of cuckoo hashing*/
-public final class CuckooHash2Template {
+/** working implementation of cuckoo hashing to store long keys as a set*/
+public final class KeySet {
 	private final long[] l;
 	private final int size;
 	private final static int maxAttempts = 16;
 	private long a = (long)(Math.random()*Long.MAX_VALUE);
 	private long b = (long)(Math.random()*Long.MAX_VALUE);
 	
-	public CuckooHash2Template(int size){
+	public KeySet(int size){
 		l = new long[1<<size];
 		this.size = size;
 	}

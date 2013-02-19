@@ -42,7 +42,7 @@ public class PgnLoader {
 	
 	/** process a (move,outcome) block*/
 	public static PgnGame processMoves(String moves){
-		System.out.println("moves:"+moves);
+		//System.out.println("moves:"+moves);
 		Matcher m = moveSel.matcher(moves);
 		List<String> l = new ArrayList<String>();
 		while(m.find()){
@@ -51,15 +51,12 @@ public class PgnLoader {
 				l.add(m.group(2));
 			}
 		}
-		System.out.println(l);
+		//System.out.println(l);
 		m = outcomeSel.matcher(moves);
 		m.find();
 		String outcome = m.group(1);
-		System.out.println(outcome);
+		//System.out.println(outcome);
 		
-		PgnGame g = new PgnGame();
-		g.moves = l;
-		g.outcome = outcome;
-		return g;
+		return new PgnGame(l, outcome);
 	}
 }

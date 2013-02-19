@@ -13,8 +13,8 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import search.Search3;
-import search.SearchS4V32;
 import search.SearchStat;
+import search.exp.search32cc.SearchS4V32cc;
 import state4.State4;
 import time.TimerThread3;
 import util.AlgebraicNotation2;
@@ -121,7 +121,8 @@ public class ChessServer4 extends WebSocketServer{
 					
 					agg = new SearchStat();
 					searcher =
-							new SearchS4V32(s, e, 20, true);
+							//new SearchS4V32(s, e, 21, true);
+							new SearchS4V32cc(s, e, 21, true);
 					
 					
 					

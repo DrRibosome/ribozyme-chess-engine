@@ -491,7 +491,7 @@ public final class SearchS4V32 implements Search3{
 		int cutoffFlag = ZMap.CUTOFF_TYPE_UPPER;
 		
 		//final long enemy = s.pieces[1-player]|s.enPassante;
-		final long zkey = s.zkey(); //for testing purposes
+		final long zkey = s.zkey(); //move to top and only calc once
 		
 		boolean firstRun = true;
 		boolean hasMove = ml.kingAttacked[player];

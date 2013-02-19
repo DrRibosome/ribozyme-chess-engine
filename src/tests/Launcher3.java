@@ -2,7 +2,8 @@ package tests;
 
 import search.Search3;
 import search.SearchS4V32;
-import search.exp.searchS4V32c.SearchS4V32c;
+import search.SearchStat;
+import search.exp.search32cc.SearchS4V32cc;
 import state4.BitUtil;
 import state4.State4;
 import time.TimerThread3;
@@ -34,7 +35,7 @@ public class Launcher3 {
 		
 		final Search3[] search = new Search3[2];
 		search[0] = new SearchS4V32(state, e1, 20, false);
-		search[1] = new SearchS4V32c(state, e2, 20, false);
+		search[1] = new SearchS4V32cc(state, e2, 20, false);
 		
 		int[] move = new int[2];
 		int turn = State4.WHITE;
@@ -43,6 +44,9 @@ public class Launcher3 {
 		final long startTime = 60*1000;
 		long[] time = new long[]{startTime, startTime};
 		final long inc = 0;
+		
+		SearchStat[] agg = new SearchStat[2];
+		for(int q = 0; q < agg.length; q++){ agg[q] = new SearchStat();}
 		
 		while(state.pieceCounts[turn][State4.PIECE_TYPE_KING] != 0 && !isMate(turn, state) && time[turn] > 0){
 			
@@ -56,12 +60,23 @@ public class Launcher3 {
 			state.executeMove(turn, 1L<<move[0], 1L<<move[1]);
 			System.out.println("search time = "+search[turn].getStats().searchTime);
 			System.out.println("move = "+getMoveString(move, 0)+" -> "+getMoveString(move, 1));
+			agg(search[turn].getStats(), agg[turn]);
+			System.out.println("nodes searched = "+agg[turn].nodesSearched);
+			System.out.println("braching factor = "+agg[turn].empBranchingFactor);
+			System.out.println("hash hit rate = "+(agg[turn].hashHits*1./agg[turn].nodesSearched));
 			System.out.println(state);
 			turn = 1-turn;
 		}
 		
 		System.out.println("player "+(1-turn)+" wins");
 		System.exit(0);
+	}
+	
+	private static void agg(SearchStat src, SearchStat agg){
+		agg.nodesSearched += src.nodesSearched;
+		agg.searchTime += src.searchTime;
+		agg.empBranchingFactor += src.empBranchingFactor;
+		agg.hashHits += src.hashHits;
 	}
 
 	private final static int[] pawnOffset = new int[]{9,7,8,16};

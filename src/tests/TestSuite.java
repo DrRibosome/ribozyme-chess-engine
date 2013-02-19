@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import search.Search3;
+import search.SearchS4V32;
 import search.SearchStat;
-import search.exp.searchS4V32c.SearchS4V32c;
 import state4.State4;
 import util.AlgebraicNotation2;
 import debug.Debug;
@@ -205,7 +205,7 @@ public class TestSuite
 			State4 s = ts.positions.get(i);
 
 			final Search3 search =
-					new SearchS4V32c(s, e2, 20, false);
+					new SearchS4V32(s, e2, 20, false); //bf=3.66, hh=.18
 					//new SearchS4V34(s, e2, 20, false);
 			
 			final int player = ts.turnList.get(i);
