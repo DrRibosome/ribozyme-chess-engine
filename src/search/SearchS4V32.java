@@ -545,7 +545,7 @@ public final class SearchS4V32 implements Search3{
 				if(g > bestScore){
 					bestScore = g;
 					bestMove = encoding;
-					if(g > alpha){
+					if(g >= alpha){
 						alpha = g;
 						cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
 						if(alpha >= beta){
@@ -668,14 +668,14 @@ public final class SearchS4V32 implements Search3{
 					bestScore = g;
 				}
 				
-				if(g > alpha){
+				if(g > alpha){ //branching factor slightly lower with >=
 					alpha = g;
+					cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
 					if(g >= beta){
 						if(!cutoffSearch)
 							m.put2(zkey, encoding, g, depth, ZMap.CUTOFF_TYPE_LOWER);
 						return g;
 					}
-					cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
 				}
 			}
 		}
