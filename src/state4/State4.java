@@ -310,6 +310,7 @@ public final class State4 {
 		
 		zkey ^= ZHash.zhash[player][type][pos1] ^ ZHash.zhash[player][type][pos2];
 		
+		long castleBit = 0;
 		if(mailbox[pos1] == PIECE_TYPE_KING && !kingMoved[player]){
 			//System.out.println("castling");
 			if(player == 0){
@@ -323,6 +324,7 @@ public final class State4 {
 					isCastled[0] = 1;
 					zkey ^= ZHash.zhash[0][PIECE_TYPE_ROOK][0] ^
 							ZHash.zhash[0][PIECE_TYPE_ROOK][3];
+					castleBit = 1;
 				} else if(pos2 == 6){
 					//castle right
 					rooks[0] &= ~0x80L;
@@ -332,6 +334,7 @@ public final class State4 {
 					isCastled[0] = 1;
 					zkey ^= ZHash.zhash[0][PIECE_TYPE_ROOK][7] ^
 							ZHash.zhash[0][PIECE_TYPE_ROOK][5];
+					castleBit = 1;
 				}
 			} else if(player == 1){
 				zkey ^= ZHash.kingMoved[1];
@@ -344,6 +347,7 @@ public final class State4 {
 					isCastled[1] = 1;
 					zkey ^= ZHash.zhash[1][PIECE_TYPE_ROOK][56] ^
 							ZHash.zhash[1][PIECE_TYPE_ROOK][59];
+					castleBit = 1;
 				} else if(pos2 == 62){
 					//castle right
 					rooks[1] &= ~0x8000000000000000L;
@@ -353,11 +357,13 @@ public final class State4 {
 					isCastled[1] = 1;
 					zkey ^= ZHash.zhash[1][PIECE_TYPE_ROOK][63] ^
 							ZHash.zhash[1][PIECE_TYPE_ROOK][61];
+					castleBit = 1;
 				}
 			} 
 		}
 		
 		long encoding = MoveEncoder.encode(pos1, pos2, mailbox[pos1], mailbox[pos2], player, this);
+		encoding |= castleBit<<33;
 		//move the first piece
 		long[] b1 = pieceMasks[mailbox[pos1]];
 		b1[player] = (b1[player] & ~pieceMask) | moveMask;

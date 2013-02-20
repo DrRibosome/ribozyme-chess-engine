@@ -52,6 +52,15 @@ public final class MoveEncoder {
 		return encoding & (1L<<32);
 	}
 	
+	public static long setCastle(long encoding){
+		return encoding | 1L<<33;
+	}
+
+	/** return 0 if false, returns non-zero if true*/
+	public static long isCastle(long encoding){
+		return encoding & (1L<<33);
+	}
+	
 	public static void undoCastleProps(long encoding, State4 s){
 		long castleCode = (encoding & (posMask << 19)) >>> 19;
 		if(castleCode != 0){
