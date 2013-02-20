@@ -492,9 +492,6 @@ public final class SearchS4V32 implements Search3{
 		double bestScore = -99999;
 		int cutoffFlag = ZMap.CUTOFF_TYPE_UPPER;
 		
-		//final long enemy = s.pieces[1-player]|s.enPassante;
-		
-		boolean firstRun = true;
 		boolean hasMove = ml.kingAttacked[player];
 		for(int i = 0; i < length && !cutoffSearch; i++){
 			for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
@@ -534,21 +531,13 @@ public final class SearchS4V32 implements Search3{
 						} else{
 							g = -recurse(1-player, -beta, -alpha, depth-1, pv, false, stackIndex+1);
 						}
-						/*if(alphaRaised || !pv){
-							g = -recurse(1-player, -(alpha+1), -alpha, depth-1, false, false, stackIndex+1);
-							if(alpha < g && g < beta && pv){
-								g = -recurse(1-player, -beta, -alpha, depth-1, pv, false, stackIndex+1);
-							}
-						} else{
-							g = -recurse(1-player, -beta, -alpha, depth-1, pv, false, stackIndex+1);
-						}*/
 					}
 				}
 				s.undoMove();
 				this.e.undoMove(encoding);
-				assert zkey == s.zkey(); //keys should be unchanged after undo
+				assert zkey == s.zkey();
 				
-				if(isDrawable && 0 > g){// && -10*depth > g){ //can draw instead of making the move
+				if(isDrawable && 0 > g){ //can draw instead of making the move
 					g = 0;
 					encoding = 0;
 				} 
@@ -556,7 +545,6 @@ public final class SearchS4V32 implements Search3{
 				if(g > bestScore){
 					bestScore = g;
 					bestMove = encoding;
-					//firstRun = false;
 					if(g > alpha){
 						alpha = g;
 						cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
@@ -669,7 +657,7 @@ public final class SearchS4V32 implements Search3{
 				s.undoMove();
 				this.e.undoMove(encoding);
 				
-				if(isDrawable && 0 > g){// && -10*depth > g){ //can draw instead of making the move
+				if(isDrawable && 0 > g){ //can draw instead of making the move
 					g = 0;
 					encoding = 0;
 				} 
@@ -706,7 +694,6 @@ public final class SearchS4V32 implements Search3{
 			int w = ml.length;
 			if((moves & enemy) != 0){
 				
-				//retakes provides very small gains
 				final long retakes = moves & retakeMask;
 				if(retakes != 0){
 					ml.pieceMasks[w] = piece;
@@ -738,33 +725,6 @@ public final class SearchS4V32 implements Search3{
 				ml.ranks[w] = 5;
 				w++;
 			}
-			/*if(!quiesce){
-				long hashMove = 0;
-				long nonHashMove = 0;
-				for(long nonTake = moves & ~enemy; nonTake != 0; nonTake &= nonTake-1){
-					final long t = nonTake & -nonTake;
-					s.executeMove(player, piece, t);
-					final ZMap.Entry e = m.get(s.zkey());
-					if(e != null && e.cutoffType == ZMap.CUTOFF_TYPE_EXACT){
-						hashMove |= t;
-					} else{
-						nonHashMove |= t;
-					}
-					s.undoMove();
-				}
-				if(hashMove != 0){
-					ml.pieceMasks[w] = piece;
-					ml.moves[w] = hashMove;
-					ml.ranks[w] = 1;
-					w++;
-				}
-				if(nonHashMove != 0){
-					ml.pieceMasks[w] = piece;
-					ml.moves[w] = nonHashMove;
-					ml.ranks[w] = 5;
-					w++;
-				}
-			}*/
 			ml.length = w;
 		}
 	}
@@ -777,6 +737,8 @@ public final class SearchS4V32 implements Search3{
 		ml.upTakes[State4.PIECE_TYPE_BISHOP] = ml.upTakes[State4.PIECE_TYPE_KNIGHT];
 		ml.upTakes[State4.PIECE_TYPE_PAWN] = s.pieces[1-player];
 		
+		//tests on master games show that, under current implementation, disabling this
+		//has no effect on branching factor
 		long retakeMask = 0;
 		if(MoveEncoder.getTakenType(ml.prevMove) != State4.PIECE_TYPE_EMPTY){
 			retakeMask = 1L<<MoveEncoder.getPos2(ml.prevMove);
