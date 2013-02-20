@@ -1,4 +1,4 @@
-package search.exp.searchS4V32c;
+package search.exp.searchV32c;
 
 public class StateDataV1 {
 	public final static int CUTOFF_TYPE_EXACT = 0;

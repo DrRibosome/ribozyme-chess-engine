@@ -1,4 +1,4 @@
-package search.exp.searchS4V32c;
+package search.exp.searchV32c;
 
 public abstract class CuckooHash <T> {
 	public final static class BasicCuckooHash <T> extends CuckooHash<T>{

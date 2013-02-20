@@ -1,6 +1,6 @@
-package search.exp.search32cc;
+package search.exp.searchV32cc;
 
-public final class StateData {
+public final class TTEntry {
 	public final static int CUTOFF_TYPE_EXACT = 0;
 	public final static int CUTOFF_TYPE_UPPER = 1;
 	public final static int CUTOFF_TYPE_LOWER = 2;
@@ -12,7 +12,8 @@ public final class StateData {
 	public int seq;
 	public int cutoffType;
 	
-	public void fill(long zkey, long move, double score, int depth, int cutoffType, int seq){
+	public void fill(final long zkey, final long move, final double score, final int depth,
+			final int cutoffType, final int seq){
 		this.zkey = zkey;
 		this.move = move;
 		this.score = score;
@@ -21,7 +22,16 @@ public final class StateData {
 		this.seq = seq;
 	}
 	
-	public static void swap(StateData s1, StateData s2){
+	public void fill(TTEntry t){
+		this.zkey = t.zkey;
+		this.move = t.move;
+		this.score = t.score;
+		this.depth = t.depth;
+		this.cutoffType = t.cutoffType;
+		this.seq = t.seq;
+	}
+	
+	public static void swap(TTEntry s1, TTEntry s2){
 		final long temp1 = s1.zkey;
 		s1.zkey = s2.zkey;
 		s2.zkey = temp1;

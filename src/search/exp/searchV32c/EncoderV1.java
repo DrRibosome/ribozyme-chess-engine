@@ -1,4 +1,4 @@
-package search.exp.searchS4V32c;
+package search.exp.searchV32c;
 
 
 public final class EncoderV1 implements Encoder<StateDataV1>{

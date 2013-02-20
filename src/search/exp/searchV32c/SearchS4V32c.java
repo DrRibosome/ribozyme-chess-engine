@@ -1,4 +1,4 @@
-package search.exp.searchS4V32c;
+package search.exp.searchV32c;
 
 import java.io.FileWriter;
 import java.io.IOException;
