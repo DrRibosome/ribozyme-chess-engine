@@ -51,7 +51,8 @@ public final class SearchS4V32 implements Search3{
 	private FileWriter f;
 	private SearchListener l;
 	private final static int stackSize = 128;
-	private final static boolean printPV = false;
+	/** controls printing pv to console for debugging*/
+	private final static boolean printPV = true;
 	
 	/** stores history heuristic information*/
 	private final static int tteMoveRank = -1;
@@ -381,7 +382,8 @@ public final class SearchS4V32 implements Search3{
 		final int[] ranks = stack[stackIndex].ranks; //move ranking
 		int w = 0;
 
-		final ZMap.Entry e = m.get(s.zkey());
+		final long zkey = s.zkey();
+		final ZMap.Entry e = m.get(zkey);
 		boolean tteMove = false;
 		
 		if(e != null){
@@ -389,18 +391,17 @@ public final class SearchS4V32 implements Search3{
 			if(e.depth >= depth){ //check depth on hash entry greater than or equal to current
 				if(e.cutoffType == ZMap.CUTOFF_TYPE_UPPER && !pv){
 					if(e.score <= alpha){
-						return alpha;
+						return e.score;
 					} else if(e.score < beta){
 						beta = e.score;
 					}
 				} else if(e.cutoffType == ZMap.CUTOFF_TYPE_LOWER && !pv){
 					if(e.score >= beta){
-						return beta;
+						return e.score;
 					} else if(e.score > alpha){
 						alpha = e.score;
 					}
 				} else if(e.cutoffType == ZMap.CUTOFF_TYPE_EXACT){
-					//exact score
 					return e.score;
 				}
 			}
@@ -480,7 +481,7 @@ public final class SearchS4V32 implements Search3{
 		genMoves(player, s, ml, m, false);
 		final int length = ml.length;
 		if(length == 0){ //no moves, draw
-			m.put2(s.zkey(), 0, 0, depth, ZMap.CUTOFF_TYPE_EXACT);
+			m.put2(zkey, 0, 0, depth, ZMap.CUTOFF_TYPE_EXACT);
 			return 0;
 		}
 		isort(pieceMasks, moves, ranks, length);
@@ -488,11 +489,10 @@ public final class SearchS4V32 implements Search3{
 		
 		double g = alpha;
 		long bestMove = 0;
-		double bestScore = 0;
+		double bestScore = -99999;
 		int cutoffFlag = ZMap.CUTOFF_TYPE_UPPER;
 		
 		//final long enemy = s.pieces[1-player]|s.enPassante;
-		final long zkey = s.zkey(); //move to top and only calc once
 		
 		boolean firstRun = true;
 		boolean hasMove = ml.kingAttacked[player];
@@ -553,21 +553,20 @@ public final class SearchS4V32 implements Search3{
 					encoding = 0;
 				} 
 				
-				if(firstRun || g > bestScore){
+				if(g > bestScore){
 					bestScore = g;
 					bestMove = encoding;
-					firstRun = false;
-				}
-				
-				if(g > alpha){
-					alpha = g;
-					cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
-				}
-				if(alpha >= beta){
-					if(!cutoffSearch){
-						m.put2(s.zkey(), bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
+					//firstRun = false;
+					if(g > alpha){
+						alpha = g;
+						cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
+						if(alpha >= beta){
+							if(!cutoffSearch){
+								m.put2(zkey, bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
+							}
+							return g;
+						}
 					}
-					return g;
 				}
 			}
 		}
@@ -580,7 +579,7 @@ public final class SearchS4V32 implements Search3{
 		}
 		
 		if(!cutoffSearch)
-				m.put2(s.zkey(), bestMove, bestScore, depth, cutoffFlag);
+				m.put2(zkey, bestMove, bestScore, depth, cutoffFlag);
 		return bestScore;
 	}
 	
@@ -597,20 +596,21 @@ public final class SearchS4V32 implements Search3{
 		final long[] pieceMasks = stack[stackIndex].pieceMasks; //piece moving
 		final long[] moves = stack[stackIndex].moves; //moves available to piece (can be multiple)
 		final int[] ranks = stack[stackIndex].ranks; //move ranking
-		
-		final ZMap.Entry e = m.get(s.zkey());
+
+		final long zkey = s.zkey();
+		final ZMap.Entry e = m.get(zkey);
 		if(e != null){
 			stats.hashHits++;
 			if(e.depth >= depth){ //check depth on hash entry greater than or equal to current
 				if(e.cutoffType == ZMap.CUTOFF_TYPE_UPPER){
 					if(e.score <= alpha){
-						return alpha;
+						return e.score;
 					} else if(e.score < beta){
 						beta = e.score;
 					}
 				} else if(e.cutoffType == ZMap.CUTOFF_TYPE_LOWER){
 					if(e.score >= beta){
-						return beta;
+						return e.score;
 					} else if(e.score > alpha){
 						alpha = e.score;
 					}
@@ -650,7 +650,6 @@ public final class SearchS4V32 implements Search3{
 		
 		double g = alpha;
 		int cutoffFlag = ZMap.CUTOFF_TYPE_UPPER;
-		final long zkey = s.zkey(); //for testing purposes
 		
 		for(int i = 0; i < length && !cutoffSearch; i++){
 			for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
@@ -685,7 +684,7 @@ public final class SearchS4V32 implements Search3{
 					alpha = g;
 					if(g >= beta){
 						if(!cutoffSearch)
-							m.put2(s.zkey(), encoding, g, depth, ZMap.CUTOFF_TYPE_LOWER);
+							m.put2(zkey, encoding, g, depth, ZMap.CUTOFF_TYPE_LOWER);
 						return g;
 					}
 					cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
@@ -694,7 +693,7 @@ public final class SearchS4V32 implements Search3{
 		}
 
 		if(!cutoffSearch)
-			m.put2(s.zkey(), 0, bestScore, depth, cutoffFlag);
+			m.put2(zkey, 0, bestScore, depth, cutoffFlag);
 		return bestScore;
 	}
 	
