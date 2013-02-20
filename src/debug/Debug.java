@@ -1,7 +1,7 @@
 package debug;
 
 import search.Search3;
-import search.SearchS4V32;
+import search.exp.search32cc.SearchS4V32cc;
 import state4.BitUtil;
 import state4.Masks;
 import state4.State4;
@@ -40,7 +40,8 @@ public class Debug {
 		//State4 s = loadConfig(c2);
 		
 		//Position p = FenParser.parse("7r/p1pk4/5p2/1p1r2p1/7p/P3PN1P/1P3KPB/2R5 b - - - -");
-		Position p = FenParser.parse("2r1r1k1/p4ppp/3Bp3/2P5/1p2P2P/6Q1/qb3PP1/1R1R2K1 w - - - -"); //bm Rb2
+		Position p = FenParser.parse("8/8/2p3p1/2pp1b2/1n1k4/1P3P2/1P1K4/R7 w - - - -");
+		//Position p = FenParser.parse("2r1r1k1/p4ppp/3Bp3/2P5/1p2P2P/6Q1/qb3PP1/1R1R2K1 w - - - -"); //bm Rb2
 		State4 s = p.s;
 		int player = p.sideToMove;
 		
@@ -50,12 +51,14 @@ public class Debug {
 		//e.traceEval(s, State4.WHITE);
 		
 		final int maxDepth = 14;
-		Search3 search = new SearchS4V32(s, e, 20, false);
+		//Search3 search = new SearchS4V32(s, e, 20, false);
+		Search3 search = new SearchS4V32cc(s, e, 20, false);
 		int[] move = new int[2];
 		search.search(player, move, maxDepth);
 		System.out.println("\n"+getMoveString(move, 0)+" -> "+getMoveString(move, 1));
-		System.out.println("hash hit rate = "+search.getStats().hashHits*1./search.getStats().nodesSearched);
 		System.out.println("nodes searched = "+search.getStats().nodesSearched);
+		System.out.println("hash hit rate = "+search.getStats().hashHits*1./search.getStats().nodesSearched);
+		System.out.println("branching factor = "+search.getStats().empBranchingFactor);
 		
 		//TimerThread3.search(new SearchS4V30(maxDepth, s, e, 20, false), s, State4.WHITE, 1000*60*3, 0, move);
 		

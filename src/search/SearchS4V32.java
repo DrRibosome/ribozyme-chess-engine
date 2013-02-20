@@ -51,6 +51,7 @@ public final class SearchS4V32 implements Search3{
 	private FileWriter f;
 	private SearchListener l;
 	private final static int stackSize = 128;
+	private final static boolean printPV = false;
 	
 	/** stores history heuristic information*/
 	private final static int tteMoveRank = -1;
@@ -203,7 +204,7 @@ public final class SearchS4V32 implements Search3{
 					l.plySearched(bestMove, i);
 				}
 				//System.out.println("info depth "+i+" nodes "+stats.nodesSearched+" score cp "+score);
-				System.out.println("pv "+i+": ["+score+"] "+getPVString(player, s, "", 0, i));
+				if(printPV) System.out.println("pv "+i+": ["+score+"] "+getPVString(player, s, "", 0, i));
 			}
 			if(i-1 < stats.scores.length){
 				stats.scores[i-1] = score;

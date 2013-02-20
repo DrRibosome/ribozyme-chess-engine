@@ -13,8 +13,8 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import search.Search3;
+import search.SearchS4V32;
 import search.SearchStat;
-import search.exp.search32cc.SearchS4V32cc;
 import state4.State4;
 import time.TimerThread3;
 import util.AlgebraicNotation2;
@@ -121,8 +121,8 @@ public class ChessServer4 extends WebSocketServer{
 					
 					agg = new SearchStat();
 					searcher =
-							//new SearchS4V32(s, e, 21, true);
-							new SearchS4V32cc(s, e, 21, true);
+							new SearchS4V32(s, e, 21, false);
+							//new SearchS4V32cc(s, e, 24, false);
 					
 					
 					
@@ -188,6 +188,7 @@ public class ChessServer4 extends WebSocketServer{
 						}
 					}
 					if(!hasMoves || failed || skipped){
+						System.out.println("==========================================================================");
 						System.out.println("searching state:\n"+s);
 						long t = System.currentTimeMillis();
 						TimerThread3.search(searcher, s, botPlayer, time[botPlayer], 0, move);
@@ -199,6 +200,7 @@ public class ChessServer4 extends WebSocketServer{
 						}
 						SearchStat stats = searcher.getStats();
 						System.out.println("search time = "+stats.searchTime);
+						System.out.println("nodes searched = "+stats.nodesSearched);
 						System.out.println("branching factor = "+stats.empBranchingFactor);
 						System.out.println("hash hit rate = "+(stats.hashHits*1./stats.nodesSearched));
 						agg(stats, agg);

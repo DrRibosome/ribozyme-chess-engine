@@ -286,6 +286,7 @@ public final class SearchS4V32cc implements Search3{
 			int pos1 = MoveEncoder.getPos1(entry.move);
 			int pos2 = MoveEncoder.getPos2(entry.move);
 			
+			e.initialize(s);
 			double eval = this.e.eval(s, player);
 			
 			pv += moveString(pos1)+"->"+moveString(pos2)+" ("+eval+"), ";

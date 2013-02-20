@@ -1,3 +1,6 @@
 # blunders stored in form <board state><move played>, '#' at line start for comments
 
-<7r/p1pk4/5p2/1p1r2p1/7p/P3PN1P/1P3KPB/2R5 b - - - -><h8h7>
+<fen=7r/p1pk4/5p2/1p1r2p1/7p/P3PN1P/1P3KPB/2R5 b - - - -><move=h8h7>
+
+#search v32cc
+<fen=8/8/2p3p1/2pp1b2/1n1k4/1P3P2/1P1K4/R7 w - - - -><move=a1b1>

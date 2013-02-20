@@ -683,7 +683,10 @@ public final class State4 {
 		for(int i = 63; i >= 0; i--){
 			temp = c[i]+temp;
 			if(i % 8 == 0){
-				s += temp+"\n";
+				s += temp;
+				if(i != 0){
+					s += "\n";
+				}
 				temp = "";
 			}
 		}
@@ -745,7 +748,7 @@ public final class State4 {
 			}
 		}
 		zkey ^= ZHash.turn[0];
-		zkey = 0;
+		//zkey = 0;
 		hm.put(zkey);
 		collect();
 	}

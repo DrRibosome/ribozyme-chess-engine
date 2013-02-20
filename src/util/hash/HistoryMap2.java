@@ -1,4 +1,4 @@
-package state4;
+package util.hash;
 
 /** int map through cuckoo hashing, used for hashing historical positions*/
 public final class HistoryMap2 {
