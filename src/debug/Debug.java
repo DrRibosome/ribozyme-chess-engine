@@ -1,7 +1,7 @@
 package debug;
 
 import search.Search3;
-import search.exp.search32cc.SearchS4V32cc;
+import search.exp.searchV32cc.SearchS4V32cc;
 import state4.BitUtil;
 import state4.Masks;
 import state4.State4;
