@@ -41,6 +41,7 @@ public final class SearchS4V32k implements Search3{
 		public final long[] upTakes = new long[7];
 		public boolean skipNullMove = false;
 		public long prevMove;
+		public final long[] killer = new long[2];
 	}
 	
 	private final static int[] pawnOffset = new int[]{9,7,8,16};
@@ -56,8 +57,9 @@ public final class SearchS4V32k implements Search3{
 	/** controls printing pv to console for debugging*/
 	private final static boolean printPV = true;
 	
-	/** stores history heuristic information*/
 	private final static int tteMoveRank = -1;
+	/** rank set to the first of the down takes*/
+	private final static int killerMoveRank = 4;
 	
 	private boolean cutoffSearch = false;
 	
@@ -74,7 +76,7 @@ public final class SearchS4V32k implements Search3{
 
 		if(record){
 			try{
-				f = new FileWriter("search29.stats", true);
+				f = new FileWriter("search32k.stats", true);
 			} catch(IOException ex){
 				ex.printStackTrace();
 			}
@@ -379,9 +381,13 @@ public final class SearchS4V32k implements Search3{
 		}
 		
 
-		final long[] pieceMasks = stack[stackIndex].pieceMasks; //piece moving
-		final long[] moves = stack[stackIndex].moves; //moves available to piece (can be multiple)
-		final int[] ranks = stack[stackIndex].ranks; //move ranking
+		final MoveList ml = stack[stackIndex];
+		final long[] pieceMasks = ml.pieceMasks; //piece moving
+		final long[] moves = ml.moves; //moves available to piece (can be multiple)
+		final int[] ranks = ml.ranks; //move ranking
+		ml.killer[0] = 0;
+		ml.killer[1] = 0;
+		
 		int w = 0;
 
 		final long zkey = s.zkey();
@@ -416,7 +422,25 @@ public final class SearchS4V32k implements Search3{
 			}
 		}
 		
-		final MoveList ml = stack[stackIndex];
+		//load killer moves
+		if(stackIndex-1 >= 0 && !ml.skipNullMove){
+			final MoveList prev = stack[stackIndex-1];
+			if(prev.killer[0] != 0 &&
+					(1L<<MoveEncoder.getPos1(prev.killer[0]) & s.pieces[player]) != 0 &&
+					(1L<<MoveEncoder.getPos2(prev.killer[0]) & s.pieces[1-player]) == 0){
+				pieceMasks[w] = 1L<<MoveEncoder.getPos1(prev.killer[0]);
+				moves[w] = 1L<<MoveEncoder.getPos2(prev.killer[0]);
+				ranks[w++] = killerMoveRank;
+			}
+			if(prev.killer[1] != 0 &&
+					(1L<<MoveEncoder.getPos1(prev.killer[1]) & s.pieces[player]) != 0 &&
+					(1L<<MoveEncoder.getPos2(prev.killer[1]) & s.pieces[1-player]) == 0){
+				pieceMasks[w] = 1L<<MoveEncoder.getPos1(prev.killer[1]);
+				moves[w] = 1L<<MoveEncoder.getPos2(prev.killer[1]);
+				ranks[w++] = killerMoveRank;
+			}
+		}
+		
 		ml.kingAttacked[player] = State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
 		ml.kingAttacked[1-player] = State4.isAttacked2(BitUtil.lsbIndex(s.kings[1-player]), player, s);
 		
@@ -436,7 +460,6 @@ public final class SearchS4V32k implements Search3{
 			stack[stackIndex+1].skipNullMove = false;
 			
 			if(n >= beta){
-				//if(n == 88888 || n == 77777){
 				if(n >= 70000){
 					n = beta;
 				}
@@ -491,12 +514,11 @@ public final class SearchS4V32k implements Search3{
 		
 		double g = alpha;
 		long bestMove = 0;
-		double bestScore = 0;
+		double bestScore = -99999;
 		int cutoffFlag = ZMap.CUTOFF_TYPE_UPPER;
 		
 		//final long enemy = s.pieces[1-player]|s.enPassante;
 		
-		boolean firstRun = true;
 		boolean hasMove = ml.kingAttacked[player];
 		for(int i = 0; i < length && !cutoffSearch; i++){
 			for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
@@ -536,14 +558,6 @@ public final class SearchS4V32k implements Search3{
 						} else{
 							g = -recurse(1-player, -beta, -alpha, depth-1, pv, false, stackIndex+1);
 						}
-						/*if(alphaRaised || !pv){
-							g = -recurse(1-player, -(alpha+1), -alpha, depth-1, false, false, stackIndex+1);
-							if(alpha < g && g < beta && pv){
-								g = -recurse(1-player, -beta, -alpha, depth-1, pv, false, stackIndex+1);
-							}
-						} else{
-							g = -recurse(1-player, -beta, -alpha, depth-1, pv, false, stackIndex+1);
-						}*/
 					}
 				}
 				s.undoMove();
@@ -555,21 +569,43 @@ public final class SearchS4V32k implements Search3{
 					encoding = 0;
 				} 
 				
-				if(firstRun || g > bestScore){
+				if(g > bestScore){
 					bestScore = g;
 					bestMove = encoding;
-					firstRun = false;
-				}
-				
-				if(g > alpha){
-					alpha = g;
-					cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
-				}
-				if(alpha >= beta){
-					if(!cutoffSearch){
-						m.put2(zkey, bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
+					if(g >= alpha){
+						alpha = g;
+						cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
+						if(alpha >= beta){
+							if(!cutoffSearch){
+								m.put2(zkey, bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
+							}
+							
+							//chech to see if killer move can be stored
+							//if used on null moves, need to have a separate killer array
+							if(stackIndex-1 >= 0 && bestMove != 0 && !ml.skipNullMove){
+								final MoveList prev = stack[stackIndex-1];
+								if(bestMove != prev.killer[0] &&
+										bestMove != prev.killer[1] &&
+										MoveEncoder.getTakenType(bestMove) == State4.PIECE_TYPE_EMPTY &&
+										MoveEncoder.isCastle(bestMove) == 0 &&
+										MoveEncoder.isEnPassanteTake(bestMove) == 0 &&
+										!MoveEncoder.isPawnPromoted(bestMove)){
+									if(prev.killer[0] != bestMove){
+										prev.killer[1] = prev.killer[0];
+										prev.killer[0] = bestMove;
+									} else{
+										prev.killer[0] = prev.killer[1];
+										prev.killer[1] = bestMove;
+									}
+									
+									/*prev.killer[1] = prev.killer[0];
+									prev.killer[0] = bestMove;*/
+								}
+							}
+							
+							return g;
+						}
 					}
-					return g;
 				}
 			}
 		}
@@ -741,33 +777,6 @@ public final class SearchS4V32k implements Search3{
 				ml.ranks[w] = 5;
 				w++;
 			}
-			/*if(!quiesce){
-				long hashMove = 0;
-				long nonHashMove = 0;
-				for(long nonTake = moves & ~enemy; nonTake != 0; nonTake &= nonTake-1){
-					final long t = nonTake & -nonTake;
-					s.executeMove(player, piece, t);
-					final ZMap.Entry e = m.get(s.zkey());
-					if(e != null && e.cutoffType == ZMap.CUTOFF_TYPE_EXACT){
-						hashMove |= t;
-					} else{
-						nonHashMove |= t;
-					}
-					s.undoMove();
-				}
-				if(hashMove != 0){
-					ml.pieceMasks[w] = piece;
-					ml.moves[w] = hashMove;
-					ml.ranks[w] = 1;
-					w++;
-				}
-				if(nonHashMove != 0){
-					ml.pieceMasks[w] = piece;
-					ml.moves[w] = nonHashMove;
-					ml.ranks[w] = 5;
-					w++;
-				}
-			}*/
 			ml.length = w;
 		}
 	}
