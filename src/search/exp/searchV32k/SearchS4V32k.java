@@ -657,7 +657,7 @@ public final class SearchS4V32k implements Search3{
 	 * @param s
 	 * @return
 	 */
-	public boolean isPseudoLegal(final int player, final long encoding, State4 s){
+	private static boolean isPseudoLegal(final int player, final long encoding, State4 s){
 		final long p = 1L<<MoveEncoder.getPos1(encoding);
 		final long m = 1L<<MoveEncoder.getPos2(encoding);
 		final long[] pieces = s.pieces;
