@@ -493,7 +493,7 @@ public final class SearchS4V32k implements Search3{
 				this.e.undoMove(encoding);
 				assert zkey == s.zkey(); //keys should be unchanged after undo
 				
-				if(isDrawable && 0 > g){// && -10*depth > g){ //can draw instead of making the move
+				if(isDrawable && 0 > g){ //can take a draw instead of making the move
 					g = 0;
 					encoding = 0;
 				} 
