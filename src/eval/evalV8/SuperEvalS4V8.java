@@ -101,7 +101,7 @@ public class SuperEvalS4V8 implements Evaluator2<State4>
 	public double eval(State4 s, int player)
 	{
 		Weight.updateWeightScaling(materialScore[player] + materialScore[1 - player]);
-		double score = BONUS_TEMPO.getScore();
+		int score = BONUS_TEMPO.getScore();
 
 		// ratio bonus should make trading when ahead attractive
 		double materialRatio;
