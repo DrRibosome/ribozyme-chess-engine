@@ -110,6 +110,7 @@ public final class SearchS4V32k implements Search3{
 		final double max = 90000;
 		final double min = -90000;
 		
+		final int failOffset = 100;
 		long nodesSearched = 0;
 		int maxPlySearched = 0;
 		for(int i = 1; (maxPly == -1 || i <= maxPly) && !cutoffSearch && i <= stackSize; i++){
@@ -147,7 +148,7 @@ public final class SearchS4V32k implements Search3{
 				if(l != null){
 					l.failLow(i);
 				}
-				alpha = score-100;
+				alpha = score-failOffset;
 				beta = score+5;
 				if(alpha > beta){
 					double temp = alpha;
@@ -176,7 +177,7 @@ public final class SearchS4V32k implements Search3{
 					l.failHigh(i);
 				}
 				alpha = score-5;
-				beta = score+100;
+				beta = score+failOffset;
 				if(alpha > beta){
 					double temp = alpha;
 					alpha = beta;
