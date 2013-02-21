@@ -258,27 +258,6 @@ public final class SearchS4V32k implements Search3{
 		}
 		
 		stats.searchTime = System.currentTimeMillis()-stats.searchTime;
-		//System.out.println(stats.nullMoveFailLow);
-		//System.out.println(pos1+" -> "+pos2);
-		//System.out.println("final score = "+score);
-		/*System.out.println("total nodes searched = "+stats.nodesSearched);
-		System.out.println("total time (sec) = "+(stats.searchTime/1000.));
-		System.out.println("nodes/sec = "+(stats.nodesSearched*1000./stats.searchTime));
-		System.out.println("hash hits = "+stats.hashHits);
-		System.out.println("quiet forced cutoffs = "+stats.forcedQuietCutoffs);
-		System.out.println("null move verification searches = "+stats.nullMoveVerifications);
-		System.out.println("null move cutoffs = "+stats.nullMoveCutoffs);*/
-		
-		/*System.out.println("castle props:");
-		System.out.println("white: casled = "+s.isCastled[0]+" (king moved = "+s.kingMoved[0]+
-				", left rook move = "+s.rookMoved[0][0]+
-				", right rook moved = "+s.rookMoved[0][1]+")");
-		System.out.println("black: castled = "+s.isCastled[1]+" (king moved = "+s.kingMoved[1]+
-				", left rook move = "+s.rookMoved[1][0]+
-				", right rook moved = "+s.rookMoved[1][1]+")");*/
-		
-		
-		//System.out.println(stats);
 	}
 	
 	private String getPVString(int player, State4 s, String pv, int depth, int maxDepth){
@@ -350,22 +329,7 @@ public final class SearchS4V32k implements Search3{
 		
 		if(e != null){
 			stats.hashHits++;
-			if(e.depth >= depth){ //check depth on hash entry greater than or equal to current
-				/*if(e.cutoffType == ZMap.CUTOFF_TYPE_UPPER && !pv){
-					if(e.score <= alpha){
-						return e.score;
-					} else if(e.score < beta){
-						beta = e.score;
-					}
-				} else if(e.cutoffType == ZMap.CUTOFF_TYPE_LOWER && !pv){
-					if(e.score >= beta){
-						return e.score;
-					} else if(e.score > alpha){
-						alpha = e.score;
-					}
-				} else if(e.cutoffType == ZMap.CUTOFF_TYPE_EXACT){
-					return e.score;
-				}*/
+			if(e.depth >= depth){
 				if(pv ? e.cutoffType == ZMap.CUTOFF_TYPE_EXACT: (e.score >= beta?
 						e.cutoffType == ZMap.CUTOFF_TYPE_LOWER: e.cutoffType == ZMap.CUTOFF_TYPE_UPPER)){
 					
@@ -494,6 +458,8 @@ public final class SearchS4V32k implements Search3{
 					g = -88888+stackIndex+1;
 				} else{
 					hasMove = true;
+					
+					//second more theoretically sound, but higher branching factor
 					final boolean pvMove = pv && i==0;
 					//final boolean pvMove = pv && cutoffFlag == ZMap.CUTOFF_TYPE_UPPER; //second part checks that alpha has not been improved
 					
@@ -586,22 +552,7 @@ public final class SearchS4V32k implements Search3{
 		final ZMap.Entry e = m.get(zkey);
 		if(e != null){
 			stats.hashHits++;
-			if(e.depth >= depth){ //check depth on hash entry greater than or equal to current
-				/*if(e.cutoffType == ZMap.CUTOFF_TYPE_UPPER){
-					if(e.score <= alpha){
-						return e.score;
-					} else if(e.score < beta){
-						beta = e.score;
-					}
-				} else if(e.cutoffType == ZMap.CUTOFF_TYPE_LOWER){
-					if(e.score >= beta){
-						return e.score;
-					} else if(e.score > alpha){
-						alpha = e.score;
-					}
-				} else if(e.cutoffType == ZMap.CUTOFF_TYPE_EXACT){
-					return e.score;
-				}*/
+			if(e.depth >= depth){
 				if(pv ? e.cutoffType == ZMap.CUTOFF_TYPE_EXACT: (e.score >= beta?
 						e.cutoffType == ZMap.CUTOFF_TYPE_LOWER: e.cutoffType == ZMap.CUTOFF_TYPE_UPPER)){
 					return e.score;
