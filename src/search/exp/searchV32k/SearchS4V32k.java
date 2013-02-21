@@ -6,6 +6,9 @@ import java.io.IOException;
 import search.Search3;
 import search.SearchListener;
 import search.SearchStat;
+import search.exp.searchV32cc.Hash;
+import search.exp.searchV32cc.TTEntry;
+import search.exp.searchV32cc.ZMap3;
 import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
@@ -50,12 +53,15 @@ public final class SearchS4V32k implements Search3{
 	private final SearchStat27 stats = new SearchStat27();
 	private final Evaluator2<State4> e;
 	private final int qply = 8;
-	private final ZMap m;
+	private final Hash m;
 	private FileWriter f;
 	private SearchListener l;
 	private final static int stackSize = 128;
+	/** sequence number for hash entries*/
+	private int seq;
 	/** controls printing pv to console for debugging*/
 	private final static boolean printPV = true;
+	private final TTEntry fillEntry = new TTEntry();
 	
 	private final static int tteMoveRank = -1;
 	/** rank set to the first of the down takes*/
@@ -66,7 +72,8 @@ public final class SearchS4V32k implements Search3{
 	public SearchS4V32k(State4 s, Evaluator2<State4> e, int hashSize, boolean record){
 		this.s = s;
 		this.e = e;
-		m = new ZMap(hashSize);
+		m = new ZMap3(hashSize);
+		
 		stack = new MoveList[stackSize];
 		for(int i = 0; i < stack.length; i++){
 			stack[i] = new MoveList();
@@ -100,7 +107,7 @@ public final class SearchS4V32k implements Search3{
 		stats.searchTime = System.currentTimeMillis();
 		
 		//search initialization
-		m.incSeq();
+		seq++;
 		e.initialize(s);
 		cutoffSearch = false;
 		
@@ -131,13 +138,6 @@ public final class SearchS4V32k implements Search3{
 				beta = est+35;
 			}
 			
-			
-			if(alpha > beta){
-				final double temp = alpha;
-				alpha = beta;
-				beta = temp;
-			}
-			
 			//System.out.println("starting depth "+i);
 			stack[0].prevMove = 0;
 			score = recurse(player, alpha, beta, i, true, true, 0);
@@ -150,11 +150,6 @@ public final class SearchS4V32k implements Search3{
 				}
 				alpha = score-failOffset;
 				beta = score+5;
-				if(alpha > beta){
-					double temp = alpha;
-					alpha = beta;
-					beta = temp;
-				}
 				stack[0].prevMove = 0;
 				score = recurse(player, alpha, beta, i, true, true, 0);
 				if((score <= alpha || score >= beta)  && !cutoffSearch){
@@ -178,11 +173,6 @@ public final class SearchS4V32k implements Search3{
 				}
 				alpha = score-5;
 				beta = score+failOffset;
-				if(alpha > beta){
-					double temp = alpha;
-					alpha = beta;
-					beta = temp;
-				}
 				stack[0].prevMove = 0;
 				score = recurse(player, alpha, beta, i, true, true, 0);
 				if((score <= alpha || score >= beta)  && !cutoffSearch){
@@ -204,8 +194,9 @@ public final class SearchS4V32k implements Search3{
 				nodesSearched = stats.nodesSearched;
 				maxPlySearched = i;
 			}
-			if(m.get(s.zkey()) != null && m.get(s.zkey()).encoding != 0 && !cutoffSearch){
-				bestMove = m.get(s.zkey()).encoding;
+			final TTEntry tte;
+			if((tte = m.get(s.zkey())) != null && tte.move != 0 && !cutoffSearch){
+				bestMove = tte.move;
 				if(l != null){
 					l.plySearched(bestMove, i);
 				}
@@ -262,10 +253,10 @@ public final class SearchS4V32k implements Search3{
 	}
 	
 	private String getPVString(int player, State4 s, String pv, int depth, int maxDepth){
-		ZMap.Entry e = m.get(s.zkey());
-		if(depth < maxDepth && e != null && e.encoding != 0){
-			int pos1 = MoveEncoder.getPos1(e.encoding);
-			int pos2 = MoveEncoder.getPos2(e.encoding);
+		final TTEntry e = m.get(s.zkey());
+		if(depth < maxDepth && e != null && e.move != 0){
+			int pos1 = MoveEncoder.getPos1(e.move);
+			int pos2 = MoveEncoder.getPos2(e.move);
 
 			this.e.initialize(s);
 			double eval = this.e.eval(s, player);
@@ -303,6 +294,7 @@ public final class SearchS4V32k implements Search3{
 	private double recurse(int player, double alpha, double beta, int depth,
 			boolean pv, boolean rootNode, int stackIndex){
 		stats.nodesSearched++;
+		assert alpha < beta;
 		
 		if(depth <= 0){
 			//dont descend into quiescent search until out of check
@@ -325,24 +317,24 @@ public final class SearchS4V32k implements Search3{
 		int w = 0;
 
 		final long zkey = s.zkey();
-		final ZMap.Entry e = m.get(zkey);
+		final TTEntry e = m.get(zkey);
 		boolean tteMove = false;
 		
 		if(e != null){
 			stats.hashHits++;
 			if(e.depth >= depth){
-				if(pv ? e.cutoffType == ZMap.CUTOFF_TYPE_EXACT: (e.score >= beta?
-						e.cutoffType == ZMap.CUTOFF_TYPE_LOWER: e.cutoffType == ZMap.CUTOFF_TYPE_UPPER)){
+				if(pv ? e.cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (e.score >= beta?
+						e.cutoffType == TTEntry.CUTOFF_TYPE_LOWER: e.cutoffType == TTEntry.CUTOFF_TYPE_UPPER)){
 					
 					if(stackIndex-1 >= 0 && e.score >= beta){
-						attemptKillerStore(e.encoding, ml.skipNullMove, stack[stackIndex-1]);
+						attemptKillerStore(e.move, ml.skipNullMove, stack[stackIndex-1]);
 					}
 					
 					return e.score;
 				}
 			}
-			if(e.encoding != 0){
-				long encoding = e.encoding;
+			if(e.move != 0){
+				long encoding = e.move;
 				pieceMasks[w] = 1L<<MoveEncoder.getPos1(encoding);
 				moves[w] = 1L<<MoveEncoder.getPos2(encoding);
 				ranks[w++] = tteMoveRank;
@@ -417,10 +409,10 @@ public final class SearchS4V32k implements Search3{
 			stack[stackIndex+1].skipNullMove = true;
 			recurse(player, alpha, beta, d, pv, rootNode, stackIndex+1);
 			stack[stackIndex+1].skipNullMove = false;
-			ZMap.Entry temp = null;
-			if((temp = m.get(s.zkey())) != null && temp.encoding != 0){
+			final TTEntry temp;
+			if((temp = m.get(zkey)) != null && temp.move != 0){
 				tteMove = true;
-				long encoding = temp.encoding;
+				long encoding = temp.move;
 				pieceMasks[w] = 1L<<MoveEncoder.getPos1(encoding);
 				moves[w] = 1L<<MoveEncoder.getPos2(encoding);
 				ranks[w++] = tteMoveRank;
@@ -432,7 +424,9 @@ public final class SearchS4V32k implements Search3{
 		genMoves(player, s, ml, m, false);
 		final int length = ml.length;
 		if(length == 0){ //no moves, draw
-			m.put2(zkey, 0, 0, depth, ZMap.CUTOFF_TYPE_EXACT);
+			//m.put2(zkey, 0, 0, depth, ZMap.CUTOFF_TYPE_EXACT);
+			fillEntry.fill(zkey, 0, 0, depth, TTEntry.CUTOFF_TYPE_EXACT, seq);
+			m.put(zkey, fillEntry);
 			return 0;
 		}
 		isort(pieceMasks, moves, ranks, length);
@@ -507,7 +501,9 @@ public final class SearchS4V32k implements Search3{
 						cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
 						if(alpha >= beta){
 							if(!cutoffSearch){
-								m.put2(zkey, bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
+								//m.put2(zkey, bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
+								fillEntry.fill(zkey, encoding, alpha, depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
+								m.put(zkey, fillEntry);
 							}
 							
 							//check to see if killer move can be stored
@@ -530,8 +526,11 @@ public final class SearchS4V32k implements Search3{
 			cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
 		}
 		
-		if(!cutoffSearch)
-				m.put2(zkey, bestMove, bestScore, depth, cutoffFlag);
+		if(!cutoffSearch){
+			//m.put2(zkey, bestMove, bestScore, depth, cutoffFlag);
+			fillEntry.fill(zkey, bestMove, bestScore, depth, cutoffFlag, seq);
+			m.put(zkey, fillEntry);
+		}
 		return bestScore;
 	}
 	
@@ -550,17 +549,17 @@ public final class SearchS4V32k implements Search3{
 		final int[] ranks = stack[stackIndex].ranks; //move ranking
 
 		final long zkey = s.zkey();
-		final ZMap.Entry e = m.get(zkey);
+		final TTEntry e = m.get(zkey);
 		if(e != null){
 			stats.hashHits++;
 			if(e.depth >= depth){
-				if(pv ? e.cutoffType == ZMap.CUTOFF_TYPE_EXACT: (e.score >= beta?
-						e.cutoffType == ZMap.CUTOFF_TYPE_LOWER: e.cutoffType == ZMap.CUTOFF_TYPE_UPPER)){
+				if(pv ? e.cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (e.score >= beta?
+						e.cutoffType == TTEntry.CUTOFF_TYPE_LOWER: e.cutoffType == ZMap.CUTOFF_TYPE_UPPER)){
 					return e.score;
 				}
 			}
-			if(e.encoding != 0){
-				long encoding = e.encoding;
+			if(e.move != 0){
+				long encoding = e.move;
 				pieceMasks[w] = 1L<<MoveEncoder.getPos1(encoding);
 				moves[w] = 1L<<MoveEncoder.getPos2(encoding);
 				ranks[w++] = 0;
@@ -590,8 +589,8 @@ public final class SearchS4V32k implements Search3{
 
 		
 		double g = alpha;
-		int cutoffFlag = ZMap.CUTOFF_TYPE_UPPER;
-		
+		int cutoffFlag = TTEntry.CUTOFF_TYPE_UPPER;
+		long bestMove = 0;
 		for(int i = 0; i < length && !cutoffSearch; i++){
 			for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
 				long encoding = s.executeMove(player, pieceMasks[i], movesTemp&-movesTemp);
@@ -619,22 +618,28 @@ public final class SearchS4V32k implements Search3{
 				
 				if(g > bestScore){
 					bestScore = g;
-				}
-				
-				if(g > alpha){
-					alpha = g;
-					if(g >= beta){
-						if(!cutoffSearch)
-							m.put2(zkey, encoding, g, depth, ZMap.CUTOFF_TYPE_LOWER);
-						return g;
+					bestMove = encoding;
+					if(g > alpha){
+						alpha = g;
+						if(g >= beta){
+							if(!cutoffSearch){
+								//m.put2(zkey, encoding, g, depth, TTEntry.CUTOFF_TYPE_LOWER);
+								fillEntry.fill(zkey, encoding, g, depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
+								m.put(zkey, fillEntry);
+							}
+							return g;
+						}
+						cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 					}
-					cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
 				}
 			}
 		}
 
-		if(!cutoffSearch)
-			m.put2(zkey, 0, bestScore, depth, cutoffFlag);
+		if(!cutoffSearch){
+			//m.put2(zkey, 0, bestScore, depth, cutoffFlag);
+			fillEntry.fill(zkey, bestMove, bestScore, depth, cutoffFlag, seq);
+			m.put(zkey, fillEntry);
+		}
 		return bestScore;
 	}
 
@@ -708,7 +713,7 @@ public final class SearchS4V32k implements Search3{
 	
 	/** record moves as blocks*/
 	private static void recordMoves(int player, int pieceMovingType, long pieceMask,
-			long moves, MoveList ml, State4 s, ZMap m, boolean quiesce, long retakeMask){
+			long moves, MoveList ml, State4 s, Hash m, boolean quiesce, long retakeMask){
 		final long piece = pieceMask&-pieceMask;
 		if(piece != 0 && moves != 0){
 			final long enemy = s.pieces[1-player];
@@ -751,7 +756,7 @@ public final class SearchS4V32k implements Search3{
 		}
 	}
 	
-	private static void genMoves(final int player, State4 s, MoveList ml, ZMap m, boolean quiece){
+	private static void genMoves(final int player, State4 s, MoveList ml, Hash m, boolean quiece){
 		ml.upTakes[State4.PIECE_TYPE_KING] = s.pieces[1-player];
 		ml.upTakes[State4.PIECE_TYPE_QUEEN] = s.queens[1-player]|s.kings[1-player];
 		ml.upTakes[State4.PIECE_TYPE_ROOK] = ml.upTakes[State4.PIECE_TYPE_QUEEN]|s.rooks[1-player];
