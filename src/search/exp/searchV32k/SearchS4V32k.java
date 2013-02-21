@@ -530,7 +530,7 @@ public final class SearchS4V32k implements Search3{
 		
 		if(!cutoffSearch){
 			//m.put2(zkey, bestMove, bestScore, depth, cutoffFlag);
-			fillEntry.fill(zkey, bestMove, bestScore, depth, cutoffFlag, seq);
+			fillEntry.fill(zkey, bestMove, bestScore, depth, pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
 			m.put(zkey, fillEntry);
 		}
 		return bestScore;
@@ -578,7 +578,7 @@ public final class SearchS4V32k implements Search3{
 			bestScore = this.e.eval(s, player);
 			if(bestScore >= beta){ //standing pat
 				return bestScore;
-			} else if(bestScore > alpha){
+			} else if(bestScore > alpha && pv){
 				alpha = bestScore;
 			}
 		}
@@ -603,10 +603,11 @@ public final class SearchS4V32k implements Search3{
 					//king in check after move
 					g = -77777;
 				} else{
-					g = -qsearch(1-player, -(alpha+1), -alpha, depth-1, stackIndex+1, pv);
+					/*g = -qsearch(1-player, -(alpha+1), -alpha, depth-1, stackIndex+1, pv);
 					if(alpha < g && g < beta){
 						g = -qsearch(1-player, -beta, -alpha, depth-1, stackIndex+1, pv);
-					}
+					}*/
+					g = -qsearch(1-player, -beta, -alpha, depth-1, stackIndex+1, pv);
 				}
 				s.undoMove();
 				this.e.undoMove(encoding);
@@ -625,7 +626,6 @@ public final class SearchS4V32k implements Search3{
 						alpha = g;
 						if(g >= beta){
 							if(!cutoffSearch){
-								//m.put2(zkey, encoding, g, depth, TTEntry.CUTOFF_TYPE_LOWER);
 								fillEntry.fill(zkey, encoding, g, depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
 								m.put(zkey, fillEntry);
 							}
@@ -638,8 +638,7 @@ public final class SearchS4V32k implements Search3{
 		}
 
 		if(!cutoffSearch){
-			//m.put2(zkey, 0, bestScore, depth, cutoffFlag);
-			fillEntry.fill(zkey, bestMove, bestScore, depth, cutoffFlag, seq);
+			fillEntry.fill(zkey, bestMove, bestScore, depth, pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
 			m.put(zkey, fillEntry);
 		}
 		return bestScore;
