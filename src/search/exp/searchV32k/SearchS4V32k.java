@@ -8,7 +8,7 @@ import search.SearchListener;
 import search.SearchStat;
 import search.exp.searchV32cc.Hash;
 import search.exp.searchV32cc.TTEntry;
-import search.exp.searchV32cc.ZMap3;
+import search.exp.searchV32cc.ZMap4;
 import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
@@ -72,7 +72,9 @@ public final class SearchS4V32k implements Search3{
 	public SearchS4V32k(State4 s, Evaluator2<State4> e, int hashSize, boolean record){
 		this.s = s;
 		this.e = e;
-		m = new ZMap3(hashSize);
+		
+		//m = new ZMap3(hashSize);
+		m = new ZMap4(hashSize);
 		
 		stack = new MoveList[stackSize];
 		for(int i = 0; i < stack.length; i++){
@@ -456,7 +458,7 @@ public final class SearchS4V32k implements Search3{
 					
 					//second more theoretically sound, but higher branching factor
 					final boolean pvMove = pv && i==0;
-					//final boolean pvMove = pv && cutoffFlag == ZMap.CUTOFF_TYPE_UPPER; //second part checks that alpha has not been improved
+					//final boolean pvMove = pv && cutoffFlag == TTEntry.CUTOFF_TYPE_UPPER; //second part checks that alpha has not been improved
 					
 					final boolean isCapture = MoveEncoder.getTakenType(encoding) != State4.PIECE_TYPE_EMPTY;
 					final boolean inCheck = ml.kingAttacked[player];
@@ -695,18 +697,18 @@ public final class SearchS4V32k implements Search3{
 	private static void attemptKillerStore(final long move, final boolean skipNullMove, final MoveList prev){
 		assert prev != null;
 		if(move != 0 && !skipNullMove &&
-				move != prev.killer[0] &&
-				move != prev.killer[1] &&
+				(move&0xFFF) != prev.killer[0] &&
+				(move&0xFFF) != prev.killer[1] &&
 				MoveEncoder.getTakenType(move) == State4.PIECE_TYPE_EMPTY &&
 				MoveEncoder.isCastle(move) == 0 &&
 				MoveEncoder.isEnPassanteTake(move) == 0 &&
 				!MoveEncoder.isPawnPromoted(move)){
 			if(prev.killer[0] != move){
 				prev.killer[1] = prev.killer[0];
-				prev.killer[0] = move;
+				prev.killer[0] = move & 0xFFF;
 			} else{
 				prev.killer[0] = prev.killer[1];
-				prev.killer[1] = move;
+				prev.killer[1] = move & 0xFFF;
 			}
 		}
 	}

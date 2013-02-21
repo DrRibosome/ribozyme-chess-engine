@@ -59,7 +59,7 @@ public final class TimerThread3 extends Thread{
 		final int material = getMaterial(s);
 		long target = time / (getHalfMovesRemaining(material)/2);
 		search.setListener(l);
-		final long maxTime = (long)(time*.08);
+		final long maxTime = (long)(time*(material >= 60? .03: .06));
 		
 		System.out.println("moves remaining = "+(getHalfMovesRemaining(material)/2));
 		System.out.println("target time = "+target);
@@ -97,8 +97,8 @@ public final class TimerThread3 extends Thread{
 			//handle adjustments from search failures
 			while(!q.isEmpty()){
 				int failType = q.poll();
-				double scale = failType == failHigh? .05: .11;
-				target += -failType*target*scale;
+				double scale = failType == failHigh? .005: .01;
+				target += target*scale;
 			}
 		}
 		
