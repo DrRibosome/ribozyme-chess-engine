@@ -7,6 +7,8 @@ import search.SearchListener;
 import state4.State4;
 
 public final class TimerThread3 extends Thread{
+	private final static int failLow = -1;
+	private final static int failHigh = 1;
 	
 	private Search3 search;
 	private State4 s;
@@ -33,11 +35,11 @@ public final class TimerThread3 extends Thread{
 		}
 		@Override
 		public void failLow(int ply) {
-			q.add(-1);
+			q.add(failLow);
 		}
 		@Override
 		public void failHigh(int ply) {
-			q.add(1);
+			q.add(failHigh);
 		}
 	};
 	
@@ -95,7 +97,7 @@ public final class TimerThread3 extends Thread{
 			//handle adjustments from search failures
 			while(!q.isEmpty()){
 				int failType = q.poll();
-				double scale = failType == 1? .07: .15;
+				double scale = failType == failHigh? .05: .11;
 				target += -failType*target*scale;
 			}
 		}

@@ -13,9 +13,10 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import search.Search3;
-import search.SearchS4V32;
 import search.SearchStat;
+import search.exp.searchV32k.SearchS4V32k;
 import state4.State4;
+import state4.StateUtil;
 import time.TimerThread3;
 import util.AlgebraicNotation2;
 import util.opening.SuperBook;
@@ -121,8 +122,9 @@ public class ChessServer4 extends WebSocketServer{
 					
 					agg = new SearchStat();
 					searcher =
-							new SearchS4V32(s, e, 21, false);
-							//new SearchS4V32cc(s, e, 24, false);
+							//new SearchS4V32(s, e, 21, false);
+							//new SearchS4V32cc(s, e, 21, false);
+							new SearchS4V32k(s, e, 22, false);
 					
 					
 					
@@ -189,7 +191,10 @@ public class ChessServer4 extends WebSocketServer{
 					}
 					if(!hasMoves || failed || skipped){
 						System.out.println("==========================================================================");
-						System.out.println("searching state:\n"+s);
+						System.out.println("searching state:");
+						System.out.println(StateUtil.fen(botPlayer, s));
+						System.out.println(s);
+						System.out.println("turn = "+botPlayer);
 						long t = System.currentTimeMillis();
 						TimerThread3.search(searcher, s, botPlayer, time[botPlayer], 0, move);
 						final long waitTime = 75;
@@ -205,11 +210,12 @@ public class ChessServer4 extends WebSocketServer{
 						System.out.println("hash hit rate = "+(stats.hashHits*1./stats.nodesSearched));
 						agg(stats, agg);
 						System.out.println("avg hash hit rate = "+(agg.hashHits*1./agg.nodesSearched));
-						
+						System.out.println("after search state:\n"+s);
 					}
 					//searcher.getMove(move, botPlayer, 650);
 					movedWaiting = true;
 					currentMove = "" + (char)('a'+move[0]%8)+(move[0]/8+1)+(char)('a'+move[1]%8)+(move[1]/8+1);
+					System.out.println("sending move '"+currentMove+"'");
 					conn.send(currentMove);
 				}
 			}

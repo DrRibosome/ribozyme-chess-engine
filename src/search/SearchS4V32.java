@@ -283,6 +283,7 @@ public final class SearchS4V32 implements Search3{
 			int pos1 = MoveEncoder.getPos1(e.encoding);
 			int pos2 = MoveEncoder.getPos2(e.encoding);
 			
+			this.e.initialize(s);
 			double eval = this.e.eval(s, player);
 			
 			pv += moveString(pos1)+"->"+moveString(pos2)+" ("+eval+"), ";
@@ -545,7 +546,7 @@ public final class SearchS4V32 implements Search3{
 				if(g > bestScore){
 					bestScore = g;
 					bestMove = encoding;
-					if(g >= alpha){
+					if(g > alpha){
 						alpha = g;
 						cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
 						if(alpha >= beta){

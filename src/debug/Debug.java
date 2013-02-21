@@ -1,10 +1,11 @@
 package debug;
 
 import search.Search3;
-import search.exp.searchV32cc.SearchS4V32cc;
+import search.exp.searchV32k.SearchS4V32k;
 import state4.BitUtil;
 import state4.Masks;
 import state4.State4;
+import state4.StateUtil;
 import uci.FenParser;
 import uci.Position;
 import eval.evalV8.SuperEvalS4V8;
@@ -40,8 +41,14 @@ public class Debug {
 		//State4 s = loadConfig(c2);
 		
 		//Position p = FenParser.parse("7r/p1pk4/5p2/1p1r2p1/7p/P3PN1P/1P3KPB/2R5 b - - - -");
-		Position p = FenParser.parse("8/8/2p3p1/2pp1b2/1n1k4/1P3P2/1P1K4/R7 w - - - -");
+		//Position p = FenParser.parse("8/8/2p3p1/2pp1b2/1n1k4/1P3P2/1P1K4/R7 w - - - -");
 		//Position p = FenParser.parse("2r1r1k1/p4ppp/3Bp3/2P5/1p2P2P/6Q1/qb3PP1/1R1R2K1 w - - - -"); //bm Rb2
+		//Position p = FenParser.parse("1q1rkb1r/pp2pppp/2n2n2/1N1P4/5P2/4BB2/PP3P1P/R2Q1RK1 b - - - -");
+		//Position p = FenParser.parse("r1b1kb1r/ppp1qppp/2n5/1B1n4/3Q4/2P2N2/PP3PPP/RNB2K1R b - - - -");
+		//Position p = FenParser.parse("2kr1b1r/ppp3pp/4qp2/3P4/3Q3B/5N2/PP1N1PPP/5K1R b - - - -");
+		//Position p = FenParser.parse("7r/p1pk4/5p2/1p1r2p1/7p/P3PN1P/1P3KPB/2R5 b - - - -");
+		Position p = FenParser.parse("1r5k/1P3pp1/B3pn1p/8/R7/1r3P2/5P1P/R4K2 w - - - -");
+		System.out.println(StateUtil.fen(p.sideToMove, p.s));
 		State4 s = p.s;
 		int player = p.sideToMove;
 		
@@ -50,15 +57,19 @@ public class Debug {
 		e.initialize(s);
 		//e.traceEval(s, State4.WHITE);
 		
-		final int maxDepth = 14;
+		final int maxDepth = 13;
 		//Search3 search = new SearchS4V32(s, e, 20, false);
-		Search3 search = new SearchS4V32cc(s, e, 20, false);
+		Search3 search = new SearchS4V32k(s, e, 20, false);
+		//Search3 search = new SearchS4V32cc(s, e, 20, false);
 		int[] move = new int[2];
 		search.search(player, move, maxDepth);
 		System.out.println("\n"+getMoveString(move, 0)+" -> "+getMoveString(move, 1));
 		System.out.println("nodes searched = "+search.getStats().nodesSearched);
 		System.out.println("hash hit rate = "+search.getStats().hashHits*1./search.getStats().nodesSearched);
 		System.out.println("branching factor = "+search.getStats().empBranchingFactor);
+		
+		
+		System.out.println(s);
 		
 		//TimerThread3.search(new SearchS4V30(maxDepth, s, e, 20, false), s, State4.WHITE, 1000*60*3, 0, move);
 		
