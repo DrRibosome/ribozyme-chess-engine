@@ -465,8 +465,9 @@ public final class SearchS4V32k implements Search3{
 					if(depth > 2 && !pvMove && !isCapture && !inCheck && !givesCheck){
 						//int reducedDepth = pv? depth-2: depth/2;
 						int reducedDepth = pv? depth-1: depth-2;
+						//int reducedDepth =  depth/2;
 						g = -recurse(1-player, -(alpha+1), -alpha, reducedDepth, false, false, stackIndex+1);
-						fullSearch = g > alpha;
+						fullSearch = g+100 > alpha;
 					} else{
 						fullSearch = true;
 					}
@@ -763,9 +764,9 @@ public final class SearchS4V32k implements Search3{
 		ml.upTakes[State4.PIECE_TYPE_PAWN] = s.pieces[1-player];
 		
 		long retakeMask = 0;
-		if(MoveEncoder.getTakenType(ml.prevMove) != State4.PIECE_TYPE_EMPTY){
+		/*if(MoveEncoder.getTakenType(ml.prevMove) != State4.PIECE_TYPE_EMPTY){
 			retakeMask = 1L<<MoveEncoder.getPos2(ml.prevMove);
-		}
+		}*/
 		
 		if(ml.kingAttacked[player]){
 			long kingMoves = State4.getKingMoves(player, s.pieces, s.kings[player]);
