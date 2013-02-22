@@ -1,10 +1,13 @@
-package search;
+package search.legacy;
 
 import java.io.FileWriter;
 import java.io.IOException;
 
 import eval.Evaluator2;
 
+import search.Search3;
+import search.SearchListener;
+import search.SearchStat;
 import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;

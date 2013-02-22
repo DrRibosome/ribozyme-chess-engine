@@ -1,11 +1,8 @@
-package search.exp.searchV32k;
+package search;
 
 import java.io.FileWriter;
 import java.io.IOException;
 
-import search.Search3;
-import search.SearchListener;
-import search.SearchStat;
 import search.exp.searchV32cc.Hash;
 import search.exp.searchV32cc.TTEntry;
 import search.exp.searchV32cc.ZMap4;
