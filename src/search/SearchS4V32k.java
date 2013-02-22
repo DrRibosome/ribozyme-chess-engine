@@ -396,7 +396,7 @@ public final class SearchS4V32k implements Search3{
 					//if(!cutoffSearch) m.put2(s.zkey(), 0, n, depth, ZMap.CUTOFF_TYPE_LOWER);
 					return n;
 				}
-			} else if(n <= alpha){
+			} else if(n < alpha){
 				stats.nullMoveFailLow++;
 			}
 		}
