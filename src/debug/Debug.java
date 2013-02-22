@@ -47,7 +47,8 @@ public class Debug {
 		//Position p = FenParser.parse("r1b1kb1r/ppp1qppp/2n5/1B1n4/3Q4/2P2N2/PP3PPP/RNB2K1R b - - - -");
 		//Position p = FenParser.parse("2kr1b1r/ppp3pp/4qp2/3P4/3Q3B/5N2/PP1N1PPP/5K1R b - - - -");
 		//Position p = FenParser.parse("7r/p1pk4/5p2/1p1r2p1/7p/P3PN1P/1P3KPB/2R5 b - - - -");
-		Position p = FenParser.parse("1r5k/1P3pp1/B3pn1p/8/R7/1r3P2/5P1P/R4K2 w - - - -");
+		//Position p = FenParser.parse("1r5k/1P3pp1/B3pn1p/8/R7/1r3P2/5P1P/R4K2 w - - - -");
+		Position p = FenParser.parse("2r2bk1/pp3p2/1n2q2B/1P3N1Q/2p5/4P3/P4PP1/3R2K1 b - - - -");
 		System.out.println(StateUtil.fen(p.sideToMove, p.s));
 		State4 s = p.s;
 		int player = p.sideToMove;
@@ -57,7 +58,7 @@ public class Debug {
 		e.initialize(s);
 		//e.traceEval(s, State4.WHITE);
 		
-		final int maxDepth = 13;
+		final int maxDepth = 15;
 		//Search3 search = new SearchS4V32(s, e, 20, false);
 		Search3 search = new SearchS4V32k(s, e, 20, false);
 		//Search3 search = new SearchS4V32cc(s, e, 20, false);
@@ -67,6 +68,7 @@ public class Debug {
 		System.out.println("nodes searched = "+search.getStats().nodesSearched);
 		System.out.println("hash hit rate = "+search.getStats().hashHits*1./search.getStats().nodesSearched);
 		System.out.println("branching factor = "+search.getStats().empBranchingFactor);
+		System.out.println(((SearchS4V32k.SearchStat27)search.getStats()).forcedQuietCutoffs);
 		
 		
 		System.out.println(s);

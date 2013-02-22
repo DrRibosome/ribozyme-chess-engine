@@ -124,7 +124,7 @@ public class ChessServer4 extends WebSocketServer{
 					searcher =
 							//new SearchS4V32(s, e, 21, false);
 							//new SearchS4V32cc(s, e, 21, false);
-							new SearchS4V32k(s, e, 22, false);
+							new SearchS4V32k(s, e, 21, false);
 					
 					
 					

@@ -52,7 +52,7 @@ public final class SearchS4V32k implements Search3{
 	private final State4 s;
 	private final SearchStat27 stats = new SearchStat27();
 	private final Evaluator2<State4> e;
-	private final int qply = 8;
+	private final int qply = 12;
 	private final Hash m;
 	private FileWriter f;
 	private SearchListener l;
@@ -624,6 +624,7 @@ public final class SearchS4V32k implements Search3{
 					bestMove = encoding;
 					if(g > alpha){
 						alpha = g;
+						cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 						if(g >= beta){
 							if(!cutoffSearch){
 								fillEntry.fill(zkey, encoding, g, depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
@@ -631,7 +632,6 @@ public final class SearchS4V32k implements Search3{
 							}
 							return g;
 						}
-						cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 					}
 				}
 			}
