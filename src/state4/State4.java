@@ -35,12 +35,13 @@ public final class State4 {
 	public final long[] rooks = pieceMasks[PIECE_TYPE_ROOK];
 	public final long[] bishops = pieceMasks[PIECE_TYPE_BISHOP];
 	
-	private final long[] history = new long[128];
+	private final long[] history = new long[64];
 	/** index in {@link #history} of first unused record*/
 	private int hindex = 0;
 	/** zobrist hash key*/
 	private long zkey = 0;
-	private final HistoryMap hm = new HistoryMap(13, 4);
+	private final HistoryMap2 hm = new HistoryMap2(10);
+	//private final HistoryMap hm = new HistoryMap(13, 4);
 	
 	public final boolean[] kingMoved = new boolean[2];
 	public final boolean[][] rookMoved = new boolean[2][2];
@@ -145,7 +146,7 @@ public final class State4 {
 	
 	/** if true, player to move has the option to draw*/
 	public boolean isDrawable(){
-		return hm.getCount(zkey) >= 3;
+		return hm.get(zkey) >= 3;
 	}
 	
 	/**
@@ -759,14 +760,12 @@ public final class State4 {
 		collect();
 	}
 	
+	/** appearch hash, applied to zkey to denote how many times a positions hash appeared*/
+	private final static long[] appHashs = new long[]{0, 0, ZHash.appeared2, ZHash.appeared3};
 	public long zkey(){
-		long zkey = this.zkey;
-		final int count2 = hm.getCount(zkey);
-		if(count2 > 1){
-			if(count2 == 2) zkey ^= ZHash.appeared2;
-			else if(count2 >= 3) zkey ^= ZHash.appeared3;
-		}
-		return zkey;
+		final int count = hm.get(zkey);
+		assert count >= 0;
+		return zkey ^ appHashs[count < 4? count: 3];
 	}
 	
 	/**
@@ -790,7 +789,7 @@ public final class State4 {
 		System.arraycopy(src.rookMoved[1], 0, dest.rookMoved[1], 0, 2);
 		System.arraycopy(src.isCastled, 0, dest.isCastled, 0, 2);
 		dest.resetHistory();
-		dest.hm.clear();
+		//dest.hm.clear();
 		dest.zkey = 0;
 	}
 }
