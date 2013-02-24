@@ -95,4 +95,6 @@ public final class LayeredHash implements Hash{
 	private static int h2(final long b, final long zkey, final int size){
 		return (int)(b*zkey >>> 64-size);
 	}
+	
+	public void clear(){assert false;}
 }

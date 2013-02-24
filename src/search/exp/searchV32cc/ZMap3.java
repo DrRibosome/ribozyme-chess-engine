@@ -46,4 +46,6 @@ public final class ZMap3 implements Hash{
 			alwaysReplace[index].fill(e);
 		}
 	}
+	
+	public void clear(){assert false;}
 }

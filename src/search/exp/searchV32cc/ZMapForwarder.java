@@ -32,5 +32,7 @@ public final class ZMapForwarder implements Hash{
 		}
 		return null;
 	}
+	
+	public void clear(){assert false;}
 
 }
