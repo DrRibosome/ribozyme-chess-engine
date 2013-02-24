@@ -1,11 +1,11 @@
-package search;
+package search.search32k;
 
 import java.io.FileWriter;
 import java.io.IOException;
 
-import search.exp.searchV32cc.Hash;
-import search.exp.searchV32cc.TTEntry;
-import search.exp.searchV32cc.ZMap4;
+import search.Search3;
+import search.SearchListener;
+import search.SearchStat;
 import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
@@ -58,7 +58,7 @@ public final class SearchS4V32k implements Search3{
 	/** sequence number for hash entries*/
 	private int seq;
 	/** controls printing pv to console for debugging*/
-	private final static boolean printPV = true;
+	private final static boolean printPV = false;
 	private final TTEntry fillEntry = new TTEntry();
 	
 	private final static int tteMoveRank = -1;
@@ -96,6 +96,10 @@ public final class SearchS4V32k implements Search3{
 	
 	public void search(int player, int[] moveStore){
 		search(player, moveStore, -1);
+	}
+	
+	public void clearHash(){
+		m.clear();
 	}
 	
 	public void search(int player, int[] moveStore, int maxPly){

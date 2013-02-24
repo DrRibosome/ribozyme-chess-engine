@@ -1,5 +1,8 @@
 package search.exp.searchV32cc;
 
+import search.search32k.Hash;
+import search.search32k.TTEntry;
+
 /** rough but working implementation of cuckoo hashing*/
 public final class LayeredHash implements Hash{
 	/** level 1 depth hash*/

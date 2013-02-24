@@ -1,4 +1,5 @@
-package search.exp.searchV32cc;
+package search.search32k;
+
 
 /** rough but working implementation of cuckoo hashing*/
 public final class CuckooHash2 implements Hash{
@@ -27,15 +28,11 @@ public final class CuckooHash2 implements Hash{
 			final int index1 = h1(a, t.zkey, size);
 			TTEntry.swap(l[index1], t);
 			if(t.zkey == 0 || t.seq != seq || t.depth < l[index1].depth){
-			//if(t.zkey == 0 || t.seq != seq){
-			//if(t.zkey == 0){
 				return;
 			} else{
 				final int index2 = h2(b, t.zkey, size);
 				TTEntry.swap(l[index2], t);
 				if(t.zkey == 0 || t.seq != seq || t.depth < l[index2].depth){
-				//if(t.zkey == 0 || t.seq != seq){
-				//if(t.zkey == 0){
 					return;
 				}
 			}
@@ -61,5 +58,11 @@ public final class CuckooHash2 implements Hash{
 	
 	private static int h2(final long b, final long zkey, final int size){
 		return (int)(b*zkey >>> 64-size);
+	}
+	
+	public void clear(){
+		for(int a = 0; a < 1<<size; a++){
+			l[a].clear();
+		}
 	}
 }

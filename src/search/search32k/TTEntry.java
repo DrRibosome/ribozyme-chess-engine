@@ -1,4 +1,4 @@
-package search.exp.searchV32cc;
+package search.search32k;
 
 public final class TTEntry {
 	public final static int CUTOFF_TYPE_EXACT = 0;
@@ -11,6 +11,15 @@ public final class TTEntry {
 	public int depth;
 	public int seq;
 	public int cutoffType;
+	
+	public void clear(){
+		zkey = 0;
+		score = 0;
+		move = 0;
+		depth = 0;
+		seq = 0;
+		cutoffType = 0;
+	}
 	
 	public void fill(final long zkey, final long move, final double score, final int depth,
 			final int cutoffType, final int seq){

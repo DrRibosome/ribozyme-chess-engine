@@ -6,6 +6,8 @@ import java.io.IOException;
 import search.Search3;
 import search.SearchListener;
 import search.SearchStat;
+import search.search32k.Hash;
+import search.search32k.TTEntry;
 import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;

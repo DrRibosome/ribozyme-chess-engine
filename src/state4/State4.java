@@ -756,6 +756,7 @@ public final class State4 {
 		}
 		zkey ^= ZHash.turn[0];
 		//zkey = 0;
+		hm.clear();
 		hm.put(zkey);
 		collect();
 	}

@@ -1,4 +1,5 @@
-package search.exp.searchV32cc;
+package search.search32k;
+
 
 public final class ZMap4 implements Hash{
 	private final CuckooHash2 alwaysReplace;
@@ -43,5 +44,12 @@ public final class ZMap4 implements Hash{
 		} else{
 			alwaysReplace.put(zkey, e);
 		}
+	}
+	
+	public void clear(){
+		for(int a = 0; a < 1<<size; a++){
+			depthReplace[a].clear();
+		}
+		alwaysReplace.clear();
 	}
 }

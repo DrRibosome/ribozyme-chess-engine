@@ -1,5 +1,8 @@
 package search.exp.searchV32cc;
 
+import search.search32k.Hash;
+import search.search32k.TTEntry;
+
 
 public final class ZMapForwarder implements Hash{
 
