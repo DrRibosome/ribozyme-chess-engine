@@ -577,7 +577,7 @@ public final class SearchS4V32k implements Search3{
 				long encoding = e.move;
 				pieceMasks[w] = 1L<<MoveEncoder.getPos1(encoding);
 				moves[w] = 1L<<MoveEncoder.getPos2(encoding);
-				ranks[w++] = 0;
+				ranks[w++] = tteMoveRank;
 			}
 		}
 		
