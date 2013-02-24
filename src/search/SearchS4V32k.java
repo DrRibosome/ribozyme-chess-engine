@@ -40,7 +40,7 @@ public final class SearchS4V32k implements Search3{
 		public final boolean[] kingAttacked = new boolean[2];
 		public final long[] upTakes = new long[7];
 		public boolean skipNullMove = false;
-		public long prevMove;
+		/** holds killer moves as first 12 bits (ie, masked 0xFFF) of move encoding*/
 		public final long[] killer = new long[2];
 	}
 	
@@ -138,7 +138,6 @@ public final class SearchS4V32k implements Search3{
 			}
 			
 			//System.out.println("starting depth "+i);
-			stack[0].prevMove = 0;
 			score = recurse(player, alpha, beta, i, true, true, 0);
 			
 			
@@ -149,7 +148,6 @@ public final class SearchS4V32k implements Search3{
 				}
 				alpha = score-failOffset;
 				beta = score+5;
-				stack[0].prevMove = 0;
 				score = recurse(player, alpha, beta, i, true, true, 0);
 				if((score <= alpha || score >= beta)  && !cutoffSearch){
 					//System.out.println("double fail");
@@ -162,7 +160,6 @@ public final class SearchS4V32k implements Search3{
 					}
 					alpha = min;
 					beta = max;
-					stack[0].prevMove = 0;
 					score = recurse(player, alpha, beta, i, true, true, 0);
 				}
 			} else if(score >= beta && !cutoffSearch){
@@ -172,7 +169,6 @@ public final class SearchS4V32k implements Search3{
 				}
 				alpha = score-5;
 				beta = score+failOffset;
-				stack[0].prevMove = 0;
 				score = recurse(player, alpha, beta, i, true, true, 0);
 				if((score <= alpha || score >= beta)  && !cutoffSearch){
 					//System.out.println("double fail");
@@ -185,7 +181,6 @@ public final class SearchS4V32k implements Search3{
 					}
 					alpha = min;
 					beta = max;
-					stack[0].prevMove = 0;
 					score = recurse(player, alpha, beta, i, true, true, 0);
 				}
 			}
@@ -371,7 +366,6 @@ public final class SearchS4V32k implements Search3{
 			int r = 3 + depth/4;
 			
 			stack[stackIndex+1].skipNullMove = true;
-			stack[stackIndex+1].prevMove = 0;
 			s.nullMove();
 			double n = -recurse(1-player, -beta, -alpha, depth-r, pv, rootNode, stackIndex+1);
 			//double n = -recurse(1-player, -beta-1, -beta, depth-r, pv, rootNode, stackIndex+1);
@@ -446,7 +440,6 @@ public final class SearchS4V32k implements Search3{
 				
 				long encoding = s.executeMove(player, pieceMasks[i], movesTemp&-movesTemp);
 				this.e.processMove(encoding);
-				stack[stackIndex+1].prevMove = encoding;
 				boolean isDrawable = s.isDrawable(); //player can take a draw
 
 				if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
@@ -468,9 +461,7 @@ public final class SearchS4V32k implements Search3{
 							(encoding&0xFFF) != ml.killer[0] &&
 							(encoding&0xFFF) != ml.killer[1] &&
 							(!tteMove || encoding != tteMoveEncoding)){
-						//int reducedDepth = pv? depth-2: depth/2;
 						int reducedDepth = pv? depth-1: depth-2;
-						//int reducedDepth =  depth/2;
 						g = -recurse(1-player, -(alpha+1), -alpha, reducedDepth, false, false, stackIndex+1);
 						fullSearch = g+100 > alpha;
 					} else{
