@@ -17,7 +17,6 @@ import util.zmap.ZMap;
 /** modified to record various features of the search with play*/
 public final class SearchS4V26 implements Search3{
 	public final static class SearchStat26 extends SearchStat{
-		public long hashHits;
 		/** scores returned from quiet search without bottoming out*/
 		public long forcedQuietCutoffs;
 		public long nullMoveVerifications;
@@ -114,7 +113,9 @@ public final class SearchS4V26 implements Search3{
 		final double min = -90000;
 		
 		System.out.println("searching with player = "+player);
-		
+
+		long nodesSearched = 0;
+		int maxPlySearched = 0;
 		for(int i = 1; (maxPly == -1 || i <= maxPly) && !cutoffSearch; i++){
 			s.resetHistory();
 			double alpha = min;
@@ -177,6 +178,10 @@ public final class SearchS4V26 implements Search3{
 					score = recurse(player, alpha, beta, i, true, true, 0);
 				}
 			}
+			if(!cutoffSearch){
+				nodesSearched = stats.nodesSearched;
+				maxPlySearched = i;
+			}
 			if(m.get(s.zkey()) != null && m.get(s.zkey()).encoding != 0 && !cutoffSearch){
 				bestMove = m.get(s.zkey()).encoding;
 				//System.out.println("info depth "+i+" nodes "+stats.nodesSearched+" score cp "+score);
@@ -186,6 +191,8 @@ public final class SearchS4V26 implements Search3{
 				stats.scores[i-1] = score;
 			}
 		}
+
+		stats.empBranchingFactor = Math.pow(nodesSearched, 1./maxPlySearched);
 		
 		if(f != null){
 			//record turn, piece counts, and scores at each level of search
