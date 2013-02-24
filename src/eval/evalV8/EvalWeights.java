@@ -15,7 +15,7 @@ public class EvalWeights
 	};
 	
 	//non material scores are divided by this number
-		final static int GRAIN_SIZE = 2;
+		final static int GRAIN_SIZE = 3;
 		
 		//arbitrary bonus for having the side to move
 		final static Weight BONUS_TEMPO = W(24, 11);
