@@ -20,6 +20,8 @@ public final class Masks {
 	/** passed pawns have no pawns opposing them, and no pawns in either side col*/
 	public final static long[][] passedPawnMasks;
 	public final static long[] pawnPromotionMask;
+	/** mask to detect pawn on 7th row*/
+	public final static long[] pawnPrePromote = new long[]{0xFFL<<48, 0xFFL<<8};
 	/** masks for pawns that are not passed, but have no pawns in their col*/
 	public final static long[][] unopposePawnMasks;
 	
@@ -57,16 +59,15 @@ public final class Masks {
 		for(int i = 0; i < 8; i++){
 			colMaskExc[i] = ~colMask[i];
 		}
-
 		
 		passedPawnMasks = genPassedPawnMasks();
 		pawnPromotionMask = new long[]{0xFFL<<56, 0xFFL};
 		unopposePawnMasks = genUnopposedPawnMasks();
 		
 		//System.out.println(getString(pawnPromotionMask[0]));
-		/*for(int i = 0; i < 64; i++){
+		/*for(int i = 0; i < 2; i++){
 			System.out.println(i);
-			System.out.println(getString(unopposePawnMasks[1][i]));
+			System.out.println(getString(pawnPrePromote[i]));
 		}*/
 	}
 	
