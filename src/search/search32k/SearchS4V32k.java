@@ -470,10 +470,7 @@ public final class SearchS4V32k implements Search3{
 				} else{
 					hasMove = true;
 					
-					//second more theoretically sound, but higher branching factor
 					final boolean pvMove = pv && i==0;
-					//final boolean pvMove = pv && cutoffFlag == TTEntry.CUTOFF_TYPE_UPPER; //second part checks that alpha has not been improved
-					
 					final boolean isCapture = MoveEncoder.getTakenType(encoding) != State4.PIECE_TYPE_EMPTY;
 					final boolean inCheck = ml.kingAttacked[player];
 					final boolean givesCheck = !ml.kingAttacked[1-player] && State4.isAttacked2(BitUtil.lsbIndex(s.kings[1-player]), player, s);
