@@ -1,7 +1,7 @@
 package state4;
 
 /** records previously seen board states to detect 3-fold repition draws*/
-final class HistoryMap{
+public final class HistoryMap{
 	private final static class Record{
 		long zkey;
 		/** stores the number of times this state has appeared*/
@@ -35,7 +35,7 @@ final class HistoryMap{
 		}
 	}
 	
-	public int getCount(long zkey){
+	public int get(long zkey){
 		//return isDrawable;
 		int index = (int)(zkey>>>(64-size));
 		if(r[index][0].zkey == zkey){
