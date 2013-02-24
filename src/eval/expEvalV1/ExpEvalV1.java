@@ -31,7 +31,7 @@ public final class ExpEvalV1 implements Evaluator2<State4>{
 		double score = materialScore[player];
 		score += scoreMobility(player);
 		score += scorePawns(player, fset, s);
-		score += s.isCastled[player]*EvalConstantsV1.canCastleWeight;
+		//score += s.isCastled[player]*EvalConstantsV1.canCastleWeight;
 		score += s.pieceCounts[player][State4.PIECE_TYPE_BISHOP] == 2?
 				EvalConstantsV1.bishopPairWeight: 0;
 		score += knightEntropy(player, s);
@@ -68,7 +68,7 @@ public final class ExpEvalV1 implements Evaluator2<State4>{
 			final long count = BitUtil.getSetBits(attacked);
 			if(count <= 2){
 				m += EvalConstantsV1.knightEntropyWeight[0];
-			} else if(count <= 4){
+			} else if(count <= 5){
 				m += EvalConstantsV1.knightEntropyWeight[1];
 			} else{
 				m += EvalConstantsV1.knightEntropyWeight[2];
@@ -80,7 +80,7 @@ public final class ExpEvalV1 implements Evaluator2<State4>{
 	private double scoreMobility(int player){
 		double m = 0;
 		for(int a = 1; a < 7; a++){
-			double p = fset.mobility[a]*1./maxMobility[player][a];
+			final double p = fset.mobility[a]*1./maxMobility[player][a];
 			if(p < .3){ //low mobility
 				m += EvalConstantsV1.mobilityBonus[a][0];
 			} else if(p <= .66){
@@ -106,6 +106,7 @@ public final class ExpEvalV1 implements Evaluator2<State4>{
 		update(encoding, true);
 	}
 	
+	/** incrementally updates the score after a move*/
 	private void update(long encoding, boolean undo){
 		final int dir = undo? -1: 1;
 		final int player = MoveEncoder.getPlayer(encoding);
