@@ -62,7 +62,7 @@ public final class SearchS4V32k implements Search3{
 	private final TTEntry fillEntry = new TTEntry();
 	
 	private final static int tteMoveRank = -1;
-	/** rank set to the first of the down takes*/
+	/** rank set to the first of the non takes*/
 	private final static int killerMoveRank = 5;
 	
 	private boolean cutoffSearch = false;
