@@ -292,12 +292,6 @@ public final class SearchS4V32k implements Search3{
 		assert alpha < beta;
 		
 		if(depth <= 0){
-			//dont descend into quiescent search until out of check
-			/*final boolean inCheck = State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
-			if(!inCheck){
-				return qsearch(player, alpha, beta, 0, stackIndex);
-			}
-			depth = 1;*/
 			return qsearch(player, alpha, beta, 0, stackIndex, pv);
 		}
 		
