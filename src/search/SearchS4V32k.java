@@ -257,13 +257,14 @@ public final class SearchS4V32k implements Search3{
 			int pos1 = MoveEncoder.getPos1(e.move);
 			int pos2 = MoveEncoder.getPos2(e.move);
 
-			this.e.initialize(s);
-			double eval = this.e.eval(s, player);
-			
-			pv += moveString(pos1)+"->"+moveString(pos2)+" ("+eval+"), ";
 			long pmask = 1L<<pos1;
 			long mmask = 1L<<pos2;
 			s.executeMove(player, pmask, mmask);
+
+			this.e.initialize(s);
+			final double eval = this.e.eval(s, player);
+			pv += moveString(pos1)+"->"+moveString(pos2)+" ("+eval+"), ";
+			
 			String r = getPVString(1-player, s, pv, depth+1, maxDepth);
 			s.undoMove();
 			return r;
@@ -318,6 +319,7 @@ public final class SearchS4V32k implements Search3{
 		final long zkey = s.zkey();
 		final TTEntry e = m.get(zkey);
 		boolean tteMove = false;
+		long tteMoveEncoding = 0;
 		
 		if(e != null){
 			stats.hashHits++;
@@ -333,9 +335,9 @@ public final class SearchS4V32k implements Search3{
 				}
 			}
 			if(e.move != 0){
-				long encoding = e.move;
-				pieceMasks[w] = 1L<<MoveEncoder.getPos1(encoding);
-				moves[w] = 1L<<MoveEncoder.getPos2(encoding);
+				tteMoveEncoding = e.move;
+				pieceMasks[w] = 1L<<MoveEncoder.getPos1(tteMoveEncoding);
+				moves[w] = 1L<<MoveEncoder.getPos2(tteMoveEncoding);
 				ranks[w++] = tteMoveRank;
 				tteMove = true;
 			}
@@ -411,9 +413,9 @@ public final class SearchS4V32k implements Search3{
 			final TTEntry temp;
 			if((temp = m.get(zkey)) != null && temp.move != 0){
 				tteMove = true;
-				long encoding = temp.move;
-				pieceMasks[w] = 1L<<MoveEncoder.getPos1(encoding);
-				moves[w] = 1L<<MoveEncoder.getPos2(encoding);
+				tteMoveEncoding = temp.move;
+				pieceMasks[w] = 1L<<MoveEncoder.getPos1(tteMoveEncoding);
+				moves[w] = 1L<<MoveEncoder.getPos2(tteMoveEncoding);
 				ranks[w++] = tteMoveRank;
 			}
 		}
@@ -462,7 +464,10 @@ public final class SearchS4V32k implements Search3{
 					final boolean givesCheck = !ml.kingAttacked[1-player] && State4.isAttacked2(BitUtil.lsbIndex(s.kings[1-player]), player, s);
 					boolean fullSearch = false;
 					
-					if(depth > 2 && !pvMove && !isCapture && !inCheck && !givesCheck){
+					if(depth > 2 && !pvMove && !isCapture && !inCheck && !givesCheck && 
+							(encoding&0xFFF) != ml.killer[0] &&
+							(encoding&0xFFF) != ml.killer[1] &&
+							(!tteMove || encoding != tteMoveEncoding)){
 						//int reducedDepth = pv? depth-2: depth/2;
 						int reducedDepth = pv? depth-1: depth-2;
 						//int reducedDepth =  depth/2;
