@@ -1,6 +1,6 @@
 package state4;
 
-/** int map through cuckoo hashing, used for hashing historical positions*/
+/** stores number of times long key inserted into the hash*/
 public final class HistoryMap2 {
 	private final static class Entry{
 		long key;
@@ -21,6 +21,14 @@ public final class HistoryMap2 {
 			e[a] = new Entry();
 		}
 		this.size = size;
+	}
+	
+	/** clears the hash*/
+	public void clear(){
+		for(int a = 0; a < 1<<size; a++){
+			e[a].key = 0;
+			e[a].count = 0;
+		}
 	}
 	
 	/** puts one instance of the appeared zkey*/

@@ -14,7 +14,7 @@ import util.zmap.ZMap;
 import eval.Evaluator2;
 
 public final class SearchS4V32k implements Search3{
-	public final static class SearchStat27 extends SearchStat{
+	public final static class SearchStat32k extends SearchStat{
 		/** scores returned from quiet search without bottoming out*/
 		public long forcedQuietCutoffs;
 		public long nullMoveVerifications;
@@ -22,6 +22,7 @@ public final class SearchS4V32k implements Search3{
 		public long nullMoveFailLow;
 		/** scores seen pes ply*/
 		public double[] scores;
+		public int maxPlySearched;
 		
 		public String toString(){
 			return "n="+nodesSearched+", t="+searchTime+", hh="+hashHits+", qc="+forcedQuietCutoffs;
@@ -47,7 +48,7 @@ public final class SearchS4V32k implements Search3{
 	private final static int[] pawnOffset = new int[]{9,7,8,16};
 	
 	private final State4 s;
-	private final SearchStat27 stats = new SearchStat27();
+	private final SearchStat32k stats = new SearchStat32k();
 	private final Evaluator2<State4> e;
 	private final int qply = 12;
 	private final Hash m;
@@ -89,7 +90,7 @@ public final class SearchS4V32k implements Search3{
 		}
 	}
 	
-	public SearchStat27 getStats(){
+	public SearchStat32k getStats(){
 		return stats;
 	}
 	
@@ -103,6 +104,7 @@ public final class SearchS4V32k implements Search3{
 		stats.forcedQuietCutoffs = 0;
 		stats.nullMoveVerifications = 0;
 		stats.nullMoveCutoffs = 0;
+		stats.maxPlySearched = 0;
 		stats.searchTime = System.currentTimeMillis();
 		
 		//search initialization
@@ -118,7 +120,6 @@ public final class SearchS4V32k implements Search3{
 		
 		final int failOffset = 100;
 		long nodesSearched = 0;
-		int maxPlySearched = 0;
 		for(int i = 1; (maxPly == -1 || i <= maxPly) && !cutoffSearch && i <= stackSize; i++){
 			s.resetHistory();
 			double alpha = min;
@@ -186,7 +187,7 @@ public final class SearchS4V32k implements Search3{
 			}
 			if(!cutoffSearch){
 				nodesSearched = stats.nodesSearched;
-				maxPlySearched = i;
+				stats.maxPlySearched = i;
 			}
 			final TTEntry tte;
 			if((tte = m.get(s.zkey())) != null && tte.move != 0 && !cutoffSearch){
@@ -202,7 +203,7 @@ public final class SearchS4V32k implements Search3{
 			}
 		}
 		
-		stats.empBranchingFactor = Math.pow(nodesSearched, 1./maxPlySearched);
+		stats.empBranchingFactor = Math.pow(nodesSearched, 1./stats.maxPlySearched);
 		
 		if(f != null){
 			//record turn, piece counts, and scores at each level of search
@@ -269,6 +270,29 @@ public final class SearchS4V32k implements Search3{
 	
 	private static String moveString(int pos){
 		return ""+(char)('A'+(pos%8))+(pos/8+1);
+	}
+	
+	/**
+	 * Traverses TT entries until the leaf state from which the evaluation was performed
+	 * is found. This can potentially fail if the TT path has been broken
+	 * <p> note, this should be called directly after a search has been performed
+	 * @param player
+	 * @param s
+	 * @param depth
+	 * @param maxDepth
+	 * @param result store for the result
+	 */
+	public void getPredictedLeafState(int player, State4 s, int depth, int maxDepth, State4 result){
+		final TTEntry e = m.get(s.zkey());
+		if(depth < maxDepth && e != null && e.move != 0){
+			final long pmask = 1L<<MoveEncoder.getPos1(e.move);
+			final long mmask = 1L<<MoveEncoder.getPos2(e.move);
+			s.executeMove(player, pmask, mmask);
+			getPredictedLeafState(1-player, s, depth+1, maxDepth, result);
+			s.undoMove();
+			return;
+		}
+		State4.copy(s, result);
 	}
 	
 	public void cutoffSearch(){

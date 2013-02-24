@@ -775,7 +775,7 @@ public final class State4 {
 	 * @param src
 	 * @param dest
 	 */
-	public static void copy(State4 src, State4 dest){
+	public static void copy(final State4 src, final State4 dest){
 		for(int a = 0; a < src.pieceMasks.length; a++){
 			System.arraycopy(src.pieceMasks[a], 0, dest.pieceMasks[a], 0, 2);
 		}
@@ -788,8 +788,8 @@ public final class State4 {
 		System.arraycopy(src.rookMoved[0], 0, dest.rookMoved[0], 0, 2);
 		System.arraycopy(src.rookMoved[1], 0, dest.rookMoved[1], 0, 2);
 		System.arraycopy(src.isCastled, 0, dest.isCastled, 0, 2);
+		dest.zkey = src.zkey;
 		dest.resetHistory();
-		//dest.hm.clear();
-		dest.zkey = 0;
+		dest.hm.clear();
 	}
 }
