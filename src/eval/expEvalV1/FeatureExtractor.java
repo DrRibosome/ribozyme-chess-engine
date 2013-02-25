@@ -16,6 +16,10 @@ public final class FeatureExtractor {
 	 * pieces to fill the lists.
 	 */
 	public final static class FeatureSet{
+		//general values
+		/** mobility of minor and major pieces, cummulative mobility stored at index 0*/
+		public final int[] mobility = new int[7];
+		
 		//pawn values
 		public final int[] pawnRow = new int[8];
 		public final int[] pawnCol = new int[8];
@@ -32,8 +36,9 @@ public final class FeatureExtractor {
 		/** pawn has a pawn defender to either the right or left*/
 		public final int[] supportedPawn = new int[8];
 		
-		/** mobility of minor and major pieces, cummulative mobility stored at index 0*/
-		public final int[] mobility = new int[7];
+		//knight values
+		/** number of pieces attacked by each knight*/
+		public final int[] knightEntropy = new int[2];
 	}
 	
 	public static void loadFeatures(FeatureSet f, final int player, final State4 s, boolean processPawns){
@@ -41,6 +46,7 @@ public final class FeatureExtractor {
 			processPawns(f, player, s);
 		}
 		processMobility(f, player, s);
+		knightEntropy(f, player, s);
 	}
 	
 	public static void processMobility(FeatureSet f, int player, State4 s){
@@ -107,6 +113,23 @@ public final class FeatureExtractor {
 			f.pawnPassed[a] = (1-BitUtil.isDef(Masks.passedPawnMasks[player][index] & enemyPawns)) *
 					(1-BitUtil.isDef(Masks.unopposePawnMasks[player][index] & allied));
 			f.pawnUnopposed[a] = (1-BitUtil.isDef(Masks.unopposePawnMasks[player][index] & enemyPawns))-f.pawnPassed[a];
+		}
+	}
+	
+	/**
+	 * calculates the number of pieces attacked by each knight, with the results stored
+	 * in {@link FeatureSet#knightEntropy}
+	 * @param f
+	 * @param player
+	 * @param s
+	 */
+	public static void knightEntropy(final FeatureSet f, final int player, final State4 s){
+		int m = 0;
+		for(long knights = s.knights[player]; knights != 0; knights &= knights-1){
+			final long k = knights & -knights;
+			final int index = BitUtil.lsbIndex(k);
+			final long attacked = s.pieces[1-player] & Masks.knightMoves[index];
+			f.knightEntropy[m++] = (int)BitUtil.getSetBits(attacked);
 		}
 	}
 }
