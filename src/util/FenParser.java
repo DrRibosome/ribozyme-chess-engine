@@ -1,9 +1,10 @@
-package uci;
+package util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import state4.State4;
+import uci.Position;
 
 public class FenParser {
 	public static Position parse(String fen){
@@ -17,6 +18,7 @@ public class FenParser {
 		parseCastling(s[2], p.s);
 		parseEnPassant(s[3], p.s);
 		p.halfMoves = s[4].equals("-")? 0: Integer.parseInt(s[4]);
+		p.s.drawCount = p.halfMoves;
 		p.fullMoves = s[5].equals("-")? 0: Integer.parseInt(s[5]);
 		
 		return p;

@@ -58,7 +58,7 @@ public final class SearchS4V32k implements Search3{
 	/** sequence number for hash entries*/
 	private int seq;
 	/** controls printing pv to console for debugging*/
-	private final static boolean printPV = false;
+	private final static boolean printPV = true;
 	private final TTEntry fillEntry = new TTEntry();
 	
 	private final static int tteMoveRank = -1;
@@ -319,7 +319,9 @@ public final class SearchS4V32k implements Search3{
 		stats.nodesSearched++;
 		assert alpha < beta;
 		
-		if(depth <= 0){
+		if(s.isForcedDraw()){
+			return 0;
+		} else if(depth <= 0){
 			return qsearch(player, alpha, beta, 0, stackIndex, pv);
 		}
 		
@@ -454,7 +456,7 @@ public final class SearchS4V32k implements Search3{
 		double bestScore = -99999;
 		int cutoffFlag = ZMap.CUTOFF_TYPE_UPPER;
 		
-		//final long enemy = s.pieces[1-player]|s.enPassante;
+		final int drawCount = s.drawCount; //stored for error checking purposes
 		
 		boolean hasMove = ml.kingAttacked[player];
 		for(int i = 0; i < length && !cutoffSearch; i++){
@@ -502,6 +504,10 @@ public final class SearchS4V32k implements Search3{
 				s.undoMove();
 				this.e.undoMove(encoding);
 				assert zkey == s.zkey(); //keys should be unchanged after undo
+				if(drawCount != s.drawCount){
+					System.out.println(drawCount+" != "+s.drawCount);
+				}
+				assert drawCount == s.drawCount;
 				
 				if(isDrawable && 0 > g){ //can take a draw instead of making the move
 					g = 0;
@@ -606,6 +612,7 @@ public final class SearchS4V32k implements Search3{
 		double g = alpha;
 		int cutoffFlag = TTEntry.CUTOFF_TYPE_UPPER;
 		long bestMove = 0;
+		final int drawCount = s.drawCount; //stored for error checking purposes
 		for(int i = 0; i < length && !cutoffSearch; i++){
 			for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
 				long encoding = s.executeMove(player, pieceMasks[i], movesTemp&-movesTemp);
@@ -631,6 +638,7 @@ public final class SearchS4V32k implements Search3{
 				} 
 				
 				assert zkey == s.zkey();
+				assert drawCount == s.drawCount;
 				
 				if(g > bestScore){
 					bestScore = g;

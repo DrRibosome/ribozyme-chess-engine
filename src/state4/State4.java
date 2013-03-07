@@ -47,6 +47,8 @@ public final class State4 {
 	public final boolean[][] rookMoved = new boolean[2][2];
 	/** 0=not castled, 1=castled*/
 	public final int[] isCastled = new int[2];
+	/** count since last pawn move or take (for 50-move draw)*/
+	public int drawCount = 0;
 	
 	/**
 	 * gets rook moves for a specified rook
@@ -147,6 +149,11 @@ public final class State4 {
 	/** if true, player to move has the option to draw*/
 	public boolean isDrawable(){
 		return hm.get(zkey) >= 3;
+	}
+	
+	/** if true, game is a forced draw (via 50 move draw)*/
+	public boolean isForcedDraw(){
+		return drawCount >= 50;
 	}
 	
 	/**
@@ -301,15 +308,16 @@ public final class State4 {
 		assert (pieces[player] & pieces[1-player]) == 0;
 		
 		zkey ^= ZHash.turnChange;
-		int type = mailbox[pos1];
+		final int movingType = mailbox[pos1];
+		final int takenType = mailbox[pos2];
 		
 		/*if(type == 0){
 			System.out.println(pos1+" -> "+pos2);
 			System.out.println(this);
 		}*/
-		assert type != 0;
+		assert movingType != 0;
 		
-		zkey ^= ZHash.zhash[player][type][pos1] ^ ZHash.zhash[player][type][pos2];
+		zkey ^= ZHash.zhash[player][movingType][pos1] ^ ZHash.zhash[player][movingType][pos2];
 		
 		long castleBit = 0;
 		if(mailbox[pos1] == PIECE_TYPE_KING && !kingMoved[player]){
@@ -363,14 +371,14 @@ public final class State4 {
 			} 
 		}
 		
-		long encoding = MoveEncoder.encode(pos1, pos2, mailbox[pos1], mailbox[pos2], player, this);
+		long encoding = MoveEncoder.encode(pos1, pos2, movingType, takenType, player, this);
 		encoding |= castleBit<<33;
 		//move the first piece
-		long[] b1 = pieceMasks[mailbox[pos1]];
+		final long[] b1 = pieceMasks[movingType];
 		b1[player] = (b1[player] & ~pieceMask) | moveMask;
 		//remove the second piece if move was a take (non-branching)
-		long isTake = BitUtil.isDef(mailbox[pos2]);
-		long[] b2 = pieceMasks[mailbox[pos2]];
+		final long isTake = BitUtil.isDef(mailbox[pos2]);
+		final long[] b2 = pieceMasks[takenType];
 		b2[1-player] = b2[1-player] & ~(moveMask*isTake);
 		pieceCounts[1-player][mailbox[pos2]] -= 1*isTake;
 		pieceCounts[1-player][PIECE_TYPE_EMPTY] -= 1*isTake;
@@ -437,18 +445,18 @@ public final class State4 {
 			}
 		}
 		
+
+		encoding = MoveEncoder.setPrevDrawCount(encoding, drawCount);
+		drawCount++;
+		if(movingType == PIECE_TYPE_PAWN || takenType != PIECE_TYPE_EMPTY){
+			drawCount = 0;
+		}
 		
 		collect();
 		assert (pieces[player] & pieces[1-player]) == 0;
 		
 		history[hindex++] = encoding;
 		hm.put(zkey);
-		
-		/*final int count2 = hm.getCount(zkey);
-		if(count2 > 1){
-			if(count2 == 2) zkey ^= ZHash.appeared2;
-			else if(count2 >= 3) zkey ^= ZHash.appeared3;
-		}*/
 		
 		return encoding;
 	}
@@ -465,13 +473,14 @@ public final class State4 {
 			encoding = MoveEncoder.setPrevEnPassantePos(enPassante, encoding);
 		}
 		enPassante = 0;
+		encoding = MoveEncoder.setPrevDrawCount(encoding, drawCount);
 		
 		history[hindex++] = encoding;
 	}
 	
 	public void undoNullMove(){
 		zkey ^= ZHash.turnChange;
-		long encoding = history[--hindex];
+		final long encoding = history[--hindex];
 		
 		final long prevEnPassantPos = MoveEncoder.getPrevEnPassantePos(encoding);
 		final long hasPrevEnPassant = BitUtil.isDef(prevEnPassantPos);
@@ -481,6 +490,7 @@ public final class State4 {
 			enPassante = 1L<<MoveEncoder.getPrevEnPassantePos(encoding);
 			zkey ^= ZHash.enPassante[BitUtil.lsbIndex(enPassante)];
 		}*/
+		drawCount = MoveEncoder.getPrevDrawCount(encoding);
 	}
 	
 	public void undoMove(){
@@ -648,6 +658,7 @@ public final class State4 {
 		}*/
 
 		collect();
+		drawCount = MoveEncoder.getPrevDrawCount(encoding);
 		
 		assert (pieces[player] & pieces[1-player]) == 0;
 	}

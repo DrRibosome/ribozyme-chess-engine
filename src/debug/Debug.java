@@ -6,10 +6,10 @@ import state4.BitUtil;
 import state4.Masks;
 import state4.State4;
 import state4.StateUtil;
-import uci.FenParser;
 import uci.Position;
+import util.FenParser;
 import eval.Evaluator2;
-import eval.evalV8.SuperEvalS4V8;
+import eval.incrPieceScore.IncrementalPieceScore;
 
 
 public class Debug {
@@ -51,21 +51,22 @@ public class Debug {
 		//Position p = FenParser.parse("1r5k/1P3pp1/B3pn1p/8/R7/1r3P2/5P1P/R4K2 w - - - -");
 		//Position p = FenParser.parse("2r2bk1/pp3p2/1n2q2B/1P3N1Q/2p5/4P3/P4PP1/3R2K1 b - - - -");
 		//Position p = FenParser.parse("8/4kp2/p2b1r2/2p1Q3/P1P2p1P/1P6/5PP1/1R4K1 b - - - -");
-		Position p = FenParser.parse("4q1kr/p6p/1prQPppB/4n3/4P3/2P5/PP2B2P/R5K1 w - - 0 0");
+		//Position p = FenParser.parse("4q1kr/p6p/1prQPppB/4n3/4P3/2P5/PP2B2P/R5K1 w - - 0 0");
+		Position p = FenParser.parse("2r1r1k1/5ppp/R1n5/4N3/3P4/5PPq/1P2Q2P/R6K w - - 1 1");
 		System.out.println(StateUtil.fen(p.sideToMove, p.s));
 		State4 s = p.s;
 		int player = p.sideToMove;
 		
 		System.out.println(s);
-		Evaluator2<State4> e = new SuperEvalS4V8();
-		//Evaluator2<State4> e = new IncrementalPieceScore();
+		//Evaluator2<State4> e = new SuperEvalS4V8();
+		Evaluator2<State4> e = new IncrementalPieceScore();
 		
 		e.initialize(s);
 		//e.traceEval(s, State4.WHITE);
 		
-		final int maxDepth = 50;
+		final int maxDepth = 25;
 		//Search3 search = new SearchS4V32(s, e, 20, false);
-		Search3 search = new SearchS4V32k(s, e, 20, false);
+		Search3 search = new SearchS4V32k(s, e, 22, false);
 		//Search3 search = new SearchS4V32cc(s, e, 20, false);
 		int[] move = new int[2];
 		search.search(player, move, maxDepth);
