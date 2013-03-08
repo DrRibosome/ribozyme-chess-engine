@@ -303,17 +303,11 @@ public final class SearchS4V32k implements Search3{
 		cutoffSearch = true;
 	}
 	
-	/**
-	 * recurse and search
-	 * @param player
-	 * @param depth current depth
-	 * @param alpha
-	 * @param beta
-	 * @param softMaxDepth max depth, can be increased by extensions
-	 * @param hardMaxDepth hard max depth, search cuts off here regardless of soft max depth value
-	 * @param quiesce
-	 * @return
-	 */
+	/** tests to see if the passed player is in check*/
+	private static boolean isChecked(final int player, final State4 s){
+		return State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
+	}
+	
 	private double recurse(int player, double alpha, double beta, int depth,
 			boolean pv, boolean rootNode, int stackIndex){
 		stats.nodesSearched++;
@@ -322,6 +316,10 @@ public final class SearchS4V32k implements Search3{
 		if(s.isForcedDraw()){
 			return 0;
 		} else if(depth <= 0){
+			/*if(!isChecked(player, s)){
+				return qsearch(player, alpha, beta, 0, stackIndex, pv);
+			}
+			depth = 1;*/
 			return qsearch(player, alpha, beta, 0, stackIndex, pv);
 		}
 		
@@ -379,8 +377,8 @@ public final class SearchS4V32k implements Search3{
 			}
 		}
 		
-		ml.kingAttacked[player] = State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
-		ml.kingAttacked[1-player] = State4.isAttacked2(BitUtil.lsbIndex(s.kings[1-player]), player, s);
+		ml.kingAttacked[player] = isChecked(player, s);
+		ml.kingAttacked[1-player] = isChecked(1-player, s);
 		
 		//null move pruning (hashes result, but might not be sound)
 		boolean hasNonPawnMaterial = s.pieceCounts[player][0]-s.pieceCounts[player][State4.PIECE_TYPE_PAWN] > 1;
@@ -389,10 +387,10 @@ public final class SearchS4V32k implements Search3{
 			
 			int r = 3 + depth/4;
 			
+			//note, non-pv nodes are null window searched - no need to do it here explicitly
 			stack[stackIndex+1].skipNullMove = true;
 			s.nullMove();
 			double n = -recurse(1-player, -beta, -alpha, depth-r, pv, rootNode, stackIndex+1);
-			//double n = -recurse(1-player, -beta-1, -beta, depth-r, pv, rootNode, stackIndex+1);
 			s.undoNullMove();
 			stack[stackIndex+1].skipNullMove = false;
 			
@@ -402,7 +400,6 @@ public final class SearchS4V32k implements Search3{
 				}
 				if(depth < 6){
 					stats.nullMoveCutoffs++;
-					//if(!cutoffSearch) m.put2(s.zkey(), 0, n, depth, ZMap.CUTOFF_TYPE_LOWER);
 					return n;
 				}
 				
@@ -413,7 +410,6 @@ public final class SearchS4V32k implements Search3{
 				stack[stackIndex+1].skipNullMove = false;
 				if(v >= beta){
 					stats.nullMoveCutoffs++;
-					//if(!cutoffSearch) m.put2(s.zkey(), 0, n, depth, ZMap.CUTOFF_TYPE_LOWER);
 					return n;
 				}
 			} else if(n < alpha){
@@ -623,10 +619,6 @@ public final class SearchS4V32k implements Search3{
 					//king in check after move
 					g = -77777;
 				} else{
-					/*g = -qsearch(1-player, -(alpha+1), -alpha, depth-1, stackIndex+1, pv);
-					if(alpha < g && g < beta){
-						g = -qsearch(1-player, -beta, -alpha, depth-1, stackIndex+1, pv);
-					}*/
 					g = -qsearch(1-player, -beta, -alpha, depth-1, stackIndex+1, pv);
 				}
 				s.undoMove();
@@ -667,7 +659,7 @@ public final class SearchS4V32k implements Search3{
 
 	/**
 	 * checks too see if a move is legal, assumming we do not start in check,
-	 * moving does not yield check, we are not castling, and if moving a pawn
+	 * moving does not yield self check, we are not castling, and if moving a pawn
 	 * we have chosen a non take move that could be legal if no piece is
 	 * blocking the target square
 	 * 
