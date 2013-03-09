@@ -10,7 +10,7 @@ public final class ExpEvalV2 implements Evaluator2<State4>{
 	private final int[] materialScore = new int[2];
 	/** current max number of moves by piece type*/
 	private final int[][] maxMobility = new int[2][7];
-	private final FeatureExtractor.FeatureSet fset = new FeatureExtractor.FeatureSet();
+	private final FeatureExtractor2.FeatureSet fset = new FeatureExtractor2.FeatureSet();
 	private final EvalConstantsV2 c;
 	
 	public ExpEvalV2(){
@@ -33,7 +33,7 @@ public final class ExpEvalV2 implements Evaluator2<State4>{
 	}
 	
 	private double score(int player, State4 s){
-		FeatureExtractor.loadFeatures(fset, player, s, true);
+		FeatureExtractor2.loadFeatures(fset, player, s, true);
 		
 		double score = materialScore[player];
 		score += scoreMobility(player);
@@ -44,7 +44,7 @@ public final class ExpEvalV2 implements Evaluator2<State4>{
 		return score;
 	}
 	
-	private static double scorePawns(final int player, final FeatureExtractor.FeatureSet fset, final State4 s, final EvalConstantsV2 c){
+	private static double scorePawns(final int player, final FeatureExtractor2.FeatureSet fset, final State4 s, final EvalConstantsV2 c){
 		final int len = s.pieceCounts[player][State4.PIECE_TYPE_PAWN];
 		double m = 0;
 		for(int a = 0; a < len; a++){

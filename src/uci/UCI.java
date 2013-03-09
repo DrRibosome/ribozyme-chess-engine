@@ -12,8 +12,8 @@ import java.util.regex.Pattern;
 import util.FenParser;
 
 public final class UCI {
-	UCIEngine engine = new RibozymeEngine();
-	FileWriter out;
+	private UCIEngine engine = new RibozymeEngine();
+	private FileWriter out;
 	
 	private final Thread t = new Thread(){
 		@Override
@@ -22,11 +22,7 @@ public final class UCI {
 			
 			while(scanner.hasNextLine()){
 				String interfaceCommand = scanner.nextLine();
-				try{
-					out.write(interfaceCommand + "\n");
-				} catch (IOException e){
-					e.printStackTrace();
-				}
+				debug(interfaceCommand+"\n");
 				
 				interfaceCommand = interfaceCommand.replace("\r", "");
 				
@@ -40,9 +36,10 @@ public final class UCI {
 				
 				if(s[0].equalsIgnoreCase("uci")){
 					debug("processing 'uci' command\n");
-					System.out.println("id name ribozyme 1.0");
-					System.out.println("id author ribozyme team");
-					System.out.println("uciok");
+					send("id name ribozyme 1.0");
+					send("id author ribozyme team");
+					send("uciok");
+					//send("\n");
 				} else if(s[0].equalsIgnoreCase("ucinewgame")){
 					
 				} else if(s[0].equalsIgnoreCase("position")){
@@ -78,7 +75,7 @@ public final class UCI {
 					}
 					engine.setPos(p);
 				} else if(s[0].equalsIgnoreCase("isready")){
-					System.out.println("readyok");
+					send("readyok");
 				} else if(s[0].equalsIgnoreCase("stop")){
 					engine.stop();
 				} else if(s[0].equalsIgnoreCase("go")){
@@ -86,14 +83,15 @@ public final class UCI {
 					p.ponder = interfaceCommand.contains("ponder");
 					p.infinite = interfaceCommand.contains("infinite");
 					
-					//hell borked
-					/*Pattern whiteTimeSel = Pattern.compile("wtime\\s+(\\d+)");
-					Matcher temp = whiteTimeSel.matcher(interfaceCommand);
-					p.whiteTime = temp.find()? Integer.parseInt(temp.group(1)): -1;
+					Matcher temp;
 					
-					Pattern blackTimeSel = Pattern.compile("btime\\s+\\d+");
-					temp = blackTimeSel.matcher(interfaceCommand); temp.
-					p.blackTime = temp.find()? Integer.parseInt(temp.group(1)): -1;
+					Pattern whiteTimeSel = Pattern.compile("wtime\\s+(\\d+)");
+					temp = whiteTimeSel.matcher(interfaceCommand);
+					p.time[0] = temp.find()? Integer.parseInt(temp.group(1)): -1;
+					
+					Pattern blackTimeSel = Pattern.compile("btime\\s+(\\d+)");
+					temp = blackTimeSel.matcher(interfaceCommand);
+					p.time[1] = temp.find()? Integer.parseInt(temp.group(1)): -1;
 					
 					Pattern whiteTimeIncSel = Pattern.compile("winc\\s+(\\d+)");
 					temp = whiteTimeIncSel.matcher(interfaceCommand);
@@ -103,15 +101,17 @@ public final class UCI {
 					temp = blackTimeIncSel.matcher(interfaceCommand);
 					p.blackTimeInc = temp.find()? Integer.parseInt(temp.group(1)): -1;
 					
-					Pattern depthSel = Pattern.compile("depth\\s+(\\d+)");
+					/*Pattern depthSel = Pattern.compile("depth\\s+(\\d+)");
 					temp = depthSel.matcher(interfaceCommand);
 					p.depth = temp.find()? Integer.parseInt(temp.group(1)): -1;
 					*/
 					Pattern moveTimeSel = Pattern.compile("movetime\\s+(\\d+)");
-					Matcher temp = moveTimeSel.matcher(interfaceCommand);
+					temp = moveTimeSel.matcher(interfaceCommand);
 					p.moveTime = temp.find()? Integer.parseInt(temp.group(1)): -1;
 					
 					engine.go(p);
+				} else if(s[0].equalsIgnoreCase("quit")){
+					break;
 				}
 			}
 			scanner.close();
@@ -123,10 +123,17 @@ public final class UCI {
 		}
 	};
 	
+	private void send(String s){
+		System.out.println(s);
+		System.out.flush();
+		debug("sent: '"+s+"'\n");
+	}
+	
 	private void debug(String s){
 		if(out != null){
 			try{
 				out.write(s);
+				out.flush();
 			} catch(IOException e){}
 		}
 	}

@@ -5,7 +5,7 @@ import state4.Masks;
 import state4.State4;
 
 /** extracts board features*/
-public final class FeatureExtractor {
+public final class FeatureExtractor2 {
 	private final static int[] zeroi = new int[8];
 	
 	/**

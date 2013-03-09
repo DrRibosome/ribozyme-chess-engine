@@ -79,7 +79,7 @@ public final class EvalConstantsV2 {
 			final int tripledPawnWeight,
 			final int bishopPairWeight){
 		assert materialWeights.length == 7;
-		assert mobilityWeight.length == 3 && mobilityWeight[0].length == 7;
+		assert mobilityWeight.length == 7 && mobilityWeight[0].length == 3;
 		assert passedPawnRowWeight.length == 8; //interpreted symmetrically for each player
 		
 		System.arraycopy(materialWeights, 0, this.materialWeights, 0, 7);

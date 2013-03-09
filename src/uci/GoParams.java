@@ -2,8 +2,7 @@ package uci;
 
 public class GoParams {
 	boolean ponder = false;
-	int whiteTime = -1;
-	int blackTime = -1;
+	final int[] time = new int[]{-1,-1};
 	/** white time increment per move*/
 	int whiteTimeInc = -1;
 	/** black time increment per move*/

@@ -57,8 +57,11 @@ public final class SearchS4V32k implements Search3{
 	private final static int stackSize = 128;
 	/** sequence number for hash entries*/
 	private int seq;
+	
 	/** controls printing pv to console for debugging*/
 	private final static boolean printPV = true;
+	private final static boolean uciPV = true;
+	
 	private final TTEntry fillEntry = new TTEntry();
 	
 	private final static int tteMoveRank = -1;
@@ -199,8 +202,14 @@ public final class SearchS4V32k implements Search3{
 				if(l != null){
 					l.plySearched(bestMove, i);
 				}
-				//System.out.println("info depth "+i+" nodes "+stats.nodesSearched+" score cp "+score);
-				if(printPV) System.out.println("pv "+i+": ["+score+"] "+getPVString(player, s, "", 0, i));
+				if(printPV){
+					final String pvString = getPVString(player, s, "", 0, i, uciPV);
+					if(!uciPV) System.out.println("pv "+i+": ["+score+"] "+pvString);
+					else System.out.println("info depth "+i+" score cp "+score+" time "+
+							((System.currentTimeMillis()-stats.searchTime)/1000.)+
+							" nodes "+stats.nodesSearched+" nps "+(int)(stats.nodesSearched*1000./
+							(System.currentTimeMillis()-stats.searchTime))+" pv "+pvString);
+				}
 			}
 			if(i-1 < stats.scores.length){
 				stats.scores[i-1] = score;
@@ -251,7 +260,7 @@ public final class SearchS4V32k implements Search3{
 		stats.searchTime = System.currentTimeMillis()-stats.searchTime;
 	}
 	
-	private String getPVString(int player, State4 s, String pv, int depth, int maxDepth){
+	private String getPVString(int player, State4 s, String pv, int depth, int maxDepth, boolean uci){
 		final TTEntry e = m.get(s.zkey());
 		if(depth < maxDepth && e != null && e.move != 0){
 			int pos1 = MoveEncoder.getPos1(e.move);
@@ -261,11 +270,15 @@ public final class SearchS4V32k implements Search3{
 			long mmask = 1L<<pos2;
 			s.executeMove(player, pmask, mmask);
 
-			this.e.initialize(s);
-			final double eval = this.e.eval(s, player);
-			pv += moveString(pos1)+"->"+moveString(pos2)+" ("+eval+"), ";
+			if(!uci){
+				this.e.initialize(s);
+				final double eval = this.e.eval(s, player);
+				pv += moveString(pos1)+"->"+moveString(pos2)+" ("+eval+"), ";
+			} else{
+				pv += moveString(pos1)+moveString(pos2)+" ";
+			}
 			
-			String r = getPVString(1-player, s, pv, depth+1, maxDepth);
+			String r = getPVString(1-player, s, pv, depth+1, maxDepth, uci);
 			s.undoMove();
 			return r;
 		}

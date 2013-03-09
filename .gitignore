@@ -9,6 +9,7 @@ Launcher2.java
 search25.stats
 search27.stats
 search29.stats
-test.jar
+*.jar
 uci-log.txt
 game-archive/temp
+*.sh

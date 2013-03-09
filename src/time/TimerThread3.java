@@ -1,14 +1,22 @@
 package time;
 
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import search.Search3;
 import search.SearchListener;
 import state4.State4;
 
 public final class TimerThread3 extends Thread{
+	public static interface Controller{
+		public void stopSearch();
+		public boolean isFinished();
+	}
+	
 	private final static int failLow = -1;
 	private final static int failHigh = 1;
+	private final AtomicBoolean stopSearch = new AtomicBoolean(false);
+	private final AtomicBoolean isFinished = new AtomicBoolean(false);
 	
 	private Search3 search;
 	private State4 s;
@@ -16,6 +24,8 @@ public final class TimerThread3 extends Thread{
 	private long inc;
 	private int player;
 	private int[] moveStore;
+	
+	private static final boolean debug = false;
 	
 	/** stores extra time from aspiration window failures*/
 	private final LinkedBlockingQueue<Integer> q = new LinkedBlockingQueue<>();
@@ -31,15 +41,18 @@ public final class TimerThread3 extends Thread{
 			PlySearchResult temp = new PlySearchResult();
 			temp.move = move;
 			temp.ply = ply;
+			interrupt();
 			plyq.add(temp);
 		}
 		@Override
 		public void failLow(int ply) {
 			q.add(failLow);
+			interrupt();
 		}
 		@Override
 		public void failHigh(int ply) {
 			q.add(failHigh);
+			interrupt();
 		}
 	};
 	
@@ -62,9 +75,11 @@ public final class TimerThread3 extends Thread{
 		//final long maxTime = (long)(time*(material >= 60? .04: .06));
 		final long maxTime = (long)(target * 1.3);
 		
-		System.out.println("moves remaining = "+(getHalfMovesRemaining(material)/2));
-		System.out.println("target time = "+target);
-		System.out.println("max time = "+maxTime);
+		if(debug){
+			System.out.println("moves remaining = "+(getHalfMovesRemaining(material)/2));
+			System.out.println("target time = "+target);
+			System.out.println("max time = "+maxTime);
+		}
 		
 		final Thread t = new Thread(){
 			public void run(){
@@ -78,7 +93,8 @@ public final class TimerThread3 extends Thread{
 		int currentPly = 0;
 		int lastpvChange = 1;
 		while(System.currentTimeMillis()-start < target &&
-				System.currentTimeMillis()-start < maxTime){ //so we dont keep extending forever
+				System.currentTimeMillis()-start < maxTime && 
+				!stopSearch.get()){ //so we dont keep extending forever
 			
 			while(!plyq.isEmpty()){
 				PlySearchResult r = plyq.poll();
@@ -90,7 +106,7 @@ public final class TimerThread3 extends Thread{
 				currentPly = r.ply > currentPly? r.ply: currentPly;
 			}
 			
-			if(currentPly-lastpvChange+1 > 6 && currentPly > 8){
+			if(currentPly-lastpvChange+1 > 6 && currentPly > 8){ //perhaps increase difficulty with fail lows
 				break;
 				//target -= target*.2;
 			}
@@ -98,8 +114,16 @@ public final class TimerThread3 extends Thread{
 			//handle adjustments from search failures
 			while(!q.isEmpty()){
 				int failType = q.poll();
-				double scale = failType == failHigh? .005: .01;
+				//double scale = failType == failHigh? .005: .01;
+				double scale = 0;
 				target += target*scale;
+			}
+
+			final long remainingTime = (target-(System.currentTimeMillis()-start))/2;
+			if(remainingTime > 10){
+				try{
+					Thread.sleep(remainingTime);
+				} catch(InterruptedException e){}
 			}
 		}
 		
@@ -109,16 +133,38 @@ public final class TimerThread3 extends Thread{
 				t.join();
 			} catch(InterruptedException e){}
 		}
+		isFinished.set(true);
 	}
 	
-	public static void search(Search3 search, State4 s, int player, long time, long inc, int[] moveStore){
-		TimerThread3 t = new TimerThread3(search, s, player, time, inc, moveStore);
+	public static void searchBlocking(Search3 search, State4 s, int player, long time, long inc, int[] moveStore){
+		final TimerThread3 t = new TimerThread3(search, s, player, time, inc, moveStore);
 		t.start();
 		while(t.isAlive()){
 			try{
 				t.join();
 			} catch(InterruptedException e){}
 		}
+	}
+	
+	public static Controller searchNonBlocking(Search3 search, State4 s, int player, long time, long inc, int[] moveStore){
+		final TimerThread3 t = new TimerThread3(search, s, player, time, inc, moveStore);
+		final Controller temp = new Controller(){
+			@Override
+			public void stopSearch() {
+				t.endSearch();
+			}
+			@Override
+			public boolean isFinished() {
+				return t.isFinished.get();
+			}
+		};
+		t.start();
+		return temp;
+	}
+	
+	private void endSearch(){
+		stopSearch.set(true);
+		interrupt();
 	}
 	
 	private static int getMaterial(State4 s){

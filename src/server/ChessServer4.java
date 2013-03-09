@@ -196,7 +196,7 @@ public class ChessServer4 extends WebSocketServer{
 						System.out.println(s);
 						System.out.println("turn = "+botPlayer);
 						long t = System.currentTimeMillis();
-						TimerThread3.search(searcher, s, botPlayer, time[botPlayer], 0, move);
+						TimerThread3.searchBlocking(searcher, s, botPlayer, time[botPlayer], 0, move);
 						final long waitTime = 75;
 						if((t = System.currentTimeMillis()-t) < waitTime){
 							try{
