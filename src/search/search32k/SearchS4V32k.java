@@ -205,7 +205,7 @@ public final class SearchS4V32k implements Search3{
 				if(printPV){
 					final String pvString = getPVString(player, s, "", 0, i, uciPV);
 					if(!uciPV) System.out.println("pv "+i+": ["+score+"] "+pvString);
-					else System.out.println("info depth "+i+" score cp "+score+" time "+
+					else System.out.println("info depth "+i+" score cp "+(int)score+" time "+
 							((System.currentTimeMillis()-stats.searchTime)/1000.)+
 							" nodes "+stats.nodesSearched+" nps "+(int)(stats.nodesSearched*1000./
 							(System.currentTimeMillis()-stats.searchTime))+" pv "+pvString);
