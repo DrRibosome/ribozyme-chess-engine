@@ -44,12 +44,14 @@ public final class HistoryMap2 {
 			temp.key = zkey;
 			temp.count = increment;
 			for(int q = 0; q < maxAttempts; q++){
-				final Entry e1 = e[h1(a, temp.key, size)];
+				final int index1 = h1(a, temp.key, size);
+				final int index2;
+				final Entry e1 = e[index1];
 				swap(e1, temp);
 				if(temp.count == 0){
 					return;
-				} else{
-					final Entry e2 = e[h2(b, temp.key, size)];
+				} else if((index2 = h2(b, temp.key, size)) != index1){
+					final Entry e2 = e[index2];
 					swap(e2, temp);
 					if(temp.count == 0){
 						return;
