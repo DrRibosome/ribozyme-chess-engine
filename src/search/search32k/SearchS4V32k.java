@@ -2,6 +2,7 @@ package search.search32k;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import search.Search3;
 import search.SearchListener;
@@ -68,7 +69,7 @@ public final class SearchS4V32k implements Search3{
 	/** rank set to the first of the non takes*/
 	private final static int killerMoveRank = 5;
 	
-	private boolean cutoffSearch = false;
+	private final AtomicBoolean cutoffSearch = new AtomicBoolean(false);
 	
 	public SearchS4V32k(State4 s, Evaluator2<State4> e, int hashSize, boolean record){
 		this.s = s;
@@ -117,7 +118,6 @@ public final class SearchS4V32k implements Search3{
 		//search initialization
 		seq++;
 		e.initialize(s);
-		cutoffSearch = false;
 		
 		long bestMove = 0;
 		double score = 0;
@@ -127,7 +127,7 @@ public final class SearchS4V32k implements Search3{
 		
 		final int failOffset = 100;
 		long nodesSearched = 0;
-		for(int i = 1; (maxPly == -1 || i <= maxPly) && !cutoffSearch && i <= stackSize; i++){
+		for(int i = 1; (maxPly == -1 || i <= maxPly) && !cutoffSearch.get() && i <= stackSize; i++){
 			s.resetHistory();
 			double alpha = min;
 			double beta = max;
@@ -149,7 +149,7 @@ public final class SearchS4V32k implements Search3{
 			score = recurse(player, alpha, beta, i, true, true, 0);
 			
 			
-			if(score <= alpha && !cutoffSearch){
+			if(score <= alpha && !cutoffSearch.get()){
 				//System.out.println("search failed low, researching");
 				if(l != null){
 					l.failLow(i);
@@ -157,7 +157,7 @@ public final class SearchS4V32k implements Search3{
 				alpha = score-failOffset;
 				beta = score+5;
 				score = recurse(player, alpha, beta, i, true, true, 0);
-				if((score <= alpha || score >= beta)  && !cutoffSearch){
+				if((score <= alpha || score >= beta)  && !cutoffSearch.get()){
 					//System.out.println("double fail");
 					if(l != null){
 						if(score <= alpha){
@@ -170,7 +170,7 @@ public final class SearchS4V32k implements Search3{
 					beta = max;
 					score = recurse(player, alpha, beta, i, true, true, 0);
 				}
-			} else if(score >= beta && !cutoffSearch){
+			} else if(score >= beta && !cutoffSearch.get()){
 				//System.out.println("search failed high, researching");
 				if(l != null){
 					l.failHigh(i);
@@ -178,7 +178,7 @@ public final class SearchS4V32k implements Search3{
 				alpha = score-5;
 				beta = score+failOffset;
 				score = recurse(player, alpha, beta, i, true, true, 0);
-				if((score <= alpha || score >= beta)  && !cutoffSearch){
+				if((score <= alpha || score >= beta)  && !cutoffSearch.get()){
 					//System.out.println("double fail");
 					if(l != null){
 						if(score <= alpha){
@@ -192,12 +192,12 @@ public final class SearchS4V32k implements Search3{
 					score = recurse(player, alpha, beta, i, true, true, 0);
 				}
 			}
-			if(!cutoffSearch){
+			if(!cutoffSearch.get()){
 				nodesSearched = stats.nodesSearched;
 				stats.maxPlySearched = i;
 			}
 			final TTEntry tte;
-			if((tte = m.get(s.zkey())) != null && tte.move != 0 && !cutoffSearch){
+			if((tte = m.get(s.zkey())) != null && tte.move != 0 && !cutoffSearch.get()){
 				bestMove = tte.move;
 				if(l != null){
 					l.plySearched(bestMove, i);
@@ -258,6 +258,7 @@ public final class SearchS4V32k implements Search3{
 		}
 		
 		stats.searchTime = System.currentTimeMillis()-stats.searchTime;
+		cutoffSearch.set(false);
 	}
 	
 	private String getPVString(int player, State4 s, String pv, int depth, int maxDepth, boolean uci){
@@ -313,7 +314,7 @@ public final class SearchS4V32k implements Search3{
 	}
 	
 	public void cutoffSearch(){
-		cutoffSearch = true;
+		cutoffSearch.set(true);
 	}
 	
 	/** tests to see if the passed player is in check*/
@@ -395,7 +396,7 @@ public final class SearchS4V32k implements Search3{
 		
 		//null move pruning (hashes result, but might not be sound)
 		boolean hasNonPawnMaterial = s.pieceCounts[player][0]-s.pieceCounts[player][State4.PIECE_TYPE_PAWN] > 1;
-		if(!pv && !ml.skipNullMove && depth > 0 &&  !cutoffSearch &&
+		if(!pv && !ml.skipNullMove && depth > 0 &&  !cutoffSearch.get() &&
 				!ml.kingAttacked[player] && hasNonPawnMaterial){
 			
 			int r = 3 + depth/4;
@@ -468,7 +469,7 @@ public final class SearchS4V32k implements Search3{
 		final int drawCount = s.drawCount; //stored for error checking purposes
 		
 		boolean hasMove = ml.kingAttacked[player];
-		for(int i = 0; i < length && !cutoffSearch; i++){
+		for(int i = 0; i < length && !cutoffSearch.get(); i++){
 			for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
 				
 				long encoding = s.executeMove(player, pieceMasks[i], movesTemp&-movesTemp);
@@ -530,7 +531,7 @@ public final class SearchS4V32k implements Search3{
 						alpha = g;
 						cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
 						if(alpha >= beta){
-							if(!cutoffSearch){
+							if(!cutoffSearch.get()){
 								//m.put2(zkey, bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
 								fillEntry.fill(zkey, encoding, alpha, depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
 								m.put(zkey, fillEntry);
@@ -556,7 +557,7 @@ public final class SearchS4V32k implements Search3{
 			cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
 		}
 		
-		if(!cutoffSearch){
+		if(!cutoffSearch.get()){
 			//m.put2(zkey, bestMove, bestScore, depth, cutoffFlag);
 			fillEntry.fill(zkey, bestMove, bestScore, depth, pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
 			m.put(zkey, fillEntry);
@@ -622,7 +623,7 @@ public final class SearchS4V32k implements Search3{
 		int cutoffFlag = TTEntry.CUTOFF_TYPE_UPPER;
 		long bestMove = 0;
 		final int drawCount = s.drawCount; //stored for error checking purposes
-		for(int i = 0; i < length && !cutoffSearch; i++){
+		for(int i = 0; i < length && !cutoffSearch.get(); i++){
 			for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
 				long encoding = s.executeMove(player, pieceMasks[i], movesTemp&-movesTemp);
 				this.e.processMove(encoding);
@@ -652,7 +653,7 @@ public final class SearchS4V32k implements Search3{
 						alpha = g;
 						cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 						if(g >= beta){
-							if(!cutoffSearch){
+							if(!cutoffSearch.get()){
 								fillEntry.fill(zkey, encoding, g, depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
 								m.put(zkey, fillEntry);
 							}
@@ -663,7 +664,7 @@ public final class SearchS4V32k implements Search3{
 			}
 		}
 
-		if(!cutoffSearch){
+		if(!cutoffSearch.get()){
 			fillEntry.fill(zkey, bestMove, bestScore, depth, pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
 			m.put(zkey, fillEntry);
 		}
