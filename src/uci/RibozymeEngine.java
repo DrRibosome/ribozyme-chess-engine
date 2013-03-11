@@ -24,8 +24,10 @@ public class RibozymeEngine implements UCIEngine{
 					final int inc = 0;
 					TimerThread3.searchBlocking(s, p.s, player, params.time[player], inc, moveStore);
 					//s.search(player, moveStore, params.depth);
+					
+					String promotion = (p.s.pawns[player] & 1L<<moveStore[0]) != 0 && moveStore[0]/8==7? "q": "";
 					String move = posString(moveStore[0])+posString(moveStore[1]);
-					System.out.println("bestmove "+move);
+					System.out.println("bestmove "+move+promotion);
 				}
 			};
 			t.setDaemon(true);
