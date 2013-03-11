@@ -1,5 +1,6 @@
 package eval.expEvalV2;
 
+import state4.BitUtil;
 import state4.MoveEncoder;
 import state4.State4;
 import eval.Evaluator2;
@@ -36,7 +37,7 @@ public final class ExpEvalV2 implements Evaluator2<State4>{
 		FeatureExtractor2.loadFeatures(fset, player, s, true);
 		
 		double score = materialScore[player];
-		score += scoreMobility(player);
+		score += scoreMobility(player, s, c);
 		score += scorePawns(player, fset, s, c);
 		score += s.pieceCounts[player][State4.PIECE_TYPE_BISHOP] == 2?
 				c.bishopPairWeight: 0;
@@ -58,21 +59,6 @@ public final class ExpEvalV2 implements Evaluator2<State4>{
 		m += c.doubledPawnsWeight*fset.doubledPawns;
 		m += c.tripledPawnsWeight*fset.tripledPawns;
 		
-		return m;
-	}
-	
-	private double scoreMobility(int player){
-		double m = 0;
-		for(int a = 1; a < 7; a++){
-			final double p = fset.mobility[a]*1./maxMobility[player][a];
-			if(p < .3){ //low mobility
-				m += c.mobilityWeight[a][0];
-			} else if(p <= .66){
-				m += c.mobilityWeight[a][1];
-			} else{
-				m += c.mobilityWeight[a][2];
-			}
-		}
 		return m;
 	}
 	
@@ -137,6 +123,49 @@ public final class ExpEvalV2 implements Evaluator2<State4>{
 			final int p = State4.PIECE_TYPE_PAWN;
 			materialScore[a] += s.pieceCounts[a][p] * c.materialWeights[p];
 		}
+		
+		/*mobilityScore[0] = initializeMobilityScore(0, s, c);
+		mobilityScore[1] = initializeMobilityScore(1, s, c);*/
+	}
+	
+	private static int scoreMobility(int player, State4 s, EvalConstantsV2 c){
+		int mScore = 0;
+		
+		final long enemyPawns = s.pawns[1-player];
+		final long enemyPawnAttaks = State4.getLeftPawnAttacks(1-player, s.pieces, 0, enemyPawns) | 
+				State4.getRightPawnAttacks(1-player, s.pieces, 0, enemyPawns);
+		
+		for(long bishops = s.bishops[player]; bishops != 0; bishops &= bishops-1){
+			final long p = State4.getBishopMoves(player, s.pieces, bishops&-bishops) & ~enemyPawnAttaks;
+			mScore += c.mobilityWeight[State4.PIECE_TYPE_BISHOP][mobilityIndex((int)BitUtil.getSetBits(p), 14)];
+		}
+		
+		for(long knights = s.knights[player]; knights != 0; knights &= knights-1){
+			final long p = State4.getKnightMoves(player, s.pieces, knights&-knights) & ~enemyPawnAttaks;
+			mScore += c.mobilityWeight[State4.PIECE_TYPE_KNIGHT][mobilityIndex((int)BitUtil.getSetBits(p), 8)];
+		}
+		
+		for(long queens = s.queens[player]; queens != 0; queens &= queens-1){
+			final long p = State4.getQueenMoves(player, s.pieces, queens&-queens) & ~enemyPawnAttaks;
+			mScore += c.mobilityWeight[State4.PIECE_TYPE_QUEEN][mobilityIndex((int)BitUtil.getSetBits(p), 28)];
+		}
+		
+		for(long rooks = s.rooks[player]; rooks != 0; rooks &= rooks-1){
+			final long p = State4.getRookMoves(player, s.pieces, rooks&-rooks) & ~enemyPawnAttaks;
+			mScore += c.mobilityWeight[State4.PIECE_TYPE_ROOK][mobilityIndex((int)BitUtil.getSetBits(p), 15)];
+		}
+		
+		return mScore;
 	}
 
+	private static int mobilityIndex(final int movement, final int maxMovement){
+		final double d = movement*1./maxMovement;
+		if(d < .33){
+			return 0;
+		} else if(d < .66){
+			return 1;
+		} else{
+			return 2;
+		}
+	}
 }

@@ -48,6 +48,7 @@ public final class FeatureExtractor2 {
 		pieceAttackEntropy(f, player, s);
 	}
 	
+	@Deprecated
 	public static void processMobility(FeatureSet f, int player, State4 s){
 		f.mobility[State4.PIECE_TYPE_EMPTY] = 0;
 		

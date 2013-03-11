@@ -43,12 +43,12 @@ public final class EvalConstantsV2 {
 		materialWeights[State4.PIECE_TYPE_QUEEN] = 900;
 		materialWeights[State4.PIECE_TYPE_PAWN] = 100;
 
-		final int s = 2; //scale
+		final int s = 1; //scale
 		final int[][] mobilityWeight = new int[7][3];
-		mobilityWeight[State4.PIECE_TYPE_BISHOP] = new int[]{	-35/s,	0/s,	35/s};
-		mobilityWeight[State4.PIECE_TYPE_KNIGHT] = new int[]{	-30/s,	5/s,	30/s};
-		mobilityWeight[State4.PIECE_TYPE_ROOK] = new int[]{		-40/s,	0/s,	40/s};
-		mobilityWeight[State4.PIECE_TYPE_QUEEN] = new int[]{	-50/s,	0/s,	50/s};
+		mobilityWeight[State4.PIECE_TYPE_BISHOP] = new int[]{	-10/s,	8/s,	30/s};
+		mobilityWeight[State4.PIECE_TYPE_KNIGHT] = new int[]{	-20/s,	8/s,	30/s};
+		mobilityWeight[State4.PIECE_TYPE_ROOK] = new int[]{		-15/s,	20/s,	30/s};
+		mobilityWeight[State4.PIECE_TYPE_QUEEN] = new int[]{	0/s,	15/s,	20/s};
 		
 		final int[] passedPawnRowWeight = new int[]{0, 0, 10, 20, 35, 80, 130, 0};
 		
