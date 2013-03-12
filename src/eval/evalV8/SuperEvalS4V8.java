@@ -98,7 +98,7 @@ public class SuperEvalS4V8 implements Evaluator2<State4>
 	}
 
 	@Override
-	public double eval(State4 s, int player)
+	public int eval(State4 s, int player)
 	{
 		Weight.updateWeightScaling(materialScore[player] + materialScore[1 - player]);
 		int score = BONUS_TEMPO.getScore();
@@ -185,9 +185,9 @@ public class SuperEvalS4V8 implements Evaluator2<State4>
 		return score;
 	}
 
-	public double lazyEval(State4 s, int player)
+	public int lazyEval(State4 s, int player)
 	{
-		double score = 0;
+		int score = 0;
 
 		score += positionScore[player] / GRAIN_SIZE;
 		score += materialScore[player];

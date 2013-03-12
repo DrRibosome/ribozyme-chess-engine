@@ -1,6 +1,7 @@
 package eval.expEvalV2;
 
 import state4.BitUtil;
+import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
 import eval.Evaluator2;
@@ -23,24 +24,27 @@ public final class ExpEvalV2 implements Evaluator2<State4>{
 	}
 	
 	@Override
-	public double eval(State4 s, int player) {
-		final double s1 = score(player, s);
-		return s1-score(1-player, s);
+	public int eval(State4 s, int player) {
+		return score(player, s)-score(1-player, s);
 	}
 
 	@Override
-	public double lazyEval(State4 state, int player) {
+	public int lazyEval(State4 state, int player) {
 		return lazyScore(player)-lazyScore(1-player);
 	}
 	
-	private double score(int player, State4 s){
+	private int score(int player, State4 s){
 		FeatureExtractor2.loadFeatures(fset, player, s, true);
+		final int totalMaterialScore = materialScore[0]+materialScore[1];
 		
-		double score = materialScore[player];
+		int score = materialScore[player];
 		score += scoreMobility(player, s, c);
 		score += scorePawns(player, fset, s, c);
 		score += s.pieceCounts[player][State4.PIECE_TYPE_BISHOP] == 2?
 				c.bishopPairWeight: 0;
+		if(s.queens[1-player] != 0){
+			score += getKingDanger2(player, s, c, totalMaterialScore);
+		}
 		
 		return score;
 	}
@@ -62,7 +66,189 @@ public final class ExpEvalV2 implements Evaluator2<State4>{
 		return m;
 	}
 	
-	private double lazyScore(int player){
+	/** gets the king danger for the passed player*/
+	private int getKingDanger2(final int player, final State4 s, final EvalConstantsV2 c, final int totalMaterialScore){
+		final long kingRing = State4.getKingMoves(player, s.pieces, s.kings[player]);
+		final long king = s.kings[player];
+		int dindex = 0; //danger index
+		final long agg = s.pieces[0]|s.pieces[1];
+		
+		//case that checking piece not defended should be handled by qsearch
+		//(ie, it will just be taken by king, etc, and a better move will be chosen)
+		
+		for(long queens = s.queens[1-player]; queens != 0; queens &= queens-1){
+			final long q = queens&-queens;
+			final long moves = Masks.getRawQueenMoves(agg, q);
+			if((q & kingRing) != 0){ //contact check
+				dindex += EvalConstantsV2.contactCheckQueen;
+			} else if((moves & king) != 0){ //non-contact check
+				dindex += EvalConstantsV2.queenCheck;
+			}
+			dindex += c.dangerKingAttaks[State4.PIECE_TYPE_QUEEN] * BitUtil.getSetBits(moves & kingRing);
+		}
+		
+		for(long rooks = s.rooks[1-player]; rooks != 0; rooks &= rooks-1){
+			final long r = rooks&-rooks;
+			final long moves = Masks.getRawRookMoves(agg, r);
+			 if((moves & king) != 0){
+				if((r & kingRing) != 0){ //contact check
+					dindex += EvalConstantsV2.contactCheckRook;
+				} else{ //non-contact check
+					dindex += EvalConstantsV2.rookCheck;
+				}
+			}
+			dindex += c.dangerKingAttaks[State4.PIECE_TYPE_ROOK] * BitUtil.getSetBits(moves & kingRing);
+		}
+		
+		for(long bishops = s.bishops[1-player]; bishops != 0; bishops &= bishops-1){
+			final long moves = Masks.getRawBishopMoves(agg, bishops);
+			if((moves & king) != 0){ //non-contact check
+				dindex += EvalConstantsV2.bishopCheck;
+			}
+			dindex += c.dangerKingAttaks[State4.PIECE_TYPE_BISHOP] * BitUtil.getSetBits(moves & kingRing);
+		}
+		
+		for(long knights = s.knights[1-player]; knights != 0; knights &= knights-1){
+			final long moves = Masks.getRawKnightMoves(knights);
+			if((moves & king) != 0){ //non-contact check
+				dindex += EvalConstantsV2.knightCheck;
+			}
+			dindex += c.dangerKingAttaks[State4.PIECE_TYPE_KNIGHT] * BitUtil.getSetBits(moves & kingRing);
+		}
+		
+		return c.kingDangerValues[dindex].score(totalMaterialScore);
+	}
+	
+	private int getKingDanger(final int player, final State4 s, final EvalConstantsV2 c){
+		long kingRing = Masks.kingMoves[BitUtil.lsbIndex(s.kings[player])];
+
+		// add the bonus for the square the king is on
+		int dangerIndex = kingDangerSquares[player][kingSq];
+
+		int backRank = player == State4.WHITE ? 0 : 7;
+		int kingRow = kingSq / 8;
+		int kingCol = kingSq % 8;
+
+		if (s.isCastled[player] == 1)
+		{
+			// evaluate the pawn shield for holes
+			int shift = player == State4.WHITE ? 8 : -8;
+			long shieldMask = 1L << (kingSq + shift);
+			shieldMask |= 1L << (kingSq + (shift * 2));
+			if ((shieldMask & s.pawns[player]) == 0)
+			{
+				// counted twice if pawn in front of the king is missing
+				dangerIndex += DANGER_PAWN_SHIELD_GAP * 2;
+			}
+			if (kingCol > 0)
+			{
+				shieldMask = shieldMask >> 1;
+				if ((shieldMask & s.pawns[player]) == 0)
+					dangerIndex += DANGER_PAWN_SHIELD_GAP;
+				shieldMask = shieldMask << 1;
+			}
+			if (kingCol < 7)
+			{
+				shieldMask = shieldMask << 1;
+				if ((shieldMask & s.pawns[player]) == 0)
+					dangerIndex += DANGER_PAWN_SHIELD_GAP;
+			}
+		}
+
+		// check for approaching enemy pawns
+		long enemyPawns = s.pawns[1 - player] & (Masks.colMask[kingCol]);
+		if (kingCol > 0)
+			enemyPawns &= s.pawns[1 - player] & (Masks.colMask[kingCol - 1]);
+		else
+			enemyPawns &= s.pawns[1 - player] & (Masks.colMask[kingCol + 2]);
+		if (kingCol < 7)
+			enemyPawns &= s.pawns[1 - player] & (Masks.colMask[kingCol + 1]);
+		else
+			enemyPawns &= s.pawns[1 - player] & (Masks.colMask[kingCol - 2]);
+
+		while (enemyPawns != 0)
+		{
+			int rank = BitUtil.lsbIndex(enemyPawns) / 8;
+			enemyPawns &= enemyPawns - 1;
+			dangerIndex += DANGER_STORMING_PAWN[player][rank];
+		}
+
+		// check queen attacks
+		if (s.pieceCounts[1 - player][State4.PIECE_TYPE_QUEEN] > 0)
+		{
+			long attacks = State4.getQueenMoves(1 - player, s.pieces, s.queens[1 - player]);
+			long squaresHit = attacks & kingRing;
+
+			while (squaresHit != 0)
+			{
+				dangerIndex += c.dangerKingAttaks[State4.PIECE_TYPE_QUEEN];
+				squaresHit &= squaresHit - 1;
+			}
+		}
+
+		// check rook attacks
+		if (s.pieceCounts[1 - player][State4.PIECE_TYPE_ROOK] > 0)
+		{
+			long enemyRooks = s.rooks[1 - player];
+			long attacks = State4.getRookMoves(player, s.pieces, enemyRooks);
+			long squaresHit = attacks & kingRing;
+
+			dangerIndex += c.dangerKingAttaks[State4.PIECE_TYPE_ROOK] * BitUtil.getSetBits(squaresHit);
+
+			enemyRooks &= enemyRooks - 1;
+			if (enemyRooks != 0)
+			{
+				attacks = State4.getRookMoves(player, s.pieces, enemyRooks);
+				squaresHit = attacks & kingRing;
+
+				dangerIndex += c.dangerKingAttaks[State4.PIECE_TYPE_ROOK] * BitUtil.getSetBits(squaresHit);
+			}
+		}
+
+		// check knight attacks
+		if (s.pieceCounts[1 - player][State4.PIECE_TYPE_ROOK] > 0)
+		{
+			long enemyKnights = s.knights[1 - player];
+			long attacks = State4.getKnightMoves(1 - player, s.pieces, enemyKnights);
+			long squaresHit = attacks & kingRing;
+
+			dangerIndex += c.dangerKingAttaks[State4.PIECE_TYPE_KNIGHT] * BitUtil.getSetBits(squaresHit);
+
+			enemyKnights &= enemyKnights - 1;
+
+			if (enemyKnights != 0)
+			{
+				attacks = State4.getKnightMoves(1 - player, s.pieces, enemyKnights);
+				squaresHit = attacks & kingRing;
+
+				dangerIndex += c.dangerKingAttaks[State4.PIECE_TYPE_KNIGHT] * BitUtil.getSetBits(squaresHit);
+			}
+		}
+
+		// check bishop attacks
+		if (s.pieceCounts[1 - player][State4.PIECE_TYPE_BISHOP] > 0)
+		{
+			long enemyBishops = s.bishops[1 - player];
+			long attacks = State4.getBishopMoves(1 - player, s.pieces, enemyBishops);
+			long squaresHit = attacks & kingRing;
+
+			dangerIndex += c.dangerKingAttaks[State4.PIECE_TYPE_BISHOP] * BitUtil.getSetBits(squaresHit);
+
+			enemyBishops &= enemyBishops - 1;
+
+			if (enemyBishops != 0)
+			{
+				attacks = State4.getBishopMoves(1 - player, s.pieces, enemyBishops);
+				squaresHit = attacks & kingRing;
+
+				dangerIndex += c.dangerKingAttaks[State4.PIECE_TYPE_BISHOP] * BitUtil.getSetBits(squaresHit);
+			}
+		}
+
+		return kingDangerValues[dangerIndex].getScore();
+	}
+	
+	private int lazyScore(int player){
 		return materialScore[player];
 	}
 
@@ -131,9 +317,7 @@ public final class ExpEvalV2 implements Evaluator2<State4>{
 	private static int scoreMobility(int player, State4 s, EvalConstantsV2 c){
 		int mScore = 0;
 		
-		final long enemyPawns = s.pawns[1-player];
-		final long enemyPawnAttaks = State4.getLeftPawnAttacks(1-player, s.pieces, 0, enemyPawns) | 
-				State4.getRightPawnAttacks(1-player, s.pieces, 0, enemyPawns);
+		final long enemyPawnAttaks = Masks.getRawPawnAttacks(1-player, s.pawns[1-player]);
 		
 		for(long bishops = s.bishops[player]; bishops != 0; bishops &= bishops-1){
 			final long p = State4.getBishopMoves(player, s.pieces, bishops&-bishops) & ~enemyPawnAttaks;

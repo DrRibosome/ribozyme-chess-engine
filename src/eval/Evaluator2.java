@@ -6,10 +6,10 @@ public interface Evaluator2<BoardRepresentation> {
 	 * @param state
 	 * @return returns evaluated board state score
 	 */
-	public double eval(BoardRepresentation state, int player);
+	public int eval(BoardRepresentation state, int player);
 	
 	/** quick, but rough, eval*/
-	public double lazyEval(BoardRepresentation state, int player);
+	public int lazyEval(BoardRepresentation state, int player);
 	
 	/** 
 	 * called whenever a piece is moved to allow the evaluator to update

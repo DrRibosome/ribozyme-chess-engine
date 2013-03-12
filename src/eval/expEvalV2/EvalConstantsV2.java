@@ -1,5 +1,8 @@
 package eval.expEvalV2;
 
+import static eval.evalV8.Weight.W;
+
+import java.awt.dnd.DnDConstants;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -26,6 +29,17 @@ public final class EvalConstantsV2 {
 	public final int doubledPawnsWeight;
 	public final int tripledPawnsWeight;
 	public final int supportedPassedPawn;
+	
+	//king danger
+	/** danger index increment associated with each piece type*/
+	public final int[] dangerKingAttaks = new int[7];
+	public final static int contactCheckQueen = 6;
+	public final static int contactCheckRook = 4;
+	public final static int queenCheck = 3;
+	public final static int rookCheck = 2;
+	public final static int knightCheck = 1;
+	public final static int bishopCheck = 1;
+	public final Weight[] kingDangerValues = new Weight[64];
 	
 	static{
 		maxPieceMobility = new int[7];
@@ -58,6 +72,16 @@ public final class EvalConstantsV2 {
 		final int supportedPassedPawn = 5;
 		final int bishopPairWeight = 20;
 		
+		final int[] dangerKingAttacks = new int[]{
+				0,
+				0, 		//king
+				3,   	//queen
+				2,	    //rook
+				1,	    //bishop
+				1,	    //knight
+				0		//pawn
+			};
+		
 		return new EvalConstantsV2(
 				materialWeights,
 				mobilityWeight,
@@ -66,7 +90,8 @@ public final class EvalConstantsV2 {
 				supportedPassedPawn,
 				doubledPawnsWeight,
 				tripledPawnsWeight,
-				bishopPairWeight
+				bishopPairWeight,
+				dangerKingAttacks
 				);
 	}
 	
@@ -77,7 +102,8 @@ public final class EvalConstantsV2 {
 			final int supportedPassedPawnWeight,
 			final int doubledPawnsWeight,
 			final int tripledPawnWeight,
-			final int bishopPairWeight){
+			final int bishopPairWeight,
+			final int[] dangerKingAttaks){
 		assert materialWeights.length == 7;
 		assert mobilityWeight.length == 7 && mobilityWeight[0].length == 3;
 		assert passedPawnRowWeight.length == 8; //interpreted symmetrically for each player
@@ -96,6 +122,17 @@ public final class EvalConstantsV2 {
 		this.doubledPawnsWeight = doubledPawnsWeight;
 		this.tripledPawnsWeight = tripledPawnWeight;
 		this.bishopPairWeight = bishopPairWeight;
+		
+		System.arraycopy(dangerKingAttaks, 0, this.dangerKingAttaks, 0, 7);
+		
+
+		
+		final int maxSlope = 25;
+		final int maxDanger = 800;
+		for(int x = 0, i = 0; i < kingDangerValues.length; i++){
+			x = Math.min(maxDanger, Math.min((i * i) / 2, x + maxSlope));
+			kingDangerValues[i] = new Weight(x, 0, materialWeights);
+		}
 	}
 	
 	/** write weight values to passed output stream*/
@@ -117,6 +154,10 @@ public final class EvalConstantsV2 {
 		dos.writeShort(e.doubledPawnsWeight);
 		dos.writeShort(e.tripledPawnsWeight);
 		dos.writeShort(e.bishopPairWeight);
+		
+		for(int a = 0; a < e.dangerKingAttaks.length; a++){
+			dos.writeShort(e.dangerKingAttaks[a]);
+		}
 	}
 	
 	public static EvalConstantsV2 loadWeights(InputStream is) throws IOException{
@@ -142,6 +183,11 @@ public final class EvalConstantsV2 {
 		final int tripledPawnsWeight = dis.readShort();
 		final int bishopPairWeight = dis.readShort();
 		
+		final int[] dangerKingAttacks = new int[7];
+		for(int a = 0; a < dangerKingAttacks.length; a++){
+			dangerKingAttacks[a] = dis.readShort();
+		}
+		
 		return new EvalConstantsV2(
 				materialWeights,
 				mobilityWeight,
@@ -150,7 +196,8 @@ public final class EvalConstantsV2 {
 				supportedPassedPawn,
 				doubledPawnsWeight,
 				tripledPawnsWeight,
-				bishopPairWeight
+				bishopPairWeight,
+				dangerKingAttacks
 				);
 	}
 }

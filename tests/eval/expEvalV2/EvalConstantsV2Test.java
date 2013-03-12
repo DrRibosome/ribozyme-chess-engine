@@ -27,11 +27,13 @@ public class EvalConstantsV2Test {
 			assertEquals(t1.bishopPairWeight, t2.bishopPairWeight);
 			for(int a = 0; a < 7; a++){
 				assertEquals(t1.materialWeights[a], t2.materialWeights[a]);
+				assertEquals(t1.dangerKingAttaks[a], t2.dangerKingAttaks[a]);
 				
 				for(int q = 0; q < 3; q++){
 					assertEquals(t1.mobilityWeight[a][q], t2.mobilityWeight[a][q]);
 				}
 			}
+			
 			for(int a = 0; a < 8; a++){
 				assertEquals(t1.passedPawnRowWeight[0][a], t2.passedPawnRowWeight[0][a]);
 				assertEquals(t1.passedPawnRowWeight[1][a], t2.passedPawnRowWeight[1][a]);

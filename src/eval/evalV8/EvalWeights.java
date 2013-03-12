@@ -189,9 +189,7 @@ public class EvalWeights
 		
 		int maxSlope = 25;
 		int maxDanger = 800;
-		
-		for(int x = 0, i = 0; i < 127; i++)
-		{
+		for(int x = 0, i = 0; i < 127; i++){
 			x = Math.min(maxDanger, Math.min((i * i) / 2, x + maxSlope));
 			kingDangerValues[i] = W(x, 0);
 		}
