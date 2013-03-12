@@ -223,6 +223,47 @@ public final class Masks {
 		return s;
 	}
 	
+	/** gets all rook moves given all pieces and location of the rook irrespective of piece side*/
+	public static long getRawRookMoves(final long aggPieces, final long rook){
+		final int pos = BitUtil.lsbIndex(rook);
+		final long attackMask = Masks.rookMoves[pos] & aggPieces;
+		final int hashIndex = (int)(attackMask*Magics.rookMagics[pos] >>> (64-Magics.rookBits));
+		return Magics.rookMoveLookup[pos][hashIndex];
+	}
+
+	/** gets all bishop moves given all pieces and location of the bishop irrespective of piece side*/
+	public static long getRawBishopMoves(final long aggPieces, final long bishop){
+		final int pos = BitUtil.lsbIndex(bishop);
+		final long attackMask = Masks.bishopMoves[pos] & aggPieces;
+		final int hashIndex = (int)(attackMask*Magics.bishopMagics[pos] >>> (64-Magics.bishopBits));
+		return Magics.bishopMoveLookup[pos][hashIndex];
+	}
+
+	/** gets all queen moves given all pieces and location of the queen irrespective of piece side*/
+	public static long getRawQueenMoves(final long aggPieces, final long queen){
+		return getRawRookMoves(aggPieces, queen) | getRawBishopMoves(aggPieces, queen);
+	}
+	
+	/** gets all knight moves given all pieces and location of the knight irrespective of piece side*/
+	public static long getRawKnightMoves(final long knight){
+		final int index = BitUtil.lsbIndex(knight);
+		return Masks.knightMoves[index];
+	}
+	
+	/** gets all king moves given all pieces and location of the king irrespective of piece side*/
+	public static long getRawKingMoves(final long knight){
+		final int index = BitUtil.lsbIndex(knight);
+		return Masks.kingMoves[index];
+	}
+	
+	public static long getRawPawnAttacks(final int player, final long pawns){
+		final long colMask1 = player == 0? Masks.colMaskExc[7]: Masks.colMaskExc[0];
+		final long colMask2 = player == 0? Masks.colMaskExc[0]: Masks.colMaskExc[7];
+		final long attacks1 = player == 0? (pawns << 7) & colMask1: (pawns >>> 7) & colMask1;
+		final long attacks2 = player == 0? (pawns << 9) & colMask2: (pawns >>> 9) & colMask2;
+		return attacks1 | attacks2;
+	}
+	
 	public static void main(String[] args){
 		//System.out.println("here");
 		/*long l = 982312;

@@ -57,21 +57,23 @@ public final class State4 {
 	 * @return returns move mask for viable moves
 	 */
 	public static long getRookMoves(final int player, final long[] pieces, final long rook){
-		long agg = pieces[0] | pieces[1];
+		/*long agg = pieces[0] | pieces[1];
 		int pos = BitUtil.lsbIndex(rook);
 		long attackMask = Masks.rookMoves[pos] & agg;
 		int hashIndex = (int)(attackMask*Magics.rookMagics[pos] >>> (64-Magics.rookBits));
-		long move = Magics.rookMoveLookup[pos][hashIndex];
+		long move = Magics.rookMoveLookup[pos][hashIndex];*/
+		final long move = Masks.getRawRookMoves(pieces[0]|pieces[1], rook);
 		return (move & pieces[player]) ^ move;
 	}
 	
 	/** {@link #getRookMoves(int, long[], long)} */
 	public static long getBishopMoves(final int player, final long[] pieces, final long bishop){
-		long agg = pieces[0] | pieces[1];
+		/*long agg = pieces[0] | pieces[1];
 		int pos = BitUtil.lsbIndex(bishop);
 		long attackMask = Masks.bishopMoves[pos] & agg;
 		int hashIndex = (int)(attackMask*Magics.bishopMagics[pos] >>> (64-Magics.bishopBits));
-		long move = Magics.bishopMoveLookup[pos][hashIndex];
+		long move = Magics.bishopMoveLookup[pos][hashIndex];*/
+		final long move = Masks.getRawBishopMoves(pieces[0]|pieces[1], bishop);
 		return (move & pieces[player]) ^ move;
 	}
 	
