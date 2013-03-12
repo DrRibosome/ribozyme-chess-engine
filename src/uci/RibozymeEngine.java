@@ -6,6 +6,7 @@ import state4.State4;
 import time.TimerThread3;
 import eval.Evaluator2;
 import eval.evalV8.SuperEvalS4V8;
+import eval.expEvalV2.ExpEvalV2;
 
 public class RibozymeEngine implements UCIEngine{
 
@@ -25,7 +26,7 @@ public class RibozymeEngine implements UCIEngine{
 					TimerThread3.searchBlocking(s, p.s, player, params.time[player], inc, moveStore);
 					//s.search(player, moveStore, params.depth);
 					
-					String promotion = (p.s.pawns[player] & 1L<<moveStore[0]) != 0 && moveStore[0]/8==7? "q": "";
+					String promotion = (p.s.pawns[player] & 1L<<moveStore[0]) != 0 && (moveStore[1]/8==7 || moveStore[1]/8==0)? "q": "";
 					String move = posString(moveStore[0])+posString(moveStore[1]);
 					System.out.println("bestmove "+move+promotion);
 				}
@@ -80,9 +81,11 @@ public class RibozymeEngine implements UCIEngine{
 	public void setPos(Position p) {
 		this.p = p;
 		
-		Evaluator2<State4> e = new SuperEvalS4V8();
-		s = new SearchS4V32k(p.s, e, 21, false);
+		Evaluator2<State4> e = 
+				new SuperEvalS4V8();
+				//new ExpEvalV2();
 		
+		s = new SearchS4V32k(p.s, e, 21, false);
 	}
 
 }
