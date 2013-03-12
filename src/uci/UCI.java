@@ -36,16 +36,15 @@ public final class UCI {
 				
 				if(s[0].equalsIgnoreCase("uci")){
 					debug("processing 'uci' command\n");
-					send("id name ribozyme 1.0");
+					send("id name ribozyme .1");
 					send("id author ribozyme team");
 					send("uciok");
 					//send("\n");
 				} else if(s[0].equalsIgnoreCase("ucinewgame")){
-					
+					engine.setPos(Position.startPos());
 				} else if(s[0].equalsIgnoreCase("position")){
 					Position p = null;
 					if(s[1].equalsIgnoreCase("fen")){
-						//Pattern fenSel = Pattern.compile("<(.*?)>");
 						Pattern fenSel = Pattern.compile("fen ((.*?\\s+){5}.*?)(\\s+|$)");
 						Matcher temp = fenSel.matcher(interfaceCommand);
 						temp.find();
@@ -69,7 +68,7 @@ public final class UCI {
 							}
 							turn = 1-turn;
 							p.fullMoves++;
-							p.halfMoves++; //not correct, should only update on non-takes
+							p.halfMoves = 0; //not correct, should only update on non-takes
 						}
 						p.sideToMove = turn;
 					}

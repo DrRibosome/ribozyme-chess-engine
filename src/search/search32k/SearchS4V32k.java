@@ -287,7 +287,7 @@ public final class SearchS4V32k implements Search3{
 	}
 	
 	private static String moveString(int pos){
-		return ""+(char)('A'+(pos%8))+(pos/8+1);
+		return ""+(char)('a'+(pos%8))+(pos/8+1);
 	}
 	
 	/**
