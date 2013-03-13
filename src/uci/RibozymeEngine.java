@@ -6,7 +6,6 @@ import state4.State4;
 import time.TimerThread3;
 import eval.Evaluator2;
 import eval.evalV8.SuperEvalS4V8;
-import eval.expEvalV2.ExpEvalV2;
 
 public class RibozymeEngine implements UCIEngine{
 

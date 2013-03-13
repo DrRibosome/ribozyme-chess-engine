@@ -1,6 +1,6 @@
 package uci;
 
-public class Move {
+public class UCIMove {
 	public enum MoveType{
 		Normal,
 		Promotion,

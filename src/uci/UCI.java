@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 import state4.MoveEncoder;
 import state4.State4;
-import uci.Move.MoveType;
+import uci.UCIMove.MoveType;
 import util.FenParser;
 
 public final class UCI {
@@ -63,11 +63,11 @@ public final class UCI {
 						String moves = temp.group(1);
 						String[] ml = moves.split("\\s+");
 						for(int a = 0; a < ml.length; a++){
-							Move m = parseMove(ml[a]);
+							UCIMove m = parseMove(ml[a]);
 							long encoding = 0;
-							if(m.type == Move.MoveType.Normal){
+							if(m.type == UCIMove.MoveType.Normal){
 								encoding = p.s.executeMove(turn, 1L<<m.move[0], 1L<<m.move[1]);
-							} else if(m.type == Move.MoveType.Null){
+							} else if(m.type == UCIMove.MoveType.Null){
 								p.s.nullMove();
 							}
 							p.s.resetHistory();
@@ -143,27 +143,27 @@ public final class UCI {
 		}
 	}
 	
-	private static Move parseMove(String move){
-		Move m = new Move();
+	private static UCIMove parseMove(String move){
+		UCIMove m = new UCIMove();
 		if(move.equals("0000")){
-			m.type = Move.MoveType.Null;
+			m.type = UCIMove.MoveType.Null;
 			return m;
 		}
 		
-		m.type = Move.MoveType.Normal;
+		m.type = UCIMove.MoveType.Normal;
 		move = move.toLowerCase();
 		m.move[0] = move.charAt(0)-'a'+(move.charAt(1)-'1')*8;
 		m.move[1] = move.charAt(2)-'a'+(move.charAt(3)-'1')*8;
 		if(move.length() == 5){
 			char promotion = move.charAt(4);
 			if(promotion == 'q'){
-				m.ptype = Move.PromotionType.Queen;
+				m.ptype = UCIMove.PromotionType.Queen;
 			} else if(promotion == 'b'){
-				m.ptype = Move.PromotionType.Bishop;
+				m.ptype = UCIMove.PromotionType.Bishop;
 			} else if(promotion == 'r'){
-				m.ptype = Move.PromotionType.Rook;
+				m.ptype = UCIMove.PromotionType.Rook;
 			} else if(promotion == 'n'){
-				m.ptype = Move.PromotionType.Knight;
+				m.ptype = UCIMove.PromotionType.Knight;
 			}
 		}
 		
