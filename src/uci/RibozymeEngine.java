@@ -1,6 +1,6 @@
 package uci;
 
-import search.Search3;
+import search.Search4;
 import search.search32k.SearchS4V32k;
 import state4.State4;
 import time.TimerThread3;
@@ -9,16 +9,25 @@ import eval.evalV8.SuperEvalS4V8;
 
 public class RibozymeEngine implements UCIEngine{
 
-	private Search3 s;
+	private final Search4 s;
 	private Thread t;
 	private final int[] moveStore = new int[2];
 	private Position p;
 	private TimerThread3.Controller c;
 	
+	public RibozymeEngine(){
+		
+		Evaluator2<State4> e = 
+				new SuperEvalS4V8();
+				//new ExpEvalV2();
+		
+		s = new SearchS4V32k(e, 21, false);
+	}
+	
 	@Override
-	public void go(final GoParams params) {
+	public void go(final GoParams params, final Position p) {
 		final int player = p.sideToMove;
-		if(1==1||!params.infinite && params.moveTime != -1){
+		if(!params.infinite && params.moveTime == -1){ //allocate time
 			t = new Thread(){
 				public void run(){
 					final int inc = 0;
@@ -32,36 +41,45 @@ public class RibozymeEngine implements UCIEngine{
 			};
 			t.setDaemon(true);
 			t.start();
-		}
-		
-		/*Thread stopThread = new Thread(){
-			public void run(){
-				if(!params.infinite && params.moveTime != -1){ //time stop
-					long start = System.currentTimeMillis();
-					while(t.isAlive() && System.currentTimeMillis()-start < params.moveTime){
+		} else if(!params.infinite && params.moveTime != -1){ //fixed time per move
+			t = new Thread(){
+				public void run(){
+					s.search(player, p.s, moveStore);
+					
+					String promotion = (p.s.pawns[player] & 1L<<moveStore[0]) != 0 && (moveStore[1]/8==7 || moveStore[1]/8==0)? "q": "";
+					String move = posString(moveStore[0])+posString(moveStore[1]);
+					System.out.println("bestmove "+move+promotion);
+				}
+			};
+			t.setDaemon(true);
+			t.start();
+			final Thread timer = new Thread(){
+				public void run(){
+					final long start = System.currentTimeMillis();
+					final long targetTime = params.time[player];
+					long time;
+					while((time = System.currentTimeMillis()-start) < targetTime){
 						try{
-							Thread.sleep(30);
+							Thread.sleep(time/2);
 						} catch(InterruptedException e){}
 					}
-					RibozymeEngine.this.stop();
+					s.cutoffSearch();
 				}
-			}
-		};
-		stopThread.setDaemon(true);
-		stopThread.start();*/
-		
-		/*Thread runner = new Thread(){
-			public void run(){
-				final int inc = 0;
-				this.c = TimerThread3.searchNonBlocking(s, p.s, player, params.time[player], inc, moveStore);
-				String move = posString(moveStore[0])+posString(moveStore[1]);
-			}
-		};
-		runner.setDaemon(true);
-		runner.start();*/
-
-		/*String move = posString(moveStore[0])+posString(moveStore[1]);
-		System.out.println("bestmove "+move);*/
+			};
+			timer.setDaemon(true);
+			timer.start();
+		} else if(params.infinite){
+			t = new Thread(){
+				public void run(){
+					s.search(player, p.s, moveStore);
+					String promotion = (p.s.pawns[player] & 1L<<moveStore[0]) != 0 && (moveStore[1]/8==7 || moveStore[1]/8==0)? "q": "";
+					String move = posString(moveStore[0])+posString(moveStore[1]);
+					System.out.println("bestmove "+move+promotion);
+				}
+			};
+			t.setDaemon(true);
+			t.start();
+		}
 	}
 	
 	private static String posString(int pos){
@@ -71,20 +89,19 @@ public class RibozymeEngine implements UCIEngine{
 	@Override
 	public void stop() {
 		s.cutoffSearch();
-		/*if(c != null){
-			c.stopSearch();
-		}*/
+		if(t != null){
+			while(t.isAlive()){
+				try{
+					t.join();
+				} catch(InterruptedException e){}
+			}
+		}
 	}
 
 	@Override
-	public void setPos(Position p) {
-		this.p = p;
-		
-		Evaluator2<State4> e = 
-				new SuperEvalS4V8();
-				//new ExpEvalV2();
-		
-		s = new SearchS4V32k(p.s, e, 21, false);
+	public void resetEngine() {
+		stop();
+		s.resetSearch();
 	}
 
 }

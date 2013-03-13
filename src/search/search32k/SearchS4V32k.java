@@ -4,7 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import search.Search3;
+import search.Search4;
 import search.SearchListener;
 import search.SearchStat;
 import state4.BitUtil;
@@ -14,7 +14,7 @@ import state4.State4;
 import util.zmap.ZMap;
 import eval.Evaluator2;
 
-public final class SearchS4V32k implements Search3{
+public final class SearchS4V32k implements Search4{
 	public final static class SearchStat32k extends SearchStat{
 		/** scores returned from quiet search without bottoming out*/
 		public long forcedQuietCutoffs;
@@ -48,7 +48,6 @@ public final class SearchS4V32k implements Search3{
 	
 	private final static int[] pawnOffset = new int[]{9,7,8,16};
 	
-	private final State4 s;
 	private final SearchStat32k stats = new SearchStat32k();
 	private final Evaluator2<State4> e;
 	private final int qply = 12;
@@ -71,8 +70,7 @@ public final class SearchS4V32k implements Search3{
 	
 	private final AtomicBoolean cutoffSearch = new AtomicBoolean(false);
 	
-	public SearchS4V32k(State4 s, Evaluator2<State4> e, int hashSize, boolean record){
-		this.s = s;
+	public SearchS4V32k(Evaluator2<State4> e, int hashSize, boolean record){
 		this.e = e;
 		
 		//m = new ZMap3(hashSize);
@@ -98,15 +96,17 @@ public final class SearchS4V32k implements Search3{
 		return stats;
 	}
 	
-	public void search(int player, int[] moveStore){
-		search(player, moveStore, -1);
+	public void search(final int player, final State4 s, final int[] moveStore){
+		search(player, s, moveStore, -1);
 	}
 	
-	public void clearHash(){
+	@Override
+	public void resetSearch(){
 		m.clear();
+		seq = 0;
 	}
 	
-	public void search(int player, int[] moveStore, int maxPly){
+	public void search(final int player, final State4 s, final int[] moveStore, final int maxPly){
 		stats.nodesSearched = 0;
 		stats.hashHits = 0;
 		stats.forcedQuietCutoffs = 0;
@@ -146,7 +146,7 @@ public final class SearchS4V32k implements Search3{
 			}
 			
 			//System.out.println("starting depth "+i);
-			score = recurse(player, alpha, beta, i, true, true, 0);
+			score = recurse(player, alpha, beta, i, true, true, 0, s);
 			
 			
 			if(score <= alpha && !cutoffSearch.get()){
@@ -156,7 +156,7 @@ public final class SearchS4V32k implements Search3{
 				}
 				alpha = score-failOffset;
 				beta = score+5;
-				score = recurse(player, alpha, beta, i, true, true, 0);
+				score = recurse(player, alpha, beta, i, true, true, 0, s);
 				if((score <= alpha || score >= beta)  && !cutoffSearch.get()){
 					//System.out.println("double fail");
 					if(l != null){
@@ -168,7 +168,7 @@ public final class SearchS4V32k implements Search3{
 					}
 					alpha = min;
 					beta = max;
-					score = recurse(player, alpha, beta, i, true, true, 0);
+					score = recurse(player, alpha, beta, i, true, true, 0, s);
 				}
 			} else if(score >= beta && !cutoffSearch.get()){
 				//System.out.println("search failed high, researching");
@@ -177,7 +177,7 @@ public final class SearchS4V32k implements Search3{
 				}
 				alpha = score-5;
 				beta = score+failOffset;
-				score = recurse(player, alpha, beta, i, true, true, 0);
+				score = recurse(player, alpha, beta, i, true, true, 0, s);
 				if((score <= alpha || score >= beta)  && !cutoffSearch.get()){
 					//System.out.println("double fail");
 					if(l != null){
@@ -189,7 +189,7 @@ public final class SearchS4V32k implements Search3{
 					}
 					alpha = min;
 					beta = max;
-					score = recurse(player, alpha, beta, i, true, true, 0);
+					score = recurse(player, alpha, beta, i, true, true, 0, s);
 				}
 			}
 			if(!cutoffSearch.get()){
@@ -322,8 +322,8 @@ public final class SearchS4V32k implements Search3{
 		return State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
 	}
 	
-	private double recurse(int player, double alpha, double beta, int depth,
-			boolean pv, boolean rootNode, int stackIndex){
+	private double recurse(final int player, double alpha, double beta, int depth,
+			final boolean pv, final boolean rootNode, final int stackIndex, final State4 s){
 		stats.nodesSearched++;
 		assert alpha < beta;
 		
@@ -334,7 +334,9 @@ public final class SearchS4V32k implements Search3{
 				return qsearch(player, alpha, beta, 0, stackIndex, pv);
 			}
 			depth = 1;*/
-			return qsearch(player, alpha, beta, 0, stackIndex, pv);
+			return qsearch(player, alpha, beta, 0, stackIndex, pv, s);
+		} else if(cutoffSearch.get()){
+			return 0;
 		}
 		
 
@@ -404,7 +406,7 @@ public final class SearchS4V32k implements Search3{
 			//note, non-pv nodes are null window searched - no need to do it here explicitly
 			stack[stackIndex+1].skipNullMove = true;
 			s.nullMove();
-			double n = -recurse(1-player, -beta, -alpha, depth-r, pv, rootNode, stackIndex+1);
+			double n = -recurse(1-player, -beta, -alpha, depth-r, pv, rootNode, stackIndex+1, s);
 			s.undoNullMove();
 			stack[stackIndex+1].skipNullMove = false;
 			
@@ -420,7 +422,7 @@ public final class SearchS4V32k implements Search3{
 				stats.nullMoveVerifications++;
 				//verification search
 				stack[stackIndex+1].skipNullMove = true;
-				double v = recurse(player, alpha, beta, depth-r, pv, rootNode, stackIndex+1);
+				double v = recurse(player, alpha, beta, depth-r, pv, rootNode, stackIndex+1, s);
 				stack[stackIndex+1].skipNullMove = false;
 				if(v >= beta){
 					stats.nullMoveCutoffs++;
@@ -436,7 +438,7 @@ public final class SearchS4V32k implements Search3{
 		if(!tteMove && depth >= (pv? 5: 8) && (pv || (!ml.kingAttacked[player] && lazyEval+256 >= beta))){
 			int d = pv? depth-2: depth/2;
 			stack[stackIndex+1].skipNullMove = true;
-			recurse(player, alpha, beta, d, pv, rootNode, stackIndex+1);
+			recurse(player, alpha, beta, d, pv, rootNode, stackIndex+1, s);
 			stack[stackIndex+1].skipNullMove = false;
 			final TTEntry temp;
 			if((temp = m.get(zkey)) != null && temp.move != 0){
@@ -469,7 +471,7 @@ public final class SearchS4V32k implements Search3{
 		final int drawCount = s.drawCount; //stored for error checking purposes
 		
 		boolean hasMove = ml.kingAttacked[player];
-		for(int i = 0; i < length && !cutoffSearch.get(); i++){
+		for(int i = 0; i < length; i++){
 			for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
 				
 				long encoding = s.executeMove(player, pieceMasks[i], movesTemp&-movesTemp);
@@ -493,7 +495,7 @@ public final class SearchS4V32k implements Search3{
 							(encoding&0xFFF) != ml.killer[1] &&
 							(!tteMove || encoding != tteMoveEncoding)){
 						int reducedDepth = pv? depth-1: depth-2;
-						g = -recurse(1-player, -(alpha+1), -alpha, reducedDepth, false, false, stackIndex+1);
+						g = -recurse(1-player, -(alpha+1), -alpha, reducedDepth, false, false, stackIndex+1, s);
 						fullSearch = g+100 > alpha;
 					} else{
 						fullSearch = true;
@@ -502,12 +504,12 @@ public final class SearchS4V32k implements Search3{
 					if(fullSearch){
 						//descend negascout style
 						if(!pvMove){
-							g = -recurse(1-player, -(alpha+1), -alpha, depth-1, false, false, stackIndex+1);
+							g = -recurse(1-player, -(alpha+1), -alpha, depth-1, false, false, stackIndex+1, s);
 							if(alpha < g && g < beta && pv){
-								g = -recurse(1-player, -beta, -alpha, depth-1, pv, false, stackIndex+1);
+								g = -recurse(1-player, -beta, -alpha, depth-1, pv, false, stackIndex+1, s);
 							}
 						} else{
-							g = -recurse(1-player, -beta, -alpha, depth-1, pv, false, stackIndex+1);
+							g = -recurse(1-player, -beta, -alpha, depth-1, pv, false, stackIndex+1, s);
 						}
 					}
 				}
@@ -565,12 +567,15 @@ public final class SearchS4V32k implements Search3{
 		return bestScore;
 	}
 	
-	private double qsearch(int player, double alpha, double beta, int depth, int stackIndex, boolean pv){
+	private double qsearch(final int player, double alpha, double beta, final int depth,
+			final int stackIndex, final boolean pv, final State4 s){
 		stats.nodesSearched++;
 		
 		if(depth < -qply){
 			stats.forcedQuietCutoffs++;
 			return beta; //qply bottomed out, return bad value
+		} else if(cutoffSearch.get()){
+			return 0;
 		}
 
 		
@@ -623,7 +628,7 @@ public final class SearchS4V32k implements Search3{
 		int cutoffFlag = TTEntry.CUTOFF_TYPE_UPPER;
 		long bestMove = 0;
 		final int drawCount = s.drawCount; //stored for error checking purposes
-		for(int i = 0; i < length && !cutoffSearch.get(); i++){
+		for(int i = 0; i < length; i++){
 			for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
 				long encoding = s.executeMove(player, pieceMasks[i], movesTemp&-movesTemp);
 				this.e.processMove(encoding);
@@ -633,7 +638,7 @@ public final class SearchS4V32k implements Search3{
 					//king in check after move
 					g = -77777;
 				} else{
-					g = -qsearch(1-player, -beta, -alpha, depth-1, stackIndex+1, pv);
+					g = -qsearch(1-player, -beta, -alpha, depth-1, stackIndex+1, pv, s);
 				}
 				s.undoMove();
 				this.e.undoMove(encoding);
@@ -784,7 +789,7 @@ public final class SearchS4V32k implements Search3{
 		}
 	}
 	
-	private static void genMoves(final int player, State4 s, MoveList ml, Hash m, boolean quiece){
+	private static void genMoves(final int player, final State4 s, final MoveList ml, final Hash m, final boolean quiece){
 		ml.upTakes[State4.PIECE_TYPE_KING] = s.pieces[1-player];
 		ml.upTakes[State4.PIECE_TYPE_QUEEN] = s.queens[1-player]|s.kings[1-player];
 		ml.upTakes[State4.PIECE_TYPE_ROOK] = ml.upTakes[State4.PIECE_TYPE_QUEEN]|s.rooks[1-player];

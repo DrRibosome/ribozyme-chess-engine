@@ -12,7 +12,7 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
-import search.Search3;
+import search.Search4;
 import search.SearchStat;
 import search.search32k.SearchS4V32k;
 import state4.State4;
@@ -41,7 +41,7 @@ public class ChessServer4 extends WebSocketServer{
 	SuperBook book;
 	Random r;
 
-	Search3 searcher;
+	final Search4 searcher;
 	SearchStat agg;
 
 	public ChessServer4(int port)
@@ -60,6 +60,13 @@ public class ChessServer4 extends WebSocketServer{
 		book.init("millionBook.txt");
 		s.initialize();
 		r = new Random();
+
+		final Evaluator2<State4> e =
+				new SuperEvalS4V8();
+		searcher =
+				//new SearchS4V32(s, e, 21, false);
+				//new SearchS4V32cc(s, e, 21, false);
+				new SearchS4V32k(e, 21, false);
 	}
 
 	@Override
@@ -113,7 +120,6 @@ public class ChessServer4 extends WebSocketServer{
 				}
 				
 				if(resettable || searcher == null){
-					Evaluator2<State4> e = new SuperEvalS4V8();
 					s = new State4();
 					s.initialize();
 					book = new SuperBook();
@@ -121,11 +127,7 @@ public class ChessServer4 extends WebSocketServer{
 					processedMoves = new ArrayList<String>();
 					
 					agg = new SearchStat();
-					searcher =
-							//new SearchS4V32(s, e, 21, false);
-							//new SearchS4V32cc(s, e, 21, false);
-							new SearchS4V32k(s, e, 21, false);
-					
+					searcher.resetSearch();
 					
 					
 					

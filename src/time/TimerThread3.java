@@ -3,7 +3,7 @@ package time;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import search.Search3;
+import search.Search4;
 import search.SearchListener;
 import state4.State4;
 
@@ -18,8 +18,8 @@ public final class TimerThread3 extends Thread{
 	private final AtomicBoolean stopSearch = new AtomicBoolean(false);
 	private final AtomicBoolean isFinished = new AtomicBoolean(false);
 	
-	private Search3 search;
-	private State4 s;
+	private final Search4 search;
+	private final State4 s;
 	private long time;
 	private long inc;
 	private int player;
@@ -56,7 +56,7 @@ public final class TimerThread3 extends Thread{
 		}
 	};
 	
-	private TimerThread3(Search3 search, State4 s, int player, long time, long inc, int[] moveStore) {
+	private TimerThread3(Search4 search, State4 s, int player, long time, long inc, int[] moveStore) {
 		setDaemon(true);
 		this.search = search;
 		this.s = s;
@@ -83,7 +83,7 @@ public final class TimerThread3 extends Thread{
 		
 		final Thread t = new Thread(){
 			public void run(){
-				search.search(player, moveStore, 99);
+				search.search(player, s, moveStore, 99);
 			}
 		};
 		t.setDaemon(true);
@@ -136,7 +136,7 @@ public final class TimerThread3 extends Thread{
 		isFinished.set(true);
 	}
 	
-	public static void searchBlocking(Search3 search, State4 s, int player, long time, long inc, int[] moveStore){
+	public static void searchBlocking(Search4 search, State4 s, int player, long time, long inc, int[] moveStore){
 		final TimerThread3 t = new TimerThread3(search, s, player, time, inc, moveStore);
 		t.start();
 		while(t.isAlive()){
@@ -146,7 +146,7 @@ public final class TimerThread3 extends Thread{
 		}
 	}
 	
-	public static Controller searchNonBlocking(Search3 search, State4 s, int player, long time, long inc, int[] moveStore){
+	public static Controller searchNonBlocking(Search4 search, State4 s, int player, long time, long inc, int[] moveStore){
 		final TimerThread3 t = new TimerThread3(search, s, player, time, inc, moveStore);
 		final Controller temp = new Controller(){
 			@Override

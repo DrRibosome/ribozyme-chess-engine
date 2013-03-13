@@ -3,6 +3,7 @@ package time;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import search.Search3;
+import search.Search4;
 import search.SearchListener;
 import state4.State4;
 
@@ -11,8 +12,8 @@ public final class RawTimerThread3 extends Thread{
 	private final static int failLow = -1;
 	private final static int failHigh = 1;
 	
-	private Search3 search;
-	private State4 s;
+	private final Search4 search;
+	private final State4 s;
 	private long time;
 	private long inc;
 	private int player;
@@ -44,7 +45,7 @@ public final class RawTimerThread3 extends Thread{
 		}
 	};
 	
-	private RawTimerThread3(Search3 search, State4 s, int player, long time, long inc, int[] moveStore) {
+	private RawTimerThread3(Search4 search, State4 s, int player, long time, long inc, int[] moveStore) {
 		setDaemon(true);
 		this.search = search;
 		this.s = s;
@@ -66,7 +67,7 @@ public final class RawTimerThread3 extends Thread{
 		
 		final Thread t = new Thread(){
 			public void run(){
-				search.search(player, moveStore, 99);
+				search.search(player, s, moveStore, 99);
 			}
 		};
 		t.setDaemon(true);
@@ -92,7 +93,7 @@ public final class RawTimerThread3 extends Thread{
 		}
 	}
 	
-	public static void search(Search3 search, State4 s, int player, long time, long inc, int[] moveStore){
+	public static void search(Search4 search, State4 s, int player, long time, long inc, int[] moveStore){
 		RawTimerThread3 t = new RawTimerThread3(search, s, player, time, inc, moveStore);
 		t.start();
 		while(t.isAlive()){

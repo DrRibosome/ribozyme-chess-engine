@@ -17,6 +17,7 @@ import util.FenParser;
 public final class UCI {
 	private UCIEngine engine = new RibozymeEngine();
 	private FileWriter out;
+	private Position pos;
 	
 	private final Thread t = new Thread(){
 		@Override
@@ -44,67 +45,65 @@ public final class UCI {
 					send("uciok");
 					//send("\n");
 				} else if(s[0].equalsIgnoreCase("ucinewgame")){
-					engine.setPos(Position.startPos());
+					pos = Position.startPos();
 				} else if(s[0].equalsIgnoreCase("position")){
-					Position p = null;
 					if(s[1].equalsIgnoreCase("fen")){
 						Pattern fenSel = Pattern.compile("fen ((.*?\\s+){5}.*?)(\\s+|$)");
 						Matcher temp = fenSel.matcher(interfaceCommand);
 						temp.find();
-						p = FenParser.parse(temp.group(1));
+						pos = FenParser.parse(temp.group(1));
 					} else if(s[1].equalsIgnoreCase("startpos")){
-						p = Position.startPos();
+						pos = Position.startPos();
 					}
 					
 					Pattern moveSel = Pattern.compile("moves\\s+(.*)");
 					Matcher temp = moveSel.matcher(interfaceCommand);
 					if(temp.find()){
-						int turn = p.sideToMove;
+						int turn = pos.sideToMove;
 						String moves = temp.group(1);
 						String[] ml = moves.split("\\s+");
 						for(int a = 0; a < ml.length; a++){
 							UCIMove m = parseMove(ml[a]);
 							long encoding = 0;
 							if(m.type == UCIMove.MoveType.Normal){
-								encoding = p.s.executeMove(turn, 1L<<m.move[0], 1L<<m.move[1]);
+								encoding = pos.s.executeMove(turn, 1L<<m.move[0], 1L<<m.move[1]);
 							} else if(m.type == UCIMove.MoveType.Null){
-								p.s.nullMove();
+								pos.s.nullMove();
 							}
-							p.s.resetHistory();
+							pos.s.resetHistory();
 							turn = 1-turn;
-							p.fullMoves++;
-							p.halfMoves = MoveEncoder.getTakenType(encoding) == State4.PIECE_TYPE_EMPTY ||
-									m.type == MoveType.Null? 0: p.halfMoves+1;
+							pos.fullMoves++;
+							pos.halfMoves = MoveEncoder.getTakenType(encoding) == State4.PIECE_TYPE_EMPTY ||
+									m.type == MoveType.Null? 0: pos.halfMoves+1;
 						}
-						p.sideToMove = turn;
+						pos.sideToMove = turn;
 					}
-					engine.setPos(p);
 				} else if(s[0].equalsIgnoreCase("isready")){
 					send("readyok");
 				} else if(s[0].equalsIgnoreCase("stop")){
 					engine.stop();
 				} else if(s[0].equalsIgnoreCase("go")){
-					GoParams p = new GoParams();
-					p.ponder = interfaceCommand.contains("ponder");
-					p.infinite = interfaceCommand.contains("infinite");
+					GoParams params = new GoParams();
+					params.ponder = interfaceCommand.contains("ponder");
+					params.infinite = interfaceCommand.contains("infinite");
 					
 					Matcher temp;
 					
 					Pattern whiteTimeSel = Pattern.compile("wtime\\s+(\\d+)");
 					temp = whiteTimeSel.matcher(interfaceCommand);
-					p.time[0] = temp.find()? Integer.parseInt(temp.group(1)): -1;
+					params.time[0] = temp.find()? Integer.parseInt(temp.group(1)): -1;
 					
 					Pattern blackTimeSel = Pattern.compile("btime\\s+(\\d+)");
 					temp = blackTimeSel.matcher(interfaceCommand);
-					p.time[1] = temp.find()? Integer.parseInt(temp.group(1)): -1;
+					params.time[1] = temp.find()? Integer.parseInt(temp.group(1)): -1;
 					
 					Pattern whiteTimeIncSel = Pattern.compile("winc\\s+(\\d+)");
 					temp = whiteTimeIncSel.matcher(interfaceCommand);
-					p.whiteTimeInc = temp.find()? Integer.parseInt(temp.group(1)): -1;
+					params.whiteTimeInc = temp.find()? Integer.parseInt(temp.group(1)): -1;
 					
 					Pattern blackTimeIncSel = Pattern.compile("binc\\s+(\\d+)");
 					temp = blackTimeIncSel.matcher(interfaceCommand);
-					p.blackTimeInc = temp.find()? Integer.parseInt(temp.group(1)): -1;
+					params.blackTimeInc = temp.find()? Integer.parseInt(temp.group(1)): -1;
 					
 					/*Pattern depthSel = Pattern.compile("depth\\s+(\\d+)");
 					temp = depthSel.matcher(interfaceCommand);
@@ -112,9 +111,9 @@ public final class UCI {
 					*/
 					Pattern moveTimeSel = Pattern.compile("movetime\\s+(\\d+)");
 					temp = moveTimeSel.matcher(interfaceCommand);
-					p.moveTime = temp.find()? Integer.parseInt(temp.group(1)): -1;
+					params.moveTime = temp.find()? Integer.parseInt(temp.group(1)): -1;
 					
-					engine.go(p);
+					engine.go(params, pos);
 				} else if(s[0].equalsIgnoreCase("quit")){
 					break;
 				}
