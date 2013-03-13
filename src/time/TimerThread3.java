@@ -28,12 +28,12 @@ public final class TimerThread3 extends Thread{
 	private static final boolean debug = false;
 	
 	/** stores extra time from aspiration window failures*/
-	private final LinkedBlockingQueue<Integer> q = new LinkedBlockingQueue<>();
+	private final LinkedBlockingQueue<Integer> q = new LinkedBlockingQueue<Integer>();
 	private final static class PlySearchResult{
 		int ply;
 		long move;
 	}
-	private final LinkedBlockingQueue<PlySearchResult> plyq = new LinkedBlockingQueue<>();
+	private final LinkedBlockingQueue<PlySearchResult> plyq = new LinkedBlockingQueue<PlySearchResult>();
 	
 	private final SearchListener l = new SearchListener() {
 		@Override
