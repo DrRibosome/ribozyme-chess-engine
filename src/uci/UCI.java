@@ -9,6 +9,9 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import state4.MoveEncoder;
+import state4.State4;
+import uci.Move.MoveType;
 import util.FenParser;
 
 public final class UCI {
@@ -61,14 +64,17 @@ public final class UCI {
 						String[] ml = moves.split("\\s+");
 						for(int a = 0; a < ml.length; a++){
 							Move m = parseMove(ml[a]);
+							long encoding = 0;
 							if(m.type == Move.MoveType.Normal){
-								p.s.executeMove(turn, 1L<<m.move[0], 1L<<m.move[1]);
+								encoding = p.s.executeMove(turn, 1L<<m.move[0], 1L<<m.move[1]);
 							} else if(m.type == Move.MoveType.Null){
 								p.s.nullMove();
 							}
+							p.s.resetHistory();
 							turn = 1-turn;
 							p.fullMoves++;
-							p.halfMoves = 0; //not correct, should only update on non-takes
+							p.halfMoves = MoveEncoder.getTakenType(encoding) == State4.PIECE_TYPE_EMPTY ||
+									m.type == MoveType.Null? 0: p.halfMoves+1;
 						}
 						p.sideToMove = turn;
 					}
