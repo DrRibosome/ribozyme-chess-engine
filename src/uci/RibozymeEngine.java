@@ -32,8 +32,6 @@ public class RibozymeEngine implements UCIEngine{
 				public void run(){
 					final int inc = 0;
 					TimerThread3.searchBlocking(s, p.s, player, params.time[player], inc, moveStore);
-					//s.search(player, moveStore, params.depth);
-					
 					String promotion = (p.s.pawns[player] & 1L<<moveStore[0]) != 0 && (moveStore[1]/8==7 || moveStore[1]/8==0)? "q": "";
 					String move = posString(moveStore[0])+posString(moveStore[1]);
 					System.out.println("bestmove "+move+promotion);
@@ -42,6 +40,7 @@ public class RibozymeEngine implements UCIEngine{
 			t.setDaemon(true);
 			t.start();
 		} else if(!params.infinite && params.moveTime != -1){ //fixed time per move
+			assert false;
 			t = new Thread(){
 				public void run(){
 					s.search(player, p.s, moveStore);
@@ -69,6 +68,7 @@ public class RibozymeEngine implements UCIEngine{
 			timer.setDaemon(true);
 			timer.start();
 		} else if(params.infinite){
+			assert false;
 			t = new Thread(){
 				public void run(){
 					s.search(player, p.s, moveStore);
@@ -89,6 +89,7 @@ public class RibozymeEngine implements UCIEngine{
 	@Override
 	public void stop() {
 		s.cutoffSearch();
+		final Thread t = this.t;
 		if(t != null){
 			while(t.isAlive()){
 				try{

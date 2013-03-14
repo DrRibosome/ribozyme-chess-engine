@@ -118,6 +118,7 @@ public final class SearchS4V32k implements Search4{
 		//search initialization
 		seq++;
 		e.initialize(s);
+		cutoffSearch.set(false);
 		
 		long bestMove = 0;
 		double score = 0;
@@ -258,7 +259,6 @@ public final class SearchS4V32k implements Search4{
 		}
 		
 		stats.searchTime = System.currentTimeMillis()-stats.searchTime;
-		cutoffSearch.set(false);
 	}
 	
 	private String getPVString(int player, State4 s, String pv, int depth, int maxDepth, boolean uci){

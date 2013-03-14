@@ -43,8 +43,8 @@ public final class UCI {
 					send("id name ribozyme .1");
 					send("id author ribozyme team");
 					send("uciok");
-					//send("\n");
 				} else if(s[0].equalsIgnoreCase("ucinewgame")){
+					engine.resetEngine();
 					pos = Position.startPos();
 				} else if(s[0].equalsIgnoreCase("position")){
 					if(s[1].equalsIgnoreCase("fen")){

@@ -83,7 +83,7 @@ public final class TimerThread3 extends Thread{
 		
 		final Thread t = new Thread(){
 			public void run(){
-				search.search(player, s, moveStore, 99);
+				search.search(player, s, moveStore);
 			}
 		};
 		t.setDaemon(true);
