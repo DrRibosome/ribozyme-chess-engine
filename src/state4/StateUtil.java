@@ -61,7 +61,7 @@ public final class StateUtil {
 		
 		if(s.enPassante != 0){
 			final int index = BitUtil.lsbIndex(s.enPassante);
-			f += " "+(char)('a'+index%8)+(""+(index/8));
+			f += " "+(char)('a'+index%8)+(""+(index/8+1));
 		} else{
 			f += " -";
 		}

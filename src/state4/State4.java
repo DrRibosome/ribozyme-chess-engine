@@ -45,8 +45,6 @@ public final class State4 {
 	
 	public final boolean[] kingMoved = new boolean[2];
 	public final boolean[][] rookMoved = new boolean[2][2];
-	/** 0=not castled, 1=castled*/
-	public final int[] isCastled = new int[2];
 	/** count since last pawn move or take (for 50-move draw)*/
 	public int drawCount = 0;
 	
@@ -155,7 +153,7 @@ public final class State4 {
 	
 	/** if true, game is a forced draw (via 50 move draw)*/
 	public boolean isForcedDraw(){
-		return drawCount >= 50;
+		return drawCount >= 100;
 	}
 	
 	/**
@@ -332,7 +330,6 @@ public final class State4 {
 					rooks[0] |= 0x8L;
 					mailbox[0] = PIECE_TYPE_EMPTY;
 					mailbox[3] = PIECE_TYPE_ROOK;
-					isCastled[0] = 1;
 					zkey ^= ZHash.zhash[0][PIECE_TYPE_ROOK][0] ^
 							ZHash.zhash[0][PIECE_TYPE_ROOK][3];
 					castleBit = 1;
@@ -342,7 +339,6 @@ public final class State4 {
 					rooks[0] |= 0x20L;
 					mailbox[7] = PIECE_TYPE_EMPTY;
 					mailbox[5] = PIECE_TYPE_ROOK;
-					isCastled[0] = 1;
 					zkey ^= ZHash.zhash[0][PIECE_TYPE_ROOK][7] ^
 							ZHash.zhash[0][PIECE_TYPE_ROOK][5];
 					castleBit = 1;
@@ -355,7 +351,6 @@ public final class State4 {
 					rooks[1] |= 0x800000000000000L;
 					mailbox[56] = PIECE_TYPE_EMPTY;
 					mailbox[59] = PIECE_TYPE_ROOK;
-					isCastled[1] = 1;
 					zkey ^= ZHash.zhash[1][PIECE_TYPE_ROOK][56] ^
 							ZHash.zhash[1][PIECE_TYPE_ROOK][59];
 					castleBit = 1;
@@ -365,7 +360,6 @@ public final class State4 {
 					rooks[1] |= 0x2000000000000000L;
 					mailbox[63] = PIECE_TYPE_EMPTY;
 					mailbox[61] = PIECE_TYPE_ROOK;
-					isCastled[1] = 1;
 					zkey ^= ZHash.zhash[1][PIECE_TYPE_ROOK][63] ^
 							ZHash.zhash[1][PIECE_TYPE_ROOK][61];
 					castleBit = 1;
@@ -536,7 +530,6 @@ public final class State4 {
 					rooks[0] |= 1L;
 					mailbox[3] = PIECE_TYPE_EMPTY;
 					mailbox[0] = PIECE_TYPE_ROOK;
-					isCastled[0] = 0;
 					zkey ^= ZHash.zhash[0][PIECE_TYPE_ROOK][0] ^
 							ZHash.zhash[0][PIECE_TYPE_ROOK][3];
 				} else if(pos2 == 6){
@@ -545,7 +538,6 @@ public final class State4 {
 					rooks[0] |= 0x80L;
 					mailbox[5] = PIECE_TYPE_EMPTY;
 					mailbox[7] = PIECE_TYPE_ROOK;
-					isCastled[0] = 0;
 					zkey ^= ZHash.zhash[0][PIECE_TYPE_ROOK][5] ^
 							ZHash.zhash[0][PIECE_TYPE_ROOK][7];
 				}
@@ -557,7 +549,6 @@ public final class State4 {
 					rooks[1] |= 0x100000000000000L;
 					mailbox[59] = PIECE_TYPE_EMPTY;
 					mailbox[56] = PIECE_TYPE_ROOK;
-					isCastled[1] = 0;
 					zkey ^= ZHash.zhash[1][PIECE_TYPE_ROOK][59] ^
 							ZHash.zhash[1][PIECE_TYPE_ROOK][56];
 				} else if(pos2 == 62){
@@ -566,7 +557,6 @@ public final class State4 {
 					rooks[1] |= 0x8000000000000000L;
 					mailbox[61] = PIECE_TYPE_EMPTY;
 					mailbox[63] = PIECE_TYPE_ROOK;
-					isCastled[1] = 0;
 					zkey ^= ZHash.zhash[1][PIECE_TYPE_ROOK][61] ^
 							ZHash.zhash[1][PIECE_TYPE_ROOK][63];
 				}
@@ -801,9 +791,48 @@ public final class State4 {
 		System.arraycopy(src.kingMoved, 0, dest.kingMoved, 0, 2);
 		System.arraycopy(src.rookMoved[0], 0, dest.rookMoved[0], 0, 2);
 		System.arraycopy(src.rookMoved[1], 0, dest.rookMoved[1], 0, 2);
-		System.arraycopy(src.isCastled, 0, dest.isCastled, 0, 2);
 		dest.zkey = src.zkey;
 		dest.resetHistory();
 		dest.hm.clear();
+	}
+	
+	/** 
+	 * updates mailbox, zkey, etc to the pieces set on the board
+	 * <p> this should only be called once after the pieces have been set up
+	 * on a new board. Afterwards, everything will be maintained incrementally
+	 */
+	public void update(){
+		long[][] l = new long[][]{pawns,kings,queens,rooks,bishops,knights};
+		int[] rep = new int[]{PIECE_TYPE_PAWN, PIECE_TYPE_KING, PIECE_TYPE_QUEEN,
+				PIECE_TYPE_ROOK, PIECE_TYPE_BISHOP, PIECE_TYPE_KNIGHT};
+		for(int i = 0; i < l.length; i++){
+			for(int a = 0; a <= 1; a++){
+				long piece = l[i][a];
+				while(piece != 0){
+					int index = BitUtil.lsbIndex(piece);
+					mailbox[index] = rep[i];
+					piece = piece&(piece-1);
+				}
+			}
+		}
+		
+		zkey = 0;
+		for(int f = 0; f < l.length; f++){
+			for(int i = 0; i < 2; i++){
+				long w = l[f][i];
+				while(w != 0){
+					int pos = BitUtil.lsbIndex(w&-w);
+					w &= w-1;
+					zkey ^= ZHash.zhash[i][rep[f]][pos];
+				}
+			}
+		}
+		zkey ^= ZHash.turn[0];
+		if(enPassante != 0){
+			zkey ^= ZHash.enPassante[BitUtil.lsbIndex(enPassante)];
+		}
+		hm.clear();
+		hm.put(zkey);
+		collect();
 	}
 }
