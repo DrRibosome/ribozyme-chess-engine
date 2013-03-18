@@ -14,3 +14,4 @@ search29.stats
 uci-log.txt
 game-archive/temp
 *.sh
+log/*
