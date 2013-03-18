@@ -1,6 +1,6 @@
 package debug;
 
-import search.Search3;
+import search.Search4;
 import search.search32k.SearchS4V32k;
 import state4.BitUtil;
 import state4.Masks;
@@ -52,7 +52,8 @@ public class Debug {
 		//Position p = FenParser.parse("2r2bk1/pp3p2/1n2q2B/1P3N1Q/2p5/4P3/P4PP1/3R2K1 b - - - -");
 		//Position p = FenParser.parse("8/4kp2/p2b1r2/2p1Q3/P1P2p1P/1P6/5PP1/1R4K1 b - - - -");
 		//Position p = FenParser.parse("4q1kr/p6p/1prQPppB/4n3/4P3/2P5/PP2B2P/R5K1 w - - 0 0");
-		Position p = FenParser.parse("2k5/pp1r2b1/2p5/7P/2P2r1q/5pN1/PPb2P1P/2Q1RRK1 w - - 0 27"); //c1c2 leads to loss by checkmate
+		//Position p = FenParser.parse("2k5/pp1r2b1/2p5/7P/2P2r1q/5pN1/PPb2P1P/2Q1RRK1 w - - 0 27"); //c1c2 leads to loss by checkmate
+		Position p = FenParser.parse("r2qkb1r/p4ppp/2pp1n2/1p2p3/4P1b1/1BNPBn2/PPP2PPP/R2Q1RK1 w kq - 0 10");
 		System.out.println(StateUtil.fen(p.sideToMove, p.s));
 		State4 s = p.s;
 		int player = p.sideToMove;
@@ -66,10 +67,10 @@ public class Debug {
 		
 		final int maxDepth = 25;
 		//Search3 search = new SearchS4V32(s, e, 20, false);
-		Search3 search = new SearchS4V32k(s, e, 22, false);
+		Search4 search = new SearchS4V32k(e, 22, false);
 		//Search3 search = new SearchS4V32cc(s, e, 20, false);
 		int[] move = new int[2];
-		search.search(player, move, maxDepth);
+		search.search(player, s, move, maxDepth);
 		System.out.println("\n"+getMoveString(move, 0)+" -> "+getMoveString(move, 1));
 		System.out.println("nodes searched = "+search.getStats().nodesSearched);
 		System.out.println("hash hit rate = "+search.getStats().hashHits*1./search.getStats().nodesSearched);
