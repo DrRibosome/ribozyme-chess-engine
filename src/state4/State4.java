@@ -324,7 +324,6 @@ public final class State4 {
 		if(mailbox[pos1] == PIECE_TYPE_KING && !kingMoved[player]){
 			//System.out.println("castling");
 			if(player == 0){
-				zkey ^= zhash.kingMoved[0];
 				if(pos2 == 2){
 					//castle left
 					rooks[0] &= ~1L;
@@ -345,7 +344,6 @@ public final class State4 {
 					castleBit = 1;
 				}
 			} else if(player == 1){
-				zkey ^= zhash.kingMoved[1];
 				if(pos2 == 58){
 					//castle left
 					rooks[1] &= ~0x100000000000000L;
@@ -524,7 +522,6 @@ public final class State4 {
 		if(mailbox[pos2] == PIECE_TYPE_KING && MoveEncoder.isFirstKingMove(player, encoding)){
 			//System.out.println("undoing castle");
 			if(player == 0){
-				zkey ^= zhash.kingMoved[0];
 				if(pos2 == 2){
 					//castle left
 					rooks[0] &= ~0x8L;
@@ -543,7 +540,6 @@ public final class State4 {
 							zhash.zhash[0][PIECE_TYPE_ROOK][7];
 				}
 			} else if(player == 1){
-				zkey ^= zhash.kingMoved[1];
 				if(pos2 == 58){
 					//castle left
 					rooks[1] &= ~0x800000000000000L;
@@ -733,36 +729,7 @@ public final class State4 {
 		rooks[0] = r;
 		rooks[1] = r<<8*7;
 		
-		long[][] l = new long[][]{pawns,kings,queens,rooks,bishops,knights};
-		int[] rep = new int[]{PIECE_TYPE_PAWN, PIECE_TYPE_KING, PIECE_TYPE_QUEEN,
-				PIECE_TYPE_ROOK, PIECE_TYPE_BISHOP, PIECE_TYPE_KNIGHT};
-		for(int i = 0; i < l.length; i++){
-			for(int a = 0; a <= 1; a++){
-				long piece = l[i][a];
-				while(piece != 0){
-					int index = BitUtil.lsbIndex(piece);
-					mailbox[index] = rep[i];
-					piece = piece&(piece-1);
-				}
-			}
-		}
-		
-		zkey = 0;
-		for(int f = 0; f < l.length; f++){
-			for(int i = 0; i < 2; i++){
-				long w = l[f][i];
-				while(w != 0){
-					int pos = BitUtil.lsbIndex(w&-w);
-					w &= w-1;
-					zkey ^= zhash.zhash[i][rep[f]][pos];
-				}
-			}
-		}
-		zkey ^= zhash.turn[0];
-		//zkey = 0;
-		hm.clear();
-		hm.put(zkey);
-		collect();
+		update();
 	}
 	
 	/** appearch hash, applied to zkey to denote how many times a positions hash appeared*/
@@ -770,7 +737,14 @@ public final class State4 {
 	public long zkey(){
 		final int count = hm.get(zkey);
 		assert count >= 0;
-		return zkey ^ appHashs[count < 4? count: 3];
+		
+		long castleKey = 0;
+		if(!kingMoved[0] && !rookMoved[0][0]) castleKey ^= zhash.canCastle[0][0];
+		if(!kingMoved[0] && !rookMoved[0][1]) castleKey ^= zhash.canCastle[0][1];
+		if(!kingMoved[1] && !rookMoved[0][0]) castleKey ^= zhash.canCastle[1][0];
+		if(!kingMoved[1] && !rookMoved[0][1]) castleKey ^= zhash.canCastle[1][1];
+		
+		return zkey ^ appHashs[count < 4? count: 3] ^ castleKey;
 	}
 	
 	/**
@@ -817,6 +791,7 @@ public final class State4 {
 			}
 		}
 		
+		//build zkey
 		zkey = 0;
 		for(int f = 0; f < l.length; f++){
 			for(int i = 0; i < 2; i++){
@@ -832,6 +807,19 @@ public final class State4 {
 		if(enPassante != 0){
 			zkey ^= zhash.enPassante[BitUtil.lsbIndex(enPassante)];
 		}
+		
+		//add castling rights into zkey
+		for(int a = 0; a < 2; a++){
+			if(!kingMoved[a]){
+				for(int q = 0; q < 2; q++){
+					if(!rookMoved[a][q]){
+						zkey ^= zhash.canCastle[a][q];
+					}
+				}
+			}
+		}
+		
+
 		hm.clear();
 		hm.put(zkey);
 		collect();

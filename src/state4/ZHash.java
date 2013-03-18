@@ -7,8 +7,9 @@ public final class ZHash {
 	
 	/** indexed [player][type][position]*/
 	public final long[][][] zhash;
-	public final long[] kingMoved;
-	public final long[][] rookMoved;
+	
+	/** records castling rights, indexed [player][castle-side] where castle-side==left? 0: 1*/
+	public final long[][] canCastle;
 	
 	/** en passant enabled for target square*/
 	public final long[] enPassante;
@@ -47,14 +48,10 @@ public final class ZHash {
 		appeared2 = r.nextLong();
 		appeared3 = r.nextLong();
 		
-		kingMoved = new long[2];
-		kingMoved[0] = r.nextLong();
-		kingMoved[1] = r.nextLong();
-		
-		rookMoved = new long[2][2];
-		rookMoved[0][0] = r.nextLong();
-		rookMoved[0][1] = r.nextLong();
-		rookMoved[1][0] = r.nextLong();
-		rookMoved[1][1] = r.nextLong();
+		canCastle = new long[2][2];
+		canCastle[0][0] = r.nextLong();
+		canCastle[0][1] = r.nextLong();
+		canCastle[1][0] = r.nextLong();
+		canCastle[1][1] = r.nextLong();
 	}
 }
