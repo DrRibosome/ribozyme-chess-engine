@@ -139,8 +139,9 @@ public final class TimerThread4 extends Thread{
 		
 		search.cutoffSearch();
 		while(t.isAlive()){
+			search.cutoffSearch();
 			try{
-				t.join();
+				t.join(500);
 			} catch(InterruptedException e){}
 		}
 		isFinished.set(true);
