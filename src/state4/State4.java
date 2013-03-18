@@ -38,16 +38,37 @@ public final class State4 {
 	private final long[] history = new long[64];
 	/** index in {@link #history} of first unused record*/
 	private int hindex = 0;
+	
 	/** zobrist hash key*/
 	private long zkey = 0;
-	private final ZHash zhash = new ZHash();
+	private final ZHash zhash;
 	private final HistoryMap2 hm = new HistoryMap2(10);
-	//private final HistoryMap hm = new HistoryMap(13, 4);
+	/** appearance hash, applied to zkey to denote how many times a positions hash appeared*/
+	private final long[] appHashs;
+	/** seed used to generate zkey hashes*/
+	private final long zkeySeed;
 	
+	/** records if king has moved to determine castling props, indexed [player]*/
 	public final boolean[] kingMoved = new boolean[2];
+	/** records if rook has moved to determine castline props, indexed [player][rook] where rook==left-rook? 0: 1*/
 	public final boolean[][] rookMoved = new boolean[2][2];
 	/** count since last pawn move or take (for 50-move draw)*/
 	public int drawCount = 0;
+	
+	public State4(final long zkeySeed){
+		zhash = new ZHash(zkeySeed);
+		appHashs = new long[]{0, 0, zhash.appeared2, zhash.appeared3};
+		this.zkeySeed = zkeySeed;
+	}
+	
+	public State4(){
+		this(47388L);
+	}
+	
+	/** returns the seed used to generate the zobrist hash keys*/
+	public long getZkeySeed(){
+		return zkeySeed;
+	}
 	
 	/**
 	 * gets rook moves for a specified rook
@@ -732,8 +753,6 @@ public final class State4 {
 		update();
 	}
 	
-	/** appearch hash, applied to zkey to denote how many times a positions hash appeared*/
-	private final long[] appHashs = new long[]{0, 0, zhash.appeared2, zhash.appeared3};
 	public long zkey(){
 		final int count = hm.get(zkey);
 		assert count >= 0;

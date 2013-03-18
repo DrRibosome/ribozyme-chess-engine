@@ -23,8 +23,8 @@ public final class ZHash {
 	/** appeared greater than or equal to 3 times*/
 	public final long appeared3;
 	
-	ZHash(){
-		Random r = new Random();
+	ZHash(final long seed){
+		Random r = new Random(seed);
 		zhash = new long[2][7][64];
 		for(int q = 0; q < 2; q++){
 			for(int i = 0; i < zhash[0].length; i++){
