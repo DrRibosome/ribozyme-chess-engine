@@ -36,12 +36,12 @@ public class ChessServer4 extends WebSocketServer{
 	int offsetx = 29 + spaceWidth / 2, offsety = 155 + spaceWidth / 2;
 	Robot clicker;
 	int botPlayer;
-	boolean ourTurn = false, movedWaiting = false, resettable = false;
+	boolean ourTurn = false, movedWaiting = false, resettable = true;
 	ArrayList<String> processedMoves;
 	SuperBook book;
 	Random r;
 
-	final Search4 searcher;
+	Search4 searcher;
 	SearchStat agg;
 
 	public ChessServer4(int port)
@@ -61,12 +61,14 @@ public class ChessServer4 extends WebSocketServer{
 		s.initialize();
 		r = new Random();
 
+
+
 		final Evaluator2<State4> e =
 				new SuperEvalS4V8();
 		searcher =
 				//new SearchS4V32(s, e, 21, false);
 				//new SearchS4V32cc(s, e, 21, false);
-				new SearchS4V32k(e, 21, false);
+				new SearchS4V32k(e, 22, false);
 	}
 
 	@Override
@@ -119,7 +121,8 @@ public class ChessServer4 extends WebSocketServer{
 					resettable = true;
 				}
 				
-				if(resettable || searcher == null){
+				if(resettable){
+					
 					s = new State4();
 					s.initialize();
 					book = new SuperBook();
@@ -128,7 +131,7 @@ public class ChessServer4 extends WebSocketServer{
 					
 					agg = new SearchStat();
 					searcher.resetSearch();
-					
+
 					
 					
 					movedWaiting = false;
