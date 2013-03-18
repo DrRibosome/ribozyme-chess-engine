@@ -5,9 +5,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import search.Search4;
 import search.SearchListener;
+import state4.BitUtil;
 import state4.State4;
 
-public final class TimerThread3 extends Thread{
+public final class TimerThread4 extends Thread{
 	public static interface Controller{
 		public void stopSearch();
 		public boolean isFinished();
@@ -56,7 +57,7 @@ public final class TimerThread3 extends Thread{
 		}
 	};
 	
-	private TimerThread3(Search4 search, State4 s, int player, long time, long inc, int[] moveStore) {
+	private TimerThread4(Search4 search, State4 s, int player, long time, long inc, int[] moveStore) {
 		setDaemon(true);
 		this.search = search;
 		this.s = s;
@@ -72,6 +73,7 @@ public final class TimerThread3 extends Thread{
 		final int material = getMaterial(s);
 		long target = time / (getHalfMovesRemaining(material)/2);
 		target *= .8;
+		target += .3*inc;
 		
 		
 		search.setListener(l);
@@ -95,6 +97,9 @@ public final class TimerThread3 extends Thread{
 		long move = 0;
 		int currentPly = 0;
 		int lastpvChange = 1;
+		
+		final boolean checking = isChecked(0, s) | isChecked(1, s);
+		
 		while(System.currentTimeMillis()-start < target &&
 				System.currentTimeMillis()-start < maxTime && 
 				!stopSearch.get()){ //so we dont keep extending forever
@@ -109,9 +114,11 @@ public final class TimerThread3 extends Thread{
 				currentPly = r.ply > currentPly? r.ply: currentPly;
 			}
 			
-			if(currentPly-lastpvChange+1 > 6 && currentPly > 8){ //perhaps increase difficulty with fail lows
+			if(!checking && currentPly-lastpvChange+1 > 6 && currentPly >= 11){ //perhaps increase difficulty with fail lows
 				break;
 				//target -= target*.2;
+			} else if(checking && currentPly-lastpvChange+1 > 6 && currentPly >= 13){
+				break;
 			}
 			
 			//handle adjustments from search failures
@@ -139,8 +146,13 @@ public final class TimerThread3 extends Thread{
 		isFinished.set(true);
 	}
 	
+	/** tests to see if the passed player is in check*/
+	private static boolean isChecked(final int player, final State4 s){
+		return State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
+	}
+	
 	public static void searchBlocking(Search4 search, State4 s, int player, long time, long inc, int[] moveStore){
-		final TimerThread3 t = new TimerThread3(search, s, player, time, inc, moveStore);
+		final TimerThread4 t = new TimerThread4(search, s, player, time, inc, moveStore);
 		t.start();
 		while(t.isAlive()){
 			try{
@@ -150,7 +162,7 @@ public final class TimerThread3 extends Thread{
 	}
 	
 	public static Controller searchNonBlocking(Search4 search, State4 s, int player, long time, long inc, int[] moveStore){
-		final TimerThread3 t = new TimerThread3(search, s, player, time, inc, moveStore);
+		final TimerThread4 t = new TimerThread4(search, s, player, time, inc, moveStore);
 		final Controller temp = new Controller(){
 			@Override
 			public void stopSearch() {
