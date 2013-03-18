@@ -88,7 +88,7 @@ public final class RawTimerThread3 extends Thread{
 		while(t.isAlive()){
 			search.cutoffSearch();
 			try{
-				t.join();
+				t.join(500);
 			} catch(InterruptedException e){}
 		}
 	}
