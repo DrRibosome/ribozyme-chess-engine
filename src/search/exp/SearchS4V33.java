@@ -8,12 +8,12 @@ import eval.Evaluator2;
 import search.Search3;
 import search.SearchListener;
 import search.SearchStat;
+import search.legacy.ZMap;
 import search.statsStore.StatsStore;
 import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
-import util.zmap.ZMap;
 
 @Deprecated
 public final class SearchS4V33 implements Search3{

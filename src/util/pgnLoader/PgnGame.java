@@ -26,6 +26,7 @@ public final class PgnGame {
 			//System.out.println(m[a][0]+"->"+m[a][1]+", "+moves.get(a));
 			s.executeMove(turn, 1L<<m[a][0], 1L<<m[a][1]);
 			turn = 1-turn;
+			s.resetHistory();
 		}
 		this.moves = m;
 		this.outcome = outcome.equals("1-0")? whiteWin: outcome.equals("0-1")? blackWin: tie;

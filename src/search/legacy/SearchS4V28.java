@@ -12,7 +12,6 @@ import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
-import util.zmap.ZMap;
 
 /** very similar to v27, slightly fewer nodes searched*/
 public final class SearchS4V28 implements Search3{

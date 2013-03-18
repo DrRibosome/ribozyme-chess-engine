@@ -8,6 +8,7 @@ import org.omg.CORBA.REBIND;
 import search.Search3;
 import search.SearchListener;
 import search.SearchStat;
+import search.legacy.ZMap;
 import search.search32k.Hash;
 import search.search32k.TTEntry;
 import search.search32k.ZMap4;
@@ -15,7 +16,6 @@ import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
-import util.zmap.ZMap;
 import eval.Evaluator2;
 
 public final class SearchS4V32kr implements Search3{

@@ -7,11 +7,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import search.Search4;
 import search.SearchListener;
 import search.SearchStat;
+import search.legacy.ZMap;
 import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
-import util.zmap.ZMap;
 import eval.Evaluator2;
 
 public final class SearchS4V32k implements Search4{
