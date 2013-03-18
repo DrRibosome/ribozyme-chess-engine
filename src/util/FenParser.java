@@ -98,14 +98,14 @@ public class FenParser {
 					
 					final int index = (7-a)*8+off+i;
 					pieces[player] |= 1L << index;
-					state.mailbox[index] = type;
+					//state.mailbox[index] = type; //handled by update below
 					state.pieceCounts[player][type]++;
 					state.pieceCounts[player][State4.PIECE_TYPE_EMPTY]++;
 				}
 			}
 		}
 		
-		state.collect();
+		state.update();
 	}
 	
 	public static void main(String[] args){
