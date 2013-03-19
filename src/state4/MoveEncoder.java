@@ -2,8 +2,11 @@ package state4;
 
 
 public final class MoveEncoder {
+	/** 6-bit position mask*/
 	private final static long posMask = 0x3FL;
 	private final static long pieceTypeMask = 7;
+	/** 7-bit draw count mask*/
+	private final static long drawCountMask = 0x7F;
 	
 	public static int getPos1(final long encoding){
 		return (int)(encoding & posMask);
@@ -69,7 +72,7 @@ public final class MoveEncoder {
 	
 	/** gets the number of moves since the last pawn move or capture*/
 	public static int getPrevDrawCount(final long encoding){
-		return (int)(posMask & encoding >>> 34);
+		return (int)(drawCountMask & encoding >>> 34);
 	}
 	
 	public static void undoCastleProps(final long encoding, final State4 s){
