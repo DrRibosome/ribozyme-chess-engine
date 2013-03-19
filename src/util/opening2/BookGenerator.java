@@ -53,7 +53,7 @@ public final class BookGenerator {
 		System.out.println("loading complete!");
 		
 
-		final File out = new File("megabook.bk");
+		final File out = new File("temp.bk");
 		final DataOutputStream dos = new DataOutputStream(new FileOutputStream(out));
 		dos.writeLong(seed);
 		

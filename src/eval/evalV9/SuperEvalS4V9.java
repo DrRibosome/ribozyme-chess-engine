@@ -335,17 +335,16 @@ public final class SuperEvalS4V9 implements Evaluator2<State4>
 		return score;
 	}
 
-	private int getKingDanger(State4 s, int player)
-	{
-		int kingSq = BitUtil.lsbIndex(s.kings[player]);
-		long kingRing = Masks.kingMoves[kingSq];
+	private int getKingDanger(State4 s, int player){
+		final int kingSq = BitUtil.lsbIndex(s.kings[player]);
+		final long kingRing = Masks.kingMoves[kingSq];
 
 		// add the bonus for the square the king is on
 		int dangerIndex = kingDangerSquares[player][kingSq];
 
-		int backRank = player == State4.WHITE ? 0 : 7;
-		int kingRow = kingSq / 8;
-		int kingCol = kingSq % 8;
+		//int backRank = player == State4.WHITE ? 0 : 7;
+		//int kingRow = kingSq / 8;
+		final int kingCol = kingSq % 8;
 
 		final boolean kingInStartingPos = player == 0? kingSq == 4: kingSq == 60;
 		if (!kingInStartingPos){
@@ -396,24 +395,6 @@ public final class SuperEvalS4V9 implements Evaluator2<State4>
 			final long attacks = State4.getRookMoves(player, s.pieces, rooks);
 			dangerIndex += DANGER_KING_ATTACKS[State4.PIECE_TYPE_ROOK] * BitUtil.getSetBits(attacks & kingRing);
 		}
-		
-		/*if (s.pieceCounts[1 - player][State4.PIECE_TYPE_ROOK] > 0)
-		{
-			long enemyRooks = s.rooks[1 - player];
-			long attacks = State4.getRookMoves(player, s.pieces, enemyRooks);
-			long squaresHit = attacks & kingRing;
-
-			dangerIndex += DANGER_KING_ATTACKS[State4.PIECE_TYPE_ROOK] * BitUtil.getSetBits(squaresHit);
-
-			enemyRooks &= enemyRooks - 1;
-			if (enemyRooks != 0)
-			{
-				attacks = State4.getRookMoves(player, s.pieces, enemyRooks);
-				squaresHit = attacks & kingRing;
-
-				dangerIndex += DANGER_KING_ATTACKS[State4.PIECE_TYPE_ROOK] * BitUtil.getSetBits(squaresHit);
-			}
-		}*/
 
 		// check knight attacks
 		if (s.pieceCounts[1 - player][State4.PIECE_TYPE_ROOK] > 0)
