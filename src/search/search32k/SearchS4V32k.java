@@ -516,9 +516,6 @@ public final class SearchS4V32k implements Search4{
 				s.undoMove();
 				this.e.undoMove(encoding);
 				assert zkey == s.zkey(); //keys should be unchanged after undo
-				if(drawCount != s.drawCount){
-					System.out.println(drawCount+" != "+s.drawCount);
-				}
 				assert drawCount == s.drawCount;
 				
 				if(isDrawable && 0 > g){ //can take a draw instead of making the move
