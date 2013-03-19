@@ -8,8 +8,12 @@ import uci.Position;
 
 public class FenParser {
 	public static Position parse(String fen){
+		return parse(fen, 88373L);
+	}
+	
+	public static Position parse(String fen, long seed){
 		Position p = new Position();
-		p.s = new State4();
+		p.s = new State4(seed);
 		
 		String[] s = fen.split("\\s+");
 		
