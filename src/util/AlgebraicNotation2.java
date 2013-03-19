@@ -44,6 +44,7 @@ public final class AlgebraicNotation2 {
 				long pawns = s.pawns[player];
 				while((pawns & mask) == 0){
 					mask = player == 0? mask >>> 8: mask << 8;
+					assert mask != 0;
 				}
 				return new int[]{BitUtil.lsbIndex(mask), target};
 			} //else if(move.length() == 4 && move.charAt(2) != '='){
