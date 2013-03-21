@@ -32,7 +32,7 @@ public final class EvalConstantsV2 {
 	
 	//king danger
 	/** danger index increment associated with each piece type*/
-	public final int[] dangerKingAttaks = new int[7];
+	public final int[] dangerKingAttacks = new int[7];
 	public final static int contactCheckQueen = 6;
 	public final static int contactCheckRook = 4;
 	public final static int queenCheck = 3;
@@ -67,10 +67,10 @@ public final class EvalConstantsV2 {
 		final int[] passedPawnRowWeight = new int[]{0, 0, 10, 20, 35, 80, 130, 0};
 		
 		final int unopposedPawnWeight = 5;
-		final int doubledPawnsWeight = -10;
-		final int tripledPawnsWeight = -15;
+		final int doubledPawnsWeight = -30;
+		final int tripledPawnsWeight = -60;
 		final int supportedPassedPawn = 5;
-		final int bishopPairWeight = 20;
+		final int bishopPairWeight = 40;
 		
 		final int[] dangerKingAttacks = new int[]{
 				0,
@@ -103,7 +103,7 @@ public final class EvalConstantsV2 {
 			final int doubledPawnsWeight,
 			final int tripledPawnWeight,
 			final int bishopPairWeight,
-			final int[] dangerKingAttaks){
+			final int[] dangerKingAttacks){
 		assert materialWeights.length == 7;
 		assert mobilityWeight.length == 7 && mobilityWeight[0].length == 3;
 		assert passedPawnRowWeight.length == 8; //interpreted symmetrically for each player
@@ -123,7 +123,7 @@ public final class EvalConstantsV2 {
 		this.tripledPawnsWeight = tripledPawnWeight;
 		this.bishopPairWeight = bishopPairWeight;
 		
-		System.arraycopy(dangerKingAttaks, 0, this.dangerKingAttaks, 0, 7);
+		System.arraycopy(dangerKingAttacks, 0, this.dangerKingAttacks, 0, 7);
 		
 
 		
@@ -155,8 +155,8 @@ public final class EvalConstantsV2 {
 		dos.writeShort(e.tripledPawnsWeight);
 		dos.writeShort(e.bishopPairWeight);
 		
-		for(int a = 0; a < e.dangerKingAttaks.length; a++){
-			dos.writeShort(e.dangerKingAttaks[a]);
+		for(int a = 0; a < e.dangerKingAttacks.length; a++){
+			dos.writeShort(e.dangerKingAttacks[a]);
 		}
 	}
 	

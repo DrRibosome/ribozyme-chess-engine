@@ -346,8 +346,9 @@ public final class SearchS4V32kr implements Search3{
 			}
 		}
 
-		final double lazyEval = this.e.lazyEval(s, player);
-		final boolean pawnPrePromotion = (s.pawns[player] & Masks.pawnPromotionMask[player]) != 0;
+		//razoring
+		final int lazyEval = this.e.lazyEval(s, player);
+		final boolean pawnPrePromotion = (s.pawns[player] & Masks.pawnPrePromote[player]) != 0;
 		if(!pv &&
 				depth < 4 &&
 				!ml.kingAttacked[player] &&
@@ -360,7 +361,6 @@ public final class SearchS4V32kr implements Search3{
 				return v+rbeta;
 			}
 		}
-				
 		
 		//load killer moves
 		if(stackIndex-1 >= 0 && !ml.skipNullMove){

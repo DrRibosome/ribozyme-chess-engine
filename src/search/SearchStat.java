@@ -4,7 +4,7 @@ public class SearchStat {
 	public long nodesSearched;
 	public long searchTime;
 	public double endScore;
-	/** empiricle branching factor*/
+	/** empirical branching factor*/
 	public double empBranchingFactor;
 	public long hashHits;
 	

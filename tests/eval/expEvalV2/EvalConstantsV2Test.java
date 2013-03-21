@@ -27,7 +27,7 @@ public class EvalConstantsV2Test {
 			assertEquals(t1.bishopPairWeight, t2.bishopPairWeight);
 			for(int a = 0; a < 7; a++){
 				assertEquals(t1.materialWeights[a], t2.materialWeights[a]);
-				assertEquals(t1.dangerKingAttaks[a], t2.dangerKingAttaks[a]);
+				assertEquals(t1.dangerKingAttacks[a], t2.dangerKingAttacks[a]);
 				
 				for(int q = 0; q < 3; q++){
 					assertEquals(t1.mobilityWeight[a][q], t2.mobilityWeight[a][q]);

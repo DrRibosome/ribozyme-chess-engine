@@ -84,7 +84,7 @@ public final class ExpEvalV2 implements Evaluator2<State4>{
 			} else if((moves & king) != 0){ //non-contact check
 				dindex += EvalConstantsV2.queenCheck;
 			}
-			dindex += c.dangerKingAttaks[State4.PIECE_TYPE_QUEEN] * BitUtil.getSetBits(moves & kingRing);
+			dindex += c.dangerKingAttacks[State4.PIECE_TYPE_QUEEN] * BitUtil.getSetBits(moves & kingRing);
 		}
 		
 		for(long rooks = s.rooks[1-player]; rooks != 0; rooks &= rooks-1){
@@ -97,7 +97,7 @@ public final class ExpEvalV2 implements Evaluator2<State4>{
 					dindex += EvalConstantsV2.rookCheck;
 				}
 			}
-			dindex += c.dangerKingAttaks[State4.PIECE_TYPE_ROOK] * BitUtil.getSetBits(moves & kingRing);
+			dindex += c.dangerKingAttacks[State4.PIECE_TYPE_ROOK] * BitUtil.getSetBits(moves & kingRing);
 		}
 		
 		for(long bishops = s.bishops[1-player]; bishops != 0; bishops &= bishops-1){
@@ -105,7 +105,7 @@ public final class ExpEvalV2 implements Evaluator2<State4>{
 			if((moves & king) != 0){ //non-contact check
 				dindex += EvalConstantsV2.bishopCheck;
 			}
-			dindex += c.dangerKingAttaks[State4.PIECE_TYPE_BISHOP] * BitUtil.getSetBits(moves & kingRing);
+			dindex += c.dangerKingAttacks[State4.PIECE_TYPE_BISHOP] * BitUtil.getSetBits(moves & kingRing);
 		}
 		
 		for(long knights = s.knights[1-player]; knights != 0; knights &= knights-1){
@@ -113,7 +113,7 @@ public final class ExpEvalV2 implements Evaluator2<State4>{
 			if((moves & king) != 0){ //non-contact check
 				dindex += EvalConstantsV2.knightCheck;
 			}
-			dindex += c.dangerKingAttaks[State4.PIECE_TYPE_KNIGHT] * BitUtil.getSetBits(moves & kingRing);
+			dindex += c.dangerKingAttacks[State4.PIECE_TYPE_KNIGHT] * BitUtil.getSetBits(moves & kingRing);
 		}
 		
 		return c.kingDangerValues[dindex].score(totalMaterialScore);
