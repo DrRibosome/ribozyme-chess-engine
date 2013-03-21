@@ -35,7 +35,7 @@ public final class State4 {
 	public final long[] rooks = pieceMasks[PIECE_TYPE_ROOK];
 	public final long[] bishops = pieceMasks[PIECE_TYPE_BISHOP];
 	
-	private final long[] history = new long[64];
+	private final long[] history = new long[128];
 	/** index in {@link #history} of first unused record*/
 	private int hindex = 0;
 	
