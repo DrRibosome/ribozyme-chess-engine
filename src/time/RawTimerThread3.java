@@ -62,8 +62,8 @@ public final class RawTimerThread3 extends Thread{
 		long target = time / (getHalfMovesRemaining(material)/2);
 		search.setListener(l);
 		
-		System.out.println("moves remaining = "+(getHalfMovesRemaining(material)/2));
-		System.out.println("target time = "+target);
+		//System.out.println("moves remaining = "+(getHalfMovesRemaining(material)/2));
+		//System.out.println("target time = "+target);
 		
 		final Thread t = new Thread(){
 			public void run(){
