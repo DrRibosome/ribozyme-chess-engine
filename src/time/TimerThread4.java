@@ -4,7 +4,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import search.Search4;
-import search.SearchListener;
+import search.SearchListener2;
 import state4.BitUtil;
 import state4.State4;
 
@@ -33,27 +33,27 @@ public final class TimerThread4 extends Thread{
 	private final static class PlySearchResult{
 		int ply;
 		long move;
+		int score;
 	}
 	private final LinkedBlockingQueue<PlySearchResult> plyq = new LinkedBlockingQueue<PlySearchResult>();
 	
-	private final SearchListener l = new SearchListener() {
+	private final SearchListener2 l = new SearchListener2() {
 		@Override
-		public void plySearched(long move, int ply) {
+		public void plySearched(long move, int ply, int score) {
 			PlySearchResult temp = new PlySearchResult();
 			temp.move = move;
 			temp.ply = ply;
-			interrupt();
+			temp.score = score;
 			plyq.add(temp);
+			TimerThread4.this.interrupt();
 		}
 		@Override
 		public void failLow(int ply) {
-			q.add(failLow);
-			interrupt();
+			//q.add(failLow);
 		}
 		@Override
 		public void failHigh(int ply) {
-			q.add(failHigh);
-			interrupt();
+			//q.add(failHigh);
 		}
 	};
 	
@@ -97,6 +97,7 @@ public final class TimerThread4 extends Thread{
 		long move = 0;
 		int currentPly = 0;
 		int lastpvChange = 1;
+		int currentScore = 0;
 		
 		final boolean checking = isChecked(0, s) | isChecked(1, s);
 		
@@ -106,18 +107,23 @@ public final class TimerThread4 extends Thread{
 			
 			while(!plyq.isEmpty()){
 				PlySearchResult r = plyq.poll();
-				if(r.ply != 1 && r.move != move){// && currentPly < r.ply){
+				if(r.ply != 1 && r.move != move){
 					lastpvChange = r.ply;
-					target += target*.15;
 				}
 				move = r.move;
-				currentPly = r.ply > currentPly? r.ply: currentPly;
+				currentPly = r.ply;
+				currentScore = r.score;
 			}
 			
-			if(!checking && currentPly-lastpvChange+1 > 6 && currentPly >= 11){ //perhaps increase difficulty with fail lows
-				break;
-				//target -= target*.2;
-			} else if(checking && currentPly-lastpvChange+1 > 6 && currentPly >= 13){
+			if(currentScore < 70000){
+				if(!checking && currentPly-lastpvChange+1 > 7 && currentPly >= 11){ //perhaps increase difficulty with fail lows
+					break;
+					//target -= target*.2;
+				} else if(checking && currentPly-lastpvChange+1 > 7 && currentPly >= 13){
+					break;
+				}
+			}
+			if(currentScore > 80000){
 				break;
 			}
 			

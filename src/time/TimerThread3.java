@@ -4,7 +4,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import search.Search4;
-import search.SearchListener;
+import search.SearchListener2;
 import state4.State4;
 
 public final class TimerThread3 extends Thread{
@@ -35,24 +35,21 @@ public final class TimerThread3 extends Thread{
 	}
 	private final LinkedBlockingQueue<PlySearchResult> plyq = new LinkedBlockingQueue<PlySearchResult>();
 	
-	private final SearchListener l = new SearchListener() {
+	private final SearchListener2 l = new SearchListener2() {
 		@Override
-		public void plySearched(long move, int ply) {
+		public void plySearched(long move, int ply, int score) {
 			PlySearchResult temp = new PlySearchResult();
 			temp.move = move;
 			temp.ply = ply;
-			interrupt();
-			plyq.add(temp);
+			//plyq.add(temp);
 		}
 		@Override
 		public void failLow(int ply) {
-			q.add(failLow);
-			interrupt();
+			//q.add(failLow);
 		}
 		@Override
 		public void failHigh(int ply) {
-			q.add(failHigh);
-			interrupt();
+			//q.add(failHigh);
 		}
 	};
 	

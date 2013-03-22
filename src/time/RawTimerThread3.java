@@ -2,9 +2,8 @@ package time;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-import search.Search3;
 import search.Search4;
-import search.SearchListener;
+import search.SearchListener2;
 import state4.State4;
 
 /** timer thread that merely follows the suggested time*/
@@ -27,9 +26,9 @@ public final class RawTimerThread3 extends Thread{
 	}
 	private final LinkedBlockingQueue<PlySearchResult> plyq = new LinkedBlockingQueue<>();
 	
-	private final SearchListener l = new SearchListener() {
+	private final SearchListener2 l = new SearchListener2() {
 		@Override
-		public void plySearched(long move, int ply) {
+		public void plySearched(long move, int ply, int score) {
 			PlySearchResult temp = new PlySearchResult();
 			temp.move = move;
 			temp.ply = ply;

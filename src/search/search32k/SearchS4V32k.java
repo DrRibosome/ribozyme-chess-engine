@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import search.Search4;
-import search.SearchListener;
+import search.SearchListener2;
 import search.SearchStat;
 import search.legacy.ZMap;
 import state4.BitUtil;
@@ -53,13 +53,13 @@ public final class SearchS4V32k implements Search4{
 	private final int qply = 12;
 	private final Hash m;
 	private FileWriter f;
-	private SearchListener l;
+	private SearchListener2 l;
 	private final static int stackSize = 128;
 	/** sequence number for hash entries*/
 	private int seq;
 	
 	/** controls printing pv to console for debugging*/
-	private final static boolean printPV = false;
+	private final static boolean printPV = true;
 	private final static boolean uciPV = true;
 	
 	private final TTEntry fillEntry = new TTEntry();
@@ -201,7 +201,7 @@ public final class SearchS4V32k implements Search4{
 			if((tte = m.get(s.zkey())) != null && tte.move != 0 && !cutoffSearch.get()){
 				bestMove = tte.move;
 				if(l != null){
-					l.plySearched(bestMove, i);
+					l.plySearched(bestMove, i, (int)score);
 				}
 				if(printPV){
 					final String pvString = getPVString(player, s, "", 0, i, uciPV);
@@ -922,7 +922,7 @@ public final class SearchS4V32k implements Search4{
 	}
 
 	@Override
-	public void setListener(SearchListener l) {
+	public void setListener(SearchListener2 l) {
 		this.l = l;
 	}
 }

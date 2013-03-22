@@ -64,12 +64,12 @@ avg hash hit rate = 0.09875843728868781
 depth = 9, hash = 20
 
 search33
-positions searched = 100
-avg nodes searched = 628311.9
-avg time (ms) = 563.74
-avg nodes/ms = 1114.5419874410188
-avg braching factor = 4.31199847943789
-avg hash hit rate = 0.09690032927913668
+positions searched = 500
+avg nodes searched = 631405.434
+avg time (ms) = 562.978
+avg nodes/ms = 1121.5454849034954
+avg braching factor = 4.300426388513804
+avg hash hit rate = 0.09721173226393234
 
 search32k
 positions searched = 200

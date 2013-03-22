@@ -11,7 +11,7 @@ public interface Search4 {
 	/** cuts off search*/
 	public void cutoffSearch();
 	public SearchStat getStats();
-	public void setListener(SearchListener l);
+	public void setListener(SearchListener2 l);
 	/** ready search for new game (ie, clear hash, etc)*/
 	public void resetSearch();
 }
