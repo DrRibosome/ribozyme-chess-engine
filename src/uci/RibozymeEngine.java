@@ -1,11 +1,11 @@
 package uci;
 
 import search.Search4;
-import search.search32k.SearchS4V32k;
+import search.search33.SearchS4V33t;
 import state4.State4;
 import time.TimerThread3;
 import eval.Evaluator2;
-import eval.evalV8.SuperEvalS4V8;
+import eval.evalV9.SuperEvalS4V9;
 
 public class RibozymeEngine implements UCIEngine{
 
@@ -18,10 +18,9 @@ public class RibozymeEngine implements UCIEngine{
 	public RibozymeEngine(){
 		
 		Evaluator2<State4> e = 
-				new SuperEvalS4V8();
-				//new ExpEvalV2();
+				new SuperEvalS4V9();
 		
-		s = new SearchS4V32k(e, 21, false);
+		s = new SearchS4V33t(e, 22, false);
 	}
 	
 	@Override
