@@ -59,7 +59,7 @@ public final class SearchS4V32k implements Search4{
 	private int seq;
 	
 	/** controls printing pv to console for debugging*/
-	private final static boolean printPV = true;
+	private final static boolean printPV = false;
 	private final static boolean uciPV = true;
 	
 	private final TTEntry fillEntry = new TTEntry();

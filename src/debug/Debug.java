@@ -74,7 +74,7 @@ pp---p--
 r--Nk--r
 		
 		*/
-		Position p = FenParser.parse("q1b2rk1/1p1p1ppp/p1nPp3/8/P1B1nP2/2P1B3/1P4PP/R2QK2R w QK - 0 -"); //c4d3 blunder
+		Position p = FenParser.parse("r1bq1rk1/p1pp1ppp/2p5/3nP3/8/2B5/PPPQ1PPP/R3KB1R w - - - -"); //c4d3 blunder
 		System.out.println(StateUtil.fen(p.sideToMove, p.s));
 		State4 s = p.s;
 		int player = p.sideToMove;

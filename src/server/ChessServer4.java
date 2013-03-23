@@ -14,10 +14,10 @@ import org.java_websocket.server.WebSocketServer;
 
 import search.Search4;
 import search.SearchStat;
-import search.search32k.SearchS4V32k;
+import search.search33.SearchS4V33t;
 import state4.State4;
 import state4.StateUtil;
-import time.TimerThread3;
+import time.TimerThread4;
 import util.AlgebraicNotation2;
 import util.opening1.SuperBook;
 import eval.Evaluator2;
@@ -68,7 +68,8 @@ public class ChessServer4 extends WebSocketServer{
 		searcher =
 				//new SearchS4V32(s, e, 21, false);
 				//new SearchS4V32cc(s, e, 21, false);
-				new SearchS4V32k(e, 22, false);
+				//new SearchS4V32k(e, 22, false);
+				new SearchS4V33t(e, 23, false);
 	}
 
 	@Override
@@ -201,8 +202,8 @@ public class ChessServer4 extends WebSocketServer{
 						System.out.println(s);
 						System.out.println("turn = "+botPlayer);
 						long t = System.currentTimeMillis();
-						TimerThread3.searchBlocking(searcher, s, botPlayer, time[botPlayer], 0, move);
-						final long waitTime = 75;
+						TimerThread4.searchBlocking(searcher, s, botPlayer, time[botPlayer], 0, move);
+						final long waitTime = 150;
 						if((t = System.currentTimeMillis()-t) < waitTime){
 							try{
 								Thread.sleep(waitTime-t);

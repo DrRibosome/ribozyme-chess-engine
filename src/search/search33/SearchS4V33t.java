@@ -13,8 +13,9 @@ import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
 import eval.Evaluator2;
+import eval.evalV9.SuperEvalS4V9;
 
-public final class SearchS4V33 implements Search4{
+public final class SearchS4V33t implements Search4{
 	public final static class SearchStat32k extends SearchStat{
 		/** scores returned from quiet search without bottoming out*/
 		public long forcedQuietCutoffs;
@@ -49,6 +50,12 @@ public final class SearchS4V33 implements Search4{
 	private final static int[] pawnOffset = new int[]{9,7,8,16};
 	/** rough material gain by piece type*/
 	private final static int[] materialGain = new int[7];
+	/** stores lmr reductions by [isPv][depth][move-count]*/
+	private final static int[][][] reductions;
+	/** stores futility margins by [depth][move-count]*/
+	private final static int[][] futilityMargins;
+	/** stores futility margins for move count pruning by [depth]*/
+	private final static int[] futilityMoveCounts;
 	
 	static{
 		materialGain[State4.PIECE_TYPE_BISHOP] = 300;
@@ -56,6 +63,37 @@ public final class SearchS4V33 implements Search4{
 		materialGain[State4.PIECE_TYPE_PAWN] = 100;
 		materialGain[State4.PIECE_TYPE_QUEEN] = 900;
 		materialGain[State4.PIECE_TYPE_ROOK] = 500;
+		
+		reductions = new int[2][64][64];
+		for (int d = 1; d < 64; d++){ //depth
+			//System.out.print("d="+d+":\t");
+			for (int mc = 1; mc < 64; mc++) //move count
+			{
+				final double pvRed = Math.log(d) * Math.log(mc) / 3.0;
+				final double nonPVRed = 0.33 + Math.log(d) * Math.log(mc) / 2.25;
+				reductions[1][d][mc] = (int)(pvRed > 1? pvRed: 0);
+				reductions[0][d][mc] = (int)(nonPVRed > 1? nonPVRed: 0);
+				//System.out.print(reductions[1][d][mc]+", ");
+			}
+			//System.out.println();
+		}
+		
+		futilityMargins = new int[16][64];
+		for (int d = 1; d < 16; d++){
+			//System.out.print("d="+d+":\t");
+			for (int mc = 0; mc < 64; mc++){
+				futilityMargins[d][mc] = 112 * (int)(Math.log(d*d/2.) / Math.log(2) + 1.001) - 8 * mc + 45;
+				//System.out.print(futilityMargins[d][mc]+",\t");
+			}
+			//System.out.println();
+		}
+		
+		futilityMoveCounts = new int[32];
+		for (int d = 0; d < 32; d++){
+			futilityMoveCounts[d] = (int)(3.001 + 0.25 * Math.pow(d, 2));
+			//System.out.print(futilityMoveCounts[d]+", ");
+		}
+		//System.out.println();
 	}
 	
 	private final SearchStat32k stats = new SearchStat32k();
@@ -69,7 +107,7 @@ public final class SearchS4V33 implements Search4{
 	private int seq;
 	
 	/** controls printing pv to console for debugging*/
-	private final static boolean printPV = false;
+	private final static boolean printPV = true;
 	/** controls whether the printed pv should be in uci style*/
 	private final static boolean uciPV = true;
 	
@@ -79,9 +117,14 @@ public final class SearchS4V33 implements Search4{
 	/** rank set to the first of the non takes*/
 	private final static int killerMoveRank = 5;
 	
+	
 	private final AtomicBoolean cutoffSearch = new AtomicBoolean(false);
 	
-	public SearchS4V33(Evaluator2<State4> e, int hashSize, boolean record){
+	public SearchS4V33t(Evaluator2<State4> e, int hashSize){
+		this(e, hashSize, false);
+	}
+	
+	public SearchS4V33t(Evaluator2<State4> e, int hashSize, boolean record){
 		this.e = e;
 		
 		//m = new ZMap3(hashSize);
@@ -337,6 +380,10 @@ public final class SearchS4V33 implements Search4{
 		return 512+16*depth;
 	}
 	
+	private static int lmrReduction(final boolean pv, final int depth, final int moveCount){
+		return reductions[pv? 1: 0][depth < 64? depth: 63][moveCount < 64? moveCount: 63];
+	}
+	
 	private int recurse(final int player, int alpha, int beta, int depth,
 			final boolean pv, final boolean rootNode, final int stackIndex, final State4 s){
 		stats.nodesSearched++;
@@ -444,8 +491,9 @@ public final class SearchS4V33 implements Search4{
 		ml.kingAttacked[player] = isChecked(player, s);
 		ml.kingAttacked[1-player] = isChecked(1-player, s);
 		
-		//null move pruning (hashes result, but might not be sound)
-		boolean hasNonPawnMaterial = s.pieceCounts[player][0]-s.pieceCounts[player][State4.PIECE_TYPE_PAWN] > 1;
+		//null move pruning
+		final boolean threatMove; //true if opponent can make a move that causes null-move fail low
+		final boolean hasNonPawnMaterial = s.pieceCounts[player][0]-s.pieceCounts[player][State4.PIECE_TYPE_PAWN] > 1;
 		if(!pv && !ml.skipNullMove && depth > 0 &&  !cutoffSearch.get() &&
 				!ml.kingAttacked[player] && hasNonPawnMaterial){
 			
@@ -457,6 +505,8 @@ public final class SearchS4V33 implements Search4{
 			int n = -recurse(1-player, -beta, -alpha, depth-r, pv, rootNode, stackIndex+1, s);
 			s.undoNullMove();
 			stack[stackIndex+1].skipNullMove = false;
+			
+			threatMove = n < alpha;
 			
 			if(n >= beta){
 				if(n >= 70000){
@@ -479,6 +529,8 @@ public final class SearchS4V33 implements Search4{
 			} else if(n < alpha){
 				stats.nullMoveFailLow++;
 			}
+		} else{
+			threatMove = false;
 		}
 
 		//internal iterative deepening
@@ -515,6 +567,7 @@ public final class SearchS4V33 implements Search4{
 		final int initialBestScore = -99999;
 		int bestScore = initialBestScore;
 		int cutoffFlag = ZMap.CUTOFF_TYPE_UPPER;
+		int moveCount = 0;
 		
 		final int drawCount = s.drawCount; //stored for error checking purposes
 		
@@ -523,6 +576,7 @@ public final class SearchS4V33 implements Search4{
 		for(int i = 0; i < length; i++){
 			for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
 				
+				moveCount++;
 				long encoding = s.executeMove(player, pieceMasks[i], movesTemp&-movesTemp);
 				this.e.processMove(encoding);
 				boolean isDrawable = s.isDrawable(); //player can take a draw
@@ -549,26 +603,41 @@ public final class SearchS4V33 implements Search4{
 					/*if(!pv && !isPawnPromotion &&
 							bestScore != initialBestScore && //check already found a move
 							!inCheck &&
-							!(tteMove && i==0) &&
+							!isTTEMove &&
 							!isCapture &&
 							!isDangerous){
 						
-						final int gain = materialGain[MoveEncoder.getTakenType(encoding)];
-						final int futilityMargin = 200;
-						final int futilityScore = lazyEval+gain+futilityMargin;
-						if(depth == 1 && futilityScore < alpha){
+						if(depth < 16 && moveCount >= futilityMoveCounts[depth] && !threatMove){
+							s.undoMove();
+							this.e.undoMove(encoding);
 							continue;
+						}
+						
+						if(depth < 7){
+							final int gain = materialGain[MoveEncoder.getTakenType(encoding)];
+							final int reduction = lmrReduction(pv, depth, moveCount);
+							final int reducedDepth = depth-(reduction > depth? depth: reduction);
+							final int mc = moveCount < 64? moveCount: 63;
+							final int futilityScore = lazyEval+gain+futilityMargins[reducedDepth][mc];
+							if(futilityScore < alpha){
+								s.undoMove();
+								this.e.undoMove(encoding);
+								continue;
+							}
 						}
 					}*/
 					
 					//LMR
 					final boolean fullSearch;
+					final int reduction;
 					if(depth > 2 && !pvMove && !isCapture && !inCheck && !isPawnPromotion &&
 							!isDangerous && 
 							(encoding&0xFFF) != ml.killer[0] &&
 							(encoding&0xFFF) != ml.killer[1] &&
-							!isTTEMove){
-						int reducedDepth = pv? depth-2: depth-3;
+							!isTTEMove &&
+							(reduction = lmrReduction(pv, depth, moveCount)+2) > 1){
+						//int reducedDepth = pv? depth-2: depth-3;
+						final int reducedDepth = depth-reduction;
 						g = -recurse(1-player, -alpha-1, -alpha, reducedDepth, false, false, stackIndex+1, s);
 						fullSearch = g > alpha;
 					} else{

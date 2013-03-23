@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import search.Search4;
 import search.search32k.SearchS4V32k;
-import search.search33.SearchS4V33;
+import search.search33.SearchS4V33t;
 import state4.BitUtil;
 import state4.State4;
 import state4.StateUtil;
@@ -26,35 +26,12 @@ public class Gauntlet {
 	private static final int draw = 2;
 	
 	public static void main(String[] args) throws IOException{
-		/*if(args.length == 0){
-			throw new RuntimeException("must specity number of tests");
-		}
-		final int tests = Integer.parseInt(args[0]);
-		final File f = args.length == 2? new File(args[1]): null;
-		if(f != null && !f.exists()){
-			throw new RuntimeException("file '"+args[1]+"' does not exist");
-		}
 		
-		final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		final FileOutputStream fos = new FileOutputStream(f == null? new File("gaunlet-"+dateFormat.format(new Date())): f);
-		*/
-		
-		//search32k v search33
-		//(w0,w1,d) = (67,111,36)
-		
-		
-		
-		/*if(args.length < 2){
-			System.out.println("incorrect args: <tests> <maxDepth> <hashSize>");
-		}
-		final int tests = Integer.parseInt(args[0]);
-		final int maxDepth = Integer.parseInt(args[1]);
-		final int hashSize = Integer.parseInt(args[2]);*/
 		final boolean print = false;
-		
-		final int tests = 200;
+		final int tests = 99999;
 		final int maxDepth = 5;
 		final int hashSize = 20;
+		final long time = 15*1000;
 
 		Evaluator2<State4> e1 =
 				new SuperEvalS4V9();
@@ -65,12 +42,9 @@ public class Gauntlet {
 				//new SuperEvalS4V8();
 				//new ExpEvalV1();
 		
-		//final int maxDepth = 8;
-		
-
 		final Search4[] search = new Search4[2];
-		search[0] = new SearchS4V32k(e1, hashSize, false);
-		search[1] = new SearchS4V33(e2, hashSize, false);
+		search[0] = new SearchS4V33t(e1, hashSize, false);
+		search[1] = new SearchS4V32k(e2, hashSize, false);
 		final Book b = new Book(new File("megabook.bk"));
 
 		final int[] wins = new int[2];
@@ -100,7 +74,7 @@ public class Gauntlet {
 					if(print) System.out.println("book move");
 				} else{
 					//search[(turn+searchOffset)%2].search(turn, state, move, maxDepth);
-					RawTimerThread3.search(search[(turn+searchOffset)%2], state, turn, 1000, 0, move);
+					RawTimerThread3.search(search[(turn+searchOffset)%2], state, turn, time, 0, move);
 				}
 				
 				if(print) System.out.println("search time = "+search[turn].getStats().searchTime);

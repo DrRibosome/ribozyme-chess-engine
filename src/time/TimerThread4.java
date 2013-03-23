@@ -116,10 +116,10 @@ public final class TimerThread4 extends Thread{
 			}
 			
 			if(currentScore < 70000){
-				if(!checking && currentPly-lastpvChange+1 > 7 && currentPly >= 11){ //perhaps increase difficulty with fail lows
+				if(!checking && currentPly-lastpvChange+1 > 7 && currentPly >= 14){ //perhaps increase difficulty with fail lows
 					break;
 					//target -= target*.2;
-				} else if(checking && currentPly-lastpvChange+1 > 7 && currentPly >= 13){
+				} else if(checking && currentPly-lastpvChange+1 > 8 && currentPly >= 16){
 					break;
 				}
 			}

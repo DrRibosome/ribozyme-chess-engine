@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 import search.Search4;
 import search.SearchStat;
-import search.search33.SearchS4V33;
+import search.search33.SearchS4V33t;
 import state4.State4;
 import uci.Position;
 import util.FenParser;
@@ -39,6 +39,14 @@ avg time (ms) = 52.038333333333334
 avg nodes/ms = 1117.8822662780642
 avg braching factor = 8.616624555337996
 avg hash hit rate = 0.10688461758628141
+
+search33t (with other things running, avg time will be high)
+positions searched = 600
+avg nodes searched = 61471.511666666665
+avg time (ms) = 66.06166666666667
+avg nodes/ms = 930.5171178444383
+avg braching factor = 8.641350938235018
+avg hash hit rate = 0.08039810961755266
 
 
 ---------------------------------------------------
@@ -95,12 +103,12 @@ avg hash hit rate = 0.09519992815962193
 		
 		
 		//initialize search
-		final int searchDepth = 9;
+		final int searchDepth = 5;
 		final int hashSize = 20;
 		final Evaluator2<State4> e = new SuperEvalS4V9();
 		final Search4 searcher =
 				//new SearchS4V32k(e, hashSize, false);
-				new SearchS4V33(e, hashSize, false);
+				new SearchS4V33t(e, hashSize, false);
 		
 		//search positions
 		final int len = pos.size();
