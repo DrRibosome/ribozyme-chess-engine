@@ -3,7 +3,7 @@ package uci;
 import search.Search4;
 import search.search33.SearchS4V33t;
 import state4.State4;
-import time.TimerThread3;
+import time.TimerThread4;
 import eval.Evaluator2;
 import eval.evalV9.SuperEvalS4V9;
 
@@ -13,7 +13,7 @@ public class RibozymeEngine implements UCIEngine{
 	private Thread t;
 	private final int[] moveStore = new int[2];
 	private Position p;
-	private TimerThread3.Controller c;
+	private TimerThread4.Controller c;
 	
 	public RibozymeEngine(){
 		
@@ -30,7 +30,7 @@ public class RibozymeEngine implements UCIEngine{
 			t = new Thread(){
 				public void run(){
 					final int inc = 0;
-					TimerThread3.searchBlocking(s, p.s, player, params.time[player], inc, moveStore);
+					TimerThread4.searchBlocking(s, p.s, player, params.time[player], inc, moveStore);
 					String promotion = (p.s.pawns[player] & 1L<<moveStore[0]) != 0 && (moveStore[1]/8==7 || moveStore[1]/8==0)? "q": "";
 					String move = posString(moveStore[0])+posString(moveStore[1]);
 					System.out.println("bestmove "+move+promotion);
