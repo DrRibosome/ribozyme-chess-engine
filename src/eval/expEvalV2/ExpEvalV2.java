@@ -6,7 +6,7 @@ import state4.MoveEncoder;
 import state4.State4;
 import eval.Evaluator2;
 
-public final class ExpEvalV2 implements Evaluator2<State4>{
+public final class ExpEvalV2 implements Evaluator2{
 	private final static int[] zeroi7 = new int[7];
 	
 	private final int[] materialScore = new int[2];
