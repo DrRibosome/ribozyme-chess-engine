@@ -72,9 +72,6 @@ public final class RawTimerThread3 extends Thread{
 		t.setDaemon(true);
 		t.start();
 		
-		long move = 0;
-		int currentPly = 0;
-		int lastpvChange = 1;
 		while(System.currentTimeMillis()-start < target){
 			final long diff = target-(System.currentTimeMillis()-start);
 			if(diff/2 >= 10){

@@ -13,7 +13,7 @@ import state4.State4;
 import uci.Position;
 import util.FenParser;
 import eval.Evaluator2;
-import eval.evalV9.SuperEvalS4V9;
+import eval.evalV10.SuperEvalS4V10;
 
 /**
  * tests search implementations by running through random test positions
@@ -22,7 +22,7 @@ import eval.evalV9.SuperEvalS4V9;
 public final class SearchTester {
 	/*
 ---------------------------------------------------
-depth = 5, hash = 20
+depth = 5, hash = 20, eval v9
 
 search33
 positions searched = 600
@@ -40,17 +40,17 @@ avg nodes/ms = 1117.8822662780642
 avg braching factor = 8.616624555337996
 avg hash hit rate = 0.10688461758628141
 
-search33t (with other things running, avg time will be high)
+search33t
 positions searched = 600
-avg nodes searched = 61471.511666666665
-avg time (ms) = 66.06166666666667
-avg nodes/ms = 930.5171178444383
-avg braching factor = 8.641350938235018
-avg hash hit rate = 0.08039810961755266
+avg nodes searched = 17738.466666666667
+avg time (ms) = 18.368333333333332
+avg nodes/ms = 965.7091008075492
+avg braching factor = 6.813911329589111
+avg hash hit rate = 0.12364691423911124
 
 
 ---------------------------------------------------
-depth = 6, hash = 20
+depth = 6, hash = 20, eval v9
 
 search33
 positions searched = 600
@@ -67,6 +67,14 @@ avg time (ms) = 202.21833333333333
 avg nodes/ms = 1097.42465651812
 avg braching factor = 7.431774228704282
 avg hash hit rate = 0.09875843728868781
+
+search33t
+positions searched = 600
+avg nodes searched = 43418.48166666667
+avg time (ms) = 43.985
+avg nodes/ms = 987.1201924898639
+avg braching factor = 5.704324156780116
+avg hash hit rate = 0.11445694266370209
 
 ---------------------------------------------------
 depth = 9, hash = 20
@@ -87,6 +95,22 @@ avg nodes/ms = 1168.242634156434
 avg braching factor = 5.390726187869697
 avg hash hit rate = 0.09519992815962193
 
+search33t, eval v9
+positions searched = 700
+avg nodes searched = 314273.9928571429
+avg time (ms) = 307.55
+avg nodes/ms = 1021.863088464129
+avg braching factor = 3.9806606625189853
+avg hash hit rate = 0.10091848198247576
+
+search33t, eval v10
+positions searched = 700
+avg nodes searched = 303980.5585714286
+avg time (ms) = 302.5185714285714
+avg nodes/ms = 1004.8327186524558
+avg braching factor = 3.97431878447357
+avg hash hit rate = 0.09974372844173103
+
 	 */
 	public static void main(String[] args) throws IOException{
 		
@@ -103,9 +127,9 @@ avg hash hit rate = 0.09519992815962193
 		
 		
 		//initialize search
-		final int searchDepth = 5;
+		final int searchDepth = 9;
 		final int hashSize = 20;
-		final Evaluator2<State4> e = new SuperEvalS4V9();
+		final Evaluator2 e = new SuperEvalS4V10();
 		final Search4 searcher =
 				//new SearchS4V32k(e, hashSize, false);
 				new SearchS4V33t(e, hashSize, false);

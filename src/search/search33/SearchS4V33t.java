@@ -97,7 +97,7 @@ public final class SearchS4V33t implements Search4{
 	}
 	
 	private final SearchStat32k stats = new SearchStat32k();
-	private final Evaluator2<State4> e;
+	private final Evaluator2 e;
 	private final int qply = 12;
 	private final Hash m;
 	private FileWriter f;
@@ -107,7 +107,7 @@ public final class SearchS4V33t implements Search4{
 	private int seq;
 	
 	/** controls printing pv to console for debugging*/
-	private final static boolean printPV = true;
+	private final static boolean printPV = false;
 	/** controls whether the printed pv should be in uci style*/
 	private final static boolean uciPV = true;
 	
@@ -120,11 +120,11 @@ public final class SearchS4V33t implements Search4{
 	
 	private final AtomicBoolean cutoffSearch = new AtomicBoolean(false);
 	
-	public SearchS4V33t(Evaluator2<State4> e, int hashSize){
+	public SearchS4V33t(Evaluator2 e, int hashSize){
 		this(e, hashSize, false);
 	}
 	
-	public SearchS4V33t(Evaluator2<State4> e, int hashSize, boolean record){
+	public SearchS4V33t(Evaluator2 e, int hashSize, boolean record){
 		this.e = e;
 		
 		//m = new ZMap3(hashSize);
@@ -635,7 +635,7 @@ public final class SearchS4V33t implements Search4{
 							(encoding&0xFFF) != ml.killer[0] &&
 							(encoding&0xFFF) != ml.killer[1] &&
 							!isTTEMove &&
-							(reduction = lmrReduction(pv, depth, moveCount)+2) > 1){
+							(reduction = lmrReduction(pv, depth, moveCount)+1) > 1){
 						//int reducedDepth = pv? depth-2: depth-3;
 						final int reducedDepth = depth-reduction;
 						g = -recurse(1-player, -alpha-1, -alpha, reducedDepth, false, false, stackIndex+1, s);

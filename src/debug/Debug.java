@@ -2,7 +2,7 @@ package debug;
 
 import search.Search4;
 import search.search32k.SearchS4V32k;
-import search.search33.SearchS4V33;
+import search.search33.SearchS4V33t;
 import state4.BitUtil;
 import state4.Masks;
 import state4.State4;
@@ -54,27 +54,10 @@ public class Debug {
 		//Position p = FenParser.parse("8/4kp2/p2b1r2/2p1Q3/P1P2p1P/1P6/5PP1/1R4K1 b - - - -");
 		//Position p = FenParser.parse("4q1kr/p6p/1prQPppB/4n3/4P3/2P5/PP2B2P/R5K1 w - - 0 0");
 		//Position p = FenParser.parse("2k5/pp1r2b1/2p5/7P/2P2r1q/5pN1/PPb2P1P/2Q1RRK1 w - - 0 27"); //c1c2 leads to loss by checkmate
-		/*
-Q-B--RK-
--P-P-PPP
-P-NpP---
---------
-p-b-Np--
---p-b---
--p----pp
-r--qk--r
-
-Q-B--RK-
--P-P-PPP
-P-NpP---
---------
-pp---p--
----bb---
-------pp
-r--Nk--r
+		//Position p = FenParser.parse("r1bq1rk1/p1pp1ppp/2p5/3nP3/8/2B5/PPPQ1PPP/R3KB1R w - - - -"); //c4d3 blunder
+		Position p = FenParser.parse("6k1/1R3p1p/6p1/8/p4r1n/PR3P1K/2P2P1P/8 w - - 1 -");
 		
-		*/
-		Position p = FenParser.parse("r1bq1rk1/p1pp1ppp/2p5/3nP3/8/2B5/PPPQ1PPP/R3KB1R w - - - -"); //c4d3 blunder
+		
 		System.out.println(StateUtil.fen(p.sideToMove, p.s));
 		State4 s = p.s;
 		int player = p.sideToMove;
@@ -88,7 +71,7 @@ r--Nk--r
 		
 		final int maxDepth = 25;
 		//Search3 search = new SearchS4V32(s, e, 20, false);
-		Search4 search = new SearchS4V33(e, 20, false);
+		Search4 search = new SearchS4V33t(e, 20, false);
 		//Search3 search = new SearchS4V32cc(s, e, 20, false);
 		int[] move = new int[2];
 		search.search(player, s, move, maxDepth);
