@@ -1,22 +1,6 @@
-package eval.evalV8;
+package eval.evalV10;
 
-import static eval.evalV8.EvalWeights.BONUS_BISHOP_PAIR;
-import static eval.evalV8.EvalWeights.BONUS_MATERIAL_ADVANTAGE;
-import static eval.evalV8.EvalWeights.BONUS_ROOK_HALF_OPEN_FILE;
-import static eval.evalV8.EvalWeights.BONUS_ROOK_ON_7TH;
-import static eval.evalV8.EvalWeights.BONUS_ROOK_OPEN_FILE;
-import static eval.evalV8.EvalWeights.BONUS_TEMPO;
-import static eval.evalV8.EvalWeights.DANGER_KING_ATTACKS;
-import static eval.evalV8.EvalWeights.DANGER_PAWN_SHIELD_GAP;
-import static eval.evalV8.EvalWeights.GRAIN_SIZE;
-import static eval.evalV8.EvalWeights.MOBILITY_BONUSES;
-import static eval.evalV8.EvalWeights.PENALTY_DOUBLED_PAWNS;
-import static eval.evalV8.EvalWeights.PENALTY_ISOLATED_PAWN;
-import static eval.evalV8.EvalWeights.PENALTY_TRIPLED_PAWNS;
-import static eval.evalV8.EvalWeights.kingDangerSquares;
-import static eval.evalV8.EvalWeights.kingDangerValues;
-import static eval.evalV8.EvalWeights.pieceSquareTables;
-import static eval.evalV8.EvalWeights.pieceValues;
+import static eval.evalV10.EvalWeights.*;
 import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
@@ -32,7 +16,7 @@ import eval.Evaluator2;
  * 
  * 
  */
-public class SuperEvalS4V8 implements Evaluator2
+public final class SuperEvalS4V10v2 implements Evaluator2
 {
 	private final static int[] zeroi = new int[8];
 
@@ -170,9 +154,9 @@ public class SuperEvalS4V8 implements Evaluator2
 		System.out.println("     Kings      |  " + getKingScore(s, State4.WHITE) + " , " + getKingScore(s, State4.BLACK) + " , " + (getKingScore(s, State4.WHITE) - getKingScore(s, State4.BLACK)));
 	}
 
-	private double evalPlayer(State4 s, int player)
+	private int evalPlayer(State4 s, int player)
 	{
-		double score = 0;
+		int score = 0;
 
 		score += getPawnScore(s, player);
 		score += getBishopScore(s, player);
@@ -214,31 +198,25 @@ public class SuperEvalS4V8 implements Evaluator2
 		}
 	}
 
-	private int scorePassedPawns(State4 s, int player)
-	{
+	private int scorePassedPawns(State4 s, int player){
 		int score = 0;
-		long pawns = s.pawns[player];
-
-		while (pawns != 0)
-		{
-			int index = BitUtil.lsbIndex(pawns);
-			pawns &= pawns - 1;
-			if ((Masks.passedPawnMasks[player][index] & s.pawns[1 - player]) == 0)
-			{
-				int r = player == State4.WHITE ? index / 8 : 7 - (index / 8);
-				int rr = r * (r - 1);
+		final long enemyPawns = s.pawns[1-player];
+		final long agg = s.pieces[0] | s.pieces[1];
+		for(long pawns = s.pawns[player]; pawns != 0; pawns &= pawns-1){
+			final int index = BitUtil.lsbIndex(pawns);
+			if ((Masks.passedPawnMasks[player][index] & enemyPawns) == 0){
+				final int r = player == State4.WHITE ? index / 8 : 7 - (index / 8); //rank
+				final int rr = r * (r - 1);
 
 				// bonus based on rank
-				score += 20 * rr;
+				score += 9*rr; //this value is very very high right now (pawn worth ~380 on rank 7)
+				//11 puts pawn on 7th at 254
 
-				if (rr > 0)
-				{
-					long blockSq = player == State4.WHITE ? 1L << index + 8 : 1L << index - 8;
-
+				if (rr > 0){
+					final long blockSq = player == State4.WHITE ? 1L << index + 8 : 1L << index - 8;
 					// further bonus if the pawn is free to advance
-					if ((blockSq & (s.pieces[player] & s.pieces[1 - player])) == 0)
-					{
-						score += 10;
+					if ((blockSq & agg) == 0){
+						score += 5;
 					}
 				}
 			}
@@ -247,31 +225,25 @@ public class SuperEvalS4V8 implements Evaluator2
 		return score;
 	}
 
-	private int scorePieceMobility(State4 s, int player)
-	{
+	private static int scorePieceMobility(final State4 s, final int player){
 		int score = 0;
+		
+		//mobility score calculated from pieces attacked and open squares not attacked by enemy pawns
+		/*final long enemyPawnAttacks = State4.getLeftPawnAttacks(1-player, s.pieces, s.enPassante, s.pawns[1-player]) |
+				State4.getRightPawnAttacks(1-player, s.pieces, s.enPassante, s.pawns[1-player]);*/
 
-		long knights = s.knights[player];
-		while (knights != 0)
-		{
-			long moves = State4.getKnightMoves(player, s.pieces, knights & -knights);
-			knights &= knights - 1;
+		for(long knights = s.knights[player]; knights != 0; knights &= knights-1){
+			final long moves = State4.getKnightMoves(player, s.pieces, knights & -knights);// & ~enemyPawnAttacks;
 			score += MOBILITY_BONUSES[State4.PIECE_TYPE_KNIGHT][(int) BitUtil.getSetBits(moves)].getScore();
 		}
 
-		long bishops = s.bishops[player];
-		while (bishops != 0)
-		{
-			long moves = State4.getBishopMoves(player, s.pieces, bishops & -bishops);
-			bishops &= bishops - 1;
+		for(long bishops = s.knights[player]; bishops != 0; bishops &= bishops-1){
+			final long moves = State4.getBishopMoves(player, s.pieces, bishops & -bishops);// & ~enemyPawnAttacks;
 			score += MOBILITY_BONUSES[State4.PIECE_TYPE_BISHOP][(int) BitUtil.getSetBits(moves)].getScore();
 		}
 
-		long rooks = s.rooks[player];
-		while (rooks != 0)
-		{
-			long moves = State4.getRookMoves(player, s.pieces, rooks & -rooks);
-			rooks &= rooks - 1;
+		for(long rooks = s.knights[player]; rooks != 0; rooks &= rooks-1){
+			final long moves = State4.getRookMoves(player, s.pieces, rooks & -rooks);// & ~enemyPawnAttacks;
 			score += MOBILITY_BONUSES[State4.PIECE_TYPE_ROOK][(int) BitUtil.getSetBits(moves)].getScore();
 		}
 
@@ -351,38 +323,35 @@ public class SuperEvalS4V8 implements Evaluator2
 		return score;
 	}
 
-	private int getKingDanger(State4 s, int player)
-	{
-		int kingSq = BitUtil.lsbIndex(s.kings[player]);
-		long kingRing = Masks.kingMoves[kingSq];
+	private int getKingDanger(State4 s, int player){
+		final int kingSq = BitUtil.lsbIndex(s.kings[player]);
+		final long kingRing = Masks.kingMoves[kingSq];
 
 		// add the bonus for the square the king is on
 		int dangerIndex = kingDangerSquares[player][kingSq];
 
-		int backRank = player == State4.WHITE ? 0 : 7;
-		int kingRow = kingSq / 8;
-		int kingCol = kingSq % 8;
+		//int backRank = player == State4.WHITE ? 0 : 7;
+		//int kingRow = kingSq / 8;
+		final int kingCol = kingSq % 8;
+		
 
-		final boolean kingInStartingPos = player == 0? kingSq == 4: kingSq == 60;
-		if (!kingInStartingPos){
-			// evaluate the pawn shield for holes
-			final int shift = player == State4.WHITE ? 8 : -8;
-			final long shieldMask = (1L << kingSq + shift) | (1L << kingSq+shift*2);
-			if ((shieldMask & s.pawns[player]) == 0){
-				dangerIndex += DANGER_PAWN_SHIELD_GAP * 2;
-			}
-			if (kingCol > 0){
-				if ((shieldMask>>>1 & s.pawns[player]) == 0)
-					dangerIndex += DANGER_PAWN_SHIELD_GAP;
-			}
-			if (kingCol < 7){
-				if ((shieldMask<<1 & s.pawns[player]) == 0)
-					dangerIndex += DANGER_PAWN_SHIELD_GAP;
-			}
+		final long pawns = s.pawns[1-player];
+
+		final int shift = player == State4.WHITE ? 8 : -8;
+		final long shieldMask = (1L << kingSq + shift) | (1L << kingSq+shift*2);
+		if ((shieldMask & pawns) == 0){
+			dangerIndex += DANGER_PAWN_SHIELD_GAP * 2;
+		}
+		if (kingCol > 0){
+			if ((shieldMask>>>1 & pawns) == 0)
+				dangerIndex += DANGER_PAWN_SHIELD_GAP;
+		}
+		if (kingCol < 7){
+			if ((shieldMask<<1 & pawns) == 0)
+				dangerIndex += DANGER_PAWN_SHIELD_GAP;
 		}
 
 		// check for approaching enemy pawns
-		/*final long pawns = s.pawns[1-player];
 		long enemyPawns = pawns & (Masks.colMask[kingCol]);
 		if (kingCol > 0) enemyPawns |= pawns & (Masks.colMask[kingCol - 1]);
 		else enemyPawns |= pawns & (Masks.colMask[kingCol + 2]);
@@ -392,7 +361,7 @@ public class SuperEvalS4V8 implements Evaluator2
 		for(; enemyPawns != 0; enemyPawns &= enemyPawns-1){
 			final int rank = BitUtil.lsbIndex(enemyPawns) / 8;
 			dangerIndex += DANGER_STORMING_PAWN[player][rank];
-		}*/
+		}
 
 		// check queen attacks
 		if (s.pieceCounts[1 - player][State4.PIECE_TYPE_QUEEN] > 0)
@@ -408,22 +377,9 @@ public class SuperEvalS4V8 implements Evaluator2
 		}
 
 		// check rook attacks
-		if (s.pieceCounts[1 - player][State4.PIECE_TYPE_ROOK] > 0)
-		{
-			long enemyRooks = s.rooks[1 - player];
-			long attacks = State4.getRookMoves(player, s.pieces, enemyRooks);
-			long squaresHit = attacks & kingRing;
-
-			dangerIndex += DANGER_KING_ATTACKS[State4.PIECE_TYPE_ROOK] * BitUtil.getSetBits(squaresHit);
-
-			enemyRooks &= enemyRooks - 1;
-			if (enemyRooks != 0)
-			{
-				attacks = State4.getRookMoves(player, s.pieces, enemyRooks);
-				squaresHit = attacks & kingRing;
-
-				dangerIndex += DANGER_KING_ATTACKS[State4.PIECE_TYPE_ROOK] * BitUtil.getSetBits(squaresHit);
-			}
+		for(long rooks = s.rooks[1-player]; rooks != 0; rooks &= rooks-1){
+			final long attacks = State4.getRookMoves(player, s.pieces, rooks);
+			dangerIndex += DANGER_KING_ATTACKS[State4.PIECE_TYPE_ROOK] * BitUtil.getSetBits(attacks & kingRing);
 		}
 
 		// check knight attacks

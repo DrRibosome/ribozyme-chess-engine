@@ -59,7 +59,7 @@ public final class SearchS4V33 implements Search4{
 	}
 	
 	private final SearchStat32k stats = new SearchStat32k();
-	private final Evaluator2<State4> e;
+	private final Evaluator2 e;
 	private final int qply = 12;
 	private final Hash m;
 	private FileWriter f;
@@ -81,7 +81,7 @@ public final class SearchS4V33 implements Search4{
 	
 	private final AtomicBoolean cutoffSearch = new AtomicBoolean(false);
 	
-	public SearchS4V33(Evaluator2<State4> e, int hashSize, boolean record){
+	public SearchS4V33(Evaluator2 e, int hashSize, boolean record){
 		this.e = e;
 		
 		//m = new ZMap3(hashSize);

@@ -333,27 +333,29 @@ public final class SuperEvalS4V10 implements Evaluator2
 		//int backRank = player == State4.WHITE ? 0 : 7;
 		//int kingRow = kingSq / 8;
 		final int kingCol = kingSq % 8;
+		
+
+		final long pawns = s.pawns[1-player];
 
 		final boolean kingInStartingPos = player == 0? kingSq == 4: kingSq == 60;
 		if (!kingInStartingPos){
 			// evaluate the pawn shield for holes
 			final int shift = player == State4.WHITE ? 8 : -8;
 			final long shieldMask = (1L << kingSq + shift) | (1L << kingSq+shift*2);
-			if ((shieldMask & s.pawns[player]) == 0){
+			if ((shieldMask & pawns) == 0){
 				dangerIndex += DANGER_PAWN_SHIELD_GAP * 2;
 			}
 			if (kingCol > 0){
-				if ((shieldMask>>>1 & s.pawns[player]) == 0)
+				if ((shieldMask>>>1 & pawns) == 0)
 					dangerIndex += DANGER_PAWN_SHIELD_GAP;
 			}
 			if (kingCol < 7){
-				if ((shieldMask<<1 & s.pawns[player]) == 0)
+				if ((shieldMask<<1 & pawns) == 0)
 					dangerIndex += DANGER_PAWN_SHIELD_GAP;
 			}
 		}
 
 		// check for approaching enemy pawns
-		final long pawns = s.pawns[1-player];
 		long enemyPawns = pawns & (Masks.colMask[kingCol]);
 		if (kingCol > 0) enemyPawns |= pawns & (Masks.colMask[kingCol - 1]);
 		else enemyPawns |= pawns & (Masks.colMask[kingCol + 2]);

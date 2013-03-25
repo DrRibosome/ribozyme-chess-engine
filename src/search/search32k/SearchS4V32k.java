@@ -49,7 +49,7 @@ public final class SearchS4V32k implements Search4{
 	private final static int[] pawnOffset = new int[]{9,7,8,16};
 	
 	private final SearchStat32k stats = new SearchStat32k();
-	private final Evaluator2<State4> e;
+	private final Evaluator2 e;
 	private final int qply = 12;
 	private final Hash m;
 	private FileWriter f;
@@ -70,7 +70,7 @@ public final class SearchS4V32k implements Search4{
 	
 	private final AtomicBoolean cutoffSearch = new AtomicBoolean(false);
 	
-	public SearchS4V32k(Evaluator2<State4> e, int hashSize, boolean record){
+	public SearchS4V32k(Evaluator2 e, int hashSize, boolean record){
 		this.e = e;
 		
 		//m = new ZMap3(hashSize);
