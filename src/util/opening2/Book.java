@@ -44,7 +44,7 @@ public final class Book {
 		List<int[]> moves = new ArrayList<int[]>();
 		genMoves(player, s, moves);
 		
-		List<int[]> available = new ArrayList<>();
+		List<int[]> available = new ArrayList<int[]>();
 		for(int[] m: moves){
 			s.executeMove(player, 1L<<m[0], 1L<<m[1]);
 			if(book.contains(s.zkey())){
