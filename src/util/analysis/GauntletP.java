@@ -21,9 +21,7 @@ import eval.evalV10.SuperEvalS4V10v2;
  *
  */
 public class GauntletP {
-	private static final int whiteWin = 0;
-	private static final int blackWin = 1;
-	private static final int draw = 2;
+	final static Book b = new Book(new File("megabook.bk"));
 	
 	private final static class GauntletThread extends Thread{
 		private final long time;
@@ -41,7 +39,6 @@ public class GauntletP {
 		public void run(){
 			final boolean print = false;
 			
-			final Book b = new Book(new File("megabook.bk"));
 
 			final int[] wins = new int[2];
 			int draws = 0;
