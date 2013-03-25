@@ -6,7 +6,7 @@ import state4.State4;
 
 /** raw piece score eval, appears to have very slight performance increase over
  * non-incremental piece score eval*/
-public final class IncrementalPieceScore implements Evaluator2<State4>{
+public final class IncrementalPieceScore implements Evaluator2{
 	private final int[] materialScore = new int[2];
 	final static int[] materialWeights;
 	
@@ -20,12 +20,12 @@ public final class IncrementalPieceScore implements Evaluator2<State4>{
 	}
 	
 	@Override
-	public double eval(State4 state, int player) {
+	public int eval(State4 state, int player) {
 		return materialScore[player]-materialScore[1-player];
 	}
 
 	@Override
-	public double lazyEval(State4 state, int player) {
+	public int lazyEval(State4 state, int player) {
 		return materialScore[player]-materialScore[1-player];
 	}
 
