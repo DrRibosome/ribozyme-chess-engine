@@ -4,7 +4,7 @@ import search.Search4;
 import search.search33.SearchS4V33t;
 import time.TimerThread4;
 import eval.Evaluator2;
-import eval.evalV10.SuperEvalS4V10;
+import eval.evalV10.SuperEvalS4V10v4;
 
 public class RibozymeEngine implements UCIEngine{
 
@@ -17,7 +17,7 @@ public class RibozymeEngine implements UCIEngine{
 	public RibozymeEngine(){
 		
 		Evaluator2 e = 
-				new SuperEvalS4V10();
+				new SuperEvalS4V10v4();
 		
 		s = new SearchS4V33t(e, 22, false);
 	}
