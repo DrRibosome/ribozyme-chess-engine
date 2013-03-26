@@ -226,93 +226,6 @@ public final class State4 {
 			}
 		}
 		return false;
-		/*long[] pieceMasks = s.pieces;
-		long queens = s.queens[player];
-		if(queens != 0){
-			final long queenMoves = State4.getQueenMoves(player, pieceMasks, queens);
-			if((queenMoves & posMask) != 0){
-				return true;
-			}
-			queens = queens&(queens-1);
-			if(queens != 0){
-				final long moves2 = State4.getQueenMoves(player, pieceMasks, queens);
-				if((moves2 & posMask) != 0){
-					return true;
-				}
-				queens = queens&(queens-1);
-				if(queens != 0){
-					while(queens != 0){
-						final long moves3 = State4.getQueenMoves(player, pieceMasks, queens);
-						queens = queens&(queens-1);
-						if((moves3 & posMask) != 0){
-							return true;
-						}
-					}
-				}
-			}
-		}
-		
-		long knights = s.knights[player];
-		if(knights != 0){
-			final long knightMoves = State4.getKnightMoves(player, pieceMasks, knights);
-			if((knightMoves & posMask) != 0){
-				return true;
-			}
-			knights = knights&(knights-1);
-			if(knights != 0){
-				final long moves2 = State4.getKnightMoves(player, pieceMasks, knights);
-				if((moves2 & posMask) != 0){
-					return true;
-				}
-			}
-		}
-		
-		long bishops = s.bishops[player];
-		if(bishops != 0){
-			final long bishopMoves = State4.getBishopMoves(player, pieceMasks, bishops);
-			if((bishopMoves & posMask) != 0){
-				return true;
-			}
-			bishops = bishops&(bishops-1);
-			if(bishops != 0){
-				final long moves2 = State4.getBishopMoves(player, pieceMasks, bishops);
-				if((moves2 & posMask) != 0){
-					return true;
-				}
-			}
-		}
-		
-		long rooks = s.rooks[player];
-		if(rooks != 0){
-			final long rookMoves = State4.getRookMoves(player, pieceMasks, rooks);
-			if((rookMoves & posMask) != 0){
-				return true;
-			}
-			rooks = rooks&(rooks-1);
-			if(rooks != 0){
-				final long moves2 = State4.getRookMoves(player, pieceMasks, rooks);
-				if((moves2 & posMask) != 0){
-					return true;
-				}
-			}
-		}
-		
-		long king = s.rooks[player];
-		final long kingMoves = State4.getKingMoves(player, pieceMasks, king);
-		if((kingMoves & posMask) != 0){
-			return true;
-		}
-		
-		long colMask = player == 0? Masks.colMaskExc[7]: Masks.colMaskExc[0];
-		long pawns = s.pawns[player];
-		long temp = player == 0? (pawns << 7) & colMask & posMask: (pawns >>> 7) & colMask & posMask;
-		colMask = player == 0? Masks.colMaskExc[0]: Masks.colMaskExc[7];
-		temp |= player == 0? (pawns << 9) & colMask & posMask: (pawns >>> 9) & colMask & posMask;
-		if(temp != 0){
-			return true;
-		}
-		
-		return false;*/
 	}
 	
 	/** conveneince method for executing a move stored in a move encoding*/
@@ -332,12 +245,6 @@ public final class State4 {
 	public long executeMove(int player, long pieceMask, long moveMask){
 		final int pos1 = BitUtil.lsbIndex(pieceMask);
 		final int pos2 = BitUtil.lsbIndex(moveMask);
-		
-		/*final int count1 = hm.getCount(zkey);
-		if(count1 > 1){
-			if(count1 == 2) zkey ^= zhash.appeared2;
-			else if(count1 >= 3) zkey ^= zhash.appeared3;
-		}*/
 		
 		assert pieceMask != 0;
 		assert moveMask != 0;
@@ -839,7 +746,7 @@ public final class State4 {
 				}
 			}
 		}
-		zkey ^= zhash.turn[0];
+		zkey ^= zhash.turn[0]; //NOTE: THIS METHOD SHOULD PROB BE CALLED WITH A PLAYER TO CORRECTLY SET THIS
 		if(enPassante != 0){
 			zkey ^= zhash.enPassante[BitUtil.lsbIndex(enPassante)];
 		}
