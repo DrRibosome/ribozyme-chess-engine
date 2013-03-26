@@ -752,7 +752,7 @@ public final class State4 {
 		}
 		
 		//add castling rights into zkey
-		for(int a = 0; a < 2; a++){
+		/*for(int a = 0; a < 2; a++){
 			if(!kingMoved[a]){
 				for(int q = 0; q < 2; q++){
 					if(!rookMoved[a][q]){
@@ -760,7 +760,7 @@ public final class State4 {
 					}
 				}
 			}
-		}
+		}*/
 		
 
 		hm.clear();

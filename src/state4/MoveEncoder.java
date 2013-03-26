@@ -8,6 +8,21 @@ public final class MoveEncoder {
 	/** 7-bit draw count mask*/
 	private final static long drawCountMask = 0x7F;
 	
+	/**
+	 * stores offsets for king/rook first moves
+	 * <p>
+	 * bit 0: king moved
+	 * bit 1: rook moved/taken, player 0
+	 * bit 2: rook moved/taken, player 1
+	 * bit 3: which rook was moved/taken for player 0
+	 * bit 4: which rook was moved/taken for player 1
+	 * bit 5: unused
+	 */
+	private final static int castleCodeOffset = 19; //new castle code uses 5 bits, reserves 6
+	private final static int isEnPassanteTakeOffset = 32;
+	private final static int isCastleOffset = 33;
+	private final static int prevDrawCountOffset = 34;
+	
 	public static int getPos1(final long encoding){
 		return (int)(encoding & posMask);
 	}
@@ -47,32 +62,32 @@ public final class MoveEncoder {
 	
 	/** sets that the move encoded was an en passante take*/
 	public static long setEnPassanteTake(final long encoding){
-		return encoding | (1L << 32);
+		return encoding | 1L << isEnPassanteTakeOffset;
 	}
 	
 	/** return 0 if false, returns non-zero if true*/
 	public static long isEnPassanteTake(final long encoding){
 		//return (encoding & (1L<<32)) != 0;
-		return encoding & (1L<<32);
+		return encoding & 1L<<isEnPassanteTakeOffset;
 	}
 	
 	public static long setCastle(final long encoding){
-		return encoding | 1L<<33;
+		return encoding | 1L<<isCastleOffset;
 	}
 
 	/** return 0 if false, returns non-zero if true*/
 	public static long isCastle(final long encoding){
-		return encoding & (1L<<33);
+		return encoding & (1L<<isCastleOffset);
 	}
 	
 	/** sets the number of moves since last pawn move or capture*/
 	public static long setPrevDrawCount(final long encoding, final long count){
-		return encoding | count << 34;
+		return encoding | count << prevDrawCountOffset;
 	}
 	
 	/** gets the number of moves since the last pawn move or capture*/
 	public static int getPrevDrawCount(final long encoding){
-		return (int)(drawCountMask & encoding >>> 34);
+		return (int)(drawCountMask & encoding >>> prevDrawCountOffset);
 	}
 	
 	public static void undoCastleProps(final long encoding, final State4 s){
@@ -96,6 +111,35 @@ public final class MoveEncoder {
 		}
 	}
 	
+	/** record that king has moved for first time*/
+	public static long setFirstKingMove(final long encoding){
+		return encoding | 1L<<castleCodeOffset;
+	}
+	
+	/** true if move was first king move, false otherwise*/
+	public static boolean isFirstKingMove(final long encoding){
+		return (encoding & 1L<<castleCodeOffset) != 0;
+	}
+
+	/** sets that a players rook has moved for the first time, rook==left? 0: 1*/
+	public static long setFirstRookMove(final int player, final int rook, final long encoding){
+		final long playerMask = 1L << 1+player;
+		final long rookMask = 1L << 3+player;
+		return encoding | (playerMask | rookMask) << castleCodeOffset;
+	}
+	
+	/** returns true if rook has moved/taken for first time*/
+	public static boolean isFirstRookMove(final int player, final long encoding){
+		final long playerMask = 1L << 1+player;
+		return (encoding & playerMask << castleCodeOffset) != 0;
+	}
+	
+	/** gets the side the first rook moved on, returns correct values if {@link #isFirstRookMove(int, long)} returns true*/
+	public static int getFirstRookMoveSide(final int player, final long encoding){
+		final int rookOffset = 3+player+castleCodeOffset;
+		return (int)((encoding & 1L << rookOffset) >>> rookOffset);
+	}
+	
 	/**
 	 * encodes passed move and sets castling properties on the passed state object
 	 * @param pos1
@@ -113,8 +157,8 @@ public final class MoveEncoder {
 			castleCode |= 1<<player;
 			s.kingMoved[player] = true;
 		} else if(pieceMovingType == State4.PIECE_TYPE_ROOK){
-			final boolean left = (player == 0 && pos1 == 0) ||(player == 1 && pos1 == 56);
-			final boolean right = (player == 0 && pos1 == 7) ||(player == 1 && pos1 == 63);
+			final boolean left = (player == 0 && pos1 == 0) || (player == 1 && pos1 == 56);
+			final boolean right = (player == 0 && pos1 == 7) || (player == 1 && pos1 == 63);
 			if(!s.rookMoved[player][0] && left){
 				castleCode |= 1<<(2+player*2);
 				s.rookMoved[player][0] = true;
