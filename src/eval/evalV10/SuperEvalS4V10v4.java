@@ -415,7 +415,7 @@ public final class SuperEvalS4V10v4 implements Evaluator2
 			dangerIndex += DANGER_KING_ATTACKS[State4.PIECE_TYPE_KNIGHT] * BitUtil.getSetBits(moves & kingRing);
 		}
 
-		return (int)(kingDangerValues[dangerIndex].getScore()/8.*3); //scaled to stockfish values
+		return kingDangerValues[dangerIndex].getScore();
 	}
 
 	public void processMove(long encoding)
