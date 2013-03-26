@@ -69,7 +69,7 @@ public class ChessServer4 extends WebSocketServer{
 				//new SearchS4V32(s, e, 21, false);
 				//new SearchS4V32cc(s, e, 21, false);
 				//new SearchS4V32k(e, 22, false);
-				new SearchS4V33t(e, 23, false);
+				new SearchS4V33t(e, 23, true);
 	}
 
 	@Override

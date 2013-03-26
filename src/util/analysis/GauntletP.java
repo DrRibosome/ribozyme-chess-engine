@@ -11,8 +11,8 @@ import state4.State4;
 import state4.StateUtil;
 import util.opening2.Book;
 import eval.Evaluator2;
+import eval.evalV10.SuperEvalS4V10;
 import eval.evalV10.SuperEvalS4V10v4;
-import eval.evalV8.SuperEvalS4V8;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -110,14 +110,15 @@ public class GauntletP {
 	public static void main(String[] args) throws IOException{
 		
 		final int hashSize = 20;
-		final long time = 100;
+		final long time = 1000;
 
-		final int threads = 4;
+		final int threads = 3;
 		final GauntletThread[] t = new GauntletThread[threads];
 		
+		System.out.print("initializing... ");
 		for(int a = 0; a < threads; a++){
 			Evaluator2 e1 =
-					new SuperEvalS4V8();
+					new SuperEvalS4V10();
 					//new ExpEvalV2();
 
 			Evaluator2 e2 = 
@@ -131,6 +132,7 @@ public class GauntletP {
 			t[a] = new GauntletThread(time, search);
 			t[a].setDaemon(true);
 		}
+		System.out.println("complete");
 		
 		Thread controller = new Thread(){
 			public void run(){

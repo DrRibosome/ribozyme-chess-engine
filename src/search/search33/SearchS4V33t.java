@@ -107,7 +107,7 @@ public final class SearchS4V33t implements Search4{
 	private int seq;
 	
 	/** controls printing pv to console for debugging*/
-	private final static boolean printPV = true;
+	private final boolean printPV;
 	/** controls whether the printed pv should be in uci style*/
 	private final static boolean uciPV = true;
 	
@@ -124,7 +124,7 @@ public final class SearchS4V33t implements Search4{
 		this(e, hashSize, false);
 	}
 	
-	public SearchS4V33t(Evaluator2 e, int hashSize, boolean record){
+	public SearchS4V33t(Evaluator2 e, int hashSize, boolean printPV){
 		this.e = e;
 		
 		//m = new ZMap3(hashSize);
@@ -136,14 +136,7 @@ public final class SearchS4V33t implements Search4{
 		}
 		stats.scores = new int[stackSize];
 		
-
-		if(record){
-			try{
-				f = new FileWriter("search32k.stats", true);
-			} catch(IOException ex){
-				ex.printStackTrace();
-			}
-		}
+		this.printPV = printPV;
 	}
 	
 	public SearchStat32k getStats(){
