@@ -149,7 +149,7 @@ public final class State4 {
 	public static long getCastleMoves(int player, State4 s){
 		if(!s.kingMoved[player] && (!s.rookMoved[player][0] || !s.rookMoved[player][1])){
 			long moves = 0;
-			long agg = s.pieces[0]|s.pieces[1];
+			final long agg = s.pieces[0]|s.pieces[1];
 			if(!s.rookMoved[player][0] && (Masks.castleBlockedMask[player][0] & agg) == 0 &&
 					!isAttacked(Masks.castleThroughCheck[player][0], 1-player, s)){
 				moves |= Masks.castleMask[player][0];
@@ -193,12 +193,23 @@ public final class State4 {
 		long temp = player == 0? (pawns << 7) & colMask & l: (pawns >>> 7) & colMask & l;
 		colMask = player == 0? Masks.colMaskExc[0]: Masks.colMaskExc[7];
 		temp |= player == 0? (pawns << 9) & colMask & l: (pawns >>> 9) & colMask & l;
+
+		final long agg = s.pieces[0] | s.pieces[1] | l;
+		
+		/*System.out.println("pawn attacks = "+temp);
+		System.out.println("bishop attackes = "+(Masks.getRawBishopMoves(agg, l) & (s.queens[player]|s.bishops[player])));
+		System.out.println("rook attackes = "+(Masks.getRawRookMoves(agg, l) & (s.queens[player]|s.rooks[player])));
+		System.out.println("knight attacks = "+(Masks.getRawKnightMoves(l) & s.knights[player]));
+		System.out.println("king attacks = "+(Masks.getRawKingMoves(l) & s.kings[player]));
+		System.out.println(Masks.getString(Masks.getRawBishopMoves(agg|l, l)));
+		System.out.println(Masks.getString(getBishopMoves(1-player, s.pieces, l)));
+		System.out.println(Masks.getString(agg));*/
 		
 		return temp != 0 ||
-				((getBishopMoves(1-player, s.pieces, l) & (s.queens[player]|s.bishops[player])) |
-				(getRookMoves(1-player, s.pieces, l) & (s.queens[player]|s.rooks[player])) |
-				(getKnightMoves(1-player, s.pieces, l) & s.knights[player]) |
-				(getKingMoves(1-player, s.pieces, l) & s.kings[player])) != 0;
+				((Masks.getRawBishopMoves(agg, l) & (s.queens[player]|s.bishops[player])) |
+				(Masks.getRawRookMoves(agg, l) & (s.queens[player]|s.rooks[player])) |
+				(Masks.getRawKnightMoves(l) & s.knights[player]) |
+				(Masks.getRawKingMoves(l) & s.kings[player])) != 0;
 	}
 	
 	/**
@@ -209,13 +220,13 @@ public final class State4 {
 	 * @return returns true if attacked, false otherwise
 	 */
 	public static boolean isAttacked(long posMask, final int player, final State4 s){
-		/*for(; posMask != 0; posMask &= posMask-1){
+		for(; posMask != 0; posMask &= posMask-1){
 			if(isAttacked2(BitUtil.lsbIndex(posMask), player, s)){
 				return true;
 			}
 		}
-		return false;*/
-		long[] pieceMasks = s.pieces;
+		return false;
+		/*long[] pieceMasks = s.pieces;
 		long queens = s.queens[player];
 		if(queens != 0){
 			final long queenMoves = State4.getQueenMoves(player, pieceMasks, queens);
@@ -301,7 +312,7 @@ public final class State4 {
 			return true;
 		}
 		
-		return false;
+		return false;*/
 	}
 	
 	/** conveneince method for executing a move stored in a move encoding*/

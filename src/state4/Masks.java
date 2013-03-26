@@ -9,8 +9,9 @@ public final class Masks {
 	public final static long[] bishopMoves;
 	
 	public final static long[][] castleMask;
+	/** masks squares to check that no pieces block the castling king/rook, indexed [player][side] with side==left? 0: 1*/
 	public final static long[][] castleBlockedMask;
-	/** masks the squares for checking if castling through check or not*/
+	/** masks the squares for checking if castling through check or not, indexed [player][side] with side==left? 0: 1*/
 	public final static long[][] castleThroughCheck;
 	
 	public final static long[] colMask;
@@ -251,8 +252,8 @@ public final class Masks {
 	}
 	
 	/** gets all king moves given all pieces and location of the king irrespective of piece side*/
-	public static long getRawKingMoves(final long knight){
-		final int index = BitUtil.lsbIndex(knight);
+	public static long getRawKingMoves(final long king){
+		final int index = BitUtil.lsbIndex(king);
 		return Masks.kingMoves[index];
 	}
 	
