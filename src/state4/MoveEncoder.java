@@ -46,10 +46,6 @@ public final class MoveEncoder {
 		return (int)((encoding & (q<<18)) >>> 18);
 	}
 	
-	public static boolean isFirstKingMove(final int player, final long encoding){
-		return (encoding & (1L<<(19+player))) != 0;
-	}
-	
 	/** sets the position of a previous en passante (that will be destroyed by this move)*/
 	public static long setPrevEnPassantePos(final long pos, final long encoding){
 		return encoding | ((1L*BitUtil.lsbIndex(pos))<<26);
@@ -71,13 +67,14 @@ public final class MoveEncoder {
 		return encoding & 1L<<isEnPassanteTakeOffset;
 	}
 	
+	/** record that the move was a castle*/
 	public static long setCastle(final long encoding){
 		return encoding | 1L<<isCastleOffset;
 	}
 
 	/** return 0 if false, returns non-zero if true*/
 	public static long isCastle(final long encoding){
-		return encoding & (1L<<isCastleOffset);
+		return encoding & 1L<<isCastleOffset;
 	}
 	
 	/** sets the number of moves since last pawn move or capture*/
@@ -88,27 +85,6 @@ public final class MoveEncoder {
 	/** gets the number of moves since the last pawn move or capture*/
 	public static int getPrevDrawCount(final long encoding){
 		return (int)(drawCountMask & encoding >>> prevDrawCountOffset);
-	}
-	
-	public static void undoCastleProps(final long encoding, final State4 s){
-		long castleCode = (encoding & (posMask << 19)) >>> 19;
-		if(castleCode != 0){
-			int player = getPlayer(encoding);
-			
-			if((castleCode & 1<<player) != 0){
-				s.kingMoved[player] = false;
-			} else if((castleCode & 3<<(player*2+2)) != 0){
-				//rook was moved for first time
-				final int rook = (int)((castleCode & (3<<(player*2+2))) >>> (player*2+2));
-				s.rookMoved[player][rook-1] = false;
-			}
-			
-			if((castleCode & 3<<((1-player)*2+2)) != 0){
-				//must have taken a rook that had not moved
-				final int rook = (int)((castleCode & 3<<((1-player)*2+2)) >>> ((1-player)*2+2));
-				s.rookMoved[1-player][rook-1] = false;
-			}
-		}
 	}
 	
 	/** record that king has moved for first time*/
@@ -147,43 +123,11 @@ public final class MoveEncoder {
 	 * @param pieceMovingType
 	 * @param pieceTakenType
 	 * @param player
-	 * @param s
 	 * @return
 	 */
-	public static long encode(final int pos1, final int pos2, final int pieceMovingType, final int pieceTakenType,
-			final int player, final State4 s){
-		long castleCode = 0;
-		if(!s.kingMoved[player] && pieceMovingType == State4.PIECE_TYPE_KING){
-			castleCode |= 1<<player;
-			s.kingMoved[player] = true;
-		} else if(pieceMovingType == State4.PIECE_TYPE_ROOK){
-			final boolean left = (player == 0 && pos1 == 0) || (player == 1 && pos1 == 56);
-			final boolean right = (player == 0 && pos1 == 7) || (player == 1 && pos1 == 63);
-			if(!s.rookMoved[player][0] && left){
-				castleCode |= 1<<(2+player*2);
-				s.rookMoved[player][0] = true;
-			} else if(!s.rookMoved[player][1] && right){
-				castleCode |= 1<<(2+player*2+1);
-				s.rookMoved[player][1] = true;
-			}
-		}
-		
-		if(pieceTakenType == State4.PIECE_TYPE_ROOK){
-			//System.out.println("rook taken");
-			final boolean left = (1-player == 0 && pos2 == 0) || (1-player == 1 && pos2 == 56);
-			final boolean right = (1-player == 0 && pos2 == 7) || (1-player == 1 && pos2 == 63);
-			if(!s.rookMoved[1-player][0] && left){
-				castleCode |= 1<<(2+(1-player)*2);
-				s.rookMoved[1-player][0] = true;
-			} else if(!s.rookMoved[1-player][1] && right){
-				castleCode |= 1<<(2+(1-player)*2+1);
-				s.rookMoved[1-player][1] = true;
-			}
-		}
-		
-		
+	public static long encode(final int pos1, final int pos2, final int pieceMovingType, final int pieceTakenType, final int player){
 		return pos1 | (pos2 << 6) | (pieceMovingType << 12) |
-				(pieceTakenType << 15) | (player << 18) | (castleCode << 19);
+				(pieceTakenType << 15) | (player << 18);
 	}
 	
 	/** given the encoding, set pawn promotion flag and return new encoding*/
