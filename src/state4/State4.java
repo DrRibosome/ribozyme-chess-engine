@@ -436,11 +436,6 @@ public final class State4 {
 	public void undoMove(){
 		final long encoding = history[--hindex];
 		
-		/*final int count1 = hm.getCount(zkey);
-		if(count1 > 1){
-			if(count1 == 2) zkey ^= zhash.appeared2;
-			else if(count1 >= 3) zkey ^= zhash.appeared3;
-		}*/
 		hm.remove(zkey);
 		
 		assert encoding != 0;
@@ -584,12 +579,6 @@ public final class State4 {
 			pieceCounts[1-player][PIECE_TYPE_EMPTY]++;
 			zkey ^= zhash.zhash[1-player][PIECE_TYPE_PAWN][pos3];
 		}
-		
-		/*final int count2 = hm.getCount(zkey);
-		if(count2 > 1){
-			if(count2 == 2) zkey ^= zhash.appeared2;
-			else if(count2 >= 3) zkey ^= zhash.appeared3;
-		}*/
 
 		collect();
 		drawCount = MoveEncoder.getPrevDrawCount(encoding);
