@@ -1,0 +1,29 @@
+----------------------------------
+1 sec, hash = 20, eval v9
+search32k v search33
+(w0,w1,d) = (67,111,36)
+with raw timer (ie, not 1 sec)
+
+search33t v search33
+(w0,w1,d) = (139,128,126)
+
+search33t v search32k
+(w0,w1,d) = (38,16,24)
+
+----------------------------------
+5 sec, hash = 20, eval v9
+
+search33t v search32k
+(w0,w1,d) = (22,6,7)
+with raw timer (ie, not 5 sec)
+
+search33t v search33
+(w0,w1,d) = (27,9,23)
+with raw timer (ie, not 5 sec)
+
+----------------------------------
+15 sec, hash = 20, eval v9
+
+search33t v search32k
+(w0,w1,d) = (21,3,15)
+with raw timer (ie, not 15 sec)

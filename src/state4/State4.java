@@ -185,11 +185,11 @@ public final class State4 {
 	 * @param player player doing the attacking attacking
 	 * @param s
 	 */
-	public static boolean isAttacked2(int pos, int player, State4 s){
-		long l = 1L<<pos;
+	public static boolean isAttacked2(final int pos, final int player, final State4 s){
+		final long l = 1L<<pos;
 		
 		long colMask = player == 0? Masks.colMaskExc[7]: Masks.colMaskExc[0];
-		long pawns = s.pawns[player];
+		final long pawns = s.pawns[player];
 		long temp = player == 0? (pawns << 7) & colMask & l: (pawns >>> 7) & colMask & l;
 		colMask = player == 0? Masks.colMaskExc[0]: Masks.colMaskExc[7];
 		temp |= player == 0? (pawns << 9) & colMask & l: (pawns >>> 9) & colMask & l;
@@ -208,8 +208,14 @@ public final class State4 {
 	 * @param s
 	 * @return returns true if attacked, false otherwise
 	 */
-	public static boolean isAttacked(long posMask, int player, State4 s){
-		long[] pieceMasks = s.pieces;
+	public static boolean isAttacked(long posMask, final int player, final State4 s){
+		for(; posMask != 0; posMask &= posMask-1){
+			if(isAttacked2(BitUtil.lsbIndex(posMask), player, s)){
+				return true;
+			}
+		}
+		return false;
+		/*long[] pieceMasks = s.pieces;
 		long queens = s.queens[player];
 		if(queens != 0){
 			final long queenMoves = State4.getQueenMoves(player, pieceMasks, queens);
@@ -295,7 +301,7 @@ public final class State4 {
 			return true;
 		}
 		
-		return false;
+		return false;*/
 	}
 	
 	/** conveneince method for executing a move stored in a move encoding*/

@@ -40,13 +40,13 @@ avg nodes/ms = 1117.8822662780642
 avg braching factor = 8.616624555337996
 avg hash hit rate = 0.10688461758628141
 
-search33t
+search33t, eval 10
 positions searched = 600
-avg nodes searched = 17738.466666666667
-avg time (ms) = 18.368333333333332
-avg nodes/ms = 965.7091008075492
-avg braching factor = 6.813911329589111
-avg hash hit rate = 0.12364691423911124
+avg nodes searched = 29579.668333333335
+avg time (ms) = 27.711666666666666
+avg nodes/ms = 1067.4084922114632
+avg braching factor = 7.542718481811838
+avg hash hit rate = 0.10848555266086204
 
 
 ---------------------------------------------------
@@ -127,7 +127,7 @@ avg hash hit rate = 0.09974372844173103
 		
 		
 		//initialize search
-		final int searchDepth = 9;
+		final int searchDepth = 5;
 		final int hashSize = 20;
 		final Evaluator2 e = new SuperEvalS4V10();
 		final Search4 searcher =
