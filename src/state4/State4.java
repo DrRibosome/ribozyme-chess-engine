@@ -673,8 +673,8 @@ public final class State4 {
 		long castleKey = 0;
 		if(!kingMoved[0] && !rookMoved[0][0]) castleKey ^= zhash.canCastle[0][0];
 		if(!kingMoved[0] && !rookMoved[0][1]) castleKey ^= zhash.canCastle[0][1];
-		if(!kingMoved[1] && !rookMoved[0][0]) castleKey ^= zhash.canCastle[1][0];
-		if(!kingMoved[1] && !rookMoved[0][1]) castleKey ^= zhash.canCastle[1][1];
+		if(!kingMoved[1] && !rookMoved[1][0]) castleKey ^= zhash.canCastle[1][0];
+		if(!kingMoved[1] && !rookMoved[1][1]) castleKey ^= zhash.canCastle[1][1];
 		
 		return zkey ^ appHashs[count < 4? count: 3] ^ castleKey;
 	}
