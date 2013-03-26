@@ -209,13 +209,13 @@ public final class State4 {
 	 * @return returns true if attacked, false otherwise
 	 */
 	public static boolean isAttacked(long posMask, final int player, final State4 s){
-		for(; posMask != 0; posMask &= posMask-1){
+		/*for(; posMask != 0; posMask &= posMask-1){
 			if(isAttacked2(BitUtil.lsbIndex(posMask), player, s)){
 				return true;
 			}
 		}
-		return false;
-		/*long[] pieceMasks = s.pieces;
+		return false;*/
+		long[] pieceMasks = s.pieces;
 		long queens = s.queens[player];
 		if(queens != 0){
 			final long queenMoves = State4.getQueenMoves(player, pieceMasks, queens);
@@ -301,7 +301,7 @@ public final class State4 {
 			return true;
 		}
 		
-		return false;*/
+		return false;
 	}
 	
 	/** conveneince method for executing a move stored in a move encoding*/

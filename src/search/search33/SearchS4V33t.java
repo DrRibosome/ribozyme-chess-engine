@@ -107,7 +107,7 @@ public final class SearchS4V33t implements Search4{
 	private int seq;
 	
 	/** controls printing pv to console for debugging*/
-	private final static boolean printPV = false;
+	private final static boolean printPV = true;
 	/** controls whether the printed pv should be in uci style*/
 	private final static boolean uciPV = true;
 	
