@@ -100,7 +100,7 @@ public final class MoveEncoder {
 	/** sets that a players rook has moved for the first time, rook==left? 0: 1*/
 	public static long setFirstRookMove(final int player, final int rook, final long encoding){
 		final long playerMask = 1L << 1+player;
-		final long rookMask = 1L << 3+player;
+		final long rookMask = (1L << 3+player)*rook;
 		return encoding | ((playerMask | rookMask) << castleCodeOffset);
 	}
 	

@@ -50,7 +50,7 @@ public final class SearchTester {
 			final Position p = pos.get(a);
 			searcher.resetSearch();
 			
-			System.out.println(StateUtil.fen(p.sideToMove, p.s));
+			//System.out.println(StateUtil.fen(p.sideToMove, p.s));
 			searcher.search(p.sideToMove, p.s, null, searchDepth);
 			SearchStat.agg(searcher.getStats(), agg);
 			
