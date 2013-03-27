@@ -9,6 +9,7 @@ import java.util.Scanner;
 import search.Search4;
 import search.SearchStat;
 import search.search33.SearchS4V33t;
+import state4.StateUtil;
 import uci.Position;
 import util.FenParser;
 import eval.Evaluator2;
@@ -49,6 +50,7 @@ public final class SearchTester {
 			final Position p = pos.get(a);
 			searcher.resetSearch();
 			
+			System.out.println(StateUtil.fen(p.sideToMove, p.s));
 			searcher.search(p.sideToMove, p.s, null, searchDepth);
 			SearchStat.agg(searcher.getStats(), agg);
 			

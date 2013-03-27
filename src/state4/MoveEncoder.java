@@ -101,19 +101,19 @@ public final class MoveEncoder {
 	public static long setFirstRookMove(final int player, final int rook, final long encoding){
 		final long playerMask = 1L << 1+player;
 		final long rookMask = 1L << 3+player;
-		return encoding | (playerMask | rookMask) << castleCodeOffset;
+		return encoding | ((playerMask | rookMask) << castleCodeOffset);
 	}
 	
 	/** returns true if rook has moved/taken for first time*/
 	public static boolean isFirstRookMove(final int player, final long encoding){
 		final long playerMask = 1L << 1+player;
-		return (encoding & playerMask << castleCodeOffset) != 0;
+		return (encoding & (playerMask << castleCodeOffset)) != 0;
 	}
 	
 	/** gets the side the first rook moved on, returns correct values if {@link #isFirstRookMove(int, long)} returns true*/
 	public static int getFirstRookMoveSide(final int player, final long encoding){
 		final int rookOffset = 3+player+castleCodeOffset;
-		return (int)((encoding & 1L << rookOffset) >>> rookOffset);
+		return (int)((encoding & (1L << rookOffset)) >>> rookOffset);
 	}
 	
 	/**
@@ -146,6 +146,6 @@ public final class MoveEncoder {
 	}
 	
 	private static String posString(final int pos){
-		return ""+(char)(pos%8+'A')+(char)(pos/8+'1');
+		return ""+(char)(pos%8+'a')+(char)(pos/8+'1');
 	}
 }
