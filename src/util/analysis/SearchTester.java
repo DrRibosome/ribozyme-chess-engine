@@ -9,7 +9,6 @@ import java.util.Scanner;
 import search.Search4;
 import search.SearchStat;
 import search.search33.SearchS4V33t;
-import state4.StateUtil;
 import uci.Position;
 import util.FenParser;
 import eval.Evaluator2;

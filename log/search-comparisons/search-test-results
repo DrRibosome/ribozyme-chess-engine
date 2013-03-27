@@ -56,15 +56,15 @@ avg hash hit rate = 0.11445694266370209
 ---------------------------------------------------
 depth = 9, hash = 20
 
-search33
+search33, eval v10
 positions searched = 500
-avg nodes searched = 631405.434
-avg time (ms) = 562.978
-avg nodes/ms = 1121.5454849034954
-avg braching factor = 4.300426388513804
-avg hash hit rate = 0.09721173226393234
+avg nodes searched = 597512.794
+avg time (ms) = 509.764
+avg nodes/ms = 1172.136113966463
+avg braching factor = 4.267105072553733
+avg hash hit rate = 0.09655906380474925
 
-search32k
+search32k, eval v9?
 positions searched = 200
 avg nodes searched = 5985269.17
 avg time (ms) = 5123.31
@@ -72,18 +72,10 @@ avg nodes/ms = 1168.242634156434
 avg braching factor = 5.390726187869697
 avg hash hit rate = 0.09519992815962193
 
-search33t, eval v9
-positions searched = 700
-avg nodes searched = 314273.9928571429
-avg time (ms) = 307.55
-avg nodes/ms = 1021.863088464129
-avg braching factor = 3.9806606625189853
-avg hash hit rate = 0.10091848198247576
-
 search33t, eval v10
-positions searched = 700
-avg nodes searched = 303980.5585714286
-avg time (ms) = 302.5185714285714
-avg nodes/ms = 1004.8327186524558
-avg braching factor = 3.97431878447357
-avg hash hit rate = 0.09974372844173103
+positions searched = 500
+avg nodes searched = 582971.982
+avg time (ms) = 490.424
+avg nodes/ms = 1188.7101406130205
+avg braching factor = 4.257976889203428
+avg hash hit rate = 0.10256662043151157
