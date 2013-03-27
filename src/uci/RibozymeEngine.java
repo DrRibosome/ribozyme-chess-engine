@@ -19,7 +19,7 @@ public class RibozymeEngine implements UCIEngine{
 		Evaluator2 e = 
 				new SuperEvalS4V10v4();
 		
-		s = new SearchS4V33t(e, 22, false);
+		s = new SearchS4V33t(e, 22, true);
 	}
 	
 	@Override
