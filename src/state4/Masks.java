@@ -26,6 +26,9 @@ public final class Masks {
 	/** masks for pawns that are not passed, but have no pawns in their col*/
 	public final static long[][] unopposePawnMasks;
 	
+	/** stores masks for starting locations of rooks, indexed [player][side] with side==left? 0: 1*/
+	public final static long[][] rookStartingPos;
+	
 	
 	static{
 		knightMoves = genKnightMoves();
@@ -65,10 +68,16 @@ public final class Masks {
 		pawnPromotionMask = new long[]{0xFFL<<56, 0xFFL};
 		unopposePawnMasks = genUnopposedPawnMasks();
 		
+		rookStartingPos = new long[2][2];
+		rookStartingPos[0][0] = 0x1L;
+		rookStartingPos[0][1] = 0x80L;
+		rookStartingPos[1][0] = 0x1L << 56;
+		rookStartingPos[1][1] = 0x80L << 56;
+		
 		//System.out.println(getString(pawnPromotionMask[0]));
 		/*for(int i = 0; i < 2; i++){
 			System.out.println(i);
-			System.out.println(getString(pawnPrePromote[i]));
+			System.out.println(getString(rookStartingPos[1][i]));
 		}*/
 	}
 	

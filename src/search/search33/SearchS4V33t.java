@@ -779,7 +779,7 @@ public final class SearchS4V33t implements Search4{
 				if(isDrawable && 0 > g){// && -10*depth > g){ //can draw instead of making the move
 					g = 0;
 					encoding = 0;
-				} 
+				}
 				
 				assert zkey == s.zkey();
 				assert drawCount == s.drawCount;
