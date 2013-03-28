@@ -10,7 +10,7 @@ import state4.StateUtil;
 import uci.Position;
 import util.FenParser;
 import eval.Evaluator2;
-import eval.evalV9.SuperEvalS4V9;
+import eval.evalV10.SuperEvalS4V10v4;
 
 
 public class Debug {
@@ -55,7 +55,7 @@ public class Debug {
 		//Position p = FenParser.parse("4q1kr/p6p/1prQPppB/4n3/4P3/2P5/PP2B2P/R5K1 w - - 0 0");
 		//Position p = FenParser.parse("2k5/pp1r2b1/2p5/7P/2P2r1q/5pN1/PPb2P1P/2Q1RRK1 w - - 0 27"); //c1c2 leads to loss by checkmate
 		//Position p = FenParser.parse("r1bq1rk1/p1pp1ppp/2p5/3nP3/8/2B5/PPPQ1PPP/R3KB1R w - - - -"); //c4d3 blunder
-		Position p = FenParser.parse("6k1/1R3p1p/6p1/8/p4r1n/PR3P1K/2P2P1P/8 w - - 1 -");
+		Position p = FenParser.parse("8/6R1/8/1p5p/8/1P2KN1k/2r3nP/8 w - - 1 1");
 		
 		
 		System.out.println(StateUtil.fen(p.sideToMove, p.s));
@@ -63,23 +63,20 @@ public class Debug {
 		int player = p.sideToMove;
 		
 		System.out.println(s);
-		Evaluator2<State4> e = new SuperEvalS4V9();
+		Evaluator2 e = new SuperEvalS4V10v4();
 		//Evaluator2<State4> e = new IncrementalPieceScore();
 		
 		e.initialize(s);
 		//e.traceEval(s, State4.WHITE);
 		
-		final int maxDepth = 25;
-		//Search3 search = new SearchS4V32(s, e, 20, false);
-		Search4 search = new SearchS4V33t(e, 20, false);
-		//Search3 search = new SearchS4V32cc(s, e, 20, false);
+		final int maxDepth = 40;
+		Search4 search = new SearchS4V33t(e, 20, true);
 		int[] move = new int[2];
 		search.search(player, s, move, maxDepth);
 		System.out.println("\n"+getMoveString(move, 0)+" -> "+getMoveString(move, 1));
 		System.out.println("nodes searched = "+search.getStats().nodesSearched);
 		System.out.println("hash hit rate = "+search.getStats().hashHits*1./search.getStats().nodesSearched);
 		System.out.println("branching factor = "+search.getStats().empBranchingFactor);
-		System.out.println(((SearchS4V32k.SearchStat32k)search.getStats()).forcedQuietCutoffs);
 		
 		
 		System.out.println(s);
