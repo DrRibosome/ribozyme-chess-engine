@@ -110,7 +110,7 @@ public class GauntletP {
 	public static void main(String[] args) throws IOException{
 		
 		final int hashSize = 20;
-		final long time = 100;
+		final long time = 1000;
 
 		final int threads = 3;
 		final GauntletThread[] t = new GauntletThread[threads];

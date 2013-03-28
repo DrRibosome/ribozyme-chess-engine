@@ -42,8 +42,8 @@ public class Gauntlet {
 				//new ExpEvalV1();
 		
 		final Search4[] search = new Search4[2];
-		search[0] = new SearchS4V33t(e1, hashSize, false);
-		search[1] = new SearchS4V33t(e2, hashSize, false);
+		search[0] = new SearchS4V33t(e1, hashSize, true);
+		search[1] = new SearchS4V33t(e2, hashSize, true);
 		final Book b = new Book(new File("megabook.bk"));
 
 		final int[] wins = new int[2];

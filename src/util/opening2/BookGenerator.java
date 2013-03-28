@@ -12,6 +12,10 @@ import util.pgnLoader.PgnGame;
 import util.pgnLoader.PgnLoader;
 import util.pgnLoader.PgnProcessor;
 
+/**
+ * generates opening book from pgn games
+ * <p> NOTE: THIS MUST BE RUN WITH ASSERTIONS TO WORK IF PGN FILES CONTAIN BAD GAMES!
+ */
 public final class BookGenerator {
 	private static final class Stat{
 		int count;
@@ -22,6 +26,8 @@ public final class BookGenerator {
 		//NOTE: THIS MUST BE RUN WITH ASSERTIONS TO WORK IF PGN FILES CONTAIN BAD GAMES!
 		
 		final Map<Long, Stat> m = new HashMap<>();
+		
+		final int minCount = 5; //min number of times a position must appear to be included in the book
 		
 		final long seed = 43388L;
 		PgnProcessor proc = new PgnProcessor() {
@@ -64,7 +70,7 @@ public final class BookGenerator {
 				maxAppearances = s.count;
 			}
 			
-			if(s.count >= 10){
+			if(s.count >= minCount){
 				dos.writeLong(key);
 				dos.writeShort(s.count);
 				dos.writeShort(s.wins[0]);
