@@ -78,7 +78,7 @@ public final class TimerThread4 extends Thread{
 		
 		search.setListener(l);
 		//final long maxTime = (long)(time*(material >= 60? .04: .06));
-		final long maxTime = (long)(target * 1.3);
+		long maxTime = (long)(target * 1.3);
 		
 		if(debug){
 			System.out.println("moves remaining = "+(getHalfMovesRemaining(material)/2));
@@ -116,10 +116,10 @@ public final class TimerThread4 extends Thread{
 			}
 			
 			if(currentScore < 70000){
-				if(!checking && currentPly-lastpvChange+1 > 7 && currentPly >= 14){ //perhaps increase difficulty with fail lows
+				if(!checking && currentPly-lastpvChange+1 > 7 && currentPly >= 17){ //perhaps increase difficulty with fail lows
 					break;
 					//target -= target*.2;
-				} else if(checking && currentPly-lastpvChange+1 > 8 && currentPly >= 16){
+				} else if(checking && currentPly-lastpvChange+1 > 8 && currentPly >= 19){
 					break;
 				}
 			}
@@ -151,6 +151,10 @@ public final class TimerThread4 extends Thread{
 			} catch(InterruptedException e){}
 		}
 		isFinished.set(true);
+	}
+	
+	private static long min(long l1, long l2){
+		return l1 < l2? l1: l2;
 	}
 	
 	/** tests to see if the passed player is in check*/

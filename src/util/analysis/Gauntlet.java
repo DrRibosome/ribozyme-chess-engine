@@ -74,7 +74,7 @@ public class Gauntlet {
 				if(print) System.out.println("search state:\n"+state);
 				if(print) System.out.println("draw count = "+state.drawCount);
 
-				int[] bookMove = b.getRandomMove(turn, state);
+				int[] bookMove = b.getRandomMove(turn, state, 100);
 				if(bookMove != null && !outOfBook){
 					System.arraycopy(bookMove, 0, move, 0, 2);
 					if(print) System.out.println("book move");

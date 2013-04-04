@@ -5,16 +5,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import state4.BitUtil;
 import state4.State4;
 
 public final class Book {
 	private long seed;
-	private final Set<Long> book = new HashSet<Long>();
+	private final Map<Long, BookRecord> book = new HashMap<Long, BookRecord>();
 	
 	public Book(File f){
 		try{
@@ -22,7 +22,7 @@ public final class Book {
 			seed = dis.readLong();
 			while(dis.available() > 0){
 				BookRecord r = BookRecord.read(dis);
-				book.add(r.key);
+				book.put(r.key, r);
 			}
 			dis.close();
 		} catch(IOException e){
@@ -39,6 +39,11 @@ public final class Book {
 	}
 	
 	public List<int[]> getMoves(int player, State4 s){
+		return getMoves(player, s, 0);
+	}
+
+	/** gets moves that appear in at least minCount games*/
+	public List<int[]> getMoves(int player, State4 s, int minCount){
 		assert s.getZkeySeed() == seed;
 		
 		List<int[]> moves = new ArrayList<int[]>();
@@ -47,7 +52,9 @@ public final class Book {
 		List<int[]> available = new ArrayList<int[]>();
 		for(int[] m: moves){
 			s.executeMove(player, 1L<<m[0], 1L<<m[1]);
-			if(book.contains(s.zkey())){
+			
+			final BookRecord r;
+			if((r = book.get(s.zkey())) != null && r.count >= minCount){
 				available.add(m);
 			}
 			s.undoMove();
@@ -57,7 +64,12 @@ public final class Book {
 	}
 	
 	public int[] getRandomMove(int player, State4 s){
-		final List<int[]> l = getMoves(player, s);
+		return getRandomMove(player, s, 0);
+	}
+	
+	/** gets a random move that appears in at least minCount games*/
+	public int[] getRandomMove(int player, State4 s, int minCount){
+		final List<int[]> l = getMoves(player, s, minCount);
 		return l.size() != 0? l.get((int)(Math.random()*l.size())): null;
 	}
 

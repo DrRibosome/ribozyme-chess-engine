@@ -11,8 +11,8 @@ import state4.State4;
 import state4.StateUtil;
 import util.opening2.Book;
 import eval.Evaluator2;
-import eval.evalV10.SuperEvalS4V10;
-import eval.evalV10.SuperEvalS4V10v4;
+import eval.evalV8.SuperEvalS4V8;
+import eval.expEvalV2.ExpEvalV3;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -65,7 +65,7 @@ public class GauntletP {
 					if(print) System.out.println("search state:\n"+state);
 					if(print) System.out.println("draw count = "+state.drawCount);
 
-					int[] bookMove = b.getRandomMove(turn, state);
+					int[] bookMove = b.getRandomMove(turn, state, 100);
 					if(bookMove != null && !outOfBook){
 						System.arraycopy(bookMove, 0, move, 0, 2);
 						if(print) System.out.println("book move");
@@ -110,7 +110,7 @@ public class GauntletP {
 	public static void main(String[] args) throws IOException{
 		
 		final int hashSize = 20;
-		final long time = 1000;
+		final long time = 100;
 
 		final int threads = 3;
 		final GauntletThread[] t = new GauntletThread[threads];
@@ -118,12 +118,15 @@ public class GauntletP {
 		System.out.print("initializing... ");
 		for(int a = 0; a < threads; a++){
 			Evaluator2 e1 =
-					new SuperEvalS4V10();
-					//new ExpEvalV2();
+					//new SuperEvalS4V10();
+					new ExpEvalV3();
+					//new SuperEvalS4V10v4();
+					//new EvalS4V10v5();
 
 			Evaluator2 e2 = 
-					new SuperEvalS4V10v4();
-					//new SuperEvalS4V8();
+					//new SuperEvalS4V10v4();
+					//new ExpEvalV3();
+					new SuperEvalS4V8();
 					//new ExpEvalV1();
 			
 			final Search4[] search = new Search4[2];

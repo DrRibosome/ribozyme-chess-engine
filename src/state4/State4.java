@@ -175,7 +175,8 @@ public final class State4 {
 	
 	/** if true, game is a forced draw (via 50 move draw)*/
 	public boolean isForcedDraw(){
-		return drawCount >= 100;
+		final boolean onlyKings = pieces[0] == kings[0] && pieces[1] == kings[1];
+		return drawCount >= 100 || onlyKings;
 	}
 	
 	/**

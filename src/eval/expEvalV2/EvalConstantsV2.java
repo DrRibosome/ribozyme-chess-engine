@@ -17,18 +17,18 @@ public final class EvalConstantsV2 {
 	/** stores max number of moves by piece type (major minor pieces only)*/
 	public final static int[] maxPieceMobility;
 	/** mobility bonus for 3 levels of mobility, by piece type*/
-	public final int[][] mobilityWeight = new int[7][3];
+	public final Weight[][] mobilityWeight;
 	
 	//bishop weights
-	public final int bishopPairWeight;
+	public final Weight bishopPairWeight;
 	
 	//pawn weights
-	/** weights for pawns in given row, indexed by player,row*/
-	public final int[][] passedPawnRowWeight = new int[2][8];
-	public final int unopposedPawnWeight;
-	public final int doubledPawnsWeight;
-	public final int tripledPawnsWeight;
-	public final int supportedPassedPawn;
+	/** weights for pawns in given row, indexed [player][row]*/
+	public final Weight[][] passedPawnRowWeight = new Weight[2][8];
+	public final Weight[][] unopposedPawnWeight = new Weight[2][8];
+	public final Weight doubledPawnsWeight;
+	public final Weight tripledPawnsWeight;
+	public final Weight[][] supportedPassedPawn = new Weight[2][8];
 	
 	//king danger
 	/** danger index increment associated with each piece type*/
@@ -49,69 +49,14 @@ public final class EvalConstantsV2 {
 		maxPieceMobility[State4.PIECE_TYPE_QUEEN] = 28;
 	}
 	
-	public static EvalConstantsV2 defaultEval(){
-		final int[] materialWeights = new int[7];
-		materialWeights[State4.PIECE_TYPE_BISHOP] = 310;
-		materialWeights[State4.PIECE_TYPE_KNIGHT] = 300;
-		materialWeights[State4.PIECE_TYPE_ROOK] = 500;
-		materialWeights[State4.PIECE_TYPE_QUEEN] = 900;
-		materialWeights[State4.PIECE_TYPE_PAWN] = 100;
-
-		final int s = 1; //scale
-		final int[][] mobilityWeight = new int[7][3];
-		mobilityWeight[State4.PIECE_TYPE_BISHOP] = new int[]{	-10/s,	8/s,	30/s};
-		mobilityWeight[State4.PIECE_TYPE_KNIGHT] = new int[]{	-20/s,	8/s,	30/s};
-		mobilityWeight[State4.PIECE_TYPE_ROOK] = new int[]{		-15/s,	20/s,	30/s};
-		mobilityWeight[State4.PIECE_TYPE_QUEEN] = new int[]{	0/s,	15/s,	20/s};
-		
-		final int[] passedPawnRowWeight = new int[]{0, 0, 10, 20, 35, 80, 130, 0};
-		
-		final int unopposedPawnWeight = 5;
-		final int doubledPawnsWeight = -30;
-		final int tripledPawnsWeight = -60;
-		final int supportedPassedPawn = 5;
-		final int bishopPairWeight = 40;
-		
-		final int[] dangerKingAttacks = new int[]{
-				0,
-				0, 		//king
-				3,   	//queen
-				2,	    //rook
-				1,	    //bishop
-				1,	    //knight
-				0		//pawn
-			};
-		
-		return new EvalConstantsV2(
-				materialWeights,
-				mobilityWeight,
-				passedPawnRowWeight,
-				unopposedPawnWeight,
-				supportedPassedPawn,
-				doubledPawnsWeight,
-				tripledPawnsWeight,
-				bishopPairWeight,
-				dangerKingAttacks
-				);
-	}
 	
-	public EvalConstantsV2(final int[] materialWeights,
-			final int[][] mobilityWeight,
-			final int[] passedPawnRowWeight,
-			final int unopposedPawnWeight,
-			final int supportedPassedPawnWeight,
-			final int doubledPawnsWeight,
-			final int tripledPawnWeight,
-			final int bishopPairWeight,
-			final int[] dangerKingAttacks){
+	
+	public EvalConstantsV2(final EvalParameters p){
 		assert materialWeights.length == 7;
-		assert mobilityWeight.length == 7 && mobilityWeight[0].length == 3;
 		assert passedPawnRowWeight.length == 8; //interpreted symmetrically for each player
 		
 		System.arraycopy(materialWeights, 0, this.materialWeights, 0, 7);
-		for(int a = 0; a < 7; a++){
-			System.arraycopy(mobilityWeight[a], 0, this.mobilityWeight[a], 0, 3);
-		}
+		this.mobilityWeight = mobilityWeight;
 		for(int a = 0; a < 8; a++){
 			this.passedPawnRowWeight[0][a] = passedPawnRowWeight[a];
 			this.passedPawnRowWeight[1][a] = passedPawnRowWeight[7-a];
@@ -142,8 +87,8 @@ public final class EvalConstantsV2 {
 			dos.writeShort(e.materialWeights[a]);
 		}
 		for(int a = 0; a < 7; a++){
-			for(int q = 0; q < 3; q++){
-				dos.writeShort(e.mobilityWeight[a][q]);
+			for(int q = 0; q < e.mobilityWeight[a].length; q++){
+				Weight.writeWeight(e.mobilityWeight[a][q], dos);
 			}
 		}
 		for(int a = 0; a < 8; a++){

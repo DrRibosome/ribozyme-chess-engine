@@ -50,10 +50,29 @@ public class State4Test {
 		
 		for(TestCase c: l){
 			final boolean attacked = State4.isAttacked2(c.loc, c.p.sideToMove, c.p.s);
-			System.out.println(c.p.s);
+			//System.out.println(c.p.s);
 			assertEquals(attacked, c.exp);
 		}
 	}
 
-
+	@Test
+	public void testIsForcedDraw() {
+		class TestCase{
+			final boolean exp;
+			final Position p;
+			TestCase(String fen, boolean exp){
+				p = FenParser.parse(fen);
+				this.exp = exp;
+			}
+		}
+		
+		final List<TestCase> l = new ArrayList<>();
+		l.add(new TestCase("8/8/8/8/8/8/8/k6K b - - - -", true));
+		
+		for(TestCase c: l){
+			final boolean draw = c.p.s.isForcedDraw();
+			//System.out.println(c.p.s);
+			assertEquals(draw, c.exp);
+		}
+	}
 }
