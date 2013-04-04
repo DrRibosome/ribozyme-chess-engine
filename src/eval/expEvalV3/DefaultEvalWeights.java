@@ -53,6 +53,21 @@ public final class DefaultEvalWeights {
 		};
 		for(int a = 0; a < 8; a++) passedPawnRowWeight[1][a] = passedPawnRowWeight[0][7-a];
 		p.passedPawnRowWeight = passedPawnRowWeight;
+
+		final int[][] kingDangerSquares = {
+				{
+					2,  0,  2,  3,  3,  2,  0,  2,
+					2,  2,  4,  8,  8,  4,  2,  2,
+					7, 10, 12, 12, 12, 12, 10,  7,
+					15, 15, 15, 15, 15, 15, 15, 15,
+					15, 15, 15, 15, 15, 15, 15, 15,
+					15, 15, 15, 15, 15, 15, 15, 15,
+					15, 15, 15, 15, 15, 15, 15, 15,
+					15, 15, 15, 15, 15, 15, 15, 15
+				}, new int[64]
+		};
+		for(int a = 0; a < 64; a++) kingDangerSquares[1][a] = kingDangerSquares[0][63-a];
+		p.kingDangerSquares = kingDangerSquares;
 		
 		p.tempo = new Weight(3, 1);
 		
@@ -65,7 +80,7 @@ public final class DefaultEvalWeights {
 		final int maxDanger = 800;
 		for(int x = 0, i = 0; i < p.kingDangerValues.length; i++){
 			x = Math.min(maxDanger, Math.min((i * i) / 2, x + maxSlope));
-			p.kingDangerValues[i] = new Weight(x, 0);
+			p.kingDangerValues[i] = new Weight(x >>> 3, 0);
 		}
 		
 		p.dangerKingAttacks = new int[]{

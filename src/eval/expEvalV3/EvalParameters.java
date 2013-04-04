@@ -14,8 +14,12 @@ public final class EvalParameters {
 	//-------------------------------------------------
 	//king danger
 	
+	/** danger for attacks on the king, indexed [piece-type]*/
 	public int[] dangerKingAttacks;
+	/** king danger index, indexed [danger]*/
 	public Weight[] kingDangerValues;
+	/** king danger based off location of the king*/
+	public int[][] kingDangerSquares;
 	
 	//-------------------------------------------------
 	//pawns weights

@@ -6,7 +6,7 @@ import state4.MoveEncoder;
 import state4.State4;
 import eval.Evaluator2;
 
-public final class ExpEvalV3 implements Evaluator2{
+public final class ExpEvalV3v2 implements Evaluator2{
 	private final static class WeightAgg{
 		int start;
 		int end;
@@ -46,7 +46,7 @@ public final class ExpEvalV3 implements Evaluator2{
 	private final int margin;
 	private final int endMaterial;
 	
-	public ExpEvalV3(EvalParameters p){
+	public ExpEvalV3v2(EvalParameters p){
 		this.p = p;
 		int startMaterial = (
 				  p.materialWeights[State4.PIECE_TYPE_PAWN]*8
@@ -63,7 +63,7 @@ public final class ExpEvalV3 implements Evaluator2{
 		margin = Weight.margin(startMaterial, endMaterial);
 	}
 	
-	public ExpEvalV3(){
+	public ExpEvalV3v2(){
 		this(DefaultEvalWeights.defaultEval());
 	}
 	
@@ -111,8 +111,7 @@ public final class ExpEvalV3 implements Evaluator2{
 	private void getKingDanger(final int player, final State4 s, final WeightAgg w, final EvalParameters p){
 		final long kingRing = State4.getKingMoves(player, s.pieces, s.kings[player]);
 		final long king = s.kings[player];
-		final int kingSq = BitUtil.lsbIndex(s.kings[player]);
-		int dindex = p.kingDangerSquares[player][kingSq]; //danger index
+		int dindex = 0; //danger index
 		final long agg = s.pieces[0]|s.pieces[1];
 		
 		//case that checking piece not defended should be handled by qsearch
