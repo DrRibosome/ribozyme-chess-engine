@@ -102,7 +102,7 @@ public final class ExpEvalV3 implements Evaluator2{
 		for(long pawns = s.pawns[player]; pawns != 0; pawns &= pawns-1){
 			final int index = BitUtil.lsbIndex(pawns);
 			if((Masks.passedPawnMasks[player][index] & enemyPawns) == 0){ //pawn passed
-				agg.add(p.passedPawnRowWeight[player][index >>> 3]); //index >>> 3 == index/8 == row
+				agg.add(p.passedPawnRowWeight[player][index >> 3]); //index >>> 3 == index/8 == row
 			}
 		}
 	}
