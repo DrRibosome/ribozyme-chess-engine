@@ -62,7 +62,7 @@ public class ChessServer4 extends WebSocketServer{
 		r = new Random();
 
 
-
+		System.out.print("initializing... ");
 		final Evaluator2 e =
 				//new SuperEvalS4V10v4();
 				new ExpEvalV3();
@@ -71,6 +71,7 @@ public class ChessServer4 extends WebSocketServer{
 				//new SearchS4V32cc(s, e, 21, false);
 				//new SearchS4V32k(e, 22, false);
 				new SearchS4V33t(e, 23, true);
+		System.out.println("complete!");
 	}
 
 	@Override

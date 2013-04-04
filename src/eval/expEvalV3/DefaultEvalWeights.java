@@ -40,16 +40,18 @@ public final class DefaultEvalWeights {
 				W( 20, 35), W( 20, 35) };
 		p.mobilityWeights = mobilityWeights;
 		
-		final Weight[] passedPawnRowWeight = new Weight[]{
-				null,
+		final Weight[][] passedPawnRowWeight = new Weight[][]{
+				{null,
 				new Weight(0, 3),
 				new Weight(5, 6),
 				new Weight(15, 13),
 				new Weight(30, 21),
 				new Weight(50, 32),
 				new Weight(75, 46),
-				new Weight(105, 63),
+				new Weight(105, 63),},
+				new Weight[8]
 		};
+		for(int a = 0; a < 8; a++) passedPawnRowWeight[1][a] = passedPawnRowWeight[0][7-a];
 		p.passedPawnRowWeight = passedPawnRowWeight;
 		
 		p.tempo = new Weight(3, 1);

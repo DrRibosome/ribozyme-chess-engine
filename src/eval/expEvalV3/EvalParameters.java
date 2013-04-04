@@ -21,7 +21,7 @@ public final class EvalParameters {
 	//pawns weights
 	
 	/** passed pawn weight, indexed [row] from white perspective*/
-	public Weight[] passedPawnRowWeight;
+	public Weight[][] passedPawnRowWeight;
 	public Weight doubledPawnsWeight;
 	public Weight tripledPawnsWeight;
 }
