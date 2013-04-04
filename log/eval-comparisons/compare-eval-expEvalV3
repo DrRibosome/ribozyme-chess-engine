@@ -1,0 +1,11 @@
+search = search33t, hash = 20, minBookCount = 100
+book = megabook.mk
+
+================================================= v3
+v3 - v10v4 (minBookCount = 5)
+100 ms
+(w0,w1,d) = (73,2,1)
+
+---------------------------------
+
+v10 - v10v4 (minBookCount = 5)
