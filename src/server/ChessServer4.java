@@ -21,7 +21,7 @@ import time.TimerThread4;
 import util.AlgebraicNotation2;
 import util.opening1.SuperBook;
 import eval.Evaluator2;
-import eval.expEvalV3.ExpEvalV3;
+import eval.expEvalV3.ExpEvalV3v3;
 
 /*
 char[] buf = "[{\"channel\":\"/service/user\",\"data\"\"basetime\":9000,\"timeinc\":0,\"rated\":true,\"color\":null,\"minrating\":800,\"maxrating\":2000,\"from\":\"drribosome\",\"sid\":\"gserv\",\"tid\":\"Challenge\"},\"id\":\"917\",\"clientId\":\"6lfamft3cpmoalbn91vyk8nnxb67hx\"}]".toCharArray();
@@ -65,7 +65,7 @@ public class ChessServer4 extends WebSocketServer{
 		System.out.print("initializing... ");
 		final Evaluator2 e =
 				//new SuperEvalS4V10v4();
-				new ExpEvalV3();
+				new ExpEvalV3v3();
 		searcher =
 				//new SearchS4V32(s, e, 21, false);
 				//new SearchS4V32cc(s, e, 21, false);
