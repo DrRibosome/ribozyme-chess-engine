@@ -8,4 +8,5 @@ public interface UCIEngine {
 	public void stop();
 	/** ready engine for new game (ie, clear hash, etc)*/
 	public void resetEngine();
+	public String getName();
 }

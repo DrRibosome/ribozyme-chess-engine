@@ -4,10 +4,12 @@ import search.Search4;
 import search.search33.SearchS4V33t;
 import time.TimerThread4;
 import eval.Evaluator2;
-import eval.evalV10.SuperEvalS4V10v4;
+import eval.expEvalV3.ExpEvalV3;
 
-public class RibozymeEngine implements UCIEngine{
+public final class RibozymeEngine implements UCIEngine{
 
+	private final static String name = "ribozyme .3";
+	
 	private final Search4 s;
 	private Thread t;
 	private final int[] moveStore = new int[2];
@@ -17,9 +19,15 @@ public class RibozymeEngine implements UCIEngine{
 	public RibozymeEngine(){
 		
 		Evaluator2 e = 
-				new SuperEvalS4V10v4();
+				//new SuperEvalS4V10v4();
+				new ExpEvalV3();
 		
 		s = new SearchS4V33t(e, 22, true);
+	}
+	
+	@Override
+	public String getName(){
+		return name;
 	}
 	
 	@Override

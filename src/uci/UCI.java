@@ -40,7 +40,7 @@ public final class UCI {
 				
 				if(s[0].equalsIgnoreCase("uci")){
 					debug("processing 'uci' command\n");
-					send("id name ribozyme 0.2");
+					send("id name "+engine.getName());
 					send("id author ribozyme team");
 					send("uciok");
 				} else if(s[0].equalsIgnoreCase("ucinewgame")){
