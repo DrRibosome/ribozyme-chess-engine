@@ -6,7 +6,7 @@ import state4.MoveEncoder;
 import state4.State4;
 import eval.Evaluator2;
 
-public final class ExpEvalV3v2 implements Evaluator2{
+public final class ExpEvalV3v3 implements Evaluator2{
 	private final static class WeightAgg{
 		int start;
 		int end;
@@ -34,6 +34,10 @@ public final class ExpEvalV3v2 implements Evaluator2{
 	}
 	
 	private final static int[] zeroi7 = new int[7];
+	private final static int[] zeroi8 = new int[8];
+	
+	/** counts pawns in each column*/
+	private final int[][] pawnCount = new int[2][8];
 	
 	private final int[] materialScore = new int[2];
 	/** current max number of moves by piece type*/
@@ -46,7 +50,7 @@ public final class ExpEvalV3v2 implements Evaluator2{
 	private final int margin;
 	private final int endMaterial;
 	
-	public ExpEvalV3v2(EvalParameters p){
+	public ExpEvalV3v3(EvalParameters p){
 		this.p = p;
 		int startMaterial = (
 				  p.materialWeights[State4.PIECE_TYPE_PAWN]*8
@@ -63,7 +67,7 @@ public final class ExpEvalV3v2 implements Evaluator2{
 		margin = Weight.margin(startMaterial, endMaterial);
 	}
 	
-	public ExpEvalV3v2(){
+	public ExpEvalV3v3(){
 		this(DefaultEvalWeights.defaultEval());
 	}
 	
@@ -84,7 +88,7 @@ public final class ExpEvalV3v2 implements Evaluator2{
 		
 		int score = materialScore[player];
 		scoreMobility(player, s, agg, p);
-		scorePawns(player, s, agg, p);
+		scorePawns(player, s, agg, p, pawnCount[player]);
 		
 		if(s.pieceCounts[player][State4.PIECE_TYPE_BISHOP] == 2){
 			agg.add(p.bishopPair);
@@ -97,12 +101,20 @@ public final class ExpEvalV3v2 implements Evaluator2{
 		return score + agg.score(scale);
 	}
 	
-	private static void scorePawns(final int player, final State4 s, final WeightAgg agg, final EvalParameters p){
+	private static void scorePawns(final int player, final State4 s, final WeightAgg agg, final EvalParameters p, int[] pawnCount){
 		final long enemyPawns = s.pawns[1-player];
 		for(long pawns = s.pawns[player]; pawns != 0; pawns &= pawns-1){
 			final int index = BitUtil.lsbIndex(pawns);
 			if((Masks.passedPawnMasks[player][index] & enemyPawns) == 0){ //pawn passed
 				agg.add(p.passedPawnRowWeight[player][index >> 3]); //index >>> 3 == index/8 == row
+			}
+		}
+		for(int a = 0; a < 8; a++){
+			final int count = pawnCount[a];
+			if(count >= 3){
+				agg.add(p.tripledPawnsWeight);
+			} else if(count == 2){
+				agg.add(p.doubledPawnsWeight);
 			}
 		}
 	}
@@ -111,7 +123,8 @@ public final class ExpEvalV3v2 implements Evaluator2{
 	private void getKingDanger(final int player, final State4 s, final WeightAgg w, final EvalParameters p){
 		final long kingRing = State4.getKingMoves(player, s.pieces, s.kings[player]);
 		final long king = s.kings[player];
-		int dindex = 0; //danger index
+		final int kingSq = BitUtil.lsbIndex(s.kings[player]);
+		int dindex = p.kingDangerSquares[player][kingSq]; //danger index
 		final long agg = s.pieces[0]|s.pieces[1];
 		
 		//case that checking piece not defended should be handled by qsearch
@@ -179,9 +192,18 @@ public final class ExpEvalV3v2 implements Evaluator2{
 		final int dir = undo? -1: 1;
 		final int player = MoveEncoder.getPlayer(encoding);
 		final int taken = MoveEncoder.getTakenType(encoding);
+		final int pos1Col = MoveEncoder.getPos1(encoding)%8;
+		final int pos2Col = MoveEncoder.getPos2(encoding)%8;
 		if(taken != 0){
 			materialScore[1-player] -= dir*p.materialWeights[taken];
 			maxMobility[1-player][taken] -= dir*maxPieceMobility[taken];
+			if(taken == State4.PIECE_TYPE_PAWN){
+				pawnCount[1-player][pos2Col] -= dir;
+			}
+			if(MoveEncoder.getMovePieceType(encoding) == State4.PIECE_TYPE_PAWN){
+				pawnCount[player][pos1Col] -= dir;
+				pawnCount[player][pos2Col] += dir;
+			}
 		} else if(MoveEncoder.isEnPassanteTake(encoding) != 0){
 			materialScore[1-player] -= dir*p.materialWeights[State4.PIECE_TYPE_PAWN];
 		}
@@ -190,6 +212,8 @@ public final class ExpEvalV3v2 implements Evaluator2{
 					p.materialWeights[State4.PIECE_TYPE_PAWN]);
 			maxMobility[1-player][State4.PIECE_TYPE_QUEEN] +=
 					dir*maxPieceMobility[State4.PIECE_TYPE_QUEEN];
+			
+			pawnCount[player][pos1Col] -= dir;
 		}
 	}
 
@@ -206,26 +230,31 @@ public final class ExpEvalV3v2 implements Evaluator2{
 		for(int a = 0; a < 2; a++){
 			final int b = State4.PIECE_TYPE_BISHOP;
 			materialScore[a] += s.pieceCounts[a][b] * p.materialWeights[b];
-			maxMobility[a][b] += s.pieceCounts[a][b] * EvalConstantsV2.maxPieceMobility[b];
+			maxMobility[a][b] += s.pieceCounts[a][b] * maxPieceMobility[b];
 			
 			final int n = State4.PIECE_TYPE_KNIGHT;
 			materialScore[a] += s.pieceCounts[a][n] * p.materialWeights[n];
-			maxMobility[a][n] += s.pieceCounts[a][n] * EvalConstantsV2.maxPieceMobility[n];
+			maxMobility[a][n] += s.pieceCounts[a][n] * maxPieceMobility[n];
 			
 			final int q = State4.PIECE_TYPE_QUEEN;
 			materialScore[a] += s.pieceCounts[a][q] * p.materialWeights[q];
-			maxMobility[a][q] += s.pieceCounts[a][q] * EvalConstantsV2.maxPieceMobility[q];
+			maxMobility[a][q] += s.pieceCounts[a][q] * maxPieceMobility[q];
 			
 			final int r = State4.PIECE_TYPE_ROOK;
 			materialScore[a] += s.pieceCounts[a][r] * p.materialWeights[r];
-			maxMobility[a][r] += s.pieceCounts[a][r] * EvalConstantsV2.maxPieceMobility[r];
+			maxMobility[a][r] += s.pieceCounts[a][r] * maxPieceMobility[r];
 			
 			final int p = State4.PIECE_TYPE_PAWN;
 			materialScore[a] += s.pieceCounts[a][p] * this.p.materialWeights[p];
 		}
 		
-		/*mobilityScore[0] = initializeMobilityScore(0, s, c);
-		mobilityScore[1] = initializeMobilityScore(1, s, c);*/
+		for(int a = 0; a < 2; a++){
+			System.arraycopy(zeroi8, 0, pawnCount[a], 0, 8);
+			for(long p = s.pawns[a]; p != 0; p &= p-1){
+				final int index = BitUtil.lsbIndex(p);
+				pawnCount[a][index%8]++;
+			}
+		}
 	}
 	
 	private static void scoreMobility(final int player, final State4 s, final WeightAgg agg, final EvalParameters c){

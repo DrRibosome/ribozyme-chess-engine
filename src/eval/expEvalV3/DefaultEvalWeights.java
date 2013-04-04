@@ -71,9 +71,9 @@ public final class DefaultEvalWeights {
 		
 		p.tempo = new Weight(3, 1);
 		
-		p.doubledPawnsWeight = new Weight(-25, -5);
-		p.tripledPawnsWeight = new Weight(-35, -7);
-		p.bishopPair = new Weight(10, 25);
+		p.doubledPawnsWeight = new Weight(-5, -5);
+		p.tripledPawnsWeight = new Weight(-10, -10);
+		p.bishopPair = new Weight(5, 12);
 		
 		p.kingDangerValues = new Weight[128];
 		final int maxSlope = 25;
