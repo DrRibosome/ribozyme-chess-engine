@@ -20,7 +20,7 @@ abstract class WeightMutator implements MutatorPoint{
 			start += max((int)Math.abs(offset), 1) * sign(offset);
 		} else{
 			final double offset = -end*MutatorV1.mDist + end*MutatorV1.mDist*2*Math.random();
-			start += max((int)Math.abs(offset), 1) * sign(offset);
+			end += max((int)Math.abs(offset), 1) * sign(offset);
 		}
 		return new Weight(start, end);
 	}
