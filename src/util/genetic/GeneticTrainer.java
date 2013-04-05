@@ -28,7 +28,7 @@ public final class GeneticTrainer {
 			id = idIndex++;
 		}
 		public double score(){
-			final double score = wins.get()+draws.get()/2;
+			final double score = wins.get()+draws.get()/2.;
 			return score/totalGames();
 		}
 		public int totalGames(){
@@ -59,7 +59,7 @@ public final class GeneticTrainer {
 		final int threads = 4;
 		final long time = 30;
 		final int hashSize = 18;
-		final int popSize = 25;
+		final int popSize = 30;
 		final int cullSize = max((int)(popSize*.05+.5), 1); //number of entries to cull
 		final int minGames = 5; //min games before entry can be culled
 		final Mutator m = new MutatorV1();
