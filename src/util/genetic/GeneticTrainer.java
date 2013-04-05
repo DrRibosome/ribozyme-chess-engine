@@ -65,7 +65,7 @@ public final class GeneticTrainer {
 		final int minGames = 5; //min games before entry can be culled
 		final Mutator m = new MutatorV1();
 		final int mutations = 6;
-		final double gameCutoffPercent = .5; //only play games against the top X percent of solutions
+		final double gameCutoffPercent = .3; //only play games against the top X percent of solutions
 		
 		final File file = new File("genetic-results/genetic-results-v13");
 		if(1==2&& file.exists()){
