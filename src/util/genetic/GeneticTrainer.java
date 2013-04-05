@@ -42,6 +42,12 @@ public final class GeneticTrainer {
 
 	private final static Comparator<Entity> sortBestFirst = new Comparator<GeneticTrainer.Entity>() {
 		public int compare(Entity e1, Entity e2) {
+			if(e1 == null){
+				return 1;
+			} else if(e2 == null){
+				return -1;
+			}
+			
 			if(e1.score() > e2.score()){
 				return -1;
 			} else if(e1.score() < e2.score()){
