@@ -46,7 +46,7 @@ public final class GeneticTrainer {
 			} else if(e1.score() < e2.score()){
 				return 1;
 			} else{
-				return e1.totalGames() < e2.totalGames()? -1: 1;
+				return e1.totalGames() > e2.totalGames()? -1: 1;
 			}
 		}
 	};
@@ -63,7 +63,7 @@ public final class GeneticTrainer {
 		final Mutator m = new MutatorV1();
 		final int mutations = 6;
 		
-		final File file = new File("genetic-results/genetic-results-v12");
+		final File file = new File("genetic-results/genetic-results-v13");
 		if(file.exists()){
 			System.out.println("log file already exists, exiting");
 			System.exit(0);

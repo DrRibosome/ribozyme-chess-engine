@@ -19,7 +19,11 @@ public final class GameQueue {
 	public final static class Game{
 		final GeneticTrainer.Entity[] e;
 		public Game(GeneticTrainer.Entity e1, GeneticTrainer.Entity e2){
-			e = new GeneticTrainer.Entity[]{e1, e2};
+			if(Math.random() < .5){
+				e = new GeneticTrainer.Entity[]{e1, e2};
+			} else{
+				e = new GeneticTrainer.Entity[]{e2, e1};
+			}
 		}
 	}
 	
