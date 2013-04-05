@@ -1,5 +1,6 @@
 package util.genetic;
 
+import state4.State4;
 import eval.expEvalV3.EvalParameters;
 import eval.expEvalV3.Weight;
 
@@ -16,16 +17,16 @@ final class MutatorV1 implements Mutator{
 		}
 		public void mutate() {
 			int i1;
-			while(w[i1 = (int)(Math.random()*w.length)].length != 0);
+			while(w[i1 = (int)(Math.random()*w.length)].length == 0);
 			final int i2 = (int)(Math.random()*w[i1].length);
-			final int i3 = (int)(Math.random()*2);
+			final int choice = (int)(Math.random()*2);
 			int start = w[i1][i2].start;
 			int end = w[i1][i2].end;
-			if(i3 == 0){
+			if(choice == 0){
 				final double offset = -start*mDist + start*mDist*2*Math.random();
 				start += min((int)offset, 1);
 			} else{
-				if(i3 == 0){
+				if(choice == 0){
 					final double offset = -end*mDist + end*mDist*2*Math.random();
 					end += min((int)offset, 1);
 				}
@@ -33,12 +34,65 @@ final class MutatorV1 implements Mutator{
 			w[i1][i2] = new Weight(start, end);
 		}
 	}
+	private final static class WeightArrayMutator implements MutatorPoint{
+		private final Weight[] w;
+		private final int[] excludedIndeces;
+		WeightArrayMutator(Weight[] w, int[] excludedIndeces){
+			this.w = w;
+			this.excludedIndeces = excludedIndeces;
+		}
+		public void mutate() {
+			int index;
+			while(contains(index = (int)(Math.random()*w.length), excludedIndeces));
+			
+			int start = w[index].start;
+			int end = w[index].end;
+			final int choice = (int)(Math.random()*2);
+			if(choice == 0){
+				final double offset = -start*mDist + start*mDist*2*Math.random();
+				start += min((int)offset, 1);
+			} else{
+				if(choice == 0){
+					final double offset = -end*mDist + end*mDist*2*Math.random();
+					end += min((int)offset, 1);
+				}
+			}
+			w[index] = new Weight(start, end);
+		}
+	}
+	private final static class IntArrayMutator implements MutatorPoint{
+		private final int[] w;
+		private final int[] excludedIndeces;
+		IntArrayMutator(int[] w, int[] excludedIndeces){
+			this.w = w;
+			this.excludedIndeces = excludedIndeces;
+		}
+		public void mutate() {
+			int index;
+			while(contains(index = (int)(Math.random()*w.length), excludedIndeces));
+			
+			int value = w[index];
+			final double offset = -value*mDist + value*mDist*2*Math.random();
+			value += min((int)offset, 1);
+			w[index] = value;
+		}
+	}
+	private static boolean contains(int i, int[] l){
+		for(int a = 0; a < l.length; a++){
+			if(l[a] == i){
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	private static MutatorPoint[] getMutationPoints(EvalParameters p){
-		final MutatorPoint[] m = new MutatorPoint[1];
+		final MutatorPoint[] m = new MutatorPoint[2];
 		int index = 0;
 		
 		m[index++] = new WeightMatrixMutator(p.mobilityWeights);
+		m[index++] = new IntArrayMutator(p.materialWeights, 
+				new int[]{State4.PIECE_TYPE_EMPTY,State4.PIECE_TYPE_PAWN,State4.PIECE_TYPE_KING});
 		
 		return m;
 	}

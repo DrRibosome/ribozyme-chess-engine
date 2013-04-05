@@ -39,4 +39,9 @@ public final class Weight {
 		int end = buff.getShort();
 		return new Weight(start, end);
 	}
+	
+	@Override
+	public String toString(){
+		return "("+start+","+end+")";
+	}
 }

@@ -1,6 +1,5 @@
 package eval.expEvalV3;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import state4.State4;
@@ -34,8 +33,67 @@ public final class EvalParameters {
 	public Weight doubledPawnsWeight;
 	public Weight tripledPawnsWeight;
 	
+
 	
-	
+	@Override
+	public String toString(){
+		String s = "";
+		
+		final String[] names = new String[7];
+		names[State4.PIECE_TYPE_EMPTY] = "";
+		names[State4.PIECE_TYPE_BISHOP] = "bishop";
+		names[State4.PIECE_TYPE_ROOK] = "rook";
+		names[State4.PIECE_TYPE_KNIGHT] = "knight";
+		names[State4.PIECE_TYPE_KING] = "king";
+		names[State4.PIECE_TYPE_QUEEN] = "queen";
+		names[State4.PIECE_TYPE_PAWN] = "pawn";
+		
+		s += "material weights:\n";
+		for(int a = 1; a < 7; a++){
+			s += "\t"+names[a]+" = "+materialWeights[a]+"\n";
+		}
+
+		s += "mobility weights:\n";
+		for(int a = 1; a < 7; a++){
+			s += "\t"+names[a]+" = ";
+			for(int q = 0; q < mobilityWeights[a].length; q++){
+				s += q+":"+mobilityWeights[a][q]+", ";
+			}
+			s += "\n";
+		}
+		
+		s += "danger king attacks:\n";
+		for(int a = 1; a < 7; a++){
+			s += "\t"+names[a]+" = "+dangerKingAttacks[a]+"\n";
+		}
+		
+		s += "king danger function:\n";
+		for(int a = 0; a < kingDangerValues.length; a++){
+			s += a+":"+kingDangerValues[a]+", ";
+		}
+		s += "\n";
+		
+		s += "king danger squares (white perspective):\n";
+		for(int a = 0; a < 8; a++){
+			for(int q = 0; q < 8; q++){
+				s += kingDangerSquares[0][a*8+q]+"\t";
+			}
+			s += "\n";
+		}
+		
+		s += "passed pawn row weight (white perspective):\n";
+		for(int a = 1; a < 8; a++){
+			s += a+":"+passedPawnRowWeight[0][a]+", ";
+		}
+		s += "\n";
+		
+		s += "tempo = "+tempo+"\n";
+		s += "bishop pair = "+bishopPair+"\n";
+		s += "doubled pawns = "+doubledPawnsWeight+"\n";
+		s += "tripled pawns = "+tripledPawnsWeight+"\n";
+		
+		return s;
+	}
 	
 	public void write(final ByteBuffer b){
 

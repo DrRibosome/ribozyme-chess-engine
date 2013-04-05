@@ -45,50 +45,54 @@ public final class GameQueue {
 				
 				while(q.size() > 0){
 					final Game g = q.poll();
-					final Search4[] search = new Search4[]{
-							new SearchS4V33t(new ExpEvalV3v3(g.e[0].p), hashSize, false),
-							new SearchS4V33t(new ExpEvalV3v3(g.e[1].p), hashSize, false),
-					};
 					
-					final State4 state = new State4(b.getSeed());
-					state.initialize();
-					int turn = 0;
-					boolean draw = false;
-					boolean outOfBook = false;
+					if(g != null){
+						final Search4[] search = new Search4[]{
+								new SearchS4V33t(new ExpEvalV3v3(g.e[0].p), hashSize, false),
+								new SearchS4V33t(new ExpEvalV3v3(g.e[1].p), hashSize, false),
+						};
+						
+						final State4 state = new State4(b.getSeed());
+						state.initialize();
+						int turn = 0;
+						boolean draw = false;
+						boolean outOfBook = false;
 
-					while(state.pieceCounts[turn][State4.PIECE_TYPE_KING] != 0 &&
-							!isMate(turn, state) && !state.isForcedDraw()){
+						while(state.pieceCounts[turn][State4.PIECE_TYPE_KING] != 0 &&
+								!isMate(turn, state) && !state.isForcedDraw()){
 
-						int[] bookMove = b.getRandomMove(turn, state, 100);
-						if(bookMove != null && !outOfBook){
-							System.arraycopy(bookMove, 0, move, 0, 2);
-							//if(print) System.out.println("book move");
+							int[] bookMove = b.getRandomMove(turn, state, 100);
+							if(bookMove != null && !outOfBook){
+								System.arraycopy(bookMove, 0, move, 0, 2);
+								//if(print) System.out.println("book move");
+							} else{
+								outOfBook = true;
+								//search(turn, state, search[turn], move, time);
+								search[turn].search(turn, state, move, 5);
+							}
+							
+							if(move[0] == move[1]){ //draw, no moves remaining
+								draw = true;
+								break;
+							}
+							
+							state.executeMove(turn, 1L<<move[0], 1L<<move[1]);
+							turn = 1-turn;
+						}
+
+						if(state.isForcedDraw() || draw){
+							//if(print) System.out.println("draw");
+							g.e[0].draws.incrementAndGet();
+							g.e[1].draws.incrementAndGet();
 						} else{
-							outOfBook = true;
-							search(turn, state, search[turn], move, time);
+							final int winner = 1-turn;
+							g.e[winner].wins.incrementAndGet();
+							g.e[1-winner].losses.incrementAndGet();
+							//if(print) System.out.println("player "+winner+" wins");
 						}
 						
-						if(move[0] == move[1]){ //draw, no moves remaining
-							draw = true;
-							break;
-						}
-						
-						state.executeMove(turn, 1L<<move[0], 1L<<move[1]);
-						turn = 1-turn;
+						outstanding.decrementAndGet();
 					}
-
-					if(state.isForcedDraw() || draw){
-						//if(print) System.out.println("draw");
-						g.e[0].draws.incrementAndGet();
-						g.e[1].draws.incrementAndGet();
-					} else{
-						final int winner = 1-turn;
-						g.e[winner].wins.incrementAndGet();
-						g.e[1-winner].losses.incrementAndGet();
-						//if(print) System.out.println("player "+winner+" wins");
-					}
-					
-					outstanding.decrementAndGet();
 				}
 				
 				try{
@@ -203,7 +207,7 @@ public final class GameQueue {
 	private final Queue<Game> q = new LinkedBlockingQueue<Game>();
 	
 	public GameQueue(int threads){
-		final long time = 100;
+		final long time = 20;
 		final int hashSize = 20;
 		
 		t = new GauntletThread[threads];
