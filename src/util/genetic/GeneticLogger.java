@@ -29,7 +29,7 @@ public final class GeneticLogger {
 	
 	public void recordGEntity(final GEntity e) throws IOException{
 		b.clear();
-		b.putInt(typeEntityRecord);
+		b.put((byte)typeEntityRecord);
 		b.putInt(e.id);
 		e.p.write(b);
 		
