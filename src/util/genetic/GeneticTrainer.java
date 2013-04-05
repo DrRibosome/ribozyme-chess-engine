@@ -111,11 +111,7 @@ public final class GeneticTrainer {
 			
 			for(int w = 0; w < tests; w++){
 				int index;
-				//while((index = (int)(Math.random()*population.length*gameCutoffPercent)) == a);
 				while(sorted.get(index = (int)(Math.random()*population.length*gameCutoffPercent)) == population[a]);
-				
-				//assert population[a] != null && population[index] != null;
-				
 				final GameQueue.Game g = new GameQueue.Game(population[a], sorted.get(index));
 				q.submit(g);
 			}
@@ -134,7 +130,6 @@ public final class GeneticTrainer {
 				if((prevCompleted % mod) == 0) System.out.println("completed "+prevCompleted+" / "+total);
 			}
 		}
-		System.out.println("games complete!");
 	}
 	
 	/** culls bad solutions from population, returns list of culled indeces*/
