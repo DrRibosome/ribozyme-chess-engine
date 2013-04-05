@@ -62,7 +62,8 @@ public final class GeneticTrainer {
 		for(int a = 0; a < population.length; a++){
 			population[a] = new GEntity();
 			population[a].p = DefaultEvalWeights.defaultEval();
-			if(Math.random() < .95) m.mutate(population[a].p, mutations);
+			if(a != 0) m.mutate(population[a].p, mutations);
+			log.recordGEntity(population[a]);
 		}
 		
 		for(int i = 0; ; i++){
