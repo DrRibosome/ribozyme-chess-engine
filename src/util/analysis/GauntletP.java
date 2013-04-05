@@ -11,7 +11,7 @@ import state4.State4;
 import state4.StateUtil;
 import util.opening2.Book;
 import eval.Evaluator2;
-import eval.evalV8.SuperEvalS4V8;
+import eval.expEvalV3.ExpEvalV3;
 import eval.expEvalV3.ExpEvalV3v3;
 
 /**
@@ -127,8 +127,9 @@ public class GauntletP {
 			Evaluator2 e2 = 
 					//new SuperEvalS4V10v4();
 					//new SuperEvalS4V10();
+					new ExpEvalV3();
 					//new ExpEvalV3v3();
-					new SuperEvalS4V8();
+					//new SuperEvalS4V8();
 					//new ExpEvalV1();
 			
 			final Search4[] search = new Search4[2];

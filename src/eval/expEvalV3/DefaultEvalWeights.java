@@ -38,10 +38,14 @@ public final class DefaultEvalWeights {
 				W( 20, 35), W( 20, 35), W( 20, 35), W(20, 35), W(20, 35), W(20, 35),
 				W( 20, 35), W( 20, 35), W( 20, 35), W(20, 35), W(20, 35), W(20, 35),
 				W( 20, 35), W( 20, 35) };
+		mobilityWeights[State4.PIECE_TYPE_EMPTY] = new Weight[0];
+		mobilityWeights[State4.PIECE_TYPE_KING] = new Weight[0];
+		mobilityWeights[State4.PIECE_TYPE_PAWN] = new Weight[0];
 		p.mobilityWeights = mobilityWeights;
 		
 		final Weight[][] passedPawnRowWeight = new Weight[][]{
-				{null,
+				{
+				new Weight(-999, -999),
 				new Weight(0, 3),
 				new Weight(5, 6),
 				new Weight(15, 13),

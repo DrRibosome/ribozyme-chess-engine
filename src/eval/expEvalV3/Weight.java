@@ -1,31 +1,10 @@
 package eval.expEvalV3;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.nio.ByteBuffer;
 
 public final class Weight {
-	//private final int startMaterial, endMaterial, margin;
 	public final int start, end;
 	
-	/*Weight(final int start, final int end, final int[] materialWeights){
-		startMaterial = (
-				  materialWeights[State4.PIECE_TYPE_PAWN]*8
-				+ materialWeights[State4.PIECE_TYPE_KNIGHT]*2
-				+ materialWeights[State4.PIECE_TYPE_BISHOP]*2
-				+ materialWeights[State4.PIECE_TYPE_ROOK]*2
-				+ materialWeights[State4.PIECE_TYPE_QUEEN]
-				) * 2;
-		endMaterial = (
-				materialWeights[State4.PIECE_TYPE_ROOK]
-				+ materialWeights[State4.PIECE_TYPE_QUEEN]
-				) * 2;
-		
-		margin = endMaterial-startMaterial;
-		this.start = start;
-		this.end = end;
-	}*/
-
 	public Weight(final int start, final int end){
 		this.start = start;
 		this.end = end;
@@ -50,14 +29,14 @@ public final class Weight {
 		return d1 < d2? d1: d2;
 	}
 	
-	public void writeWeight(final DataOutputStream dos) throws IOException{
-		dos.writeShort(start);
-		dos.writeShort(end);
+	public void writeWeight(final ByteBuffer buff){
+		buff.putShort((short)start);
+		buff.putShort((short)end);
 	}
 	
-	public Weight readWeight(final DataInputStream dis, final int[] materialWeights) throws IOException{
-		int start = dis.readShort();
-		int end = dis.readShort();
+	public static Weight readWeight(final ByteBuffer buff){
+		int start = buff.getShort();
+		int end = buff.getShort();
 		return new Weight(start, end);
 	}
 }
