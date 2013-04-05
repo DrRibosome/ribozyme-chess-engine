@@ -215,7 +215,7 @@ public final class GeneticTrainer {
 			while(sorted.get(r = (int)(Math.random()*population.length*reproduceCutoffPercent)) == null);
 			
 			b.clear();
-			population[r].p.write(b);
+			sorted.get(r).p.write(b);
 			b.rewind();
 			final EvalParameters p = new EvalParameters();
 			p.read(b);
