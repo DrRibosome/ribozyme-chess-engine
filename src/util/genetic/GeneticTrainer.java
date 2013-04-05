@@ -178,7 +178,6 @@ public final class GeneticTrainer {
 		
 		List<Integer> l = new ArrayList<Integer>();
 		while(q.size() > 0 && l.size() < cullSize){
-			System.out.println("here");
 			//count as cull even if lowest scoring not eligible for cull
 			//(prevents good solutions from being culled if no eligible bad solutions)
 			cullSize--;
