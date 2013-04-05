@@ -57,7 +57,7 @@ public final class GLogCLI {
 						System.out.println((results.size()-a)+"\t("+r[1]+","+r[2]+","+r[3]+"), id = "+r[0]);
 					}
 				} else{
-					System.out.println("no iteration '"+iteration+"', max iteration = "+log.iterationResults.size());
+					System.out.println("no iteration '"+iteration+"', max iteration = "+(log.iterationResults.size()-1));
 				}
 			}
 		});
@@ -67,7 +67,7 @@ public final class GLogCLI {
 				if(log.params.containsKey(id)){
 					System.out.println(log.params.get(id));
 				} else{
-					System.out.println("no id '"+id+"', max id = "+log.params.size());
+					System.out.println("no id '"+id+"', max id = "+(log.params.size()-1));
 				}
 			}
 		});
@@ -81,7 +81,7 @@ public final class GLogCLI {
 				log = GeneticLogger.loadLog(logF);
 			}
 		}*/
-		log = GeneticLogger.loadLog(new File("genetic-results/genetic-results-v13"));
+		log = GeneticLogger.loadLog(new File("genetic-results/genetic-results-v14"));
 		
 		while(scanner.hasNext()){
 			String line = scanner.nextLine();

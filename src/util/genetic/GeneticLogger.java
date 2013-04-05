@@ -75,10 +75,12 @@ public final class GeneticLogger {
 			final int type = dis.read();
 			if(type == typeEntityRecord){
 				final int id = dis.readInt();
-				dis.read(buff);
+				final int readLen = dis.read(buff);
 				ByteBuffer b = ByteBuffer.wrap(buff);
+				b.limit(readLen);
 				final EvalParameters temp = new EvalParameters();
 				temp.read(b);
+				dis.skip(-(b.limit()-b.position()));
 				offsets.params.put(id, temp);
 			} else if(type == typeIterationRecord){
 				final IterationResult temp = new IterationResult();
