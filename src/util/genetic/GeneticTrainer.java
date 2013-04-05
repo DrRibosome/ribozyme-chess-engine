@@ -65,7 +65,8 @@ public final class GeneticTrainer {
 		final int minGames = 5; //min games before entry can be culled
 		final Mutator m = new MutatorV1();
 		final int mutations = 6;
-		final double gameCutoffPercent = .3; //only play games against the top X percent of solutions
+		final double gameCutoffPercent = .2; //only play games against the top X percent of solutions
+		final double reproduceCutoffPercent = .4; //only clone and mutate entites in top X percent of solutions
 		
 		final File file = new File("genetic-results/genetic-results-v13");
 		if(1==2&& file.exists()){
@@ -87,7 +88,7 @@ public final class GeneticTrainer {
 		for(int i = 0; ; i++){
 			simulate(population, q, tests, gameCutoffPercent);
 			List<Integer> culled = cull(population, cullSize, minGames);
-			generate(culled, population, m, mutations);
+			generate(culled, population, m, mutations, reproduceCutoffPercent);
 
 			System.out.println("completed iteration "+i);
 			
@@ -198,17 +199,22 @@ public final class GeneticTrainer {
 	}
 	
 	/** generates new solutions from population , replacing culled entries*/
-	public static void generate(final List<Integer> culled, final Entity[] population, final Mutator m, final int mutations){
+	public static void generate(final List<Integer> culled, final Entity[] population, final Mutator m,
+			final int mutations, final double reproduceCutoffPercent){
+		final List<Entity> sorted = new ArrayList<Entity>();
+		for(int a = 0; a < population.length; a++) sorted.add(population[a]);
+		Collections.sort(sorted, sortBestFirst);
+		
 		for(int index: culled){
 			int r; //index of entity to clone and mutate
-			while(population[r = (int)(Math.random()*population.length)] == null);
+			while(sorted.get(r = (int)(Math.random()*population.length*reproduceCutoffPercent)) == null);
 			
 			b.clear();
 			population[r].p.write(b);
 			b.rewind();
 			final EvalParameters p = new EvalParameters();
 			p.read(b);
-			if(Math.random() < .98) m.mutate(p, mutations); //mutate, or, rarely, reinfuse popultation with initial values
+			m.mutate(p, mutations); 
 			Entity temp = new Entity();
 			temp.p = p;
 			
