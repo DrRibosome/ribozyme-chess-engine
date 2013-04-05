@@ -130,6 +130,7 @@ public final class GeneticTrainer {
 				if((prevCompleted % mod) == 0) System.out.println("completed "+prevCompleted+" / "+total);
 			}
 		}
+		System.out.println("-------------------------");
 	}
 	
 	/** culls bad solutions from population, returns list of culled indeces*/
