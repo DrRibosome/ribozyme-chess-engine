@@ -202,7 +202,6 @@ public final class GameQueue {
 
 	final static Book b = new Book(new File("megabook.bk"));
 	
-	private final AtomicInteger sorter = new AtomicInteger();
 	private final GauntletThread[] t;
 	/** gives a count of current outstanding jobs*/
 	private final AtomicInteger outstanding = new AtomicInteger();
