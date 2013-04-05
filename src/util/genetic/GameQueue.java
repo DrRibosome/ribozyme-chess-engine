@@ -67,8 +67,8 @@ public final class GameQueue {
 								//if(print) System.out.println("book move");
 							} else{
 								outOfBook = true;
-								//search(turn, state, search[turn], move, time);
-								search[turn].search(turn, state, move, 5);
+								search(turn, state, search[turn], move, time);
+								//search[turn].search(turn, state, move, 5);
 							}
 							
 							if(move[0] == move[1]){ //draw, no moves remaining
@@ -207,7 +207,7 @@ public final class GameQueue {
 	private final Queue<Game> q = new LinkedBlockingQueue<Game>();
 	
 	public GameQueue(int threads){
-		final long time = 20;
+		final long time = 30;
 		final int hashSize = 20;
 		
 		t = new GauntletThread[threads];

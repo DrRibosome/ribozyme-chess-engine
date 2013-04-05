@@ -11,6 +11,8 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import util.genetic.mutatorV1.MutatorV1;
+
 import eval.expEvalV3.DefaultEvalWeights;
 import eval.expEvalV3.EvalParameters;
 
@@ -61,7 +63,7 @@ public final class GeneticTrainer {
 		final Mutator m = new MutatorV1();
 		final int mutations = 6;
 		
-		final File file = new File("genetic-results/genetic-results-v9");
+		final File file = new File("genetic-results/genetic-results-v12");
 		if(file.exists()){
 			System.out.println("log file already exists, exiting");
 			System.exit(0);
