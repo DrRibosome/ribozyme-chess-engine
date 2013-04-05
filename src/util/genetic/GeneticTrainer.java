@@ -50,7 +50,7 @@ public final class GeneticTrainer {
 		final double reproduceCutoffPercent = .4; //only clone and mutate entites in top X percent of solutions
 		
 		final File file = new File("genetic-results/genetic-results-v13");
-		if(1==2&& file.exists()){
+		if(file.exists()){
 			System.out.println("log file already exists, exiting");
 			System.exit(0);
 		}

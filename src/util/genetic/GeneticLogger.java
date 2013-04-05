@@ -32,6 +32,7 @@ public final class GeneticLogger {
 		b.putInt(typeEntityRecord);
 		b.putInt(e.id);
 		e.p.write(b);
+		
 		b.limit(b.position());
 		b.rewind();
 		f.write(b);
@@ -48,6 +49,7 @@ public final class GeneticLogger {
 			b.putInt(p[a].losses.get());
 			b.putInt(p[a].draws.get());
 		}
+		
 		b.limit(b.position());
 		b.rewind();
 		f.write(b);
