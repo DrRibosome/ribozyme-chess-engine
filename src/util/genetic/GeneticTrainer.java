@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -64,6 +65,7 @@ public final class GeneticTrainer {
 		final int minGames = 5; //min games before entry can be culled
 		final Mutator m = new MutatorV1();
 		final int mutations = 6;
+		final double gameCutoffPercent = .5; //only play games against the top X percent of solutions
 		
 		final File file = new File("genetic-results/genetic-results-v13");
 		if(1==2&& file.exists()){
@@ -83,7 +85,7 @@ public final class GeneticTrainer {
 		}
 		
 		for(int i = 0; ; i++){
-			simulate(population, q, tests);
+			simulate(population, q, tests, gameCutoffPercent);
 			List<Integer> culled = cull(population, cullSize, minGames);
 			generate(culled, population, m, mutations);
 
@@ -114,16 +116,21 @@ public final class GeneticTrainer {
 	}
 	
 	/** runs the simulation, accumulating a score for each entity*/
-	public static void simulate(final Entity[] population, final GameQueue q, final int tests){
+	public static void simulate(final Entity[] population, final GameQueue q, final int tests, final double gameCutoffPercent){
+		final List<Entity> sorted = new ArrayList<Entity>();
+		for(int a = 0; a < population.length; a++) sorted.add(population[a]);
+		Collections.sort(sorted, sortBestFirst);
+		
 		for(int a = 0; a < population.length; a++){
 			
 			for(int w = 0; w < tests; w++){
 				int index;
-				while((index = (int)(Math.random()*population.length)) == a);
+				//while((index = (int)(Math.random()*population.length*gameCutoffPercent)) == a);
+				while(sorted.get(index = (int)(Math.random()*population.length*gameCutoffPercent)) == population[a]);
 				
-				assert population[a] != null && population[index] != null;
+				//assert population[a] != null && population[index] != null;
 				
-				final GameQueue.Game g = new GameQueue.Game(population[a], population[index]);
+				final GameQueue.Game g = new GameQueue.Game(population[a], sorted.get(index));
 				q.submit(g);
 			}
 		}
