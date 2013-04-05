@@ -42,7 +42,6 @@ public final class ExpEvalV3v3 implements Evaluator2{
 	private final int[] materialScore = new int[2];
 	/** current max number of moves by piece type*/
 	private final int[][] maxMobility = new int[2][7];
-	private final FeatureExtractor2.FeatureSet fset = new FeatureExtractor2.FeatureSet();
 	private final EvalParameters p;
 	/** weight aggregator*/
 	private final WeightAgg agg = new WeightAgg();
@@ -75,7 +74,7 @@ public final class ExpEvalV3v3 implements Evaluator2{
 	public int eval(State4 s, int player) {
 		final int totalMaterialScore = materialScore[0]+materialScore[1];
 		final double scale = Weight.getScale(totalMaterialScore, endMaterial, margin);
-		return score(player, s, scale) - score(1-player, s, scale);
+		return score(player, s, scale, true) - score(1-player, s, scale, false);
 	}
 
 	@Override
@@ -83,8 +82,9 @@ public final class ExpEvalV3v3 implements Evaluator2{
 		return lazyScore(player)-lazyScore(1-player);
 	}
 	
-	private int score(final int player, final State4 s, final double scale){
-		FeatureExtractor2.loadFeatures(fset, player, s, true);
+	private int score(final int player, final State4 s, final double scale, final boolean tempo){
+		
+		agg.clear();
 		
 		int score = materialScore[player];
 		scoreMobility(player, s, agg, p);
@@ -98,7 +98,17 @@ public final class ExpEvalV3v3 implements Evaluator2{
 			getKingDanger(player, s, agg, p);
 		}
 		
-		return score + agg.score(scale);
+		if(tempo){
+			agg.add(p.tempo);
+		}
+		
+		return granulate(score + agg.score(scale), 8);
+	}
+	
+	/** for grainSize a power of 2, returns passed score inside specified granularity,
+	 * helps prevent hopping around to different pvs for low score differences*/
+	private static int granulate(final int score, final int grainSize){
+		return (score+grainSize>>1) & ~(grainSize-1);
 	}
 	
 	private static void scorePawns(final int player, final State4 s, final WeightAgg agg, final EvalParameters p, int[] pawnCount){
@@ -224,8 +234,6 @@ public final class ExpEvalV3v3 implements Evaluator2{
 		materialScore[1] = 0;
 		System.arraycopy(zeroi7, 0, maxMobility[0], 0, 7);
 		System.arraycopy(zeroi7, 0, maxMobility[1], 0, 7);
-		
-		agg.clear();
 		
 		for(int a = 0; a < 2; a++){
 			final int b = State4.PIECE_TYPE_BISHOP;
