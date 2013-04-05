@@ -119,7 +119,7 @@ public final class GameQueue {
 		
 		while(System.currentTimeMillis()-start < targetTime){
 			final long diff = targetTime-(System.currentTimeMillis()-start);
-			if(diff/2 >= 10){
+			if(diff/2 >= 1){
 				try{
 					Thread.sleep(diff/2);
 				} catch(InterruptedException e){}
@@ -210,9 +210,7 @@ public final class GameQueue {
 	private final AtomicInteger outstanding = new AtomicInteger();
 	private final Queue<Game> q = new LinkedBlockingQueue<Game>();
 	
-	public GameQueue(int threads){
-		final long time = 30;
-		final int hashSize = 20;
+	public GameQueue(int threads, long time, int hashSize){
 		
 		t = new GauntletThread[threads];
 		for(int a = 0; a < t.length; a++){

@@ -56,15 +56,17 @@ public final class GeneticTrainer {
 	public static void main(String[] args) throws Exception{
 
 		final int tests = 1; //games to play per simulation step
-		final int threads = 3;
-		final int popSize = 15;
+		final int threads = 4;
+		final long time = 30;
+		final int hashSize = 18;
+		final int popSize = 25;
 		final int cullSize = max((int)(popSize*.05+.5), 1); //number of entries to cull
 		final int minGames = 5; //min games before entry can be culled
 		final Mutator m = new MutatorV1();
 		final int mutations = 6;
 		
 		final File file = new File("genetic-results/genetic-results-v13");
-		if(file.exists()){
+		if(1==2&& file.exists()){
 			System.out.println("log file already exists, exiting");
 			System.exit(0);
 		}
@@ -72,7 +74,7 @@ public final class GeneticTrainer {
 		final FileChannel f = new FileOutputStream(file).getChannel();
 		
 		final Entity[] population = new Entity[popSize];
-		final GameQueue q = new GameQueue(threads);
+		final GameQueue q = new GameQueue(threads, time, hashSize);
 		
 		for(int a = 0; a < population.length; a++){
 			population[a] = new Entity();

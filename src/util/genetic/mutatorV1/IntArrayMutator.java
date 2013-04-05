@@ -11,14 +11,21 @@ final class IntArrayMutator implements MutatorPoint{
 		int index;
 		while(contains(index = (int)(Math.random()*w.length), excludedIndeces));
 		
-		int value = w[index];
-		final double offset = -value*MutatorV1.mDist + value*MutatorV1.mDist*2*Math.random();
-		value += max((int)offset, 1);
-		w[index] = value;
+		w[index] = mutateInt(w[index]);
+	}
+	
+	int mutateInt(int value){
+		double offset = -value*MutatorV1.mDist + value*MutatorV1.mDist*2*Math.random();
+		value += max((int)Math.abs(offset), 1) * sign(offset);
+		return value;
 	}
 	
 	private static int max(final int i1, final int i2){
 		return i1 > i2? i1: i2;
+	}
+	
+	private static int sign(double d){
+		return d == 0? 0: d < 0? -1: 1;
 	}
 	
 	private static boolean contains(int i, int[] l){

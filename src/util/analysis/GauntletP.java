@@ -180,7 +180,7 @@ public class GauntletP {
 		
 		while(System.currentTimeMillis()-start < targetTime){
 			final long diff = targetTime-(System.currentTimeMillis()-start);
-			if(diff/2 >= 10){
+			if(diff/2 >= 1){
 				try{
 					Thread.sleep(diff/2);
 				} catch(InterruptedException e){}

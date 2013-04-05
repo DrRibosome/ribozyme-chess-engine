@@ -13,23 +13,7 @@ final class WeightArrayMutator implements MutatorPoint{
 		int index;
 		while(contains(index = (int)(Math.random()*w.length), excludedIndeces));
 		
-		int start = w[index].start;
-		int end = w[index].end;
-		final int choice = (int)(Math.random()*2);
-		if(choice == 0){
-			final double offset = -start*MutatorV1.mDist + start*MutatorV1.mDist*2*Math.random();
-			start += max((int)offset, 1);
-		} else{
-			if(choice == 0){
-				final double offset = -end*MutatorV1.mDist + end*MutatorV1.mDist*2*Math.random();
-				end += max((int)offset, 1);
-			}
-		}
-		w[index] = new Weight(start, end);
-	}
-	
-	private static int max(final int i1, final int i2){
-		return i1 > i2? i1: i2;
+		w[index] = WeightMutator.mutateWeight(w[index]);
 	}
 	
 	private static boolean contains(int i, int[] l){
