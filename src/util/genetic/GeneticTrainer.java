@@ -1,47 +1,22 @@
 package util.genetic;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import util.genetic.mutatorV1.MutatorV1;
-
 import eval.expEvalV3.DefaultEvalWeights;
 import eval.expEvalV3.EvalParameters;
 
 public final class GeneticTrainer {
-	public static class Entity{
-		private static long idIndex = 0;
-		EvalParameters p;
-		final AtomicInteger wins = new AtomicInteger();
-		final AtomicInteger losses = new AtomicInteger();
-		final AtomicInteger draws = new AtomicInteger();
-		private final long id;
-		Entity(){
-			id = idIndex++;
-		}
-		public double score(){
-			final double score = wins.get()+draws.get()/2.;
-			return score/totalGames();
-		}
-		public int totalGames(){
-			return wins.get() + losses.get() + draws.get();
-		}
-		public String toString(){
-			return "(w,l,d)=("+wins.get()+","+losses.get()+","+draws.get()+"), id="+id;
-		}
-	}
-
-	private final static Comparator<Entity> sortBestFirst = new Comparator<GeneticTrainer.Entity>() {
-		public int compare(Entity e1, Entity e2) {
+	private final static Comparator<GEntity> sortBestFirst = new Comparator<GEntity>() {
+		public int compare(GEntity e1, GEntity e2) {
 			if(e1 == null){
 				return 1;
 			} else if(e2 == null){
@@ -79,52 +54,55 @@ public final class GeneticTrainer {
 			System.out.println("log file already exists, exiting");
 			System.exit(0);
 		}
-		@SuppressWarnings("resource")
-		final FileChannel f = new FileOutputStream(file).getChannel();
+		final GeneticLogger log = new GeneticLogger(file);
 		
-		final Entity[] population = new Entity[popSize];
+		final GEntity[] population = new GEntity[popSize];
 		final GameQueue q = new GameQueue(threads, time, hashSize);
 		
 		for(int a = 0; a < population.length; a++){
-			population[a] = new Entity();
+			population[a] = new GEntity();
 			population[a].p = DefaultEvalWeights.defaultEval();
 			if(Math.random() < .95) m.mutate(population[a].p, mutations);
 		}
 		
 		for(int i = 0; ; i++){
 			simulate(population, q, tests, gameCutoffPercent);
+			log.recordIteration(i, population);
 			List<Integer> culled = cull(population, cullSize, minGames);
 			generate(culled, population, m, mutations, reproduceCutoffPercent);
-
+			recordNewEntities(culled, population, log);
+			
 			System.out.println("completed iteration "+i);
 			
 			//record data
-			Entity e;
-			final Queue<Entity> tempq = new PriorityQueue<Entity>(population.length, sortBestFirst);
+			GEntity e;
+			final Queue<GEntity> tempq = new PriorityQueue<GEntity>(population.length, sortBestFirst);
 			for(int a = 0; a < population.length; a++) tempq.add(population[a]);
 			while(tempq.size() > 0){
 				if((e = tempq.poll()).totalGames() >= minGames){
-					System.out.println("recording best, id="+e.id);
+					System.out.println("best id="+e.id);
 					System.out.println(e.p);
-					b.clear();
-					b.putInt(i); //put iteration count
-					e.p.write(b);
-					b.limit(b.position());
-					b.rewind();
-					f.write(b);
 					break;
 				}
 			}
 		}
 	}
 	
-	public static int max(final int i1, final int i2){
+	private static void recordNewEntities(final List<Integer> newEntities, final GEntity[] p,
+			final GeneticLogger log) throws IOException{
+		for(int index: newEntities){
+			final GEntity temp = p[index];
+			log.recordGEntity(temp);
+		}
+	}
+	
+	private static int max(final int i1, final int i2){
 		return i1 > i2? i1: i2;
 	}
 	
 	/** runs the simulation, accumulating a score for each entity*/
-	public static void simulate(final Entity[] population, final GameQueue q, final int tests, final double gameCutoffPercent){
-		final List<Entity> sorted = new ArrayList<Entity>();
+	public static void simulate(final GEntity[] population, final GameQueue q, final int tests, final double gameCutoffPercent){
+		final List<GEntity> sorted = new ArrayList<GEntity>();
 		for(int a = 0; a < population.length; a++) sorted.add(population[a]);
 		Collections.sort(sorted, sortBestFirst);
 		
@@ -159,9 +137,9 @@ public final class GeneticTrainer {
 	}
 	
 	/** culls bad solutions from population, returns list of culled indeces*/
-	public static List<Integer> cull(final Entity[] population, int cullSize, final int minGames){
-		final Comparator<Entity> c = new Comparator<GeneticTrainer.Entity>() {
-			public int compare(Entity e1, Entity e2) {
+	public static List<Integer> cull(final GEntity[] population, int cullSize, final int minGames){
+		final Comparator<GEntity> c = new Comparator<GEntity>() {
+			public int compare(GEntity e1, GEntity e2) {
 				if(e1.score() < e2.score()){
 					return -1;
 				} else if(e1.score() > e2.score()){
@@ -171,7 +149,7 @@ public final class GeneticTrainer {
 				}
 			}
 		};
-		final Queue<Entity> q = new PriorityQueue<Entity>(population.length, c);
+		final Queue<GEntity> q = new PriorityQueue<GEntity>(population.length, c);
 		for(int a = 0; a < population.length; a++) q.add(population[a]);
 		
 		final boolean print = true;
@@ -181,7 +159,7 @@ public final class GeneticTrainer {
 			//count as cull even if lowest scoring not eligible for cull
 			//(prevents good solutions from being culled if no eligible bad solutions)
 			cullSize--;
-			Entity e = q.poll();
+			GEntity e = q.poll();
 			if(print) System.out.print(e);
 			if(e.totalGames() >= minGames){
 				if(print) System.out.println(" -- culled");
@@ -204,9 +182,9 @@ public final class GeneticTrainer {
 	}
 	
 	/** generates new solutions from population , replacing culled entries*/
-	public static void generate(final List<Integer> culled, final Entity[] population, final Mutator m,
+	public static void generate(final List<Integer> culled, final GEntity[] population, final Mutator m,
 			final int mutations, final double reproduceCutoffPercent){
-		final List<Entity> sorted = new ArrayList<Entity>();
+		final List<GEntity> sorted = new ArrayList<GEntity>();
 		for(int a = 0; a < population.length; a++) sorted.add(population[a]);
 		Collections.sort(sorted, sortBestFirst);
 		
@@ -220,7 +198,7 @@ public final class GeneticTrainer {
 			final EvalParameters p = new EvalParameters();
 			p.read(b);
 			m.mutate(p, mutations); 
-			Entity temp = new Entity();
+			GEntity temp = new GEntity();
 			temp.p = p;
 			
 			population[index] = temp;

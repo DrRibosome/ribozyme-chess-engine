@@ -5,24 +5,22 @@ import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import eval.expEvalV3.ExpEvalV3v3;
-
 import search.Search4;
 import search.search33.SearchS4V33t;
 import state4.BitUtil;
 import state4.State4;
-import state4.StateUtil;
 import util.opening2.Book;
+import eval.expEvalV3.ExpEvalV3v3;
 
 /** plays queued games*/
 public final class GameQueue {
 	public final static class Game{
-		final GeneticTrainer.Entity[] e;
-		public Game(GeneticTrainer.Entity e1, GeneticTrainer.Entity e2){
+		final GEntity[] e;
+		public Game(GEntity e1, GEntity e2){
 			if(Math.random() < .5){
-				e = new GeneticTrainer.Entity[]{e1, e2};
+				e = new GEntity[]{e1, e2};
 			} else{
-				e = new GeneticTrainer.Entity[]{e2, e1};
+				e = new GEntity[]{e2, e1};
 			}
 		}
 	}
