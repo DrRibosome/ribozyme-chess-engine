@@ -9,10 +9,10 @@ public final class MutatorV1 implements Mutator{
 	static double mDist = .05; // max dist a value can move as a percent
 	
 	private static MutatorPoint[] getMutationPoints(final EvalParameters p){
-		final MutatorPoint[] m = new MutatorPoint[6];
+		final MutatorPoint[] m = new MutatorPoint[1];
 		int index = 0;
 		
-		m[index++] = new WeightMatrixMutator(p.mobilityWeights);
+		/*m[index++] = new WeightMatrixMutator(p.mobilityWeights);
 		m[index++] = new IntArrayMutator(p.materialWeights, 
 				new int[]{State4.PIECE_TYPE_EMPTY,State4.PIECE_TYPE_PAWN,State4.PIECE_TYPE_KING});
 		
@@ -26,6 +26,13 @@ public final class MutatorV1 implements Mutator{
 				p.tempo = w;
 			}
 		};
+		m[index++] = new WeightArrayMutator(p.doubledPawns[0], new int[0], true);
+		m[index++] = new WeightArrayMutator(p.doubledPawns[1], new int[0], true);*/
+		m[index++] = new WeightArrayMutator(p.passedPawnRowWeight[0], new int[]{0,7}, false, new Callback() {
+			public void callback() {
+				for(int a = 0; a < 8; a++) p.passedPawnRowWeight[1][a] = p.passedPawnRowWeight[0][7-a];
+			}
+		});
 		
 		return m;
 	}

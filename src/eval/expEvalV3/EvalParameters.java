@@ -85,7 +85,7 @@ public final class EvalParameters {
 		s += "\n";
 		
 		s += "king danger squares (white perspective):\n";
-		for(int a = 0; a < 8; a++){
+		for(int a = 0; a < 7; a++){
 			for(int q = 0; q < 8; q++){
 				s += kingDangerSquares[0][a*8+q]+"\t";
 			}
@@ -93,7 +93,7 @@ public final class EvalParameters {
 		}
 		
 		s += "passed pawn row weight (white perspective):\n";
-		for(int a = 1; a < 8; a++){
+		for(int a = 1; a < 7; a++){
 			s += a+":"+passedPawnRowWeight[0][a]+", ";
 		}
 		s += "\n";

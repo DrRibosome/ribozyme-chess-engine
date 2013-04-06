@@ -5,7 +5,7 @@ import state4.State4;
 public final class DefaultEvalWeights {
 
 	private static Weight W(int start, int end){
-		final int shift = 0;
+		final int shift = 1;
 		return new Weight(start >> shift, end >> shift);
 	}
 	
@@ -98,14 +98,14 @@ public final class DefaultEvalWeights {
 		
 		final Weight[][] passedPawnRowWeight = new Weight[][]{
 				{
-				new Weight(-999, -999),
 				new Weight(0, 3),
 				new Weight(5, 6),
 				new Weight(15, 13),
 				new Weight(30, 21),
 				new Weight(50, 32),
 				new Weight(75, 46),
-				new Weight(105, 63),},
+				new Weight(105, 63),
+				new Weight(-999, -999),},
 				new Weight[8]
 		};
 		for(int a = 0; a < 8; a++) passedPawnRowWeight[1][a] = passedPawnRowWeight[0][7-a];

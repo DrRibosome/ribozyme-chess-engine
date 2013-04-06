@@ -10,7 +10,7 @@ import search.search33.SearchS4V33t;
 import state4.BitUtil;
 import state4.State4;
 import util.opening2.Book;
-import eval.expEvalV3.ExpEvalV3v3;
+import eval.expEvalV3.ExpEvalV3v4;
 
 /** plays queued games*/
 public final class GameQueue {
@@ -50,8 +50,8 @@ public final class GameQueue {
 					
 					if(g != null){
 						final Search4[] search = new Search4[]{
-								new SearchS4V33t(new ExpEvalV3v3(g.e[0].p), hashSize, false),
-								new SearchS4V33t(new ExpEvalV3v3(g.e[1].p), hashSize, false),
+								new SearchS4V33t(new ExpEvalV3v4(g.e[0].p), hashSize, false),
+								new SearchS4V33t(new ExpEvalV3v4(g.e[1].p), hashSize, false),
 						};
 						
 						final State4 state = new State4(b.getSeed());

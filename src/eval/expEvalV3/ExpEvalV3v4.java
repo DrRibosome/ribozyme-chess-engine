@@ -123,9 +123,9 @@ public final class ExpEvalV3v4 implements Evaluator2{
 			final boolean isolated = (PositionMasks.isolatedPawnMask[col] & alliedPawns) == 0;
 			final boolean opposed = (PositionMasks.opposedPawnMask[player][index] & enemyPawns) != 0;
 			final int opposedFlag = opposed? 1: 0;
-			final long attacks = PositionMasks.pawnAttacks[player][index];
-			final boolean attacksEnemyPawn = (attacks & enemyPawns) != 0;
-			final boolean adjPawnSupport = (PositionMasks.pawnAttacks[1-player][index] & alliedPawns) != 0;
+			//final long attacks = PositionMasks.pawnAttacks[player][index];
+			//final boolean attacksEnemyPawn = (attacks & enemyPawns) != 0;
+			//final boolean adjPawnSupport = (PositionMasks.pawnAttacks[1-player][index] & alliedPawns) != 0;
 			final boolean chain = (PositionMasks.pawnChainMask[player][index] & alliedPawns) != 0;
 			
 			if(passed){
@@ -137,7 +137,7 @@ public final class ExpEvalV3v4 implements Evaluator2{
 			if(pawnCount[col] >= 2){
 				agg.add(p.doubledPawns[opposedFlag][col]);
 			}
-			if(!passed && !isolated && !attacksEnemyPawn && !adjPawnSupport){ //check for backwards pawn
+			/*if(!passed && !isolated && !attacksEnemyPawn && !adjPawnSupport){ //check for backwards pawn
 				long b = attacks | (player == 0? 1L<<index+8: 1L<<index-8);
 				while((b & (alliedPawns | enemyPawns)) == 0){
 					b = player == 0? b << 8: b >>> 8; //scan downwards until pawn encountered
@@ -146,7 +146,7 @@ public final class ExpEvalV3v4 implements Evaluator2{
 				if(((b | (player == 0? b<<8: b>>>8)) & enemyPawns) != 0){ //backward
 					agg.add(p.backwardPawns[opposedFlag][col]);
 				}
-			}
+			}*/
 			if(chain){
 				agg.add(p.pawnChain[col]);
 			}

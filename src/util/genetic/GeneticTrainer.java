@@ -43,14 +43,14 @@ public final class GeneticTrainer {
 		final int hashSize = 18;
 		final int popSize = 40;
 		final int cullSize = max((int)(popSize*.05+.5), 1); //number of entries to cull
-		final int minGames = 5; //min games before entry can be culled
+		final int minGames = 8; //min games before entry can be culled
 		final Mutator m = new MutatorV1();
-		final int mutations = 6;
+		final int mutations = 1;
 		final double gameCutoffPercent = .2; //only play games against the top X percent of solutions
 		final double reproduceCutoffPercent = .4; //only clone and mutate entites in top X percent of solutions
 		
-		final File file = new File("genetic-results/genetic-results-mac-1");
-		if(file.exists()){
+		final File file = new File("genetic-results/genetic-results-mac-2");
+		if(1==2&& file.exists()){
 			System.out.println("log file already exists, exiting");
 			System.exit(0);
 		}
