@@ -11,8 +11,8 @@ import state4.State4;
 import state4.StateUtil;
 import util.opening2.Book;
 import eval.Evaluator2;
-import eval.evalV10.SuperEvalS4V10v4;
 import eval.expEvalV3.ExpEvalV3v3;
+import eval.expEvalV3.ExpEvalV3v4;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -119,16 +119,16 @@ public class GauntletP {
 		for(int a = 0; a < threads; a++){
 			Evaluator2 e1 =
 					//new SuperEvalS4V10();
-					new ExpEvalV3v3();
+					new ExpEvalV3v4();
 					//new ExpEvalV3();
 					//new SuperEvalS4V10v4();
 					//new EvalS4V10v5();
 
 			Evaluator2 e2 = 
-					new SuperEvalS4V10v4();
+					//new SuperEvalS4V10v4();
 					//new SuperEvalS4V10();
 					//new ExpEvalV3();
-					//new ExpEvalV3v3();
+					new ExpEvalV3v3();
 					//new SuperEvalS4V8();
 					//new ExpEvalV1();
 			

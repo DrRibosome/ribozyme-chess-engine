@@ -26,16 +26,6 @@ public final class MutatorV1 implements Mutator{
 				p.tempo = w;
 			}
 		};
-		m[index++] = new WeightMutator(p.doubledPawnsWeight) {
-			public void setWeight(Weight w) {
-				p.doubledPawnsWeight = w;
-			}
-		};
-		m[index++] = new WeightMutator(p.tripledPawnsWeight) {
-			public void setWeight(Weight w) {
-				p.tripledPawnsWeight = w;
-			}
-		};
 		
 		return m;
 	}

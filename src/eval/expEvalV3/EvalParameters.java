@@ -24,16 +24,27 @@ public final class EvalParameters {
 	public Weight[] kingDangerValues;
 	/** king danger based off location of the king*/
 	public int[][] kingDangerSquares;
+	public int contactCheckQueen;
+	public int contactCheckRook;
+	public int queenCheck;
+	public int rookCheck;
+	public int knightCheck;
+	public int bishopCheck;
 	
 	//-------------------------------------------------
 	//pawns weights
 	
 	/** passed pawn weight, indexed [row] from white perspective*/
 	public Weight[][] passedPawnRowWeight;
-	public Weight doubledPawnsWeight;
-	public Weight tripledPawnsWeight;
-	
-
+	/** doubled pawns penalty, indexed [opposed-flag][col]
+	 * <p> note, this value will be added FOR EACH pawn in a row with 2 or more pawns*/
+	public Weight[][] doubledPawns;
+	/** weight for pawns with no supportind pawn in either adjacent col, indexed [opposed-flag][col]*/
+	public Weight[][] isolatedPawns;
+	/** weight for backwards pawns, indexed [opposed-flag][col]*/
+	public Weight[][] backwardPawns;
+	/** pawn chain weights by file*/
+	public Weight[] pawnChain;
 	
 	@Override
 	public String toString(){
@@ -87,10 +98,44 @@ public final class EvalParameters {
 		}
 		s += "\n";
 		
+		s += "isolated pawn weight, unopposed (by col):\n";
+		for(int a = 0; a < 8; a++){
+			s += a+":"+isolatedPawns[0][a]+", ";
+		}
+		s += "\n";
+		
+		s += "isolated pawn weight, opposed (by col):\n";
+		for(int a = 0; a < 8; a++){
+			s += a+":"+isolatedPawns[1][a]+", ";
+		}
+		s += "\n";
+		
+		s += "doubled pawn weight, unopposed (by col):\n";
+		for(int a = 0; a < 8; a++){
+			s += a+":"+doubledPawns[0][a]+", ";
+		}
+		s += "\n";
+		
+		s += "doubled pawn weight, opposed (by col):\n";
+		for(int a = 0; a < 8; a++){
+			s += a+":"+doubledPawns[1][a]+", ";
+		}
+		s += "\n";
+		
+		s += "backward pawn weight, unopposed (by col):\n";
+		for(int a = 0; a < 8; a++){
+			s += a+":"+backwardPawns[0][a]+", ";
+		}
+		s += "\n";
+		
+		s += "backward pawn weight, opposed (by col):\n";
+		for(int a = 0; a < 8; a++){
+			s += a+":"+backwardPawns[1][a]+", ";
+		}
+		s += "\n";
+		
 		s += "tempo = "+tempo+"\n";
 		s += "bishop pair = "+bishopPair+"\n";
-		s += "doubled pawns = "+doubledPawnsWeight+"\n";
-		s += "tripled pawns = "+tripledPawnsWeight+"\n";
 		
 		return s;
 	}
@@ -119,12 +164,20 @@ public final class EvalParameters {
 			}
 		}
 		
+		b.putShort((short)contactCheckQueen);
+		b.putShort((short)contactCheckRook);
+		b.putShort((short)queenCheck);
+		b.putShort((short)rookCheck);
+		b.putShort((short)knightCheck);
+		b.putShort((short)bishopCheck);
+		
 		//pawn values
 		
 		writeMatrix(passedPawnRowWeight, b);
-		doubledPawnsWeight.writeWeight(b);
-		tripledPawnsWeight.writeWeight(b);
-		
+		writeMatrix(doubledPawns, b);
+		writeMatrix(isolatedPawns, b);
+		writeMatrix(backwardPawns, b);
+		writeArray(pawnChain, b);
 	}
 	
 	public void read(final ByteBuffer b){
@@ -152,13 +205,20 @@ public final class EvalParameters {
 			}
 		}
 		
+		contactCheckQueen = b.getShort();
+		contactCheckRook = b.getShort();
+		queenCheck = b.getShort();
+		rookCheck = b.getShort();
+		knightCheck = b.getShort();
+		bishopCheck = b.getShort();
 		
 		//pawn values
 		
 		passedPawnRowWeight = readMatrix(b);
-		doubledPawnsWeight = Weight.readWeight(b);
-		tripledPawnsWeight = Weight.readWeight(b);
-		
+		doubledPawns = readMatrix(b);
+		isolatedPawns = readMatrix(b);
+		backwardPawns = readMatrix(b);
+		pawnChain = readArray(b);
 	}
 	
 	private static void writeMatrix(final Weight[][] w, final ByteBuffer b){
@@ -171,13 +231,28 @@ public final class EvalParameters {
 		}
 	}
 	
-	private static Weight[][] readMatrix(ByteBuffer b){
+	private static Weight[][] readMatrix(final ByteBuffer b){
 		Weight[][] w = new Weight[b.getShort()][];
 		for(int a = 0; a < w.length; a++){
 			w[a] = new Weight[b.getShort()];
 			for(int q = 0; q < w[a].length; q++){
 				w[a][q] = Weight.readWeight(b);
 			}
+		}
+		return w;
+	}
+	
+	private static void writeArray(final Weight[] w, final ByteBuffer b){
+		b.putShort((short)w.length);
+		for(int a = 0; a < w.length; a++){
+			w[a].writeWeight(b);
+		}
+	}
+	
+	private static Weight[] readArray(final ByteBuffer b){
+		final Weight[] w = new Weight[b.getShort()];
+		for(int a = 0; a < w.length; a++){
+			w[a] = Weight.readWeight(b);
 		}
 		return w;
 	}

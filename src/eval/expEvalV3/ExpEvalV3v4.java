@@ -6,7 +6,7 @@ import state4.MoveEncoder;
 import state4.State4;
 import eval.Evaluator2;
 
-public final class ExpEvalV3v3 implements Evaluator2{
+public final class ExpEvalV3v4 implements Evaluator2{
 	private final static class WeightAgg{
 		int start;
 		int end;
@@ -49,7 +49,7 @@ public final class ExpEvalV3v3 implements Evaluator2{
 	private final int margin;
 	private final int endMaterial;
 	
-	public ExpEvalV3v3(EvalParameters p){
+	public ExpEvalV3v4(EvalParameters p){
 		this.p = p;
 		int startMaterial = (
 				  p.materialWeights[State4.PIECE_TYPE_PAWN]*8
@@ -66,7 +66,7 @@ public final class ExpEvalV3v3 implements Evaluator2{
 		margin = Weight.margin(startMaterial, endMaterial);
 	}
 	
-	public ExpEvalV3v3(){
+	public ExpEvalV3v4(){
 		this(DefaultEvalWeights.defaultEval());
 	}
 	
@@ -106,28 +106,49 @@ public final class ExpEvalV3v3 implements Evaluator2{
 	}
 	
 	/** for grainSize a power of 2, returns passed score inside specified granularity,
-	 * helps prevent hopping around to different pvs for low score differences*/
+	 * helps prevent hopping around to different PVs on low score differences*/
 	private static int granulate(final int score, final int grainSize){
 		return (score+grainSize>>1) & ~(grainSize-1);
 	}
 	
-
-	private final static Weight doubledPawnsWeight = new Weight(-5, -5);
-	private final static Weight tripledPawnsWeight = new Weight(-10, -10);
-	private static void scorePawns(final int player, final State4 s, final WeightAgg agg, final EvalParameters p, int[] pawnCount){
+	private static void scorePawns(final int player, final State4 s, final WeightAgg agg,
+			final EvalParameters p, final int[] pawnCount){
 		final long enemyPawns = s.pawns[1-player];
-		for(long pawns = s.pawns[player]; pawns != 0; pawns &= pawns-1){
+		final long alliedPawns = s.pawns[player];
+		for(long pawns = alliedPawns; pawns != 0; pawns &= pawns-1){
 			final int index = BitUtil.lsbIndex(pawns);
-			if((Masks.passedPawnMasks[player][index] & enemyPawns) == 0){ //pawn passed
+			final int col = index%8;
+			
+			final boolean passed = (Masks.passedPawnMasks[player][index] & enemyPawns) == 0;
+			final boolean isolated = (PositionMasks.isolatedPawnMask[col] & alliedPawns) == 0;
+			final boolean opposed = (PositionMasks.opposedPawnMask[player][index] & enemyPawns) != 0;
+			final int opposedFlag = opposed? 1: 0;
+			final long attacks = PositionMasks.pawnAttacks[player][index];
+			final boolean attacksEnemyPawn = (attacks & enemyPawns) != 0;
+			final boolean adjPawnSupport = (PositionMasks.pawnAttacks[1-player][index] & alliedPawns) != 0;
+			final boolean chain = (PositionMasks.pawnChainMask[player][index] & alliedPawns) != 0;
+			
+			if(passed){
 				agg.add(p.passedPawnRowWeight[player][index >> 3]); //index >>> 3 == index/8 == row
 			}
-		}
-		for(int a = 0; a < 8; a++){
-			final int count = pawnCount[a];
-			if(count >= 3){
-				agg.add(tripledPawnsWeight);
-			} else if(count == 2){
-				agg.add(doubledPawnsWeight);
+			if(isolated){ //pawn isolated
+				agg.add(p.isolatedPawns[opposedFlag][col]);
+			}
+			if(pawnCount[col] >= 2){
+				agg.add(p.doubledPawns[opposedFlag][col]);
+			}
+			if(!passed && !isolated && !attacksEnemyPawn && !adjPawnSupport){ //check for backwards pawn
+				long b = attacks | (player == 0? 1L<<index+8: 1L<<index-8);
+				while((b & (alliedPawns | enemyPawns)) == 0){
+					b = player == 0? b << 8: b >>> 8; //scan downwards until pawn encountered
+					assert b != 0;
+				}
+				if(((b | (player == 0? b<<8: b>>>8)) & enemyPawns) != 0){ //backward
+					agg.add(p.backwardPawns[opposedFlag][col]);
+				}
+			}
+			if(chain){
+				agg.add(p.pawnChain[col]);
 			}
 		}
 	}
@@ -147,9 +168,9 @@ public final class ExpEvalV3v3 implements Evaluator2{
 			final long q = queens&-queens;
 			final long moves = Masks.getRawQueenMoves(agg, q);
 			if((q & kingRing) != 0){ //contact check
-				dindex += EvalConstantsV2.contactCheckQueen;
+				dindex += p.contactCheckQueen;
 			} else if((moves & king) != 0){ //non-contact check
-				dindex += EvalConstantsV2.queenCheck;
+				dindex += p.queenCheck;
 			}
 			dindex += p.dangerKingAttacks[State4.PIECE_TYPE_QUEEN] * BitUtil.getSetBits(moves & kingRing);
 		}
@@ -159,9 +180,9 @@ public final class ExpEvalV3v3 implements Evaluator2{
 			final long moves = Masks.getRawRookMoves(agg, r);
 			 if((moves & king) != 0){
 				if((r & kingRing) != 0){ //contact check
-					dindex += EvalConstantsV2.contactCheckRook;
+					dindex += p.contactCheckRook;
 				} else{ //non-contact check
-					dindex += EvalConstantsV2.rookCheck;
+					dindex += p.rookCheck;
 				}
 			}
 			dindex += p.dangerKingAttacks[State4.PIECE_TYPE_ROOK] * BitUtil.getSetBits(moves & kingRing);
@@ -170,7 +191,7 @@ public final class ExpEvalV3v3 implements Evaluator2{
 		for(long bishops = s.bishops[1-player]; bishops != 0; bishops &= bishops-1){
 			final long moves = Masks.getRawBishopMoves(agg, bishops);
 			if((moves & king) != 0){ //non-contact check
-				dindex += EvalConstantsV2.bishopCheck;
+				dindex += p.bishopCheck;
 			}
 			dindex += p.dangerKingAttacks[State4.PIECE_TYPE_BISHOP] * BitUtil.getSetBits(moves & kingRing);
 		}
@@ -178,7 +199,7 @@ public final class ExpEvalV3v3 implements Evaluator2{
 		for(long knights = s.knights[1-player]; knights != 0; knights &= knights-1){
 			final long moves = Masks.getRawKnightMoves(knights);
 			if((moves & king) != 0){ //non-contact check
-				dindex += EvalConstantsV2.knightCheck;
+				dindex += p.knightCheck;
 			}
 			dindex += p.dangerKingAttacks[State4.PIECE_TYPE_KNIGHT] * BitUtil.getSetBits(moves & kingRing);
 		}

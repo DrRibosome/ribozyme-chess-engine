@@ -5,11 +5,15 @@ import state4.State4;
 public final class DefaultEvalWeights {
 
 	private static Weight W(int start, int end){
-		return new Weight(start >> 3, end >> 3);
+		final int shift = 0;
+		return new Weight(start >> shift, end >> shift);
 	}
 	
-	public static synchronized EvalParameters defaultEval(){
+	public static EvalParameters defaultEval(){
 		EvalParameters p = new EvalParameters();
+		
+		//--------------------------------------------------------------
+		//general weights
 		
 		p.materialWeights = new int[7];
 		p.materialWeights[State4.PIECE_TYPE_BISHOP] = 305;
@@ -17,8 +21,11 @@ public final class DefaultEvalWeights {
 		p.materialWeights[State4.PIECE_TYPE_ROOK] = 500;
 		p.materialWeights[State4.PIECE_TYPE_QUEEN] = 900;
 		p.materialWeights[State4.PIECE_TYPE_PAWN] = 100;
+		
+		p.tempo = new Weight(3, 1);
+		p.bishopPair = new Weight(5, 12);
 
-		//all values here divided by 8 (ie, grain size from stockfish)
+		//note, all values here divided by 8
 		final Weight[][] mobilityWeights = new Weight[7][];
 		mobilityWeights[State4.PIECE_TYPE_KNIGHT] = new Weight[]{
 				W(-38,-33), W(-25,-23), W(-12,-13), W( 0, -3), W(12,  7), W(25, 17), //knights
@@ -43,20 +50,8 @@ public final class DefaultEvalWeights {
 		mobilityWeights[State4.PIECE_TYPE_PAWN] = new Weight[0];
 		p.mobilityWeights = mobilityWeights;
 		
-		final Weight[][] passedPawnRowWeight = new Weight[][]{
-				{
-				new Weight(-999, -999),
-				new Weight(0, 3),
-				new Weight(5, 6),
-				new Weight(15, 13),
-				new Weight(30, 21),
-				new Weight(50, 32),
-				new Weight(75, 46),
-				new Weight(105, 63),},
-				new Weight[8]
-		};
-		for(int a = 0; a < 8; a++) passedPawnRowWeight[1][a] = passedPawnRowWeight[0][7-a];
-		p.passedPawnRowWeight = passedPawnRowWeight;
+		//---------------------------------------------------------------------
+		//king values
 
 		final int[][] kingDangerSquares = {
 				{
@@ -73,11 +68,12 @@ public final class DefaultEvalWeights {
 		for(int a = 0; a < 64; a++) kingDangerSquares[1][a] = kingDangerSquares[0][63-a];
 		p.kingDangerSquares = kingDangerSquares;
 		
-		p.tempo = new Weight(3, 1);
-		
-		p.doubledPawnsWeight = new Weight(-5, -5);
-		p.tripledPawnsWeight = new Weight(-10, -10);
-		p.bishopPair = new Weight(5, 12);
+		p.contactCheckQueen = 6;
+		p.contactCheckRook = 4;
+		p.queenCheck = 3;
+		p.rookCheck = 2;
+		p.knightCheck = 1;
+		p.bishopCheck = 1;
 		
 		p.kingDangerValues = new Weight[128];
 		final int maxSlope = 25;
@@ -95,6 +91,50 @@ public final class DefaultEvalWeights {
 				1,	    //bishop
 				1,	    //knight
 				0		//pawn
+		};
+		
+		//-------------------------------------------------------------------------
+		//pawn values
+		
+		final Weight[][] passedPawnRowWeight = new Weight[][]{
+				{
+				new Weight(-999, -999),
+				new Weight(0, 3),
+				new Weight(5, 6),
+				new Weight(15, 13),
+				new Weight(30, 21),
+				new Weight(50, 32),
+				new Weight(75, 46),
+				new Weight(105, 63),},
+				new Weight[8]
+		};
+		for(int a = 0; a < 8; a++) passedPawnRowWeight[1][a] = passedPawnRowWeight[0][7-a];
+		p.passedPawnRowWeight = passedPawnRowWeight;
+
+		final Weight[][] isolatedPawns = new Weight[][]{
+				{W(-37, -45), W(-54, -52), W(-60, -52), W(-60, -52), W(-60, -52), W(-60, -52), W(-54, -52), W(-37, -45)},
+				{W(-25, -30), W(-36, -35), W(-40, -35), W(-40, -35), W(-40, -35), W(-40, -35), W(-36, -35), W(-25, -30)},
+		};
+		p.isolatedPawns = isolatedPawns;
+
+		//doubled pawn weights halved because added twice (once for each doubled pawn)
+		p.doubledPawns = new Weight[][]{{
+				W(-13/2, -43/2), W(-20/2, -48/2), W(-23/2, -48/2), W(-23/2, -48/2),
+				W(-23/2, -48/2), W(-23/2, -48/2), W(-20/2, -48/2), W(-13/2, -43/2)
+			},{
+				W(-13/2, -43/2), W(-20/2, -48/2), W(-23/2, -48/2), W(-23/2, -48/2),
+				W(-23/2, -48/2), W(-23/2, -48/2), W(-20/2, -48/2), W(-13/2, -43/2)
+			},
+		};
+
+		p.backwardPawns = new Weight[][]{
+				{W(-30, -42), W(-43, -46), W(-49, -46), W(-49, -46), W(-49, -46), W(-49, -46), W(-43, -46), W(-30, -42)},
+				{W(-20, -28), W(-29, -31), W(-33, -31), W(-33, -31), W(-33, -31), W(-33, -31), W(-29, -31), W(-20, -28)},
+		};
+		
+		p.pawnChain = new Weight[]{
+				W(11,-1), W(13,-1), W(13,-1), W(14,-1),
+			    W(14,-1), W(13,-1), W(13,-1), W(11,-1)
 		};
 		
 		return p;
