@@ -1,6 +1,6 @@
 package util.genetic.mutatorV1;
 
-import eval.expEvalV3.Weight;
+import eval.Weight;
 
 final class WeightArrayMutator implements MutatorPoint{
 	private final Weight[] w;

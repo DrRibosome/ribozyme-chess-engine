@@ -1,1812 +1,1747 @@
-info depth 5 score cp 1364 time 0.001 nodes 1297 nps 1297000 pv a3b3 d3e2 c3c2 e2e3 c2c1 
-info depth 6 score cp 1469 time 0.002 nodes 2787 nps 1393500 pv a3b3 d3e2 c3c2 e2e3 b2e5 e3f2 
-info depth 7 score cp 1469 time 0.003 nodes 5315 nps 1328750 pv a3b3 d3e2 c3c2 e2e3 b2e5 e3f2 c2c1 
-info depth 8 score cp 77777 time 0.006 nodes 9080 nps 1513333 pv a3b3 d3e2 c3c2 e2e1 c2c1 e1e2 b3a2 e2f2 
-info depth 9 score cp 77777 time 0.012 nodes 16617 nps 1384750 pv a3b3 d3e2 c3c2 e2e3 c2c1 e3e2 c1f4 e2d1 f4f1 
-info depth 10 score cp 1536 time 0.039 nodes 48657 nps 1247615 pv a3b3 d3e2 c3c2 e2f3 a5a4 f3e3 b2c1 e3f2 c1b2 f2e3 
-info depth 11 score cp 77777 time 0.067 nodes 90563 nps 1351686 pv a3b3 d3e2 c3c2 e2e1 b3a3 e1f1 c2c1 f1f2 c1f4 f2g2 f4c1 
-info depth 12 score cp 88872 time 0.088 nodes 123185 nps 1399829 pv a3b3 d3e2 c3c2 e2e3 c2c1 e3e2 b3a3 e2f2 c1e3 f2e3 b2c1 e3d3 
-search time = 88
-nodes searched = 123185
-branching factor = 2.6559087657651763
-hash hit rate = 0.6744814709583147
-avg hash hit rate = 0.1885927477115938
-after search state:
---------
---------
--------P
-P-------
---------
-K-Pk----
--B------
---------
-sending move 'a3b3'
-==========================================================================
-searching state:
-8/8/7p/p7/8/1kp1K3/1b6/8 b - - 3 -
---------
---------
--------P
-P-------
---------
--KP-k---
--B------
---------
-turn = 1
-info depth 1 score cp 854 time 0.0 nodes 36 nps 2147483647 pv c3c2 
-info depth 2 score cp 1369 time 0.001 nodes 125 nps 125000 pv c3c2 e3d2 
-info depth 3 score cp 1369 time 0.001 nodes 347 nps 347000 pv c3c2 e3d2 c2c1 
-info depth 4 score cp 1439 time 0.002 nodes 1369 nps 684500 pv c3c2 e3d2 a5a4 d2e3 
-info depth 5 score cp 1439 time 0.005 nodes 6102 nps 1220400 pv c3c2 e3d2 a5a4 d2e3 c2c1 
-info depth 6 score cp 1477 time 0.007 nodes 8803 nps 1257571 pv c3c2 e3d2 a5a4 d2e3 a4a3 e3e4 
-info depth 7 score cp 1484 time 0.012 nodes 15030 nps 1252500 pv c3c2 e3d2 c2c1 d2d3 a5a4 d3e4 a4a3 
-info depth 8 score cp 1544 time 0.017 nodes 23220 nps 1365882 pv c3c2 e3d2 c2c1 d2d3 c1d1 d3e3 d1c1 e3d3 
-info depth 9 score cp 1544 time 0.031 nodes 50894 nps 1641741 pv c3c2 e3d2 b2a1 d2d3 a1d4 d3d2 d4b2 d2e3 c2c1 
-info depth 10 score cp 77777 time 0.043 nodes 73693 nps 1713790 pv c3c2 e3d3 c2c1 d3e2 c1f4 e2e1 f4f3 e1d2 b3a2 d2e1 
-info depth 11 score cp 77777 time 0.069 nodes 136715 nps 1981376 pv c3c2 e3d2 c2c1 d2d3 c1d1 d3e3 d1g4 e3d2 g4f3 d2e1 b2c3 
-info depth 12 score cp 88872 time 0.104 nodes 211713 nps 2035701 pv c3c2 e3e2 c2c1 e2f3 c1g1 f3e4 g1a1 e4f3 a1c1 f3e2 c1f4 e2e1 
-search time = 104
-nodes searched = 211713
-branching factor = 2.778512109200772
-hash hit rate = 0.6492421343989269
-avg hash hit rate = 0.18899249906478507
-after search state:
---------
---------
--------P
-P-------
---------
--KP-k---
--B------
---------
-sending move 'c3c2'
-==========================================================================
-searching state:
-8/8/7p/p7/8/1k6/1bp1K3/8 b - - 1 -
---------
---------
--------P
-P-------
---------
--K------
--BP-k---
---------
-turn = 1
-info depth 1 score cp 1406 time 0.0 nodes 47 nps 2147483647 pv c2c1 
-info depth 2 score cp 1433 time 0.0 nodes 482 nps 2147483647 pv b3c4 e2f1 
-info depth 3 score cp 1445 time 0.001 nodes 938 nps 938000 pv c2c1 e2f3 b3b4 
-info depth 4 score cp 1461 time 0.002 nodes 3126 nps 1563000 pv c2c1 e2f3 c1c4 f3f2 
-info depth 5 score cp 1496 time 0.004 nodes 5339 nps 1334750 pv c2c1 e2f3 c1c4 f3f2 b2e5 
-info depth 6 score cp 1536 time 0.008 nodes 10382 nps 1297750 pv a5a4 e2f3 a4a3 f3e4 a3a2 e4d5 
-info depth 7 score cp 1569 time 0.016 nodes 28263 nps 1766437 pv c2c1 e2f3 c1c5 f3g2 c5g5 g2h1 b2e5 
-info depth 8 score cp 77777 time 0.026 nodes 44869 nps 1725730 pv c2c1 e2d3 c1c3 d3e2 c3e5 e2d2 b2c1 d2c1 
-info depth 9 score cp 2177 time 0.072 nodes 146802 nps 2038916 pv c2c1 e2f3 a5a4 f3e4 a4a3 e4d5 a3a2 d5d6 a2a1 
-info depth 10 score cp 77777 time 0.098 nodes 198682 nps 2027367 pv c2c1 e2f3 c1h1 f3g4 h1f1 g4h5 f1e2 h5h6 e2g4 h6h7 
-info depth 11 score cp 77777 time 0.235 nodes 520644 nps 2215506 pv c2c1 e2f3 c1f1 f3e4 f1a1 e4f3 a1d1 f3f2 d1d2 f2g3 d2d4 
-info depth 12 score cp 88874 time 0.43 nodes 905968 nps 2106902 pv c2c1 e2f3 c1c4 f3g2 c4e2 g2g3 e2e4 g3f2 e4f4 f2g1 b3a3 g1g2 
-search time = 430
-nodes searched = 905968
-branching factor = 3.136361192469721
-hash hit rate = 0.5685002119280151
-avg hash hit rate = 0.1903965912213143
-after search state:
---------
---------
--------P
-P-------
---------
--K------
--BP-k---
---------
-sending move 'c2c1'
-==========================================================================
-searching state:
-8/8/7p/p7/8/1k3K2/1b6/2q5 b - - 1 -
---------
---------
--------P
-P-------
---------
--K---k--
--B------
---Q-----
-turn = 1
-info depth 1 score cp 1454 time 0.0 nodes 148 nps 2147483647 pv c1c4 
-info depth 2 score cp 1486 time 0.001 nodes 424 nps 424000 pv c1c4 f3g2 
-info depth 3 score cp 1521 time 0.002 nodes 1584 nps 792000 pv c1c4 f3g2 b2f6 
-info depth 4 score cp 1508 time 0.006 nodes 5126 nps 854333 pv c1c4 f3g2 c4c3 g2f1 
-info depth 5 score cp 1569 time 0.013 nodes 15728 nps 1209846 pv c1d1 f3g2 d1d2 g2g1 a5a4 
-info depth 6 score cp 77777 time 0.019 nodes 22565 nps 1187631 pv c1d1 f3g2 d1e2 g2g1 b3a3 g1h1 
-info depth 7 score cp 77777 time 0.029 nodes 38879 nps 1340655 pv c1d1 f3g2 d1e2 g2h3 e2f3 h3h4 b2f6 
-info depth 8 score cp 88872 time 0.041 nodes 57098 nps 1392634 pv c1d1 f3g2 d1e2 g2g3 e2h5 g3g2 h5e2 g2g3 
-search time = 41
-nodes searched = 57098
-branching factor = 3.9316750092931403
-hash hit rate = 0.6584819082980139
-avg hash hit rate = 0.1905057118371151
-after search state:
---------
---------
--------P
-P-------
---------
--K---k--
--B------
---Q-----
-sending move 'c1d1'
-==========================================================================
-searching state:
-8/8/7p/p7/4K3/1k6/1b6/3q4 b - - 3 -
---------
---------
--------P
-P-------
-----k---
--K------
--B------
----Q----
-turn = 1
-info depth 1 score cp 1426 time 0.001 nodes 239 nps 239000 pv b3a3 
-info depth 2 score cp 1431 time 0.001 nodes 642 nps 642000 pv a5a4 e4f5 
-info depth 3 score cp 1467 time 0.003 nodes 2372 nps 790666 pv d1d4 e4f3 a5a4 
-info depth 4 score cp 1498 time 0.005 nodes 5046 nps 1009200 pv d1c1 e4f3 c1c4 f3g2 
-info depth 5 score cp 77777 time 0.008 nodes 12214 nps 1526750 pv d1h1 e4d3 h1f3 d3d2 b2c3 
-info depth 6 score cp 1542 time 0.026 nodes 36841 nps 1364481 pv d1e2 e4f4 h6h5 f4g5 e2g4 g5h6 
-info depth 7 score cp 77777 time 0.051 nodes 91432 nps 1792784 pv d1g4 e4d3 g4f3 d3d2 
-info depth 8 score cp 2201 time 0.11 nodes 189031 nps 1718463 pv a5a4 e4f4 a4a3 f4e4 a3a2 e4f5 h6h5 f5e4 
-info depth 9 score cp 77777 time 0.194 nodes 394698 nps 2034525 pv d1b1 e4f3 b1f1 f3g3 b2e5 g3g4 f1f4 g4h3 f4g3 
-info depth 10 score cp 88878 time 0.333 nodes 684471 nps 2055468 pv d1g4 e4d5 g4g6 d5c5 g6e6 c5b5 b2d4 b5a5 e6b6 a5b6 
-search time = 333
-nodes searched = 684471
-branching factor = 3.8329707513080726
-hash hit rate = 0.5787418312828447
-avg hash hit rate = 0.19158764369041623
-after search state:
---------
---------
--------P
-P-------
-----k---
--K------
--B------
----Q----
-sending move 'd1g4'
-==========================================================================
-searching state:
-8/8/7p/p2K4/6q1/1k6/1b6/8 b - - 5 -
---------
---------
--------P
-P--k----
-------Q-
--K------
--B------
---------
-turn = 1
-info depth 1 score cp 1434 time 0.0 nodes 260 nps 2147483647 pv g4g6 
-info depth 2 score cp 1451 time 0.001 nodes 551 nps 551000 pv g4e2 d5d6 
-info depth 3 score cp 1451 time 0.003 nodes 2169 nps 723000 pv g4e2 d5d6 a5a4 
-info depth 4 score cp 1471 time 0.006 nodes 7471 nps 1245166 pv a5a4 d5c6 g4d1 c6b5 
-info depth 5 score cp 1554 time 0.018 nodes 27983 nps 1554611 pv a5a4 d5d6 a4a3 d6d5 a3a2 
-info depth 6 score cp 77777 time 0.026 nodes 39126 nps 1504846 pv g4g6 d5c5 g6e6 c5b5 b2d4 b5a5 
-info depth 7 score cp 77777 time 0.077 nodes 144708 nps 1879324 pv g4g6 d5c5 g6e6 c5b5 b2d4 b5a5 e6b6 
-info depth 8 score cp 88880 time 0.099 nodes 183044 nps 1848929 pv g4g6 d5c5 g6e6 c5b5 b2d4 b5a5 e6b6 a5b6 
-search time = 100
-nodes searched = 183044
-branching factor = 4.547989330958989
-hash hit rate = 0.5985227595550796
-avg hash hit rate = 0.19189068793757266
-after search state:
---------
---------
--------P
-P--k----
-------Q-
--K------
--B------
---------
-sending move 'g4g6'
-==========================================================================
-searching state:
-8/8/6qp/p1K5/8/1k6/1b6/8 b - - 7 -
---------
---------
-------QP
-P-k-----
---------
--K------
--B------
---------
-turn = 1
-info depth 1 score cp 1451 time 0.002 nodes 239 nps 119500 pv g6e6 
-info depth 2 score cp 1451 time 0.002 nodes 544 nps 272000 pv a5a4 c5b5 
-info depth 3 score cp 1481 time 0.003 nodes 1943 nps 647666 pv a5a4 c5d5 a4a3 
-info depth 4 score cp 1503 time 0.004 nodes 3010 nps 752500 pv a5a4 c5d5 a4a3 d5c5 
-info depth 5 score cp 1574 time 0.007 nodes 10302 nps 1471714 pv a5a4 c5b5 a4a3 b5c5 a3a2 
-info depth 6 score cp 88882 time 0.012 nodes 16634 nps 1386166 pv g6e6 c5b5 b2d4 b5a5 e6b6 a5b6 
-search time = 12
-nodes searched = 16634
-branching factor = 5.052420045371533
-hash hit rate = 0.664843092461224
-avg hash hit rate = 0.191922692369539
-after search state:
---------
---------
-------QP
-P-k-----
---------
--K------
--B------
---------
-sending move 'g6e6'
-==========================================================================
-searching state:
-8/8/4q2p/pK6/8/1k6/1b6/8 b - - 9 -
---------
---------
-----Q--P
-Pk------
---------
--K------
--B------
---------
-turn = 1
-info depth 1 score cp 1476 time 0.001 nodes 138 nps 138000 pv b2d4 
-info depth 2 score cp 77777 time 0.001 nodes 214 nps 214000 pv b2d4 b5a5 
-info depth 3 score cp 77777 time 0.001 nodes 943 nps 943000 pv b2d4 b5a5 e6b6 
-info depth 4 score cp 88884 time 0.001 nodes 1418 nps 1418000 pv b2d4 b5a5 e6b6 a5b6 
-search time = 1
-nodes searched = 1418
-branching factor = 6.136476250057965
-hash hit rate = 0.6805359661495064
-avg hash hit rate = 0.19192551097945237
-after search state:
---------
---------
-----Q--P
-Pk------
---------
--K------
--B------
---------
-sending move 'b2d4'
-==========================================================================
-searching state:
-8/8/4q2p/K7/3b4/1k6/8/8 b - - 0 -
---------
---------
-----Q--P
-k-------
----B----
--K------
---------
---------
-turn = 1
-info depth 1 score cp 77777 time 0.0 nodes 88 nps 88000 pv e6b6 
-info depth 2 score cp 88886 time 0.001 nodes 132 nps 132000 pv e6b6 a5b6 
-search time = 1
-nodes searched = 132
-branching factor = 11.489125293076057
-hash hit rate = 0.6742424242424242
-avg hash hit rate = 0.1919257699793979
-after search state:
---------
---------
-----Q--P
-k-------
----B----
--K------
---------
---------
-sending move 'e6b6'
-connection opened
-tombookery: e7e5
-sending move 'e7e5'
-tombookery: b8c6
-sending move 'b8c6'
-tombookery: g8f6
-sending move 'g8f6'
-tombookery: d7d6
-sending move 'd7d6'
-tombookery: g7g6
-sending move 'g7g6'
-==========================================================================
-searching state:
-r1bqkb1r/ppp2p1p/2np1np1/1B2p3/3P4/1P2P3/PBP1NPPP/RN1QK2R b QKqk d3 0 -
-R-BQKB-R
-PPP--P-P
---NP-NP-
--b--P---
----p----
--p--p---
-pbp-nppp
-rn-qk--r
-turn = 1
-info depth 1 score cp 35 time 0.004 nodes 1271 nps 317750 pv c8d7 
-info depth 2 score cp 12 time 0.005 nodes 2267 nps 453400 pv c8d7 b1d2 
-info depth 3 score cp 11 time 0.014 nodes 8809 nps 629214 pv c8d7 e1g1 d7g4 
-info depth 4 score cp -3 time 0.021 nodes 13507 nps 643190 pv c8d7 e1g1 e5d4 e2d4 
-info depth 5 score cp -4 time 0.053 nodes 37366 nps 705018 pv c8d7 e1g1 e5d4 e2d4 c6d4 
-info depth 6 score cp -4 time 0.065 nodes 46409 nps 713984 pv c8d7 e1g1 e5d4 e2d4 c6d4 b5d7 
-info depth 7 score cp -4 time 0.087 nodes 64201 nps 737942 pv c8d7 e1g1 e5d4 e2d4 c6d4 b5d7 d8d7 
-info depth 8 score cp -14 time 0.35 nodes 311280 nps 889371 pv e5d4 e2d4 c8d7 b1d2 c6d4 b5d7 d8d7 b2d4 
-info depth 9 score cp -16 time 0.412 nodes 373212 nps 905854 pv e5d4 e2d4 c8d7 b1d2 c6d4 b5d7 f6d7 b2d4 d7e5 
-info depth 10 score cp -14 time 0.555 nodes 524424 nps 944908 pv e5d4 e2d4 c8d7 b1d2 c6e5 e1g1 f8h6 f2f4 d7b5 d4b5 
-info depth 11 score cp -16 time 1.494 nodes 1441744 nps 965022 pv d8e7 d4d5 a7a6 b5c6 b7c6 d5c6 f8h6 b1d2 e8g8 e1g1 c8f5 
-info depth 12 score cp -10 time 2.377 nodes 2288564 nps 962795 pv d8e7 d4d5 a7a6 b5c6 b7c6 d5c6 c8e6 b1c3 f8h6 e1g1 e8g8 d1d3 
-search time = 4314
-nodes searched = 4158873
-branching factor = 3.388157484428635
-hash hit rate = 0.09591925504818252
-avg hash hit rate = 0.09591925504818252
-after search state:
-R-BQKB-R
-PPP--P-P
---NP-NP-
--b--P---
----p----
--p--p---
-pbp-nppp
-rn-qk--r
-sending move 'd8e7'
-==========================================================================
-searching state:
-r1b1kb1r/ppp1qp1p/2np1np1/1B2P3/8/1P2P3/PBP1NPPP/RN1QK2R b QKqk - 0 -
-R-B-KB-R
-PPP-QP-P
---NP-NP-
--b--p---
---------
--p--p---
-pbp-nppp
-rn-qk--r
-turn = 1
-info depth 1 score cp 1 time 0.001 nodes 79 nps 79000 pv d6e5 
-info depth 2 score cp -12 time 0.002 nodes 469 nps 156333 pv d6e5 b1d2 
-info depth 3 score cp -2 time 0.005 nodes 1625 nps 325000 pv d6e5 e1g1 f8h6 
-info depth 4 score cp -10 time 0.008 nodes 3445 nps 430625 pv d6e5 e1g1 f8h6 b1d2 
-info depth 5 score cp -6 time 0.012 nodes 8232 nps 686000 pv d6e5 e1g1 c8g4 b1c3 a8d8 
-info depth 6 score cp -7 time 0.029 nodes 24723 nps 852517 pv d6e5 b1c3 e7d6 d1d6 f8d6 a1d1 
-info depth 7 score cp -1 time 0.055 nodes 49348 nps 897236 pv d6e5 b1c3 e7d6 e1g1 c8e6 d1d6 f8d6 
-info depth 8 score cp -2 time 0.165 nodes 147881 nps 896248 pv d6e5 b1d2 e7c5 b5d3 c6b4 d2c4 b4d3 d1d3 
-info depth 9 score cp -8 time 0.294 nodes 277509 nps 943908 pv d6e5 b1d2 c8g4 h2h3 g4d7 e1g1 e7c5 b5d3 e8c8 
-info depth 10 score cp 8 time 0.878 nodes 825125 nps 939777 pv d6e5 b1d2 c8d7 e1g1 e8c8 d1e1 e7c5 b5c4 d7f5 e2f4 
-info depth 11 score cp -2 time 1.16 nodes 1114617 nps 960876 pv d6e5 b1d2 c8d7 e1g1 e8c8 d2c4 e7c5 a2a4 f8h6 e2f4 c8b8 
-info depth 12 score cp 1 time 1.58 nodes 1565674 nps 990932 pv d6e5 b1d2 c8d7 e1g1 e8c8 d2c4 e7c5 a2a4 f8h6 d1e1 d7f5 b5c6 
-info depth 13 score cp 1 time 2.085 nodes 2129917 nps 1021542 pv d6e5 b1d2 c8d7 e1g1 e8c8 d2c4 e7c5 a2a4 f8h6 d1e1 d7f5 b5c6 c5c6 
-info depth 14 score cp 1 time 3.217 nodes 3354514 nps 1042746 pv d6e5 b1d2 c8d7 e1g1 e8c8 d2c4 e7c5 a2a4 f8h6 d1e1 d7f5 b5c6 c5c6 c4e5 
-search time = 3217
-nodes searched = 3354514
-branching factor = 2.9249362210497063
-hash hit rate = 0.1142779550182232
-avg hash hit rate = 0.10411589340466557
-after search state:
-R-B-KB-R
-PPP-QP-P
---NP-NP-
--b--p---
---------
--p--p---
-pbp-nppp
-rn-qk--r
-sending move 'd6e5'
-==========================================================================
-searching state:
-r1b1kb1r/ppp1qp1p/2n2np1/1B2p3/8/1P2P3/PBP1NPPP/RN1Q1RK1 b qk - 1 -
-R-B-KB-R
-PPP-QP-P
---N--NP-
--b--P---
---------
--p--p---
-pbp-nppp
-rn-q-rk-
-turn = 1
-info depth 1 score cp -5 time 0.0 nodes 204 nps 2147483647 pv c8f5 
-info depth 2 score cp 3 time 0.002 nodes 954 nps 477000 pv c8g4 b5c6 
-info depth 3 score cp 3 time 0.003 nodes 1411 nps 470333 pv c8g4 b5c6 b7c6 
-info depth 4 score cp 3 time 0.005 nodes 2567 nps 513400 pv c8g4 b5c6 b7c6 b1c3 
-info depth 5 score cp 3 time 0.006 nodes 3675 nps 612500 pv c8g4 b5c6 b7c6 b1c3 a8d8 
-info depth 6 score cp 6 time 0.052 nodes 34679 nps 666903 pv c8g4 h2h3 a8d8 b1d2 g4f5 f1e1 
-info depth 7 score cp 6 time 0.102 nodes 75258 nps 737823 pv c8g4 h2h3 g4d7 b1d2 e8c8 b5d3 f8h6 
-info depth 8 score cp 6 time 0.137 nodes 105851 nps 772635 pv c8g4 h2h3 g4d7 b1d2 e8c8 b5d3 f8h6 d2f3 
-info depth 9 score cp 8 time 0.292 nodes 249391 nps 854078 pv c8g4 h2h3 g4d7 b1d2 e8c8 e2g3 f8h6 f2f4 f6d5 
-info depth 10 score cp 11 time 0.533 nodes 501933 nps 941712 pv c8g4 h2h3 g4d7 b1d2 e8c8 d1e1 e7c5 b5d3 c6b4 d2c4 
-info depth 11 score cp 5 time 1.006 nodes 1010205 nps 1004179 pv c8f5 d1d2 e7c5 b1c3 a8d8 b5d3 f8h6 e2g3 f5d3 c2d3 e8g8 
-info depth 12 score cp 1 time 3.605 nodes 3794160 nps 1052471 pv c8g4 h2h3 g4d7 b2a3 e7e6 a3f8 e8f8 b1c3 a8d8 d1d2 e6e7 b5d3 
-search time = 4248
-nodes searched = 4512535
-branching factor = 3.5339437844223793
-hash hit rate = 0.10871871353906397
-avg hash hit rate = 0.10584302808549731
-after search state:
-R-B-KB-R
-PPP-QP-P
---N--NP-
--b--P---
---------
--p--p---
-pbp-nppp
-rn-q-rk-
-sending move 'c8g4'
-==========================================================================
-searching state:
-r3kb1r/ppp1qp1p/2n2np1/1B2p3/6b1/1P2PP2/PBP1N1PP/RN1Q1RK1 b qk - 0 -
-R---KB-R
-PPP-QP-P
---N--NP-
--b--P---
-------B-
--p--pp--
-pbp-n-pp
-rn-q-rk-
-turn = 1
-info depth 1 score cp 6 time 0.001 nodes 146 nps 146000 pv a8d8 
-info depth 2 score cp 6 time 0.001 nodes 366 nps 366000 pv a8d8 b1d2 
-info depth 3 score cp 14 time 0.006 nodes 3354 nps 559000 pv a8d8 b1d2 f8h6 
-info depth 4 score cp 23 time 0.02 nodes 12107 nps 605350 pv a8d8 b1d2 f8h6 f3f4 
-info depth 5 score cp 18 time 0.035 nodes 21231 nps 606600 pv a8d8 b1d2 f8h6 f3f4 e5f4 
-info depth 6 score cp 3 time 0.071 nodes 39953 nps 562718 pv a8d8 d1c1 g4f5 e2g3 e7e6 g3f5 
-info depth 7 score cp -1 time 0.146 nodes 75459 nps 516842 pv a8d8 d1c1 g4c8 f1d1 d8d1 c1d1 f8h6 
-info depth 8 score cp -13 time 0.208 nodes 128374 nps 617182 pv a8d8 d1c1 g4f5 e2g3 e7c5 b5c6 b7c6 g3f5 
-info depth 9 score cp -1 time 0.647 nodes 554119 nps 856443 pv g4d7 b2a3 e7d8 a3f8 e8f8 b1c3 a7a6 b5d3 f8g8 
-info depth 10 score cp 0 time 0.732 nodes 643980 nps 879754 pv g4d7 b2a3 e7d8 a3f8 e8f8 b1c3 a7a6 b5d3 c6b4 c3e4 
-info depth 11 score cp -2 time 0.849 nodes 759527 nps 894613 pv g4d7 b2a3 e7d8 a3f8 e8f8 b1c3 a7a6 b5d3 c6b4 c3e4 b4d3 
-info depth 12 score cp -1 time 1.374 nodes 1270081 nps 924367 pv g4d7 b2a3 e7e6 b5c4 e6f5 a3f8 e8f8 b1c3 c6b4 e3e4 f5g5 c3d5 
-info depth 13 score cp -6 time 1.986 nodes 1904565 nps 958995 pv g4d7 b2a3 e7d8 a3f8 e8f8 b1c3 a7a6 b5c4 f8g8 d1d2 d8e7 e2g3 a8d8 
-info depth 14 score cp -3 time 2.754 nodes 2693342 nps 977974 pv g4d7 b2a3 e7d8 a3f8 e8f8 b1c3 a7a6 b5c4 f8g8 d1d2 d8e7 c3e4 f6e4 f3e4 
-info depth 15 score cp -4 time 3.708 nodes 3723420 nps 1004158 pv g4d7 b2a3 e7d8 a3f8 e8f8 b1c3 a7a6 b5c4 b7b5 c4d3 c6b4 d1d2 b4d3 c2d3 f8g7 
-search time = 4149
-nodes searched = 4242785
-branching factor = 2.7419706500885748
-hash hit rate = 0.1120481004811698
-avg hash hit rate = 0.1074612751953797
-after search state:
-R---KB-R
-PPP-QP-P
---N--NP-
--b--P---
-------B-
--p--pp--
-pbp-n-pp
-rn-q-rk-
-sending move 'g4d7'
-==========================================================================
-searching state:
-r3kb1r/pppbqp1p/2n2np1/1B2p3/5P2/1P2P3/PBP1N1PP/RN1Q1RK1 b qk - 0 -
-R---KB-R
-PPPBQP-P
---N--NP-
--b--P---
------p--
--p--p---
-pbp-n-pp
-rn-q-rk-
-turn = 1
-info depth 1 score cp 3 time 0.001 nodes 561 nps 561000 pv e7c5 
-info depth 2 score cp 15 time 0.005 nodes 2291 nps 458200 pv e7c5 d1d3 
-info depth 3 score cp 12 time 0.013 nodes 7027 nps 540538 pv e7c5 d1d3 e8c8 
-info depth 4 score cp 46 time 0.02 nodes 12733 nps 636650 pv e7c5 d1d3 d7f5 b5c6 
-info depth 5 score cp 46 time 0.024 nodes 15926 nps 663583 pv e7c5 d1d3 d7f5 b5c6 c5c6 
-info depth 6 score cp 55 time 0.043 nodes 30763 nps 715418 pv e7c5 b5c6 c5e3 g1h1 d7c6 b2e5 
-info depth 7 score cp 44 time 0.068 nodes 52845 nps 777132 pv e7c5 b5c6 c5e3 g1h1 d7c6 b2e5 e3h3 
-info depth 8 score cp 63 time 0.116 nodes 93477 nps 805836 pv e7c5 b5c6 c5e3 g1h1 d7c6 b2e5 e3h3 f1f2 
-info depth 9 score cp 54 time 0.248 nodes 216921 nps 874681 pv e7c5 b5c6 c5e3 g1h1 d7c6 b2e5 e3h3 f1g1 f6g4 
-info depth 10 score cp 75 time 0.549 nodes 491432 nps 895140 pv e7c5 f4e5 c5e3 g1h1 c6e5 b5d7 f6d7 b1d2 f8b4 d2c4 
-info depth 11 score cp 62 time 0.799 nodes 758931 nps 949851 pv e7c5 f4e5 c5e3 g1h1 c6e5 b5d7 f6d7 b1d2 f8b4 d2c4 e3e4 
-info depth 12 score cp 61 time 1.335 nodes 1294911 nps 969970 pv e7c5 f4e5 c5e3 g1h1 c6e5 b5d7 f6d7 b2d4 e3g5 b1c3 d7f6 e2f4 
-info depth 13 score cp 49 time 2.081 nodes 2083581 nps 1001240 pv e7c5 f4e5 c5e3 g1h1 c6e5 b5d7 f6d7 b2d4 e3g5 b1c3 d7f6 c3b5 c7c5 
-info depth 14 score cp 56 time 3.319 nodes 3406408 nps 1026335 pv e7c5 f4e5 c5e3 g1h1 c6e5 b5d7 f6d7 b2d4 e3g5 b1c3 d7c5 d4e5 g5e5 d1d5 
-search time = 3319
-nodes searched = 3406408
-branching factor = 2.928145269265433
-hash hit rate = 0.11721555374458961
-avg hash hit rate = 0.10915006087639131
-after search state:
-R---KB-R
-PPPBQP-P
---N--NP-
--b--P---
------p--
--p--p---
-pbp-n-pp
-rn-q-rk-
-sending move 'e7c5'
-==========================================================================
-searching state:
-r3kb1r/pppb1p1p/2B2np1/2q1p3/5P2/1P2P3/PBP1N1PP/RN1Q1RK1 b qk - 0 -
-R---KB-R
-PPPB-P-P
---b--NP-
---Q-P---
------p--
--p--p---
-pbp-n-pp
-rn-q-rk-
-turn = 1
-info depth 1 score cp 60 time 0.0 nodes 186 nps 2147483647 pv c5e3 
-info depth 2 score cp 60 time 0.001 nodes 351 nps 351000 pv c5e3 g1h1 
-info depth 3 score cp 61 time 0.003 nodes 1835 nps 611666 pv d7c6 d1c1 f6g4 
-info depth 4 score cp 64 time 0.006 nodes 3690 nps 615000 pv d7c6 d1c1 f6g4 b2e5 
-info depth 5 score cp 64 time 0.01 nodes 6192 nps 619200 pv d7c6 d1c1 f6g4 b2e5 g4e5 
-info depth 6 score cp 68 time 0.026 nodes 22102 nps 850076 pv c5e3 g1h1 d7c6 b2e5 e3h3 f1f2 
-info depth 7 score cp 67 time 0.045 nodes 43501 nps 966688 pv d7c6 f4e5 c5e3 g1h1 a8d8 b2d4 e3h3 
-info depth 8 score cp 78 time 0.117 nodes 115951 nps 991034 pv d7c6 d1c1 c5d5 f1f3 e8c8 b1c3 d5e6 e3e4 
-info depth 9 score cp 86 time 0.194 nodes 199562 nps 1028670 pv d7c6 d1c1 c5d5 f1f3 e8c8 b1c3 d5e6 f3f1 f8c5 
-info depth 10 score cp 95 time 0.432 nodes 456241 nps 1056113 pv c5e3 f1f2 d7c6 b2e5 f6e4 d1d4 e3f2 d4f2 e4f2 e5h8 
-info depth 11 score cp 146 time 0.674 nodes 743487 nps 1103096 pv c5e3 f1f2 d7c6 b2c1 e3c5 c1a3 c5e3 f4e5 a8d8 d1d8 e8d8 
-info depth 12 score cp 164 time 1.098 nodes 1222352 nps 1113253 pv c5e3 g1h1 d7c6 e2d4 e5d4 b2d4 c6g2 h1g2 e3e4 f1f3 a8d8 c2c3 
-info depth 13 score cp 79 time 1.824 nodes 2035484 nps 1115945 pv c5e3 g1h1 d7c6 e2d4 e8c8 f4e5 f8c5 f1f6 c5d4 b2d4 d8d4 d1f1 c6d5 
-info depth 14 score cp 85 time 2.32 nodes 2609254 nps 1124678 pv c5e3 g1h1 d7c6 e2d4 e8c8 f4e5 f8c5 f1f6 c5d4 b2d4 d8d4 d1g1 e3g1 h1g1 
-info depth 15 score cp 96 time 3.133 nodes 3596579 nps 1147966 pv c5e3 g1h1 d7c6 e2d4 e8c8 f4e5 f8c5 e5f6 c5d4 b2d4 d8d4 d1e1 e3e1 f1e1 c8d7 
-search time = 4212
-nodes searched = 4906169
-branching factor = 2.735642278153194
-hash hit rate = 0.13577233071261915
-avg hash hit rate = 0.11446358945285365
-after search state:
-R---KB-R
-PPPB-P-P
---b--NP-
---Q-P---
------p--
--p--p---
-pbp-n-pp
-rn-q-rk-
-sending move 'c5e3'
-==========================================================================
-searching state:
-r3kb1r/pppb1p1p/2B2np1/4p3/5P2/1P2q3/PBP1N1PP/RN1Q1R1K b qk - 1 -
-R---KB-R
-PPPB-P-P
---b--NP-
-----P---
------p--
--p--Q---
-pbp-n-pp
-rn-q-r-k
-turn = 1
-info depth 1 score cp 60 time 0.002 nodes 516 nps 258000 pv d7c6 
-info depth 2 score cp 60 time 0.003 nodes 934 nps 311333 pv d7c6 b2e5 
-info depth 3 score cp 49 time 0.004 nodes 1819 nps 454750 pv d7c6 b2e5 e3h3 
-info depth 4 score cp 73 time 0.008 nodes 4463 nps 557875 pv d7c6 b2e5 e3h3 f1g1 
-info depth 5 score cp 59 time 0.01 nodes 6723 nps 611181 pv d7c6 b2e5 e3h3 f1g1 f6g4 
-info depth 6 score cp 165 time 0.033 nodes 21491 nps 651242 pv d7c6 e2g3 f6e4 g3e4 e3e4 d1g4 
-info depth 7 score cp 175 time 0.067 nodes 45047 nps 672343 pv d7c6 e2d4 e8c8 f4e5 c6g2 h1g2 f8c5 
-info depth 8 score cp 135 time 0.083 nodes 59579 nps 717819 pv d7c6 e2d4 e8c8 f4e5 e3e5 f1f6 c6g2 h1g2 
-info depth 9 score cp 91 time 0.111 nodes 94084 nps 847603 pv d7c6 e2d4 e5f4 d4c6 b7c6 b2f6 e3c1 
-info depth 10 score cp 140 time 0.731 nodes 858665 nps 1174644 pv d7c6 f4e5 e3h3 e2f4 c6g2 h1g1 f8c5 b2d4 c5d4 d1d4 
-info depth 11 score cp 115 time 1.067 nodes 1251672 nps 1173075 pv d7c6 e2g3 f6e4 d1e1 e3g3 e1g3 e4g3 h2g3 e8c8 b2e5 f8c5 
-info depth 12 score cp 75 time 1.325 nodes 1580059 nps 1192497 pv d7c6 e2g3 f6e4 d1e1 e3e1 f1e1 e4g3 h2g3 f7f6 f4e5 f8b4 b1c3 
-info depth 13 score cp 64 time 1.838 nodes 2177674 nps 1184806 pv d7c6 e2g3 f6e4 d1e1 e3e1 f1e1 e4f2 h1g1 f2g4 b2e5 g4e5 e1e5 f8e7 
-info depth 14 score cp 67 time 2.249 nodes 2723504 nps 1210446 pv d7c6 e2g3 f6e4 d1e1 e3e1 f1e1 e4g3 h2g3 e8c8 b2e5 f8b4 b1c3 h8e8 a2a3 
-search time = 2250
-nodes searched = 2723504
-branching factor = 2.8817214637184088
-hash hit rate = 0.14674441454831716
-avg hash hit rate = 0.11768342607164721
-after search state:
-R---KB-R
-PPPB-P-P
---b--NP-
-----P---
------p--
--p--Q---
-pbp-n-pp
-rn-q-r-k
-sending move 'd7c6'
-==========================================================================
-searching state:
-r3kb1r/ppp2p1p/2b2np1/4B3/5P2/1P2q3/P1P1N1PP/RN1Q1R1K b qk - 0 -
-R---KB-R
-PPP--P-P
---B--NP-
-----b---
------p--
--p--Q---
-p-p-n-pp
-rn-q-r-k
-turn = 1
-info depth 1 score cp 55 time 0.001 nodes 109 nps 54500 pv e3h3 
-info depth 2 score cp 74 time 0.003 nodes 681 nps 227000 pv e3h3 f1f2 
-info depth 3 score cp 78 time 0.003 nodes 1222 nps 407333 pv e3h3 f1f2 f8c5 
-info depth 4 score cp 250 time 0.007 nodes 5186 nps 740857 pv e3h3 f1f2 f6g4 d1g1 
-info depth 5 score cp 250 time 0.009 nodes 7577 nps 841888 pv e3h3 f1f2 f6g4 d1g1 g4f2 
-info depth 6 score cp 251 time 0.016 nodes 14114 nps 882125 pv e3h3 f1f2 f6g4 d1g1 f8c5 e2d4 
-info depth 7 score cp 255 time 0.023 nodes 21411 nps 930913 pv e3h3 f1f2 f6g4 d1g1 g4f2 g1f2 f8c5 
-info depth 8 score cp 262 time 0.051 nodes 45876 nps 899529 pv e3h3 f1f2 f6g4 d1g1 e8c8 e2d4 g4f2 g1f2 
-info depth 9 score cp 213 time 0.086 nodes 87341 nps 1015593 pv e3h3 f1f2 f6g4 d1g1 f8c5 e2d4 g4e5 d4c6 c5f2 
-info depth 10 score cp 227 time 0.231 nodes 233151 nps 1009311 pv e3h3 f1f2 f6g4 d1g1 g4e5 f4e5 f8c5 b1c3 e8c8 a2a4 
-info depth 11 score cp 227 time 0.326 nodes 351571 nps 1078438 pv e3h3 f1f2 f6g4 d1g1 g4e5 f4e5 f8c5 b1c3 e8c8 a2a4 c5f2 
-info depth 12 score cp 232 time 0.492 nodes 546545 nps 1110863 pv e3h3 f1f2 f6g4 d1g1 g4e5 f4e5 f8c5 b1c3 e8c8 a1e1 d8d2 c3b5 
-info depth 13 score cp 232 time 0.742 nodes 854833 nps 1152066 pv e3h3 f1f2 f6g4 d1g1 g4e5 f4e5 f8c5 b1c3 e8c8 a1e1 d8d2 c3b5 c5f2 
-info depth 14 score cp 232 time 1.31 nodes 1561504 nps 1191987 pv e3h3 f1f2 f6g4 d1g1 f8c5 e2d4 g4f2 g1f2 e8c8 e5h8 d8d4 a2a3 
-search time = 1310
-nodes searched = 1561504
-branching factor = 2.769465349512104
-hash hit rate = 0.16282314998872882
-avg hash hit rate = 0.1201252311866034
-after search state:
-R---KB-R
-PPP--P-P
---B--NP-
-----b---
------p--
--p--Q---
-p-p-n-pp
-rn-q-r-k
-sending move 'e3h3'
-==========================================================================
-searching state:
-r3kb1r/ppp2p1p/2b2np1/4B3/5P2/1P5q/P1P1N1PP/RN1Q2RK b qk - 2 -
-R---KB-R
-PPP--P-P
---B--NP-
-----b---
------p--
--p-----Q
-p-p-n-pp
-rn-q--rk
-turn = 1
-info depth 1 score cp 65 time 0.0 nodes 107 nps 2147483647 pv f6g4 
-info depth 2 score cp 428 time 0.0 nodes 487 nps 2147483647 pv f6g4 f4f5 
-info depth 3 score cp 978 time 0.001 nodes 944 nps 944000 pv f6g4 d1d7 e8d7 
-info depth 4 score cp 945 time 0.002 nodes 1556 nps 778000 pv f6g4 d1d7 e8d7 g1d1 
-info depth 5 score cp 77777 time 0.005 nodes 4352 nps 870400 pv f6g4 d1d8 a8d8 e2c1 h3h2 
-info depth 6 score cp 1514 time 0.009 nodes 8677 nps 964111 pv f6g4 d1d7 e8d7 g1d1 d7e8 d1d8 
-info depth 7 score cp 1514 time 0.011 nodes 10702 nps 972909 pv f6g4 d1d7 e8d7 g1d1 d7e8 d1d8 a8d8 
-info depth 8 score cp 77777 time 0.018 nodes 18407 nps 1022611 pv f6g4 d1d7 e8d7 g1d1 d7e8 d1d8 a8d8 f4f5 
-info depth 9 score cp 77777 time 0.027 nodes 28601 nps 1059296 pv f6g4 d1d7 e8d7 g1d1 d7e8 d1d8 a8d8 f4f5 h3g2 
-info depth 10 score cp 88878 time 0.051 nodes 56314 nps 1104196 pv f6g4 d1d7 e8d7 g1d1 d7e8 d1d8 a8d8 f4f5 h3g2 h1g2 
-search time = 51
-nodes searched = 56314
-branching factor = 2.985806352204393
-hash hit rate = 0.19080512838725716
-avg hash hit rate = 0.12026284906692018
-after search state:
-R---KB-R
-PPP--P-P
---B--NP-
-----b---
------p--
--p-----Q
-p-p-n-pp
-rn-q--rk
-sending move 'f6g4'
-tombookery: g1f3
-sending move 'g1f3'
-tombookery: e2e4
-sending move 'e2e4'
-tombookery: b1c3
-sending move 'b1c3'
-tombookery: d2d4
-sending move 'd2d4'
-tombookery: f1d3
-sending move 'f1d3'
-tombookery: d1e2
-sending move 'd1e2'
-tombookery: e4d5
-sending move 'e4d5'
-==========================================================================
-searching state:
-rn2k2r/pbp2ppp/1p2pn2/3q4/1b1P4/2NB1N2/PPP1QPPP/R1B1K2R w QKqk - 0 -
-RN--K--R
-PBP--PPP
--P--PN--
----Q----
--B-p----
---nb-n--
-ppp-qppp
-r-b-k--r
-turn = 0
-info depth 1 score cp 76 time 0.002 nodes 700 nps 350000 pv e1g1 
-info depth 2 score cp 77 time 0.005 nodes 1931 nps 386200 pv e1g1 d5d8 
-info depth 3 score cp 86 time 0.011 nodes 4766 nps 433272 pv e1g1 d5a5 c1d2 
-info depth 4 score cp 66 time 0.018 nodes 9795 nps 544166 pv e1g1 d5a5 c1d2 b8d7 
-info depth 5 score cp 56 time 0.044 nodes 34099 nps 774977 pv e1g1 d5a5 c1d2 b8d7 a2a3 
-info depth 6 score cp 64 time 0.064 nodes 52097 nps 814015 pv e1g1 d5a5 c1d2 b8d7 a2a3 b4d6 
-info depth 7 score cp 67 time 0.124 nodes 107644 nps 868096 pv e1g1 b4c3 b2c3 b8c6 c1f4 e8c8 f1b1 
-info depth 8 score cp 68 time 0.173 nodes 151514 nps 875803 pv e1g1 b4c3 b2c3 b8c6 c1f4 e8c8 d3c4 d5f5 
-info depth 9 score cp 60 time 0.708 nodes 661488 nps 934305 pv e1g1 d5d8 a2a3 b4e7 c1f4 b8d7 f1e1 e8g8 e2f1 
-info depth 10 score cp 56 time 1.505 nodes 1399842 nps 930127 pv e1g1 d5d8 a2a3 b4e7 d3b5 b8d7 c1f4 e8g8 b5c4 e7d6 
-info depth 11 score cp 60 time 2.582 nodes 2433884 nps 942635 pv e1g1 d5d8 c1g5 b8d7 a2a3 b4c3 b2c3 e8g8 a1b1 d8e7 b1b4 
-info depth 12 score cp 57 time 3.462 nodes 3289369 nps 950135 pv e1g1 d5d8 c1g5 b8d7 a2a3 b4e7 d3a6 b7a6 e2a6 e8g8 f1e1 e7d6 
-search time = 4424
-nodes searched = 4166506
-branching factor = 3.492148603855775
-hash hit rate = 0.08897527088644538
-avg hash hit rate = 0.08897527088644538
-after search state:
-RN--K--R
-PBP--PPP
--P--PN--
----Q----
--B-p----
---nb-n--
-ppp-qppp
-r-b-k--r
-sending move 'e1g1'
-==========================================================================
-searching state:
-rn2k2r/pbp2ppp/1p2pn2/3q4/3P4/2bB1N2/PPP1QPPP/R1B2RK1 w qk - 0 -
-RN--K--R
-PBP--PPP
--P--PN--
----Q----
----p----
---Bb-n--
-ppp-qppp
-r-b--rk-
-turn = 0
-info depth 1 score cp 102 time 0.0 nodes 126 nps 2147483647 pv b2c3 
-info depth 2 score cp 75 time 0.0 nodes 436 nps 2147483647 pv b2c3 b8c6 
-info depth 3 score cp 75 time 0.001 nodes 1117 nps 1117000 pv b2c3 b8c6 c1f4 
-info depth 4 score cp 75 time 0.002 nodes 1820 nps 910000 pv b2c3 b8c6 c1f4 e8c8 
-info depth 5 score cp 71 time 0.009 nodes 8877 nps 986333 pv b2c3 d5a5 c1d2 b8c6 c3c4 
-info depth 6 score cp 58 time 0.018 nodes 18740 nps 986315 pv b2c3 b8c6 c1f4 e8c8 f1b1 c8b8 
-info depth 7 score cp 55 time 0.056 nodes 57705 nps 1030446 pv b2c3 b8c6 d3b5 f6e4 a1b1 
-info depth 8 score cp 64 time 0.167 nodes 165833 nps 993011 pv b2c3 b8c6 c1f4 e8c8 f1b1 d5a5 b1b3 c8b8 
-info depth 9 score cp 52 time 0.227 nodes 230739 nps 1016471 pv b2c3 b8c6 c1f4 e8c8 f1b1 d5a5 b1b3 f6d5 f4d2 
-info depth 10 score cp 60 time 0.317 nodes 326096 nps 1028694 pv b2c3 b8c6 c1f4 e8c8 f1b1 d5a5 e2d2 c8b8 b1b5 a5a4 
-info depth 11 score cp 44 time 1.904 nodes 2001057 nps 1050975 pv b2c3 b8c6 c1d2 e8g8 d2f4 d5d7 f3g5 c6e7 a1b1 e7f5 d3f5 
-info depth 12 score cp 49 time 2.173 nodes 2308893 nps 1062537 pv b2c3 b8c6 c1d2 e8g8 d2f4 d5d7 f3g5 c6e7 a1b1 e7f5 f1e1 b7d5 
-info depth 13 score cp 47 time 3.637 nodes 3922718 nps 1078558 pv b2c3 b8c6 c1d2 e8g8 a2a4 d5d6 g2g3 d6e7 a1b1 e7a3 b1a1 a3b2 h2h3 
-info depth 14 score cp 46 time 4.406 nodes 4822131 nps 1094446 pv b2c3 b8c6 c1d2 e8g8 a2a4 d5d6 g2g3 d6d5 d2f4 c6d4 c3d4 d5f3 e2f3 b7f3 
-search time = 4406
-nodes searched = 4822131
-branching factor = 3.0017478939521682
-hash hit rate = 0.09290913083862716
-avg hash hit rate = 0.09108566738205136
-after search state:
-RN--K--R
-PBP--PPP
--P--PN--
----Q----
----p----
---Bb-n--
-ppp-qppp
-r-b--rk-
-sending move 'b2c3'
-==========================================================================
-searching state:
-rn3rk1/pbp2ppp/1p2pn2/3q4/3P4/2PB1N2/P1P1QPPP/R1B2RK1 w - - 1 -
-RN---RK-
-PBP--PPP
--P--PN--
----Q----
----p----
---pb-n--
-p-p-qppp
-r-b--rk-
-turn = 0
-info depth 1 score cp 87 time 0.001 nodes 100 nps 100000 pv c1a3 
-info depth 2 score cp 86 time 0.002 nodes 863 nps 431500 pv c1a3 c7c5 
-info depth 3 score cp 81 time 0.008 nodes 3769 nps 471125 pv c1a3 f8d8 f1b1 
-info depth 4 score cp 81 time 0.043 nodes 22898 nps 532511 pv c1a3 c7c5 d4c5 b6c5 
-info depth 5 score cp 75 time 0.069 nodes 38593 nps 559318 pv c1f4 b8d7 a1b1 f6e4 f4c7 
-info depth 6 score cp 75 time 0.105 nodes 59290 nps 564666 pv c1f4 b8d7 a1b1 f6e4 f4c7 e4c3 
-info depth 7 score cp 76 time 0.184 nodes 141688 nps 770043 pv c1a3 f8e8 d3c4 d5h5 a1b1 b7f3 g2f3 
-info depth 8 score cp 66 time 0.267 nodes 230925 nps 864887 pv c1a3 f8e8 e2e5 d5e5 f3e5 b8d7 d3b5 e8d8 
-info depth 9 score cp 63 time 0.463 nodes 443974 nps 958907 pv c1f4 b8d7 c3c4 d5c6 c2c3 f6g4 a1b1 f7f5 c4c5 
-info depth 10 score cp 60 time 0.932 nodes 939327 nps 1007861 pv c1f4 b8d7 c3c4 d5c6 f1e1 f6h5 f4d2 c6a4 f3e5 d7e5 
-info depth 11 score cp 51 time 1.855 nodes 1912963 nps 1031246 pv c1f4 b8d7 a2a4 f6e4 d3e4 d5e4 e2d2 e4f5 f4d6 b7f3 d6f8 
-info depth 12 score cp 52 time 2.784 nodes 2924366 nps 1050418 pv c1f4 b8d7 f4c7 d5c6 c7g3 c6c3 f1d1 b7d5 g3d6 f8c8 f3g5 b6b5 
-search time = 4771
-nodes searched = 5066810
-branching factor = 3.4580874930840846
-hash hit rate = 0.09787953367108694
-avg hash hit rate = 0.09353476982980335
-after search state:
-RN---RK-
-PBP--PPP
--P--PN--
----Q----
----p----
---pb-n--
-p-p-qppp
-r-b--rk-
-sending move 'c1f4'
-==========================================================================
-searching state:
-rn3rk1/pb3ppp/1p2pn2/2pq4/3P1B2/2PB1N2/P1P1QPPP/R4RK1 w - c6 0 -
-RN---RK-
-PB---PPP
--P--PN--
---PQ----
----p-b--
---pb-n--
-p-p-qppp
-r----rk-
-turn = 0
-info depth 1 score cp 97 time 0.001 nodes 514 nps 514000 pv f1b1 
-info depth 2 score cp 90 time 0.007 nodes 3996 nps 570857 pv d3c4 d5f5 
-info depth 3 score cp 82 time 0.021 nodes 14298 nps 680857 pv c3c4 d5h5 c2c3 
-info depth 4 score cp 76 time 0.039 nodes 27000 nps 692307 pv d3c4 d5f5 f4d6 f8d8 
-info depth 5 score cp 66 time 0.076 nodes 53974 nps 710184 pv c3c4 d5h5 d4c5 h5c5 a1b1 
-info depth 6 score cp 65 time 0.218 nodes 152723 nps 700564 pv d3c4 d5f5 f4d6 f8d8 d4c5 b6c5 
-info depth 7 score cp 67 time 0.271 nodes 207593 nps 766025 pv d3c4 d5f5 f4d6 f8d8 d4c5 b6c5 a1d1 
-info depth 8 score cp 61 time 0.651 nodes 569312 nps 874519 pv d3c4 d5f5 f4d6 f8d8 f3h4 f5e4 e2e4 b7e4 
-info depth 9 score cp 55 time 1.021 nodes 952878 nps 933279 pv d3c4 d5f5 f4d6 f8d8 d4c5 b6c5 f1d1 f6e4 d6e5 
-info depth 10 score cp 54 time 2.857 nodes 2682400 nps 938886 pv d3c4 d5f5 f4d6 f8d8 d4c5 b6c5 f1d1 f6e4 f3h4 f5g5 
-search time = 4656
-nodes searched = 4375641
-branching factor = 4.393922110234042
-hash hit rate = 0.09680844475129473
-avg hash hit rate = 0.09431195814376232
-after search state:
-RN---RK-
-PB---PPP
--P--PN--
---PQ----
----p-b--
---pb-n--
-p-p-qppp
-r----rk-
-sending move 'd3c4'
-==========================================================================
-searching state:
-rn3rk1/pb3ppp/1p2pn2/2p2q2/2BP1B2/2P2N2/P1P1QPPP/R4RK1 w - - 2 -
-RN---RK-
-PB---PPP
--P--PN--
---P--Q--
---bp-b--
---p--n--
-p-p-qppp
-r----rk-
-turn = 0
-info depth 1 score cp 74 time 0.001 nodes 173 nps 173000 pv f4d6 
-info depth 2 score cp 76 time 0.002 nodes 876 nps 438000 pv f4d6 f8d8 
-info depth 3 score cp 65 time 0.003 nodes 2228 nps 742666 pv f4d6 f8d8 d4c5 
-info depth 4 score cp 65 time 0.004 nodes 3449 nps 862250 pv f4d6 f8d8 d4c5 b6c5 
-info depth 5 score cp 49 time 0.011 nodes 11395 nps 1035909 pv f4d6 f8d8 d6c7 d8d7 c7b8 
-info depth 6 score cp 54 time 0.021 nodes 20054 nps 954952 pv f4d6 f8d8 d6c7 b7f3 e2f3 f5f3 
-info depth 7 score cp 54 time 0.026 nodes 25966 nps 998692 pv f4d6 f8d8 d6c7 b7f3 e2f3 f5f3 g2f3 
-info depth 8 score cp 61 time 0.071 nodes 70871 nps 998183 pv f4d6 f8d8 d6c7 d8d7 f3h4 f5e4 e2e4 b7e4 
-info depth 9 score cp 44 time 0.186 nodes 190367 nps 1023478 pv f4d6 f8d8 f3h4 f5e4 d6e7 e4e2 c4e2 d8d7 e7f6 
-info depth 10 score cp 44 time 0.525 nodes 550194 nps 1047988 pv f4d6 f8d8 f3h4 f5e4 d6e7 e4e2 c4e2 d8d7 e7f6 g7f6 
-info depth 11 score cp 35 time 1.691 nodes 1767288 nps 1045114 pv f4d6 f8d8 d4c5 b6c5 d6c7 d8d7 f3h4 f5g5 h4f3 g5f5 c4d3 
-info depth 12 score cp 37 time 2.424 nodes 2579864 nps 1064300 pv f4d6 f8d8 d4c5 b6c5 d6c7 d8d7 f3h4 f5g5 h4f3 g5f5 f3h4 f5g5 
-info depth 13 score cp 38 time 4.215 nodes 4538099 nps 1076654 pv f4d6 f8d8 d4c5 b6c5 a1d1 b8c6 e2e3 f6e4 d6c7 d8d1 f1d1 a8e8 h2h3 
-search time = 4513
-nodes searched = 4838003
-branching factor = 3.2513762431644513
-hash hit rate = 0.11491290931402895
-avg hash hit rate = 0.09859521371075475
-after search state:
-RN---RK-
-PB---PPP
--P--PN--
---P--Q--
---bp-b--
---p--n--
-p-p-qppp
-r----rk-
-sending move 'f4d6'
-==========================================================================
-searching state:
-rn3rk1/p4ppp/1p1Bpn2/2p2q2/2BP4/2P2b2/P1P1QPPP/R4RK1 w - - 0 -
-RN---RK-
-P----PPP
--P-bPN--
---P--Q--
---bp----
---p--B--
-p-p-qppp
-r----rk-
-turn = 0
-info depth 1 score cp 78 time 0.0 nodes 139 nps 2147483647 pv e2f3 
-info depth 2 score cp 78 time 0.003 nodes 1355 nps 451666 pv e2f3 f5f3 
-info depth 3 score cp 78 time 0.003 nodes 2108 nps 702666 pv e2f3 f5f3 g2f3 
-info depth 4 score cp 84 time 0.005 nodes 4089 nps 817800 pv e2f3 f5f3 g2f3 f8c8 
-info depth 5 score cp 84 time 0.008 nodes 6979 nps 872375 pv e2f3 f5f3 g2f3 f8c8 d4c5 
-info depth 6 score cp 84 time 0.019 nodes 16599 nps 873631 pv e2f3 f5f3 g2f3 f8c8 d4c5 b6c5 
-info depth 7 score cp 73 time 0.032 nodes 31501 nps 984406 pv e2f3 f5f3 g2f3 f8c8 d4c5 f6d7 f1e1 
-info depth 8 score cp 73 time 0.064 nodes 61169 nps 955765 pv e2f3 f5f3 g2f3 f8c8 d4c5 f6d7 f1e1 d7c5 
-info depth 9 score cp 86 time 0.093 nodes 98672 nps 1060989 pv e2f3 f5f3 g2f3 f8c8 d4c5 f6d7 f1e1 d7c5 a1b1 
-info depth 10 score cp 53 time 0.191 nodes 201823 nps 1056664 pv e2f3 f5f3 g2f3 f8c8 d4c5 f6d7 f1e1 d7c5 a1b1 b8c6 
-info depth 11 score cp 65 time 0.283 nodes 315864 nps 1116127 pv e2f3 f5f3 g2f3 f8c8 d4c5 f6d7 c5b6 a7b6 c4d3 c8c3 f1e1 
-info depth 12 score cp 51 time 0.516 nodes 599314 nps 1161461 pv e2f3 f5f3 g2f3 f8c8 d4c5 f6d7 c5b6 a7b6 c4d3 c8c3 d6b4 c3c8 
-info depth 13 score cp 61 time 0.719 nodes 877095 nps 1219881 pv e2f3 f5f3 g2f3 f8c8 d4c5 f6d7 c5b6 a7b6 c4d3 c8c3 d6b4 c3c8 f1e1 
-info depth 14 score cp 47 time 1.063 nodes 1357661 nps 1277197 pv e2f3 f5f3 g2f3 f8c8 d4c5 f6d7 a1d1 d7c5 d6c5 b6c5 d1b1 a7a5 f1d1 b8c6 
-search time = 1063
-nodes searched = 1357661
-branching factor = 2.741931017663924
-hash hit rate = 0.154514271235603
-avg hash hit rate = 0.10167800447253458
-after search state:
-RN---RK-
-P----PPP
--P-bPN--
---P--Q--
---bp----
---p--B--
-p-p-qppp
-r----rk-
-sending move 'e2f3'
-==========================================================================
-searching state:
-rn3rk1/p4ppp/1p1Bpn2/2p5/2BP4/2P2q2/P1P2PPP/R4RK1 w - - 0 -
-RN---RK-
-P----PPP
--P-bPN--
---P-----
---bp----
---p--Q--
-p-p--ppp
-r----rk-
-turn = 0
-info depth 1 score cp 74 time 0.001 nodes 75 nps 75000 pv g2f3 
-info depth 2 score cp 93 time 0.002 nodes 471 nps 235500 pv g2f3 f8c8 
-info depth 3 score cp 93 time 0.002 nodes 908 nps 454000 pv g2f3 f8c8 d4c5 
-info depth 4 score cp 93 time 0.003 nodes 1752 nps 584000 pv g2f3 f8c8 d4c5 b6c5 
-info depth 5 score cp 65 time 0.007 nodes 5513 nps 787571 pv g2f3 f8c8 d6c7 c8c7 f1d1 
-info depth 6 score cp 65 time 0.008 nodes 6945 nps 868125 pv g2f3 f8c8 d4c5 f6d7 g1g2 d7c5 
-info depth 7 score cp 49 time 0.009 nodes 9660 nps 1073333 pv g2f3 f8c8 d4c5 f6d7 g1g2 d7c5 a1c1 
-info depth 8 score cp 49 time 0.01 nodes 12178 nps 1217800 pv g2f3 f8c8 d4c5 f6d7 a1d1 d7c5 d6c5 b6c5 
-info depth 9 score cp 49 time 0.011 nodes 14785 nps 1344090 pv g2f3 f8c8 d4c5 f6d7 a1d1 d7c5 d6c5 b6c5 d1b1 
-info depth 10 score cp 50 time 0.016 nodes 22900 nps 1431250 pv g2f3 f8c8 d4c5 f6d7 f1d1 d7c5 d6c5 b6c5 a1b1 b8c6 
-info depth 11 score cp 43 time 0.042 nodes 67255 nps 1601309 pv g2f3 f8c8 d4c5 f6d7 a1d1 d7c5 d6c5 b6c5 d1b1 b8c6 f1d1 
-info depth 12 score cp 39 time 0.089 nodes 137633 nps 1546438 pv g2f3 f8c8 d4c5 f6d7 a1d1 d7c5 d6c5 b6c5 d1d6 b8c6 f1b1 c8c7 
-info depth 13 score cp 33 time 0.307 nodes 466401 nps 1519221 pv g2f3 f8c8 d4c5 f6d7 c5b6 a7b6 c4d3 c8c3 d6b4 c3c7 b4d6 c7c3 d6b4 
-info depth 14 score cp 36 time 0.537 nodes 826309 nps 1538750 pv g2f3 f8c8 d4c5 f6d7 f1e1 d7c5 d6f4 b8c6 g1g2 c8d8 a1d1 d8d1 e1d1 a7a5 
-search time = 537
-nodes searched = 826309
-branching factor = 2.646385050282235
-hash hit rate = 0.18496712488911532
-avg hash hit rate = 0.1043819051861778
-after search state:
-RN---RK-
-P----PPP
--P-bPN--
---P-----
---bp----
---p--Q--
-p-p--ppp
-r----rk-
-sending move 'g2f3'
-==========================================================================
-searching state:
-rnr3k1/p4ppp/1p1Bpn2/2p5/2BP4/2P2P2/P1P2P1P/R4RK1 w - - 1 -
-RNR---K-
-P----PPP
--P-bPN--
---P-----
---bp----
---p--p--
-p-p--p-p
-r----rk-
-turn = 0
-info depth 1 score cp 90 time 0.0 nodes 168 nps 2147483647 pv d4c5 
-info depth 2 score cp 90 time 0.0 nodes 416 nps 2147483647 pv d4c5 b6c5 
-info depth 3 score cp 66 time 0.001 nodes 955 nps 955000 pv d4c5 f6d7 f1e1 
-info depth 4 score cp 66 time 0.001 nodes 1353 nps 1353000 pv d4c5 f6d7 f1e1 d7c5 
-info depth 5 score cp 50 time 0.001 nodes 2018 nps 1009000 pv d4c5 f6d7 f1e1 d7c5 a1c1 
-info depth 6 score cp 49 time 0.003 nodes 3716 nps 1238666 pv d4c5 f6d7 f1e1 d7c5 a1b1 b8c6 
-info depth 7 score cp 28 time 0.028 nodes 36535 nps 1304821 pv d4c5 f6d7 c4e2 d7c5 f1d1 b8c6 d1e1 
-info depth 8 score cp 48 time 0.037 nodes 50349 nps 1360783 pv d4c5 f6d7 d6f4 d7c5 f4e5 b8d7 f1e1 
-info depth 9 score cp 30 time 0.06 nodes 79220 nps 1320333 pv d4c5 f6d7 a1b1 d7c5 c4b5 b8c6 f1e1 a7a5 g1g2 
-info depth 10 score cp 33 time 0.101 nodes 119163 nps 1179831 pv d4c5 f6d7 f1e1 d7c5 d6f4 b8c6 g1g2 c8d8 a1d1 d8d1 
-info depth 11 score cp 29 time 0.13 nodes 154722 nps 1190169 pv d4c5 f6d7 f1e1 d7c5 d6f4 b8c6 g1g2 c8d8 a1d1 a7a5 f4d6 
-info depth 12 score cp 33 time 0.152 nodes 195524 nps 1286342 pv d4c5 f6d7 f1e1 d7c5 d6f4 b8c6 g1g2 c8d8 a1d1 d8d1 e1d1 a7a5 
-info depth 13 score cp 28 time 0.313 nodes 435880 nps 1392587 pv d4c5 f6d7 f1e1 d7c5 d6f4 c5d7 e1e4 b8c6 g1g2 d7e5 c4d3 e5d3 c2d3 
-info depth 14 score cp 31 time 0.549 nodes 789519 nps 1438103 pv d4c5 f6d7 f1e1 d7c5 d6f4 c5d7 e1e4 d7c5 e4e1 b8c6 g1g2 c8d8 a1d1 d8d1 
-search time = 549
-nodes searched = 789519
-branching factor = 2.6377898008751384
-hash hit rate = 0.1877738217826297
-avg hash hit rate = 0.10689078589071654
-after search state:
-RNR---K-
-P----PPP
--P-bPN--
---P-----
---bp----
---p--p--
-p-p--p-p
-r----rk-
-sending move 'd4c5'
-==========================================================================
-searching state:
-r1r3k1/p2n1ppp/1p1Bpn2/2P5/2B5/2P2P2/P1P2P1P/R4RK1 w - - 1 -
-R-R---K-
-P--N-PPP
--P-bPN--
---p-----
---b-----
---p--p--
-p-p--p-p
-r----rk-
-turn = 0
-info depth 1 score cp 81 time 0.0 nodes 95 nps 2147483647 pv c4a6 
-info depth 2 score cp 87 time 0.0 nodes 394 nps 2147483647 pv c4a6 c8c6 
-info depth 3 score cp 84 time 0.001 nodes 953 nps 953000 pv c4a6 c8c6 a6b5 
-info depth 4 score cp 113 time 0.003 nodes 3093 nps 1031000 pv c4a6 d7c5 a6c8 a8c8 
-info depth 5 score cp 122 time 0.004 nodes 5030 nps 1257500 pv c4a6 c8c5 d6c5 d7c5 a6d3 
-info depth 6 score cp 103 time 0.008 nodes 10961 nps 1370125 pv c4a6 c8c5 d6c5 d7c5 a6d3 a8d8 
-info depth 7 score cp 99 time 0.016 nodes 20084 nps 1255250 pv c4a6 c8c5 d6c5 d7c5 a6d3 a8d8 f1d1 
-info depth 8 score cp 102 time 0.022 nodes 30521 nps 1387318 pv c4a6 c8c5 d6c5 d7c5 a6d3 a8d8 f1d1 g8f8 
-info depth 9 score cp 105 time 0.036 nodes 49012 nps 1361444 pv c4a6 c8c5 d6c5 d7c5 a6d3 c5d3 c2d3 a8c8 c3c4 
-info depth 10 score cp 104 time 0.061 nodes 83144 nps 1363016 pv c4a6 c8c5 d6c5 d7c5 a6b5 a7a6 b5d3 a8d8 f1d1 g8f8 
-info depth 11 score cp 103 time 0.102 nodes 145951 nps 1430892 pv c4a6 d7c5 a6c8 a8c8 a2a4 c5d7 a4a5 c8c3 a5b6 d7b6 g1g2 
-info depth 12 score cp 103 time 0.137 nodes 197739 nps 1443350 pv c4a6 d7c5 a6c8 a8c8 a2a4 c5d7 a4a5 c8c3 a5b6 d7b6 f1b1 b6d5 
-info depth 13 score cp 110 time 0.189 nodes 286371 nps 1515190 pv c4a6 d7c5 a6c8 a8c8 a2a4 c5d7 a4a5 c8c3 a5b6 d7b6 a1a7 f6d5 f1b1 
-info depth 14 score cp 103 time 0.263 nodes 413197 nps 1571091 pv c4a6 d7c5 a6c8 a8c8 a2a4 c5d7 a4a5 c8c3 a5b6 d7b6 a1a7 c3c2 f1b1 b6d5 
-search time = 263
-nodes searched = 413197
-branching factor = 2.518570329904638
-hash hit rate = 0.16847653782578287
-avg hash hit rate = 0.10784544003350569
-after search state:
-R-R---K-
-P--N-PPP
--P-bPN--
---p-----
---b-----
---p--p--
-p-p--p-p
-r----rk-
-sending move 'c4a6'
-==========================================================================
-searching state:
-r5k1/p2n1ppp/Bp1Bpn2/2r5/8/2P2P2/P1P2P1P/R4RK1 w - - 0 -
-R-----K-
-P--N-PPP
-bP-bPN--
---R-----
---------
---p--p--
-p-p--p-p
-r----rk-
-turn = 0
-info depth 1 score cp 120 time 0.0 nodes 72 nps 2147483647 pv d6c5 
-info depth 2 score cp 120 time 0.0 nodes 174 nps 2147483647 pv d6c5 d7c5 
-info depth 3 score cp 120 time 0.0 nodes 372 nps 2147483647 pv d6c5 d7c5 a6b5 
-info depth 4 score cp 109 time 0.0 nodes 649 nps 2147483647 pv d6c5 d7c5 a6b5 a8d8 
-info depth 5 score cp 115 time 0.0 nodes 1190 nps 2147483647 pv d6c5 d7c5 a6b5 a8d8 f1d1 
-info depth 6 score cp 117 time 0.001 nodes 2449 nps 2449000 pv d6c5 d7c5 a6b5 f6d5 c3c4 d5c3 
-info depth 7 score cp 113 time 0.002 nodes 3661 nps 1830500 pv d6c5 d7c5 a6b5 f6d5 c3c4 d5b4 c2c3 
-info depth 8 score cp 114 time 0.003 nodes 5623 nps 1874333 pv d6c5 d7c5 a6b5 f6d5 c3c4 d5b4 c2c3 b4d3 
-info depth 9 score cp 117 time 0.007 nodes 10257 nps 1465285 pv d6c5 d7c5 a6b5 f6d5 c3c4 d5c3 g1g2 a8d8 f1e1 
-info depth 10 score cp 122 time 0.022 nodes 34428 nps 1564909 pv d6c5 d7c5 a6b5 f6d5 c3c4 d5c3 g1g2 a8d8 f1e1 d8d2 
-info depth 11 score cp 123 time 0.049 nodes 76172 nps 1554530 pv d6c5 d7c5 a6b5 f6d5 c3c4 d5c3 f1e1 a8d8 e1e3 c3d1 e3e5 
-info depth 12 score cp 129 time 0.124 nodes 195318 nps 1575145 pv d6c5 d7c5 a6b5 f6d5 b5c6 a8d8 f1d1 d8d6 c6d5 e6d5 a1b1 d6g6 
-info depth 13 score cp 129 time 0.158 nodes 250227 nps 1583715 pv d6c5 d7c5 a6b5 f6d5 b5c6 a8d8 f1d1 d8d6 c6d5 e6d5 a1b1 d6g6 g1f1 
-info depth 14 score cp 122 time 0.474 nodes 788012 nps 1662472 pv d6c5 d7c5 a6b5 a7a6 b5d3 c5d3 c2d3 a8d8 a1b1 b6b5 f1d1 d8c8 b1b3 f6d5 
-search time = 474
-nodes searched = 788012
-branching factor = 2.6374298460554213
-hash hit rate = 0.13443703902986248
-avg hash hit rate = 0.10860898252788637
-after search state:
-R-----K-
-P--N-PPP
-bP-bPN--
---R-----
---------
---p--p--
-p-p--p-p
-r----rk-
-sending move 'd6c5'
-==========================================================================
-searching state:
-r5k1/p4ppp/Bp2pn2/2n5/8/2P2P2/P1P2P1P/R4RK1 w - - 0 -
-R-----K-
-P----PPP
-bP--PN--
---N-----
---------
---p--p--
-p-p--p-p
-r----rk-
-turn = 0
-info depth 1 score cp 118 time 0.0 nodes 51 nps 2147483647 pv a6b5 
-info depth 2 score cp 124 time 0.0 nodes 141 nps 2147483647 pv a6b5 a7a6 
-info depth 3 score cp 117 time 0.0 nodes 408 nps 2147483647 pv a6b5 a7a6 b5d3 
-info depth 4 score cp 121 time 0.0 nodes 662 nps 2147483647 pv a6b5 a7a6 b5d3 c5d3 
-info depth 5 score cp 121 time 0.0 nodes 1095 nps 2147483647 pv a6b5 a7a6 b5d3 c5d3 c2d3 
-info depth 6 score cp 110 time 0.001 nodes 1892 nps 1892000 pv a6b5 a7a6 b5d3 c5d3 c2d3 a8c8 
-info depth 7 score cp 116 time 0.002 nodes 3888 nps 1944000 pv a6b5 a7a6 b5d3 a8d8 a1b1 b6b5 f1d1 
-info depth 8 score cp 122 time 0.006 nodes 8305 nps 1384166 pv a6b5 a7a6 b5d3 f6d5 a1b1 c5d3 c2d3 a8c8 
-info depth 9 score cp 117 time 0.009 nodes 12701 nps 1411222 pv a6b5 a7a6 b5d3 f6d5 a1b1 c5d3 c2d3 a8c8 c3c4 
-info depth 10 score cp 118 time 0.022 nodes 29223 nps 1328318 pv a6b5 a7a6 b5d3 f6d5 a1b1 a8b8 c3c4 d5c3 b1b2 f7f5 
-info depth 11 score cp 120 time 0.039 nodes 54939 nps 1408692 pv a6b5 a7a6 b5d3 c5d3 c2d3 a8d8 a1b1 b6b5 f1d1 d8c8 b1b3 
-info depth 12 score cp 120 time 0.043 nodes 62340 nps 1449767 pv a6b5 a7a6 b5d3 c5d3 c2d3 a8d8 a1b1 b6b5 f1d1 d8c8 b1b3 f6d5 
-info depth 13 score cp 112 time 0.083 nodes 130807 nps 1575987 pv a6b5 a7a6 b5d3 c5d3 c2d3 a8d8 a1b1 b6b5 f1d1 d8c8 b1b3 f6d5 d1c1 
-info depth 14 score cp 113 time 0.142 nodes 221690 nps 1561197 pv a6b5 a7a6 b5d3 c5d3 c2d3 a8d8 a1b1 b6b5 f1d1 d8c8 b1b3 f6d5 d1c1 g8f8 
-search time = 142
-nodes searched = 221690
-branching factor = 2.409012244243323
-hash hit rate = 0.2139970228697731
-avg hash hit rate = 0.10945348171994419
-after search state:
-R-----K-
-P----PPP
-bP--PN--
---N-----
---------
---p--p--
-p-p--p-p
-r----rk-
-sending move 'a6b5'
-==========================================================================
-searching state:
-r5k1/p4ppp/1p2p3/1Bnn4/8/2P2P2/P1P2P1P/R4RK1 w - - 2 -
-R-----K-
-P----PPP
--P--P---
--bNN----
---------
---p--p--
-p-p--p-p
-r----rk-
-turn = 0
-info depth 1 score cp 107 time 0.001 nodes 62 nps 62000 pv b5c6 
-info depth 2 score cp 115 time 0.001 nodes 320 nps 320000 pv c3c4 d5c3 
-info depth 3 score cp 111 time 0.001 nodes 573 nps 573000 pv c3c4 d5c3 a2a4 
-info depth 4 score cp 111 time 0.001 nodes 887 nps 887000 pv c3c4 d5c3 a2a4 a7a5 
-info depth 5 score cp 117 time 0.004 nodes 2804 nps 560800 pv c3c4 d5b4 c2c3 b4d3 a1b1 
-info depth 6 score cp 135 time 0.006 nodes 4623 nps 770500 pv b5c6 a8d8 f1d1 d8d6 c6d5 e6d5 
-info depth 7 score cp 135 time 0.006 nodes 5619 nps 936500 pv b5c6 a8d8 f1d1 d8d6 c6d5 e6d5 a1b1 
-info depth 8 score cp 135 time 0.007 nodes 7036 nps 1005142 pv b5c6 a8d8 f1d1 d8d6 c6d5 e6d5 a1b1 g8f8 
-info depth 9 score cp 134 time 0.008 nodes 8991 nps 1123875 pv b5c6 a8d8 f1d1 d8d6 c6d5 e6d5 a1b1 g8f8 d1e1 
-info depth 10 score cp 134 time 0.009 nodes 12305 nps 1367222 pv b5c6 a8d8 f1d1 d8d6 c6d5 e6d5 a1b1 g8f8 d1e1 d6e6 
-info depth 11 score cp 122 time 0.041 nodes 65325 nps 1593292 pv b5c6 a8c8 c6d5 e6d5 f1d1 c5e6 d1d5 c8c3 d5d7 a7a6 d7d6 
-info depth 12 score cp 137 time 0.061 nodes 102336 nps 1677639 pv b5c6 a8c8 c6d5 e6d5 f1d1 c5e6 d1d5 c8c3 d5d7 a7a6 d7d6 b6b5 
-info depth 13 score cp 134 time 0.09 nodes 150579 nps 1673100 pv b5c6 a8c8 c6d5 e6d5 f1d1 c5e6 d1d5 c8c3 d5d7 a7a5 d7d6 b6b5 a2a4 
-info depth 14 score cp 138 time 0.133 nodes 232189 nps 1745781 pv b5c6 a8c8 c6d5 e6d5 f1d1 c5e6 d1d5 c8c3 d5d7 a7a5 d7d6 c3c2 d6b6 g8f8 
-search time = 133
-nodes searched = 232189
-branching factor = 2.416987492069553
-hash hit rate = 0.20114647980739828
-avg hash hit rate = 0.11021663172706765
-after search state:
-R-----K-
-P----PPP
--P--P---
--bNN----
---------
---p--p--
-p-p--p-p
-r----rk-
-sending move 'b5c6'
-==========================================================================
-searching state:
-2r3k1/p4ppp/1pB1p3/2nn4/8/2P2P2/P1P2P1P/R4RK1 w - - 4 -
---R---K-
-P----PPP
--Pb-P---
---NN----
---------
---p--p--
-p-p--p-p
-r----rk-
-turn = 0
-info depth 1 score cp 108 time 0.0 nodes 71 nps 2147483647 pv c6d5 
-info depth 2 score cp 108 time 0.001 nodes 278 nps 278000 pv c6d5 e6d5 
-info depth 3 score cp 120 time 0.001 nodes 495 nps 495000 pv c6d5 e6d5 g1g2 
-info depth 4 score cp 132 time 0.001 nodes 1084 nps 542000 pv c6d5 e6d5 a1d1 c5e6 
-info depth 5 score cp 132 time 0.002 nodes 1772 nps 886000 pv c6d5 e6d5 a1d1 c5e6 d1d5 
-info depth 6 score cp 132 time 0.003 nodes 2787 nps 929000 pv c6d5 e6d5 a1d1 c5e6 d1d5 c8c3 
-info depth 7 score cp 130 time 0.004 nodes 4634 nps 1158500 pv c6d5 e6d5 a1d1 c5e6 d1d5 c8c3 d5d7 
-info depth 8 score cp 138 time 0.006 nodes 6821 nps 1136833 pv c6d5 e6d5 a1d1 c5e6 d1d5 c8c3 d5d7 c3c2 
-info depth 9 score cp 122 time 0.021 nodes 23887 nps 1137476 pv c6d5 e6d5 f1d1 c5e6 d1d5 c8c3 d5d7 a7a5 d7d6 
-info depth 10 score cp 138 time 0.024 nodes 27856 nps 1160666 pv c6d5 e6d5 f1d1 c5e6 d1d5 c8c3 d5d7 a7a5 d7d6 c3c2 
-info depth 11 score cp 138 time 0.026 nodes 31809 nps 1223423 pv c6d5 e6d5 f1d1 c5e6 d1d5 c8c3 d5d7 a7a5 d7d6 c3c2 d6b6 
-info depth 12 score cp 138 time 0.029 nodes 38619 nps 1331689 pv c6d5 e6d5 f1d1 c5e6 d1d5 c8c3 d5d7 a7a5 d7d6 c3c2 d6b6 g8f8 
-info depth 13 score cp 144 time 0.164 nodes 266434 nps 1624597 pv c6d5 e6d5 f1d1 c8d8 g1g2 g8f8 d1d4 f8e7 a1e1 e7d6 g2g3 c5e6 d4b4 
-info depth 14 score cp 154 time 0.252 nodes 420046 nps 1666849 pv c6d5 e6d5 f1d1 c8d8 d1e1 c5e6 a1d1 g7g6 g1g2 d8c8 e1e3 g8g7 g2g3 c8d8 
-search time = 252
-nodes searched = 420046
-branching factor = 2.5215295436136156
-hash hit rate = 0.16940049423158415
-avg hash hit rate = 0.11109452549736183
-after search state:
---R---K-
-P----PPP
--Pb-P---
---NN----
---------
---p--p--
-p-p--p-p
-r----rk-
-sending move 'c6d5'
-==========================================================================
-searching state:
-2r3k1/p4ppp/1p6/2np4/8/2P2P2/P1P2P1P/R4RK1 w - - 0 -
---R---K-
-P----PPP
--P------
---NP----
---------
---p--p--
-p-p--p-p
-r----rk-
-turn = 0
-info depth 1 score cp 120 time 0.0 nodes 63 nps 2147483647 pv f1d1 
-info depth 2 score cp 127 time 0.0 nodes 337 nps 2147483647 pv f1d1 c8d8 
-info depth 3 score cp 136 time 0.0 nodes 550 nps 2147483647 pv f1d1 c8d8 a1b1 
-info depth 4 score cp 146 time 0.001 nodes 1447 nps 1447000 pv f1d1 c8d8 g1g2 c5e6 
-info depth 5 score cp 146 time 0.001 nodes 1985 nps 1985000 pv f1d1 c8d8 g1g2 c5e6 g2g3 
-info depth 6 score cp 145 time 0.002 nodes 3487 nps 1743500 pv f1d1 c8d8 g1g2 g7g6 g2g3 g8g7 
-info depth 7 score cp 145 time 0.003 nodes 4576 nps 1525333 pv f1d1 c8d8 g1g2 g7g6 g2g3 g8g7 d1d4 
-info depth 8 score cp 154 time 0.005 nodes 8551 nps 1710200 pv f1d1 c8d8 d1e1 c5e6 a1d1 g8f8 e1e5 d8c8 
-info depth 9 score cp 154 time 0.006 nodes 10649 nps 1774833 pv f1d1 c8d8 d1e1 c5e6 a1d1 g8f8 e1e5 d8c8 d1d5 
-info depth 10 score cp 154 time 0.008 nodes 13781 nps 1722625 pv f1d1 c8d8 d1e1 c5e6 a1d1 g8f8 e1e5 d8c8 d1d5 c8c3 
-info depth 11 score cp 154 time 0.011 nodes 17842 nps 1622000 pv f1d1 c8d8 d1e1 c5e6 a1d1 g8f8 e1e5 d8c8 d1d5 c8c3 d5d7 
-info depth 12 score cp 162 time 0.13 nodes 196420 nps 1510923 pv f1d1 c8d8 d1d4 d8c8 d4d5 c5a4 a1d1 c8e8 d5d8 a4c3 
-info depth 13 score cp 162 time 0.166 nodes 264670 nps 1594397 pv f1d1 c8d8 d1d4 c5e6 d4a4 d8d7 g1g2 d7c7 a1d1 a7a5 d1d5 c7c3 d5d6 
-info depth 14 score cp 160 time 0.256 nodes 418426 nps 1634476 pv f1d1 c8d8 d1d4 c5e6 d4a4 d8d7 a1d1 f7f5 g1f1 g8f7 f1e2 f7f6 e2e3 f6e5 
-search time = 256
-nodes searched = 418426
-branching factor = 2.5208336656601507
-hash hit rate = 0.18813123467470952
-avg hash hit rate = 0.11221625451435022
-after search state:
---R---K-
-P----PPP
--P------
---NP----
---------
---p--p--
-p-p--p-p
-r----rk-
-sending move 'f1d1'
-==========================================================================
-searching state:
-2r3k1/p4ppp/1p6/3p4/n7/2P2P2/P1P2P1P/R2R2K1 w - - 2 -
---R---K-
-P----PPP
--P------
----P----
-N-------
---p--p--
-p-p--p-p
-r--r--k-
-turn = 0
-info depth 1 score cp 139 time 0.0 nodes 47 nps 47000 pv d1d5 
-info depth 2 score cp 139 time 0.002 nodes 136 nps 68000 pv d1d5 a4c3 
-info depth 3 score cp 137 time 0.003 nodes 568 nps 189333 pv d1d5 a4c3 d5d7 
-info depth 4 score cp 164 time 0.003 nodes 1017 nps 339000 pv d1d5 a4c3 d5d7 c3b5 
-info depth 5 score cp 164 time 0.004 nodes 1635 nps 408750 pv d1d5 a4c3 d5d7 c3b5 a1b1 
-info depth 6 score cp 169 time 0.006 nodes 3873 nps 645500 pv d1d5 a4c3 d5d7 a7a6 g1g2 c8e8 
-info depth 7 score cp 164 time 0.009 nodes 6689 nps 743222 pv d1d5 a4c3 d5d7 a7a6 g1g2 c3e2 d7d6 
-info depth 8 score cp 165 time 0.012 nodes 10774 nps 897833 pv d1d5 a4c3 d5d7 a7a6 g1g2 c3e2 d7d6 e2f4 
-info depth 9 score cp 164 time 0.023 nodes 23020 nps 1000869 pv d1d5 a4c3 d5d7 a7a5 g1g2 c3e2 d7d6 b6b5 d6d5 
-info depth 10 score cp 162 time 0.091 nodes 97585 nps 1072362 pv d1d5 a4c3 d5d7 a7a5 g1g2 g7g6 d7d6 b6b5 d6a6 a5a4 
-info depth 11 score cp 159 time 0.112 nodes 129961 nps 1160366 pv d1d5 a4c3 d5d7 a7a5 g1g2 g8f8 d7d6 b6b5 d6a6 a5a4 g2g3 
-info depth 12 score cp 167 time 0.141 nodes 178570 nps 1266453 pv d1d5 a4c3 d5d7 a7a5 g1g2 g7g6 d7d6 b6b5 a2a3 g8g7 a1e1 c8c4 
-info depth 13 score cp 163 time 0.256 nodes 355880 nps 1390156 pv d1d5 a4c3 d5d7 a7a5 g1g2 g7g5 d7d6 b6b5 a1e1 g8g7 e1e5 f7f6 e5e7 
-info depth 14 score cp 167 time 0.3 nodes 432760 nps 1442533 pv d1d5 a4c3 d5d7 a7a5 g1g2 g7g5 d7d6 b6b5 a1e1 g8g7 a2a3 f7f6 g2g3 g7g6 
-search time = 300
-nodes searched = 432760
-branching factor = 2.526905958202483
-hash hit rate = 0.17070893797948056
-avg hash hit rate = 0.11308407241959759
-after search state:
---R---K-
-P----PPP
--P------
----P----
-N-------
---p--p--
-p-p--p-p
-r--r--k-
-sending move 'd1d5'
-==========================================================================
-searching state:
-2r3k1/p4p1p/1p4p1/3R4/n7/2P2P2/P1P2P1P/R5K1 w - - 0 -
---R---K-
-P----P-P
--P----P-
----r----
-N-------
---p--p--
-p-p--p-p
-r-----k-
-turn = 0
-info depth 1 score cp 188 time 0.001 nodes 176 nps 176000 pv d5d7 
-info depth 2 score cp 188 time 0.001 nodes 406 nps 406000 pv d5d7 a4c3 
-info depth 3 score cp 188 time 0.002 nodes 839 nps 419500 pv d5d7 a4c3 d7a7 
-info depth 4 score cp 188 time 0.003 nodes 1878 nps 626000 pv d5d7 a4c3 d7a7 c3e2 
-info depth 5 score cp 188 time 0.006 nodes 4155 nps 692500 pv d5d7 a4c3 d7a7 c3e2 g1g2 
-info depth 6 score cp 188 time 0.01 nodes 8199 nps 819900 pv d5d7 a4c3 d7a7 c3e2 g1g2 c8c2 
-info depth 7 score cp 173 time 0.022 nodes 22087 nps 1003954 pv d5d7 a7a6 a1b1 c8c3 d7d4 b6b5 d4d6 
-info depth 8 score cp 175 time 0.045 nodes 48191 nps 1070911 pv d5d7 a7a6 g1g2 c8c3 a1c1 a4c5 d7d6 b6b5 
-info depth 9 score cp 177 time 0.056 nodes 64680 nps 1155000 pv d5d7 a7a6 g1g2 c8c3 a1c1 a4c5 d7d6 b6b5 g2g3 
-info depth 10 score cp 173 time 0.077 nodes 98670 nps 1281428 pv d5d7 a7a6 g1g2 c8c3 d7d2 c3c4 a1e1 a4c5 e1b1 b6b5 
-info depth 11 score cp 169 time 0.108 nodes 148042 nps 1370759 pv d5d7 a7a6 g1g2 c8c3 d7d2 g8g7 g2g3 c3c4 a1e1 a4c3 d2d6 
-info depth 12 score cp 165 time 0.25 nodes 398815 nps 1595260 pv g1g2 a4c3 d5d7 a7a6 d7d6 c3a4 d6d4 a4b2 a1c1 b2c4 c1e1 g8g7 
-info depth 13 score cp 163 time 0.384 nodes 642157 nps 1672283 pv g1g2 a4c3 d5d7 a7a6 d7d6 c3a4 d6d4 a4b2 a1c1 b2c4 c1b1 g8g7 g2g3 
-info depth 14 score cp 165 time 0.71 nodes 1237611 nps 1743114 pv g1g2 c8c3 a1b1 c3c2 d5d8 g8g7 d8a8 
-info depth 15 score cp 159 time 1.21 nodes 2169758 nps 1793188 pv g1g2 c8c3 d5d7 a7a6 d7d2 g8g7 a1b1 c3c7 d2d4 b6b5 
-info depth 16 score cp 162 time 1.625 nodes 2944172 nps 1811798 pv g1g2 c8c3 d5d7 a7a6 d7d2 a4c5 a1e1 b6b5 e1e3 c3c4 c2c3 c5e6 d2d6 e6f4 g2g3 c4e4 
-info depth 17 score cp 162 time 1.973 nodes 3595628 nps 1822416 pv g1g2 c8c3 d5d7 a7a6 d7d2 a4c5 a1e1 g8g7 e1e3 c3c4 c2c3 c4a4 g2g3 g7f6 d2d6 f6f5 d6b6 
-info depth 18 score cp 164 time 2.814 nodes 5169892 nps 1837203 pv g1g2 c8c3 d5d7 a7a6 a1e1 a4c5 d7d2 g8g7 e1e3 c3c4 c2c3 c4a4 g2g3 h7h5 d2d6 h5h4 g3g2 b6b5 
-info depth 19 score cp 163 time 3.361 nodes 6233008 nps 1854509 pv g1g2 c8c3 d5d7 a7a6 a1e1 a4c5 d7d2 g8g7 e1e3 c3c4 c2c3 c4a4 g2g3 h7h5 d2d6 h5h4 g3g2 b6b5 e3e5 
-search time = 3362
-nodes searched = 6233008
-branching factor = 2.2783249575518263
-hash hit rate = 0.18595868960861273
-avg hash hit rate = 0.12591468233859035
-after search state:
---R---K-
-P----P-P
--P----P-
----r----
-N-------
---p--p--
-p-p--p-p
-r-----k-
-sending move 'g1g2'
-==========================================================================
-searching state:
-6k1/p4p1p/1pr3p1/3R4/n7/2P2P2/P1P2PKP/R7 w - - 2 -
-------K-
-P----P-P
--PR---P-
----r----
-N-------
---p--p--
-p-p--pkp
-r-------
-turn = 0
-info depth 1 score cp 277 time 0.001 nodes 135 nps 135000 pv a1e1 
-info depth 2 score cp 270 time 0.001 nodes 525 nps 525000 pv d5d7 g8g7 
-info depth 3 score cp 262 time 0.002 nodes 1604 nps 802000 pv d5d7 a7a6 d7d8 
-info depth 4 score cp 262 time 0.002 nodes 2307 nps 1153500 pv d5d7 a7a6 d7d8 g8g7 
-info depth 5 score cp 245 time 0.005 nodes 5688 nps 1137600 pv d5d7 a7a6 d7a7 b6b5 a7a8 
-info depth 6 score cp 245 time 0.008 nodes 9055 nps 1131875 pv d5d7 a7a6 d7a7 b6b5 a7a8 g8g7 
-info depth 7 score cp 192 time 0.016 nodes 22579 nps 1411187 pv d5d7 a7a6 d7a7 b6b5 c3c4 c6c4 a7a6 
-info depth 8 score cp 190 time 0.03 nodes 44851 nps 1446806 pv d5d7 a7a6 a1e1 a4c3 e1e7 c3a2 e7f7 a6a5 
-info depth 9 score cp 190 time 0.04 nodes 61167 nps 1529175 pv d5d7 a7a6 a1e1 a4c3 e1e7 c3a2 e7f7 a6a5 f7h7 
-info depth 10 score cp 190 time 0.057 nodes 84491 nps 1482298 pv d5d7 a7a6 a1e1 a4c3 e1e7 c3a2 e7f7 a6a5 f7h7 c6c2 
-info depth 11 score cp 186 time 0.095 nodes 144035 nps 1516157 pv d5d7 a7a6 a1e1 a4c3 e1e7 c6f6 a2a3 g8g7 g2g3 f6f5 g3g4 
-info depth 12 score cp 186 time 0.13 nodes 206098 nps 1585369 pv d5d7 a7a6 a1e1 a4c3 e1e7 c6f6 a2a3 g8g7 g2g3 f6f5 d7d6 f5b5 
-info depth 13 score cp 184 time 0.197 nodes 326431 nps 1657010 pv d5d7 a7a6 a1e1 a4c3 e1e7 c6f6 a2a3 g8g7 d7d3 f6c6 d3d7 c6f6 g2g3 
-info depth 14 score cp 184 time 0.276 nodes 475547 nps 1722996 pv d5d7 a7a6 a1e1 a4c3 e1e7 c6f6 a2a3 g8g7 d7d3 f6c6 d3d7 c6f6 g2g3 f6f5 
-search time = 276
-nodes searched = 475547
-branching factor = 2.5439807315835514
-hash hit rate = 0.2523914565752702
-avg hash hit rate = 0.127591101431247
-after search state:
-------K-
-P----P-P
--PR---P-
----r----
-N-------
---p--p--
-p-p--pkp
-r-------
-sending move 'd5d7'
-==========================================================================
-searching state:
-6k1/3R1p1p/1pr3p1/p7/n7/2P2P2/P1P2PKP/R7 w - a6 0 -
-------K-
----r-P-P
--PR---P-
-P-------
-N-------
---p--p--
-p-p--pkp
-r-------
-turn = 0
-info depth 1 score cp 203 time 0.0 nodes 76 nps 2147483647 pv a1e1 
-info depth 2 score cp 203 time 0.0 nodes 174 nps 2147483647 pv a1e1 a4c3 
-info depth 3 score cp 185 time 0.001 nodes 1261 nps 1261000 pv a2a3 a4c3 a3a4 
-info depth 4 score cp 184 time 0.002 nodes 3033 nps 1516500 pv a1e1 a4c3 e1e8 g8g7 
-info depth 5 score cp 183 time 0.004 nodes 4681 nps 1170250 pv a1e1 a4c3 a2a3 g8g7 g2g3 
-info depth 6 score cp 191 time 0.005 nodes 7418 nps 1483600 pv a1e1 a4c3 a2a3 c6c5 g2g3 c5d5 
-info depth 7 score cp 188 time 0.008 nodes 12750 nps 1593750 pv a1e1 a4c3 a2a3 c6c5 g2g3 c5d5 d7e7 
-info depth 8 score cp 187 time 0.018 nodes 30508 nps 1605684 pv a1e1 a4c3 a2a3 c6c5 g2g3 g8g7 e1e7 c5f5 
-info depth 9 score cp 187 time 0.028 nodes 46454 nps 1659071 pv a1e1 a4c3 a2a3 c6c5 g2g3 g8g7 e1e7 c5f5 g3g4 
-info depth 10 score cp 184 time 0.058 nodes 101292 nps 1746413 pv a1e1 a4c3 a2a3 c6c4 e1e8 g8g7 e8e7 c4f4 g2g3 g6g5 
-info depth 11 score cp 184 time 0.094 nodes 158160 nps 1682553 pv a1e1 a4c3 a2a3 c6c4 g2g3 c3b5 e1e8 g8g7 e8e7 b5a3 e7f7 
-info depth 12 score cp 181 time 0.2 nodes 339643 nps 1698215 pv a1e1 a4c3 a2a3 c3b5 e1e8 g8g7 e8e7 b5a3 e7f7 g7g8 f7h7 a3c2 
-info depth 13 score cp 182 time 0.273 nodes 471945 nps 1728736 pv a1e1 a4c3 a2a3 c6c5 e1d1 c3d1 g2g3 
-info depth 14 score cp 182 time 0.556 nodes 956011 nps 1719444 pv a1e1 a4c3 a2a3 c6c5 g2g3 g8g7 e1e7 c5g5 g3f4 g5f5 f4g4 h7h5 g4g3 c3d5 
-search time = 556
-nodes searched = 956011
-branching factor = 2.6740893888689037
-hash hit rate = 0.18814741671382443
-avg hash hit rate = 0.1291628379474253
-after search state:
-------K-
----r-P-P
--PR---P-
-P-------
-N-------
---p--p--
-p-p--pkp
-r-------
-sending move 'a1e1'
-==========================================================================
-searching state:
-6k1/3R1p1p/1pr3p1/p7/8/2n2P2/P1P2PKP/4R3 w - - 0 -
-------K-
----r-P-P
--PR---P-
-P-------
---------
---N--p--
-p-p--pkp
-----r---
-turn = 0
-info depth 1 score cp 194 time 0.0 nodes 85 nps 2147483647 pv a2a3 
-info depth 2 score cp 185 time 0.001 nodes 201 nps 201000 pv a2a3 g8g7 
-info depth 3 score cp 182 time 0.001 nodes 507 nps 507000 pv a2a3 g8g7 g2g3 
-info depth 4 score cp 181 time 0.002 nodes 2002 nps 1001000 pv a2a3 c3b5 e1e8 g8g7 
-info depth 5 score cp 185 time 0.005 nodes 4683 nps 936600 pv a2a3 c3b5 e1e8 g8g7 e8e5 
-info depth 6 score cp 183 time 0.006 nodes 6941 nps 1156833 pv a2a3 c6c5 g2g3 g8g7 e1e7 c5g5 
-info depth 7 score cp 183 time 0.007 nodes 8832 nps 1261714 pv a2a3 c6c5 g2g3 g8g7 e1e7 c5g5 g3f4 
-info depth 8 score cp 183 time 0.009 nodes 10527 nps 1169666 pv a2a3 c6c5 g2g3 g8g7 e1e7 c5g5 g3f4 g5f5 
-info depth 9 score cp 183 time 0.011 nodes 13421 nps 1220090 pv a2a3 c6c5 g2g3 g8g7 e1e7 c5g5 g3f4 g5f5 f4g4 
-info depth 10 score cp 183 time 0.012 nodes 16330 nps 1360833 pv a2a3 c6c5 g2g3 g8g7 e1e7 c5g5 g3f4 g5f5 f4g4 h7h5 
-info depth 11 score cp 183 time 0.017 nodes 22289 nps 1311117 pv a2a3 c6c5 g2g3 g8g7 e1e7 c5g5 g3f4 g5f5 f4g4 h7h5 g4g3 
-info depth 12 score cp 183 time 0.022 nodes 30845 nps 1402045 pv a2a3 c6c5 g2g3 g8g7 e1e7 c5g5 g3f4 g5f5 f4g4 h7h5 g4g3 c3d5 
-info depth 13 score cp 183 time 0.083 nodes 126201 nps 1520493 pv a2a3 c6c5 g2g3 g8g7 e1e7 c5g5 g3f4 g5f5 f4g4 h7h5 g4g3 a5a4 f3f4 
-info depth 14 score cp 181 time 0.277 nodes 466249 nps 1683209 pv a2a3 c6c5 e1e7 c5f5 h2h4 c3d5 e7e1 g8g7 g2g3 d5f6 d7d6 f6h5 g3g2 h5f4 
-search time = 277
-nodes searched = 466249
-branching factor = 2.540395176857787
-hash hit rate = 0.20512859008812886
-avg hash hit rate = 0.1301124150680508
-after search state:
-------K-
----r-P-P
--PR---P-
-P-------
---------
---N--p--
-p-p--pkp
-----r---
-sending move 'a2a3'
-==========================================================================
-searching state:
-6k1/3R1p1p/1pr3p1/pn6/8/P4P2/2P2PKP/4R3 w - - 1 -
-------K-
----r-P-P
--PR---P-
-PN------
---------
-p----p--
---p--pkp
-----r---
-turn = 0
-info depth 1 score cp 181 time 0.004 nodes 89 nps 22250 pv e1e8 
-info depth 2 score cp 181 time 0.004 nodes 150 nps 37500 pv e1e8 g8g7 
-info depth 3 score cp 185 time 0.005 nodes 833 nps 166600 pv a3a4 b5c3 e1e8 
-info depth 4 score cp 185 time 0.005 nodes 1117 nps 223400 pv a3a4 b5c3 e1e8 g8g7 
-info depth 5 score cp 184 time 0.007 nodes 3329 nps 475571 pv e1e8 g8g7 e8e7 b5a3 e7f7 
-info depth 6 score cp 184 time 0.008 nodes 5193 nps 649125 pv e1e8 g8g7 e8e7 b5a3 e7f7 g7g8 
-info depth 7 score cp 184 time 0.009 nodes 8135 nps 903888 pv e1e8 g8g7 e8e7 b5a3 e7f7 g7g8 f7h7 
-info depth 8 score cp 184 time 0.011 nodes 11582 nps 1052909 pv e1e8 g8g7 e8e7 b5a3 e7f7 g7g8 f7h7 a3c2 
-info depth 9 score cp 184 time 0.014 nodes 15994 nps 1142428 pv e1e8 g8g7 e8e7 b5a3 e7f7 g7g8 f7h7 a3c2 h7e7 
-info depth 10 score cp 174 time 0.04 nodes 60774 nps 1519350 pv e1e8 g8g7 e8e7 c6f6 a3a4 b5c3 d7d4 f6f5 g2g3 g7f6 
-info depth 11 score cp 179 time 0.138 nodes 227198 nps 1646362 pv a3a4 b5c3 e1e7 c3a4 e7f7 h7h6 f7e7 g8f8 e7f7 f8e8 f7e7 
-info depth 12 score cp 179 time 0.167 nodes 285137 nps 1707407 pv a3a4 b5c3 e1e7 c3a4 e7f7 h7h6 f7e7 g8f8 e7f7 f8e8 f7e7 e8f8 
-info depth 13 score cp 165 time 0.758 nodes 1309038 nps 1726963 pv a3a4 b5c3 d7d4 c6c5 g2g3 g8g7 g3f4 c5f5 f4g3 f5c5 h2h3 b6b5 h3h4 
-info depth 14 score cp 162 time 1.019 nodes 1780330 nps 1747134 pv a3a4 b5c3 e1e7 c3a4 e7f7 h7h6 g2g3 a4c5 f7g7 g8f8 g7f7 f8g8 f7g7 g8f8 
-info depth 15 score cp 171 time 2.358 nodes 4112436 nps 1744035 pv e1e8 g8g7 a3a4 c6d6 d7d6 b5d6 e8d8 d6c4 d8d4 c4e5 d4d6 e5c4 d6c6 c4b2 c6b6 
-info depth 16 score cp 161 time 2.649 nodes 4634646 nps 1749583 pv e1e8 g8g7 a3a4 b5c3 e8e7 c6f6 d7d4 f6f5 g2g3 b6b5 a4b5 f5g5 g3f4 g5b5 e7e5 b5e5 
-info depth 17 score cp 161 time 2.842 nodes 4999315 nps 1758464 pv e1e8 g8g7 a3a4 b5c3 e8e7 c6f6 d7d4 f6f5 g2g3 b6b5 a4b5 f5g5 g3f4 g5b5 e7e5 b5e5 f4e5 
-info depth 18 score cp 164 time 3.122 nodes 5527017 nps 1770344 pv e1e8 g8g7 a3a4 b5c3 e8e7 c6f6 d7d4 f6f5 g2g3 b6b5 a4b5 f5g5 g3h3 c3b5 d4f4 g5h5 h3g4 b5d6 
-info depth 19 score cp 189 time 6.75 nodes 12023564 nps 1781268 pv e1e7 b5a3 e7f7 h7h6 f7g7 g8f8 d7f7 f8e8 f7a7 c6c2 g7g6 b6b5 g6h6 b5b4 a7a5 
-search time = 7149
-nodes searched = 12700662
-branching factor = 2.358486134275811
-hash hit rate = 0.17056103059824756
-avg hash hit rate = 0.140386821483366
-after search state:
-------K-
----r-P-P
--PR---P-
-PN------
---------
-p----p--
---p--pkp
-----r---
-sending move 'e1e7'
-==========================================================================
-searching state:
-6k1/3RRp1p/1p3rp1/pn6/8/P4P2/2P2PKP/8 w - - 3 -
-------K-
----rrP-P
--P---RP-
-PN------
---------
-p----p--
---p--pkp
---------
-turn = 0
-info depth 1 score cp 189 time 0.0 nodes 1 nps 2147483647 pv d7d3 
-info depth 2 score cp 189 time 0.0 nodes 2 nps 2147483647 pv d7d3 g8g7 
-info depth 3 score cp 189 time 0.0 nodes 3 nps 2147483647 pv d7d3 g8g7 e7b7 
-info depth 4 score cp 189 time 0.0 nodes 4 nps 2147483647 pv d7d3 g8g7 e7b7 f6c6 
-info depth 5 score cp 189 time 0.0 nodes 5 nps 2147483647 pv d7d3 g8g7 e7b7 f6c6 d3b3 
-info depth 6 score cp 189 time 0.0 nodes 6 nps 2147483647 pv d7d3 g8g7 e7b7 f6c6 d3b3 c6c5 
-info depth 7 score cp 189 time 0.0 nodes 7 nps 2147483647 pv d7d3 g8g7 e7b7 f6c6 d3b3 c6c5 b7b6 
-info depth 8 score cp 189 time 0.0 nodes 8 nps 2147483647 pv d7d3 g8g7 e7b7 f6c6 d3b3 c6c5 b7b6 b5d4 
-info depth 9 score cp 189 time 0.0 nodes 9 nps 2147483647 pv d7d3 g8g7 e7b7 f6c6 d3b3 c6c5 b7b6 b5d4 b3d3 
-info depth 10 score cp 189 time 0.0 nodes 10 nps 2147483647 pv d7d3 g8g7 e7b7 f6c6 d3b3 c6c5 b7b6 b5d4 b3d3 d4c2 
-info depth 11 score cp 189 time 0.0 nodes 11 nps 2147483647 pv d7d3 g8g7 e7b7 f6c6 d3b3 c6c5 b7b6 b5d4 b3d3 d4c2 g2g3 
-info depth 12 score cp 189 time 0.0 nodes 12 nps 2147483647 pv d7d3 g8g7 e7b7 f6c6 d3b3 c6c5 b7b6 b5d4 b3d3 d4c2 g2g3 c5g5 
-info depth 13 score cp 189 time 0.0 nodes 13 nps 2147483647 pv d7d3 g8g7 e7b7 f6c6 d3b3 c6c5 b7b6 b5d4 b3d3 d4c2 g2g3 c5g5 g3h3 
-info depth 14 score cp 189 time 0.0 nodes 14 nps 2147483647 pv d7d3 g8g7 e7b7 f6c6 d3b3 c6c5 b7b6 b5d4 b3d3 d4c2 g2g3 c5g5 g3h3 g5h5 
-search time = 0
-nodes searched = 14
-branching factor = 1.2074420274184112
-hash hit rate = 1.0
-avg hash hit rate = 0.14038706217317382
-after search state:
-------K-
----rrP-P
--P---RP-
-PN------
---------
-p----p--
---p--pkp
---------
-sending move 'd7d3'
-==========================================================================
-searching state:
-6k1/4Rp1p/1p1n1rp1/p7/8/P2R1P2/2P2PKP/8 w - - 5 -
-------K-
-----rP-P
--P-N-RP-
-P-------
---------
-p--r-p--
---p--pkp
---------
-turn = 0
-info depth 1 score cp 217 time 0.0 nodes 81 nps 2147483647 pv d3d1 
-info depth 2 score cp 205 time 0.001 nodes 541 nps 541000 pv f3f4 g8g7 
-info depth 3 score cp 202 time 0.002 nodes 1410 nps 705000 pv f3f4 g8f8 e7e1 
-info depth 4 score cp 199 time 0.003 nodes 2362 nps 787333 pv f3f4 g8f8 e7e1 f8g7 
-info depth 5 score cp 204 time 0.005 nodes 4380 nps 876000 pv f3f4 g8f8 e7e1 f8g7 g2f3 
-info depth 6 score cp 203 time 0.008 nodes 7669 nps 958625 pv f3f4 g8f8 e7e1 f8g7 e1e7 d6c4 
-info depth 7 score cp 191 time 0.029 nodes 33916 nps 1169517 pv f3f4 d6f5 d3d8 g8g7 d8b8 
-info depth 8 score cp 184 time 0.094 nodes 140465 nps 1494308 pv d3b3 d6c4 e7e4 f6c6 b3c3 c4e5 c3c6 e5c6 
-info depth 9 score cp 187 time 0.115 nodes 175658 nps 1527460 pv d3b3 d6c4 e7e4 c4d2 e4e8 g8g7 b3d3 d2c4 g2g3 
-info depth 10 score cp 182 time 0.178 nodes 273852 nps 1538494 pv d3b3 d6c4 b3d3 g8g7 g2g3 f6d6 d3d6 c4d6 e7d7 d6c4 
-info depth 11 score cp 186 time 0.239 nodes 371066 nps 1552577 pv d3b3 d6c4 e7c7 a5a4 b3d3 b6b5 c7c5 f6b6 g2g3 b6d6 d3d6 
-info depth 12 score cp 186 time 0.288 nodes 454419 nps 1577843 pv d3b3 d6c4 e7c7 a5a4 b3d3 b6b5 c7c5 f6b6 g2g3 b6d6 d3d6 c4d6 
-info depth 13 score cp 185 time 0.366 nodes 593541 nps 1621696 pv d3b3 d6c4 e7c7 a5a4 b3d3 b6b5 c7c5 f6b6 g2g3 g8g7 g3f4 b6d6 d3d6 
-info depth 14 score cp 178 time 0.666 nodes 1106456 nps 1661345 pv d3b3 d6c4 e7c7 f6f4 g2g3 g6g5 b3c3 c4d6 c3d3 d6f5 g3g2 f4d4 c7d7 d4c4 
-info depth 15 score cp 182 time 2.42 nodes 4173166 nps 1724448 pv d3b3 g8f8 e7a7 d6c4 a7c7 c4e5 b3e3 f6f5 e3b3 f5f6 b3e3 f6f5 g2g3 f8e8 c7c6 
-search time = 2420
-nodes searched = 4173166
-branching factor = 2.762894980218265
-hash hit rate = 0.16608709071242314
-avg hash hit rate = 0.14236681929525138
-after search state:
-------K-
-----rP-P
--P-N-RP-
-P-------
---------
-p--r-p--
---p--pkp
---------
-sending move 'd3b3'
-==========================================================================
-searching state:
-6k1/4Rp1p/1p3rp1/p4n2/8/PR3P2/2P2PKP/8 w - - 7 -
-------K-
-----rP-P
--P---RP-
-P----N--
---------
-pr---p--
---p--pkp
---------
-turn = 0
-info depth 1 score cp 192 time 0.0 nodes 67 nps 2147483647 pv e7b7 
-info depth 2 score cp 189 time 0.001 nodes 235 nps 235000 pv e7e8 g8g7 
-info depth 3 score cp 189 time 0.001 nodes 427 nps 427000 pv e7e8 g8g7 b3b1 
-info depth 4 score cp 188 time 0.002 nodes 2362 nps 1181000 pv e7b7 f6c6 b3b6 c6c2 
-info depth 5 score cp 198 time 0.003 nodes 3621 nps 1207000 pv e7b7 f6c6 b3b6 c6c2 b7d7 
-info depth 6 score cp 200 time 0.005 nodes 6193 nps 1238600 pv e7b7 f6c6 b3b6 c6c2 b6f6 f5e3 
-info depth 7 score cp 200 time 0.009 nodes 10435 nps 1159444 pv e7b7 f6c6 b3b6 c6c2 b6f6 f5e3 g2g3 
-info depth 8 score cp 205 time 0.014 nodes 17999 nps 1285642 pv e7b7 f6c6 b3b6 c6c2 b6f6 f5e3 g2h3 c2f2 
-info depth 9 score cp 205 time 0.021 nodes 28010 nps 1333809 pv e7b7 f6c6 b3b6 c6c2 b6f6 f5e3 g2h3 c2f2 f6f7 
-info depth 10 score cp 205 time 0.044 nodes 58604 nps 1331909 pv e7b7 f5h4 g2g3 h4f5 g3g2 f5h4 g2g3 h4f5 g3g4 f6c6 
-info depth 11 score cp 203 time 0.059 nodes 85219 nps 1444389 pv e7b7 f5h4 g2g3 h4f5 g3g2 f5h4 g2g3 h7h5 
-info depth 12 score cp 205 time 0.112 nodes 174073 nps 1554223 pv e7b7 f5h4 g2g3 h4f5 g3g2 f5h4 g2g3 h4f5 g3g4 f6c6 b3b6 c6c2 
-info depth 13 score cp 203 time 0.152 nodes 241018 nps 1585644 pv e7b7 f5h4 g2g3 h4f5 g3g2 f5d4 b7b6 f6b6 b3b6 d4c2 b6b5 g8f8 b5a5 
-info depth 14 score cp 204 time 0.456 nodes 784168 nps 1719666 pv e7b7 f6c6 b7b6 c6c2 b3d3 f5h4 g2f1 c2c1 f1e2 c1c2 e2f1 h4f5 d3d5 c2c7 
-search time = 456
-nodes searched = 784168
-branching factor = 2.6365087837504433
-hash hit rate = 0.20457223452117404
-avg hash hit rate = 0.14325440145129734
-after search state:
-------K-
-----rP-P
--P---RP-
-P----N--
---------
-pr---p--
---p--pkp
---------
-sending move 'e7b7'
-==========================================================================
-searching state:
-6k1/1R3p1p/1p3rp1/p7/7n/PR3P2/2P2PKP/8 w - - 9 -
-------K-
--r---P-P
--P---RP-
-P-------
--------N
-pr---p--
---p--pkp
---------
-turn = 0
-info depth 1 score cp 204 time 0.0 nodes 1 nps 2147483647 pv g2g3 
-info depth 2 score cp 204 time 0.0 nodes 2 nps 2147483647 pv g2g3 h4f5 
-info depth 3 score cp 204 time 0.0 nodes 3 nps 2147483647 pv g2g3 h4f5 g3g2 
-info depth 4 score cp 204 time 0.0 nodes 4 nps 2147483647 pv g2g3 h4f5 g3g2 f6c6 
-info depth 5 score cp 204 time 0.0 nodes 5 nps 2147483647 pv g2g3 h4f5 g3g2 f6c6 b7b6 
-info depth 6 score cp 204 time 0.0 nodes 6 nps 2147483647 pv g2g3 h4f5 g3g2 f6c6 b7b6 c6c2 
-info depth 7 score cp 204 time 0.0 nodes 7 nps 2147483647 pv g2g3 h4f5 g3g2 f6c6 b7b6 c6c2 b3d3 
-info depth 8 score cp 204 time 0.0 nodes 8 nps 2147483647 pv g2g3 h4f5 g3g2 f6c6 b7b6 c6c2 b3d3 f5h4 
-info depth 9 score cp 204 time 0.0 nodes 9 nps 9000 pv g2g3 h4f5 g3g2 f6c6 b7b6 c6c2 b3d3 f5h4 g2f1 
-info depth 10 score cp 204 time 0.001 nodes 10 nps 10000 pv g2g3 h4f5 g3g2 f6c6 b7b6 c6c2 b3d3 f5h4 g2f1 c2c1 
-info depth 11 score cp 204 time 0.001 nodes 11 nps 11000 pv g2g3 h4f5 g3g2 f6c6 b7b6 c6c2 b3d3 f5h4 g2f1 c2c1 f1e2 
-info depth 12 score cp 204 time 0.001 nodes 12 nps 12000 pv g2g3 h4f5 g3g2 f6c6 b7b6 c6c2 b3d3 f5h4 g2f1 c2c1 f1e2 c1c2 
-info depth 13 score cp 202 time 0.08 nodes 122280 nps 1528500 pv g2g3 h4f5 g3g4 f6c6 b3b6 c6c2 b6b2 c2c4 f3f4 g8g7 b7d7 f5d4 d7e7 
-info depth 14 score cp 210 time 0.275 nodes 448763 nps 1631865 pv g2h3 h4f3 b3b6 f6b6 b7b6 f3d2 b6c6 d2e4 f2f3 e4d2 h3g4 f7f5 g4f4 g8f7 
-info depth 15 score cp 202 time 0.419 nodes 713001 nps 1701673 pv g2h3 h4f3 b3b6 f6b6 b7b6 f3e5 c2c3 g8f8 b6b5 e5c4 b5c5 c4a3 c5a5 a3c4 a5a7 
-info depth 16 score cp 219 time 0.593 nodes 1011231 nps 1705279 pv g2h3 h4f3 b3b6 f6b6 b7b6 f3e5 c2c3 e5c4 b6b5 c4a3 b5a5 a3c4 a5c5 c4d6 h3g4 g8g7 
-info depth 17 score cp 221 time 0.789 nodes 1368151 nps 1734031 pv g2h3 h4f3 b3b6 f6b6 b7b6 f3e5 c2c3 e5c4 b6b5 h7h6 b5c5 c4a3 c5a5 a3c4 a5a8 g8g7 h3g4 
-info depth 18 score cp 221 time 1.122 nodes 1968699 nps 1754633 pv g2h3 h4f3 b3b6 f6b6 b7b6 f3e5 c2c3 e5c4 b6b5 c4a3 b5a5 a3c4 a5a4 c4e5 c3c4 g8f8 c4c5 f8e7 
-info depth 19 score cp 234 time 2.051 nodes 3629792 nps 1769766 pv g2h3 h4f3 b3b6 f6b6 b7b6 f3e5 c2c3 e5c4 b6b5 c4a3 b5a5 a3c4 a5a4 c4b2 a4a1 b2d3 h3g3 g8g7 c3c4 
-info depth 20 score cp 227 time 2.612 nodes 4666967 nps 1786740 pv g2h3 h4f3 b3b6 f6b6 b7b6 f3e5 c2c3 e5c4 b6b5 c4a3 b5a5 a3c4 a5a4 c4b2 a4a2 b2c4 h3g4 f7f5 g4f4 g8f7 
-search time = 6600
-nodes searched = 11872742
-branching factor = 2.1550221408928985
-hash hit rate = 0.1821515198426783
-avg hash hit rate = 0.15016465469259702
-after search state:
-------K-
--r---P-P
--P---RP-
-P-------
--------N
-pr---p--
---p--pkp
---------
-sending move 'g2h3'
-==========================================================================
-searching state:
-6k1/1R3p1p/1p3rp1/8/p6n/PR3P1K/2P2P1P/8 w - - 0 -
-------K-
--r---P-P
--P---RP-
---------
-P------N
-pr---p-k
---p--p-p
---------
-turn = 0
-info depth 1 score cp 221 time 0.0 nodes 130 nps 2147483647 pv b3b6 
-info depth 2 score cp 221 time 0.0 nodes 438 nps 2147483647 pv b3b6 f6b6 
-info depth 3 score cp 221 time 0.001 nodes 679 nps 679000 pv b3b6 f6b6 b7b6 
-info depth 4 score cp 221 time 0.002 nodes 1459 nps 729500 pv b3b6 f6b6 b7b6 h4f3 
-info depth 5 score cp 241 time 0.002 nodes 2782 nps 1391000 pv b3b6 f6b6 b7b6 h4f3 c2c4 
-info depth 6 score cp 242 time 0.004 nodes 5421 nps 1355250 pv b3b6 f6b6 b7b6 h4f3 b6b4 f3g5 
-info depth 7 score cp 255 time 0.006 nodes 9844 nps 1640666 pv b3b6 f6b6 b7b6 h4f3 c2c4 g8f8 c4c5 
-info depth 8 score cp 256 time 0.01 nodes 16625 nps 1662500 pv b3b6 f6b6 b7b6 h4f3 b6b4 g8g7 c2c4 g7f6 
-info depth 9 score cp 261 time 0.015 nodes 26708 nps 1780533 pv b3b6 f6b6 b7b6 h4f3 b6b4 f3e1 c2c3 e1d3 b4a4 
-info depth 10 score cp 269 time 0.026 nodes 44034 nps 1693615 pv b3b6 f6b6 b7b6 h4f3 c2c4 g8f8 c4c5 f8e7 c5c6 f3d4 
-info depth 11 score cp 264 time 0.041 nodes 70567 nps 1721146 pv b3b6 f6b6 b7b6 h4f3 c2c4 f3g5 h3g4 g5e6 b6b4 h7h5 g4f3 
-info depth 12 score cp 273 time 0.061 nodes 105801 nps 1734442 pv b3b6 f6b6 b7b6 h4f3 c2c4 f3g5 h3g4 g5e6 b6b4 h7h5 g4f3 e6c5 
-info depth 13 score cp 271 time 0.087 nodes 152433 nps 1752103 pv b3b6 f6b6 b7b6 h4f3 c2c4 f3g5 h3g2 g5e4 b6b4 e4c5 b4b5 c5e4 c4c5 
-info depth 14 score cp 275 time 0.129 nodes 232471 nps 1802100 pv b3b6 f6b6 b7b6 h4f3 c2c4 f3e5 c4c5 e5d7 b6b5 d7e5 b5a5 e5d3 c5c6 d3f2 
-search time = 129
-nodes searched = 232471
-branching factor = 2.4171970523944686
-hash hit rate = 0.2593828907691712
-avg hash hit rate = 0.1505432553521589
-after search state:
-------K-
--r---P-P
--P---RP-
---------
-P------N
-pr---p-k
---p--p-p
---------
-sending move 'b3b6'
-==========================================================================
-searching state:
-6k1/1R3p1p/6p1/8/p4r1n/PR3P1K/2P2P1P/8 w - - 1 -
-------K-
--r---P-P
-------P-
---------
-P----R-N
-pr---p-k
---p--p-p
---------
-turn = 0
-info depth 1 score cp 299 time 0.001 nodes 204 nps 204000 pv b3b4 
-info depth 2 score cp 299 time 0.001 nodes 443 nps 443000 pv b3b4 f4b4 
-info depth 3 score cp 299 time 0.002 nodes 904 nps 452000 pv b3b4 f4b4 b7b4 
-info depth 4 score cp 299 time 0.003 nodes 1837 nps 612333 pv b3b4 f4b4 b7b4 h4f3 
-info depth 5 score cp 299 time 0.005 nodes 3635 nps 727000 pv b3b4 f4b4 b7b4 h4f3 b4a4 
-info depth 6 score cp 298 time 0.016 nodes 14513 nps 907062 pv b3d3 f4f3 h3h4 f3f2 d3c3 f2h2 
-info depth 7 score cp 298 time 0.035 nodes 34130 nps 975142 pv b3d3 h4f5 c2c3 f4h4 h3g2 g8g7 d3d7 
-info depth 8 score cp 287 time 0.062 nodes 62609 nps 1009822 pv b3d3 g6g5 h3g3 h4f5 g3g2 g8g7 c2c3 g7f6 
-info depth 9 score cp 296 time 0.078 nodes 84479 nps 1083064 pv b3d3 g6g5 b7b4 f4b4 a3b4 h4g6 d3d8 g8g7 c2c4 
-info depth 10 score cp 333 time 0.11 nodes 136013 nps 1236481 pv b3b4 f4b4 a3b4 h4f3 b7a7 f3e1 c2c4 e1d3 a7a4 d3f2 
-info depth 11 score cp 333 time 0.12 nodes 152864 nps 1273866 pv b3b4 f4b4 a3b4 h4f3 b7a7 f3e1 c2c4 e1d3 a7a4 d3f2 h3g3 
-info depth 12 score cp 329 time 0.137 nodes 181680 nps 1326131 pv b3b4 f4b4 a3b4 h4f3 b7a7 f3e1 c2c4 e1d3 a7a4 d3f2 h3g3 f2d3 
-info depth 13 score cp 355 time 0.189 nodes 280740 nps 1485396 pv b3b4 f4b4 b7b4 h4f3 h3g3 f3g5 b4a4 g5e6 a4b4 g8f8 a3a4 f8e7 a4a5 
-info depth 14 score cp 375 time 0.282 nodes 449868 nps 1595276 pv b3b4 f4b4 a3b4 h4f3 b7a7 f3e1 b4b5 g8g7 c2c4 e1d3 b5b6 d3f2 h3g2 f2e4 
-info depth 15 score cp 373 time 0.427 nodes 723118 nps 1693484 pv b3b4 f4b4 a3b4 h4f3 b7a7 g8g7 a7a4 f3e1 c2c4 e1d3 b4b5 d3f2 h3g2 f2e4 b5b6 
-info depth 16 score cp 384 time 0.572 nodes 990284 nps 1731265 pv b3b4 f4b4 a3b4 h4f3 b7a7 f3g1 h3g2 g1e2 a7a4 e2c3 a4a3 c3b5 a3a8 g8g7 c2c4 b5d4 
-info depth 17 score cp 419 time 1.154 nodes 2118846 nps 1836088 pv b3b4 f4b4 a3b4 h4f3 b7a7 f3g5 h3g2 g5e6 a7f7 g8f7 c2c3 e6d4 g2g3 
-search time = 1154
-nodes searched = 2118846
-branching factor = 2.355719048563721
-hash hit rate = 0.18147614314584448
-avg hash hit rate = 0.15149064383768998
-after search state:
-------K-
--r---P-P
-------P-
---------
-P----R-N
-pr---p-k
---p--p-p
---------
-sending move 'b3b4'
-==========================================================================
-searching state:
-6k1/1R3p1p/8/6p1/p4r1n/P4P1K/2P2P1P/8 w - - 0 -
-------K-
--r---P-P
---------
-------P-
-P----R-N
-pr---p-k
---p--p-p
---------
-turn = 0
-info depth 1 score cp 325 time 0.0 nodes 123 nps 2147483647 pv h3g3 
-info depth 2 score cp 302 time 0.001 nodes 840 nps 840000 pv b7d7 g8g7 
-info depth 3 score cp 305 time 0.002 nodes 2308 nps 1154000 pv b7b8 g8g7 h3g3 
-info depth 4 score cp 385 time 0.003 nodes 3684 nps 1228000 pv b3a4 g8g7 b7d7 h4f5 
-info depth 5 score cp 380 time 0.005 nodes 5117 nps 1023400 pv b3a4 g8g7 b7d7 f4c4 d7d5 
-info depth 6 score cp 392 time 0.011 nodes 12782 nps 1162000 pv b3a4 h4f5 b7b4 f4d4 b4d4 f5d4 
-info depth 7 score cp 401 time 0.041 nodes 59103 nps 1441536 pv b3a4 h4g6 b7b4 g8g7 a3a4 f4b4 b3b4 
-Exception in thread "Thread-322" java.lang.NullPointerException
-	at eval.evalV8.SuperEvalS4V8.processMove(SuperEvalS4V8.java:519)
-	at search.search33.SearchS4V33t.qsearch(SearchS4V33t.java:774)
-	at search.search33.SearchS4V33t.recurse(SearchS4V33t.java:399)
-	at search.search33.SearchS4V33t.recurse(SearchS4V33t.java:650)
-	at search.search33.SearchS4V33t.recurse(SearchS4V33t.java:650)
-	at search.search33.SearchS4V33t.recurse(SearchS4V33t.java:505)
-	at search.search33.SearchS4V33t.recurse(SearchS4V33t.java:650)
-	at search.search33.SearchS4V33t.recurse(SearchS4V33t.java:650)
-	at search.search33.SearchS4V33t.search(SearchS4V33t.java:204)
-	at search.search33.SearchS4V33t.search(SearchS4V33t.java:154)
-	at time.TimerThread4$2.run(TimerThread4.java:91)
-search time = 1364025544437
-nodes searched = 91557
-branching factor = 2.355719048563721
-hash hit rate = 0.1462040040630427
-avg hash hit rate = 0.1514836566060817
-after search state:
--q------
------K-P
---------
-------P-
------R-N
-pr---p-k
------p-p
---------
-sending move 'a1a1'
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(5,5), 2:(16,14), 3:(30,21), 4:(50,32), 5:(75,46), 6:(105,63), 
+isolated pawn weight, unopposed (by col):
+0:(-19,-23), 1:(-27,-26), 2:(-30,-26), 3:(-30,-26), 4:(-30,-26), 5:(-30,-26), 6:(-27,-26), 7:(-19,-23), 
+isolated pawn weight, opposed (by col):
+0:(-13,-15), 1:(-18,-18), 2:(-20,-18), 3:(-20,-18), 4:(-20,-18), 5:(-20,-18), 6:(-18,-18), 7:(-13,-15), 
+doubled pawn weight, unopposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+doubled pawn weight, opposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+tempo = (3,1)
+bishop pair = (5,12)
+
+completed 0 / 40
+completed 4 / 40
+completed 8 / 40
+completed 12 / 40
+completed 20 / 40
+completed 24 / 40
+completed 28 / 40
+completed 32 / 40
+completed 36 / 40
+completed 40 / 40
+-------------------------
+(w,l,d)=(1,4,1), id=280
+(w,l,d)=(4,5,4), id=278 -- culled
+(w,l,d)=(176,182,132), id=57
+(w,l,d)=(123,124,91), id=120
+(w,l,d)=(149,150,125), id=167
+(w,l,d)=(183,183,125), id=47
+(w,l,d)=(263,262,182), id=30
+(w,l,d)=(168,164,117), id=3
+(w,l,d)=(207,199,148), id=132
+(w,l,d)=(280,269,211), id=0
+(w,l,d)=(239,229,194), id=59
+(w,l,d)=(208,199,174), id=64
+(w,l,d)=(68,65,40), id=238
+(w,l,d)=(93,88,70), id=233
+(w,l,d)=(82,77,54), id=217
+(w,l,d)=(167,156,126), id=85
+(w,l,d)=(202,187,159), id=123
+(w,l,d)=(489,453,372), id=37
+(w,l,d)=(208,192,152), id=106
+(w,l,d)=(324,298,221), id=119
+(w,l,d)=(50,46,24), id=263
+(w,l,d)=(400,365,283), id=31
+(w,l,d)=(131,119,78), id=244
+(w,l,d)=(347,313,250), id=22
+(w,l,d)=(377,339,260), id=13
+(w,l,d)=(67,60,44), id=264
+(w,l,d)=(111,99,72), id=225
+(w,l,d)=(229,203,160), id=27
+(w,l,d)=(127,111,115), id=249
+(w,l,d)=(279,244,187), id=185
+(w,l,d)=(402,352,256), id=102
+(w,l,d)=(56,48,46), id=270
+(w,l,d)=(598,513,433), id=73
+(w,l,d)=(342,292,237), id=97
+(w,l,d)=(90,76,64), id=259
+(w,l,d)=(763,642,579), id=67
+(w,l,d)=(254,191,139), id=227
+(w,l,d)=(3,2,1), id=282
+(w,l,d)=(4,2,3), id=281
+(w,l,d)=(1,0,0), id=283
+completed iteration 429
+best id=281
+material weights:
+	king = 0
+	queen = 900
+	rook = 500
+	bishop = 305
+	knight = 300
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(-5,-9), 1:(-4,-7), 2:(-3,-4), 3:(-2,-1), 4:(-1,1), 5:(0,4), 6:(1,6), 7:(2,9), 8:(4,11), 9:(5,13), 10:(6,16), 11:(7,17), 12:(8,17), 13:(8,17), 14:(9,17), 15:(10,17), 16:(10,17), 17:(10,17), 18:(10,17), 19:(10,17), 20:(10,17), 21:(10,17), 22:(10,17), 23:(10,17), 24:(10,17), 25:(10,17), 26:(10,17), 27:(10,17), 28:(10,17), 29:(10,17), 30:(10,17), 31:(10,17), 
+	rook = 0:(-10,-18), 1:(-7,-10), 2:(-4,-2), 3:(-1,6), 4:(2,14), 5:(5,23), 6:(7,31), 7:(9,39), 8:(11,47), 9:(13,53), 10:(13,55), 11:(14,57), 12:(14,58), 13:(15,58), 14:(15,59), 15:(16,59), 
+	bishop = 0:(-13,-15), 1:(-6,-8), 2:(1,-1), 3:(8,6), 4:(15,13), 5:(22,20), 6:(28,26), 7:(32,30), 8:(35,32), 9:(37,34), 10:(38,35), 11:(39,36), 12:(39,37), 13:(40,37), 14:(40,38), 15:(40,38), 
+	knight = 0:(-19,-17), 1:(-13,-12), 2:(-6,-7), 3:(0,-2), 4:(6,3), 5:(12,8), 6:(15,11), 7:(19,13), 8:(19,13), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(5,5), 2:(15,14), 3:(30,21), 4:(50,32), 5:(75,46), 6:(105,64), 
+isolated pawn weight, unopposed (by col):
+0:(-19,-23), 1:(-27,-26), 2:(-30,-26), 3:(-30,-26), 4:(-30,-26), 5:(-30,-26), 6:(-27,-26), 7:(-19,-23), 
+isolated pawn weight, opposed (by col):
+0:(-13,-15), 1:(-18,-18), 2:(-20,-18), 3:(-20,-18), 4:(-20,-18), 5:(-20,-18), 6:(-18,-18), 7:(-13,-15), 
+doubled pawn weight, unopposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+doubled pawn weight, opposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+tempo = (3,1)
+bishop pair = (5,12)
+
+completed 0 / 40
+completed 4 / 40
+completed 8 / 40
+completed 16 / 40
+completed 20 / 40
+completed 32 / 40
+completed 36 / 40
+completed 40 / 40
+-------------------------
+(w,l,d)=(1,5,1), id=280
+(w,l,d)=(4,6,1), id=282 -- culled
+(w,l,d)=(177,182,132), id=57
+(w,l,d)=(123,124,92), id=120
+(w,l,d)=(149,150,126), id=167
+(w,l,d)=(183,184,125), id=47
+(w,l,d)=(0,0,1), id=284
+(w,l,d)=(264,262,182), id=30
+(w,l,d)=(168,164,118), id=3
+(w,l,d)=(280,270,211), id=0
+(w,l,d)=(208,199,175), id=64
+(w,l,d)=(208,199,148), id=132
+(w,l,d)=(240,229,194), id=59
+(w,l,d)=(82,78,54), id=217
+(w,l,d)=(93,88,71), id=233
+(w,l,d)=(167,157,126), id=85
+(w,l,d)=(69,65,40), id=238
+(w,l,d)=(489,454,372), id=37
+(w,l,d)=(208,193,152), id=106
+(w,l,d)=(203,187,159), id=123
+(w,l,d)=(324,299,221), id=119
+(w,l,d)=(400,366,283), id=31
+(w,l,d)=(67,61,44), id=264
+(w,l,d)=(131,119,79), id=244
+(w,l,d)=(348,313,250), id=22
+(w,l,d)=(378,339,260), id=13
+(w,l,d)=(51,46,24), id=263
+(w,l,d)=(229,204,160), id=27
+(w,l,d)=(127,111,116), id=249
+(w,l,d)=(112,99,72), id=225
+(w,l,d)=(402,352,257), id=102
+(w,l,d)=(280,244,187), id=185
+(w,l,d)=(56,48,47), id=270
+(w,l,d)=(600,517,436), id=73
+(w,l,d)=(343,293,238), id=97
+(w,l,d)=(767,645,582), id=67
+(w,l,d)=(94,76,65), id=259
+(w,l,d)=(254,193,139), id=227
+(w,l,d)=(5,3,2), id=283
+(w,l,d)=(6,3,5), id=281
+completed iteration 430
+best id=281
+material weights:
+	king = 0
+	queen = 900
+	rook = 500
+	bishop = 305
+	knight = 300
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(-5,-9), 1:(-4,-7), 2:(-3,-4), 3:(-2,-1), 4:(-1,1), 5:(0,4), 6:(1,6), 7:(2,9), 8:(4,11), 9:(5,13), 10:(6,16), 11:(7,17), 12:(8,17), 13:(8,17), 14:(9,17), 15:(10,17), 16:(10,17), 17:(10,17), 18:(10,17), 19:(10,17), 20:(10,17), 21:(10,17), 22:(10,17), 23:(10,17), 24:(10,17), 25:(10,17), 26:(10,17), 27:(10,17), 28:(10,17), 29:(10,17), 30:(10,17), 31:(10,17), 
+	rook = 0:(-10,-18), 1:(-7,-10), 2:(-4,-2), 3:(-1,6), 4:(2,14), 5:(5,23), 6:(7,31), 7:(9,39), 8:(11,47), 9:(13,53), 10:(13,55), 11:(14,57), 12:(14,58), 13:(15,58), 14:(15,59), 15:(16,59), 
+	bishop = 0:(-13,-15), 1:(-6,-8), 2:(1,-1), 3:(8,6), 4:(15,13), 5:(22,20), 6:(28,26), 7:(32,30), 8:(35,32), 9:(37,34), 10:(38,35), 11:(39,36), 12:(39,37), 13:(40,37), 14:(40,38), 15:(40,38), 
+	knight = 0:(-19,-17), 1:(-13,-12), 2:(-6,-7), 3:(0,-2), 4:(6,3), 5:(12,8), 6:(15,11), 7:(19,13), 8:(19,13), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(5,5), 2:(15,14), 3:(30,21), 4:(50,32), 5:(75,46), 6:(105,64), 
+isolated pawn weight, unopposed (by col):
+0:(-19,-23), 1:(-27,-26), 2:(-30,-26), 3:(-30,-26), 4:(-30,-26), 5:(-30,-26), 6:(-27,-26), 7:(-19,-23), 
+isolated pawn weight, opposed (by col):
+0:(-13,-15), 1:(-18,-18), 2:(-20,-18), 3:(-20,-18), 4:(-20,-18), 5:(-20,-18), 6:(-18,-18), 7:(-13,-15), 
+doubled pawn weight, unopposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+doubled pawn weight, opposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+tempo = (3,1)
+bishop pair = (5,12)
+
+completed 0 / 40
+completed 4 / 40
+completed 8 / 40
+completed 12 / 40
+completed 16 / 40
+completed 20 / 40
+completed 24 / 40
+completed 32 / 40
+completed 36 / 40
+completed 40 / 40
+-------------------------
+(w,l,d)=(1,6,1), id=280 -- culled
+(w,l,d)=(6,7,4), id=283
+(w,l,d)=(177,182,133), id=57
+(w,l,d)=(149,151,126), id=167
+(w,l,d)=(183,184,126), id=47
+(w,l,d)=(0,0,1), id=285
+(w,l,d)=(0,0,2), id=284
+(w,l,d)=(124,124,92), id=120
+(w,l,d)=(265,262,182), id=30
+(w,l,d)=(168,165,118), id=3
+(w,l,d)=(280,271,211), id=0
+(w,l,d)=(208,200,175), id=64
+(w,l,d)=(82,79,54), id=217
+(w,l,d)=(93,89,71), id=233
+(w,l,d)=(208,199,149), id=132
+(w,l,d)=(241,229,194), id=59
+(w,l,d)=(167,158,126), id=85
+(w,l,d)=(69,65,41), id=238
+(w,l,d)=(203,188,159), id=123
+(w,l,d)=(490,454,372), id=37
+(w,l,d)=(209,193,152), id=106
+(w,l,d)=(325,299,221), id=119
+(w,l,d)=(51,47,24), id=263
+(w,l,d)=(131,120,79), id=244
+(w,l,d)=(401,366,283), id=31
+(w,l,d)=(378,340,260), id=13
+(w,l,d)=(349,313,250), id=22
+(w,l,d)=(68,61,44), id=264
+(w,l,d)=(229,204,161), id=27
+(w,l,d)=(127,112,116), id=249
+(w,l,d)=(113,99,72), id=225
+(w,l,d)=(403,352,257), id=102
+(w,l,d)=(280,244,188), id=185
+(w,l,d)=(603,519,437), id=73
+(w,l,d)=(345,294,238), id=97
+(w,l,d)=(767,647,584), id=67
+(w,l,d)=(61,49,49), id=270
+(w,l,d)=(98,79,69), id=259
+(w,l,d)=(255,193,143), id=227
+(w,l,d)=(7,5,6), id=281
+completed iteration 431
+best id=281
+material weights:
+	king = 0
+	queen = 900
+	rook = 500
+	bishop = 305
+	knight = 300
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(-5,-9), 1:(-4,-7), 2:(-3,-4), 3:(-2,-1), 4:(-1,1), 5:(0,4), 6:(1,6), 7:(2,9), 8:(4,11), 9:(5,13), 10:(6,16), 11:(7,17), 12:(8,17), 13:(8,17), 14:(9,17), 15:(10,17), 16:(10,17), 17:(10,17), 18:(10,17), 19:(10,17), 20:(10,17), 21:(10,17), 22:(10,17), 23:(10,17), 24:(10,17), 25:(10,17), 26:(10,17), 27:(10,17), 28:(10,17), 29:(10,17), 30:(10,17), 31:(10,17), 
+	rook = 0:(-10,-18), 1:(-7,-10), 2:(-4,-2), 3:(-1,6), 4:(2,14), 5:(5,23), 6:(7,31), 7:(9,39), 8:(11,47), 9:(13,53), 10:(13,55), 11:(14,57), 12:(14,58), 13:(15,58), 14:(15,59), 15:(16,59), 
+	bishop = 0:(-13,-15), 1:(-6,-8), 2:(1,-1), 3:(8,6), 4:(15,13), 5:(22,20), 6:(28,26), 7:(32,30), 8:(35,32), 9:(37,34), 10:(38,35), 11:(39,36), 12:(39,37), 13:(40,37), 14:(40,38), 15:(40,38), 
+	knight = 0:(-19,-17), 1:(-13,-12), 2:(-6,-7), 3:(0,-2), 4:(6,3), 5:(12,8), 6:(15,11), 7:(19,13), 8:(19,13), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(5,5), 2:(15,14), 3:(30,21), 4:(50,32), 5:(75,46), 6:(105,64), 
+isolated pawn weight, unopposed (by col):
+0:(-19,-23), 1:(-27,-26), 2:(-30,-26), 3:(-30,-26), 4:(-30,-26), 5:(-30,-26), 6:(-27,-26), 7:(-19,-23), 
+isolated pawn weight, opposed (by col):
+0:(-13,-15), 1:(-18,-18), 2:(-20,-18), 3:(-20,-18), 4:(-20,-18), 5:(-20,-18), 6:(-18,-18), 7:(-13,-15), 
+doubled pawn weight, unopposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+doubled pawn weight, opposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+tempo = (3,1)
+bishop pair = (5,12)
+
+completed 0 / 40
+completed 4 / 40
+completed 8 / 40
+completed 12 / 40
+completed 16 / 40
+completed 24 / 40
+completed 28 / 40
+completed 32 / 40
+completed 36 / 40
+completed 40 / 40
+-------------------------
+(w,l,d)=(6,7,5), id=283 -- culled
+(w,l,d)=(177,182,134), id=57
+(w,l,d)=(149,152,126), id=167
+(w,l,d)=(124,125,92), id=120
+(w,l,d)=(0,0,2), id=285
+(w,l,d)=(9,9,8), id=281
+(w,l,d)=(184,184,126), id=47
+(w,l,d)=(168,166,118), id=3
+(w,l,d)=(266,262,182), id=30
+(w,l,d)=(281,271,211), id=0
+(w,l,d)=(209,200,175), id=64
+(w,l,d)=(208,199,150), id=132
+(w,l,d)=(241,230,194), id=59
+(w,l,d)=(83,79,54), id=217
+(w,l,d)=(94,89,71), id=233
+(w,l,d)=(168,158,126), id=85
+(w,l,d)=(69,65,42), id=238
+(w,l,d)=(51,48,24), id=263
+(w,l,d)=(203,189,159), id=123
+(w,l,d)=(491,454,372), id=37
+(w,l,d)=(210,193,152), id=106
+(w,l,d)=(325,299,222), id=119
+(w,l,d)=(402,366,283), id=31
+(w,l,d)=(68,62,44), id=264
+(w,l,d)=(132,120,79), id=244
+(w,l,d)=(378,341,260), id=13
+(w,l,d)=(127,113,116), id=249
+(w,l,d)=(349,313,251), id=22
+(w,l,d)=(230,204,161), id=27
+(w,l,d)=(113,99,73), id=225
+(w,l,d)=(605,525,439), id=73
+(w,l,d)=(404,352,257), id=102
+(w,l,d)=(283,246,189), id=185
+(w,l,d)=(347,296,240), id=97
+(w,l,d)=(769,650,586), id=67
+(w,l,d)=(99,80,70), id=259
+(w,l,d)=(64,50,49), id=270
+(w,l,d)=(255,195,145), id=227
+(w,l,d)=(1,0,2), id=284
+(w,l,d)=(1,0,0), id=286
+completed iteration 432
+best id=227
+material weights:
+	king = 0
+	queen = 900
+	rook = 500
+	bishop = 305
+	knight = 300
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(-5,-9), 1:(-4,-7), 2:(-3,-4), 3:(-2,-1), 4:(-1,1), 5:(0,4), 6:(1,6), 7:(2,9), 8:(4,11), 9:(5,13), 10:(6,16), 11:(7,17), 12:(8,17), 13:(8,17), 14:(9,17), 15:(10,17), 16:(10,17), 17:(10,17), 18:(10,17), 19:(10,17), 20:(10,17), 21:(10,17), 22:(10,17), 23:(10,17), 24:(10,17), 25:(10,17), 26:(10,17), 27:(10,17), 28:(10,17), 29:(10,17), 30:(10,17), 31:(10,17), 
+	rook = 0:(-10,-18), 1:(-7,-10), 2:(-4,-2), 3:(-1,6), 4:(2,14), 5:(5,23), 6:(7,31), 7:(9,39), 8:(11,47), 9:(13,53), 10:(13,55), 11:(14,57), 12:(14,58), 13:(15,58), 14:(15,59), 15:(16,59), 
+	bishop = 0:(-13,-15), 1:(-6,-8), 2:(1,-1), 3:(8,6), 4:(15,13), 5:(22,20), 6:(28,26), 7:(32,30), 8:(35,32), 9:(37,34), 10:(38,35), 11:(39,36), 12:(39,37), 13:(40,37), 14:(40,38), 15:(40,38), 
+	knight = 0:(-19,-17), 1:(-13,-12), 2:(-6,-7), 3:(0,-2), 4:(6,3), 5:(12,8), 6:(15,11), 7:(19,13), 8:(19,13), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(5,5), 2:(16,14), 3:(30,21), 4:(50,32), 5:(75,46), 6:(105,63), 
+isolated pawn weight, unopposed (by col):
+0:(-19,-23), 1:(-27,-26), 2:(-30,-26), 3:(-30,-26), 4:(-30,-26), 5:(-30,-26), 6:(-27,-26), 7:(-19,-23), 
+isolated pawn weight, opposed (by col):
+0:(-13,-15), 1:(-18,-18), 2:(-20,-18), 3:(-20,-18), 4:(-20,-18), 5:(-20,-18), 6:(-18,-18), 7:(-13,-15), 
+doubled pawn weight, unopposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+doubled pawn weight, opposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+tempo = (3,1)
+bishop pair = (5,12)
+
+completed 0 / 40
+completed 4 / 40
+completed 8 / 40
+completed 12 / 40
+completed 16 / 40
+completed 20 / 40
+completed 24 / 40
+completed 28 / 40
+completed 32 / 40
+completed 36 / 40
+completed 40 / 40
+-------------------------
+(w,l,d)=(0,1,2), id=285
+(w,l,d)=(2,3,1), id=286
+(w,l,d)=(9,10,8), id=281
+(w,l,d)=(149,153,126), id=167
+(w,l,d)=(178,182,134), id=57
+(w,l,d)=(184,185,126), id=47
+(w,l,d)=(125,125,92), id=120
+(w,l,d)=(266,262,183), id=30
+(w,l,d)=(169,166,118), id=3
+(w,l,d)=(281,272,211), id=0
+(w,l,d)=(209,201,175), id=64
+(w,l,d)=(83,80,54), id=217
+(w,l,d)=(208,200,150), id=132
+(w,l,d)=(241,231,194), id=59
+(w,l,d)=(94,89,72), id=233
+(w,l,d)=(168,159,126), id=85
+(w,l,d)=(203,190,159), id=123
+(w,l,d)=(491,454,373), id=37
+(w,l,d)=(70,65,42), id=238
+(w,l,d)=(68,63,44), id=264
+(w,l,d)=(325,300,222), id=119
+(w,l,d)=(52,48,24), id=263
+(w,l,d)=(211,193,152), id=106
+(w,l,d)=(403,366,283), id=31
+(w,l,d)=(127,114,116), id=249
+(w,l,d)=(379,341,260), id=13
+(w,l,d)=(133,120,79), id=244
+(w,l,d)=(349,313,252), id=22
+(w,l,d)=(230,205,161), id=27
+(w,l,d)=(404,353,257), id=102
+(w,l,d)=(605,526,439), id=73
+(w,l,d)=(114,99,73), id=225
+(w,l,d)=(285,246,191), id=185
+(w,l,d)=(350,300,241), id=97
+(w,l,d)=(773,653,586), id=67
+(w,l,d)=(103,83,72), id=259
+(w,l,d)=(65,51,50), id=270
+(w,l,d)=(259,196,147), id=227
+(w,l,d)=(3,0,5), id=284
+(w,l,d)=(1,0,0), id=287
+completed iteration 433
+best id=284
+material weights:
+	king = 0
+	queen = 900
+	rook = 500
+	bishop = 305
+	knight = 300
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(-5,-9), 1:(-4,-7), 2:(-3,-4), 3:(-2,-1), 4:(-1,1), 5:(0,4), 6:(1,6), 7:(2,9), 8:(4,11), 9:(5,13), 10:(6,16), 11:(7,17), 12:(8,17), 13:(8,17), 14:(9,17), 15:(10,17), 16:(10,17), 17:(10,17), 18:(10,17), 19:(10,17), 20:(10,17), 21:(10,17), 22:(10,17), 23:(10,17), 24:(10,17), 25:(10,17), 26:(10,17), 27:(10,17), 28:(10,17), 29:(10,17), 30:(10,17), 31:(10,17), 
+	rook = 0:(-10,-18), 1:(-7,-10), 2:(-4,-2), 3:(-1,6), 4:(2,14), 5:(5,23), 6:(7,31), 7:(9,39), 8:(11,47), 9:(13,53), 10:(13,55), 11:(14,57), 12:(14,58), 13:(15,58), 14:(15,59), 15:(16,59), 
+	bishop = 0:(-13,-15), 1:(-6,-8), 2:(1,-1), 3:(8,6), 4:(15,13), 5:(22,20), 6:(28,26), 7:(32,30), 8:(35,32), 9:(37,34), 10:(38,35), 11:(39,36), 12:(39,37), 13:(40,37), 14:(40,38), 15:(40,38), 
+	knight = 0:(-19,-17), 1:(-13,-12), 2:(-6,-7), 3:(0,-2), 4:(6,3), 5:(12,8), 6:(15,11), 7:(19,13), 8:(19,13), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(6,6), 2:(15,12), 3:(29,21), 4:(50,32), 5:(75,46), 6:(108,63), 
+isolated pawn weight, unopposed (by col):
+0:(-19,-23), 1:(-27,-26), 2:(-30,-26), 3:(-30,-26), 4:(-30,-26), 5:(-30,-26), 6:(-27,-26), 7:(-19,-23), 
+isolated pawn weight, opposed (by col):
+0:(-13,-15), 1:(-18,-18), 2:(-20,-18), 3:(-20,-18), 4:(-20,-18), 5:(-20,-18), 6:(-18,-18), 7:(-13,-15), 
+doubled pawn weight, unopposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+doubled pawn weight, opposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+tempo = (3,1)
+bishop pair = (5,12)
+
+completed 0 / 40
+completed 8 / 40
+completed 12 / 40
+completed 16 / 40
+completed 20 / 40
+completed 24 / 40
+completed 28 / 40
+completed 32 / 40
+completed 36 / 40
+completed 40 / 40
+-------------------------
+(w,l,d)=(0,2,2), id=285
+(w,l,d)=(2,4,1), id=286
+(w,l,d)=(2,3,0), id=287
+(w,l,d)=(9,11,8), id=281
+(w,l,d)=(149,154,126), id=167
+(w,l,d)=(178,183,134), id=57
+(w,l,d)=(185,185,126), id=47
+(w,l,d)=(126,125,92), id=120
+(w,l,d)=(169,166,119), id=3
+(w,l,d)=(267,262,183), id=30
+(w,l,d)=(281,273,211), id=0
+(w,l,d)=(209,202,175), id=64
+(w,l,d)=(208,201,150), id=132
+(w,l,d)=(94,90,72), id=233
+(w,l,d)=(242,231,194), id=59
+(w,l,d)=(168,160,126), id=85
+(w,l,d)=(84,80,54), id=217
+(w,l,d)=(203,191,159), id=123
+(w,l,d)=(52,49,24), id=263
+(w,l,d)=(491,455,373), id=37
+(w,l,d)=(325,301,222), id=119
+(w,l,d)=(68,63,45), id=264
+(w,l,d)=(127,115,116), id=249
+(w,l,d)=(71,65,42), id=238
+(w,l,d)=(212,193,152), id=106
+(w,l,d)=(133,121,79), id=244
+(w,l,d)=(404,366,283), id=31
+(w,l,d)=(379,341,261), id=13
+(w,l,d)=(350,313,252), id=22
+(w,l,d)=(231,205,161), id=27
+(w,l,d)=(404,354,257), id=102
+(w,l,d)=(287,250,191), id=185
+(w,l,d)=(606,526,439), id=73
+(w,l,d)=(114,99,74), id=225
+(w,l,d)=(355,302,243), id=97
+(w,l,d)=(776,654,586), id=67
+(w,l,d)=(109,86,72), id=259
+(w,l,d)=(70,54,51), id=270
+(w,l,d)=(259,197,148), id=227
+(w,l,d)=(6,2,5), id=284
+completed iteration 434
+best id=284
+material weights:
+	king = 0
+	queen = 900
+	rook = 500
+	bishop = 305
+	knight = 300
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(-5,-9), 1:(-4,-7), 2:(-3,-4), 3:(-2,-1), 4:(-1,1), 5:(0,4), 6:(1,6), 7:(2,9), 8:(4,11), 9:(5,13), 10:(6,16), 11:(7,17), 12:(8,17), 13:(8,17), 14:(9,17), 15:(10,17), 16:(10,17), 17:(10,17), 18:(10,17), 19:(10,17), 20:(10,17), 21:(10,17), 22:(10,17), 23:(10,17), 24:(10,17), 25:(10,17), 26:(10,17), 27:(10,17), 28:(10,17), 29:(10,17), 30:(10,17), 31:(10,17), 
+	rook = 0:(-10,-18), 1:(-7,-10), 2:(-4,-2), 3:(-1,6), 4:(2,14), 5:(5,23), 6:(7,31), 7:(9,39), 8:(11,47), 9:(13,53), 10:(13,55), 11:(14,57), 12:(14,58), 13:(15,58), 14:(15,59), 15:(16,59), 
+	bishop = 0:(-13,-15), 1:(-6,-8), 2:(1,-1), 3:(8,6), 4:(15,13), 5:(22,20), 6:(28,26), 7:(32,30), 8:(35,32), 9:(37,34), 10:(38,35), 11:(39,36), 12:(39,37), 13:(40,37), 14:(40,38), 15:(40,38), 
+	knight = 0:(-19,-17), 1:(-13,-12), 2:(-6,-7), 3:(0,-2), 4:(6,3), 5:(12,8), 6:(15,11), 7:(19,13), 8:(19,13), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(6,6), 2:(15,12), 3:(29,21), 4:(50,32), 5:(75,46), 6:(108,63), 
+isolated pawn weight, unopposed (by col):
+0:(-19,-23), 1:(-27,-26), 2:(-30,-26), 3:(-30,-26), 4:(-30,-26), 5:(-30,-26), 6:(-27,-26), 7:(-19,-23), 
+isolated pawn weight, opposed (by col):
+0:(-13,-15), 1:(-18,-18), 2:(-20,-18), 3:(-20,-18), 4:(-20,-18), 5:(-20,-18), 6:(-18,-18), 7:(-13,-15), 
+doubled pawn weight, unopposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+doubled pawn weight, opposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+tempo = (3,1)
+bishop pair = (5,12)
+
+completed 0 / 40
+completed 4 / 40
+completed 12 / 40
+completed 16 / 40
+completed 24 / 40
+completed 28 / 40
+completed 32 / 40
+completed 36 / 40
+completed 40 / 40
+-------------------------
+(w,l,d)=(0,2,3), id=285
+(w,l,d)=(2,5,1), id=286 -- culled
+(w,l,d)=(2,4,0), id=287
+(w,l,d)=(10,11,8), id=281
+(w,l,d)=(178,184,134), id=57
+(w,l,d)=(149,154,127), id=167
+(w,l,d)=(126,126,92), id=120
+(w,l,d)=(186,185,126), id=47
+(w,l,d)=(267,263,183), id=30
+(w,l,d)=(170,166,119), id=3
+(w,l,d)=(94,91,72), id=233
+(w,l,d)=(282,273,211), id=0
+(w,l,d)=(208,201,151), id=132
+(w,l,d)=(210,202,175), id=64
+(w,l,d)=(84,81,54), id=217
+(w,l,d)=(168,160,127), id=85
+(w,l,d)=(243,231,194), id=59
+(w,l,d)=(203,192,159), id=123
+(w,l,d)=(68,64,45), id=264
+(w,l,d)=(52,49,25), id=263
+(w,l,d)=(492,455,373), id=37
+(w,l,d)=(326,301,222), id=119
+(w,l,d)=(212,194,152), id=106
+(w,l,d)=(404,367,283), id=31
+(w,l,d)=(128,115,116), id=249
+(w,l,d)=(379,342,261), id=13
+(w,l,d)=(134,121,79), id=244
+(w,l,d)=(72,65,42), id=238
+(w,l,d)=(350,313,253), id=22
+(w,l,d)=(117,105,75), id=225
+(w,l,d)=(231,206,161), id=27
+(w,l,d)=(405,354,257), id=102
+(w,l,d)=(610,529,440), id=73
+(w,l,d)=(288,250,191), id=185
+(w,l,d)=(776,654,589), id=67
+(w,l,d)=(358,302,244), id=97
+(w,l,d)=(111,90,73), id=259
+(w,l,d)=(71,54,51), id=270
+(w,l,d)=(261,201,149), id=227
+(w,l,d)=(10,4,7), id=284
+completed iteration 435
+best id=284
+material weights:
+	king = 0
+	queen = 900
+	rook = 500
+	bishop = 305
+	knight = 300
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(-5,-9), 1:(-4,-7), 2:(-3,-4), 3:(-2,-1), 4:(-1,1), 5:(0,4), 6:(1,6), 7:(2,9), 8:(4,11), 9:(5,13), 10:(6,16), 11:(7,17), 12:(8,17), 13:(8,17), 14:(9,17), 15:(10,17), 16:(10,17), 17:(10,17), 18:(10,17), 19:(10,17), 20:(10,17), 21:(10,17), 22:(10,17), 23:(10,17), 24:(10,17), 25:(10,17), 26:(10,17), 27:(10,17), 28:(10,17), 29:(10,17), 30:(10,17), 31:(10,17), 
+	rook = 0:(-10,-18), 1:(-7,-10), 2:(-4,-2), 3:(-1,6), 4:(2,14), 5:(5,23), 6:(7,31), 7:(9,39), 8:(11,47), 9:(13,53), 10:(13,55), 11:(14,57), 12:(14,58), 13:(15,58), 14:(15,59), 15:(16,59), 
+	bishop = 0:(-13,-15), 1:(-6,-8), 2:(1,-1), 3:(8,6), 4:(15,13), 5:(22,20), 6:(28,26), 7:(32,30), 8:(35,32), 9:(37,34), 10:(38,35), 11:(39,36), 12:(39,37), 13:(40,37), 14:(40,38), 15:(40,38), 
+	knight = 0:(-19,-17), 1:(-13,-12), 2:(-6,-7), 3:(0,-2), 4:(6,3), 5:(12,8), 6:(15,11), 7:(19,13), 8:(19,13), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(6,6), 2:(15,12), 3:(29,21), 4:(50,32), 5:(75,46), 6:(108,63), 
+isolated pawn weight, unopposed (by col):
+0:(-19,-23), 1:(-27,-26), 2:(-30,-26), 3:(-30,-26), 4:(-30,-26), 5:(-30,-26), 6:(-27,-26), 7:(-19,-23), 
+isolated pawn weight, opposed (by col):
+0:(-13,-15), 1:(-18,-18), 2:(-20,-18), 3:(-20,-18), 4:(-20,-18), 5:(-20,-18), 6:(-18,-18), 7:(-13,-15), 
+doubled pawn weight, unopposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+doubled pawn weight, opposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+tempo = (3,1)
+bishop pair = (5,12)
+
+completed 0 / 40
+completed 4 / 40
+completed 8 / 40
+completed 12 / 40
+completed 16 / 40
+completed 24 / 40
+completed 28 / 40
+completed 32 / 40
+completed 36 / 40
+completed 40 / 40
+-------------------------
+(w,l,d)=(0,1,0), id=288
+(w,l,d)=(2,5,0), id=287
+(w,l,d)=(1,2,3), id=285
+(w,l,d)=(10,11,9), id=281
+(w,l,d)=(149,155,127), id=167
+(w,l,d)=(179,184,134), id=57
+(w,l,d)=(126,126,93), id=120
+(w,l,d)=(187,185,126), id=47
+(w,l,d)=(267,263,184), id=30
+(w,l,d)=(171,166,119), id=3
+(w,l,d)=(210,203,175), id=64
+(w,l,d)=(283,273,211), id=0
+(w,l,d)=(209,201,151), id=132
+(w,l,d)=(95,91,72), id=233
+(w,l,d)=(243,232,194), id=59
+(w,l,d)=(68,65,45), id=264
+(w,l,d)=(203,193,159), id=123
+(w,l,d)=(85,81,54), id=217
+(w,l,d)=(169,160,127), id=85
+(w,l,d)=(492,456,373), id=37
+(w,l,d)=(327,301,222), id=119
+(w,l,d)=(53,49,25), id=263
+(w,l,d)=(213,194,152), id=106
+(w,l,d)=(134,122,79), id=244
+(w,l,d)=(405,367,283), id=31
+(w,l,d)=(379,342,262), id=13
+(w,l,d)=(72,65,43), id=238
+(w,l,d)=(129,115,116), id=249
+(w,l,d)=(350,314,253), id=22
+(w,l,d)=(117,105,76), id=225
+(w,l,d)=(232,206,161), id=27
+(w,l,d)=(290,255,193), id=185
+(w,l,d)=(612,532,440), id=73
+(w,l,d)=(406,354,257), id=102
+(w,l,d)=(778,656,592), id=67
+(w,l,d)=(362,304,244), id=97
+(w,l,d)=(73,59,52), id=270
+(w,l,d)=(114,92,73), id=259
+(w,l,d)=(263,204,149), id=227
+(w,l,d)=(10,5,9), id=284
+completed iteration 436
+best id=284
+material weights:
+	king = 0
+	queen = 900
+	rook = 500
+	bishop = 305
+	knight = 300
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(-5,-9), 1:(-4,-7), 2:(-3,-4), 3:(-2,-1), 4:(-1,1), 5:(0,4), 6:(1,6), 7:(2,9), 8:(4,11), 9:(5,13), 10:(6,16), 11:(7,17), 12:(8,17), 13:(8,17), 14:(9,17), 15:(10,17), 16:(10,17), 17:(10,17), 18:(10,17), 19:(10,17), 20:(10,17), 21:(10,17), 22:(10,17), 23:(10,17), 24:(10,17), 25:(10,17), 26:(10,17), 27:(10,17), 28:(10,17), 29:(10,17), 30:(10,17), 31:(10,17), 
+	rook = 0:(-10,-18), 1:(-7,-10), 2:(-4,-2), 3:(-1,6), 4:(2,14), 5:(5,23), 6:(7,31), 7:(9,39), 8:(11,47), 9:(13,53), 10:(13,55), 11:(14,57), 12:(14,58), 13:(15,58), 14:(15,59), 15:(16,59), 
+	bishop = 0:(-13,-15), 1:(-6,-8), 2:(1,-1), 3:(8,6), 4:(15,13), 5:(22,20), 6:(28,26), 7:(32,30), 8:(35,32), 9:(37,34), 10:(38,35), 11:(39,36), 12:(39,37), 13:(40,37), 14:(40,38), 15:(40,38), 
+	knight = 0:(-19,-17), 1:(-13,-12), 2:(-6,-7), 3:(0,-2), 4:(6,3), 5:(12,8), 6:(15,11), 7:(19,13), 8:(19,13), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(6,6), 2:(15,12), 3:(29,21), 4:(50,32), 5:(75,46), 6:(108,63), 
+isolated pawn weight, unopposed (by col):
+0:(-19,-23), 1:(-27,-26), 2:(-30,-26), 3:(-30,-26), 4:(-30,-26), 5:(-30,-26), 6:(-27,-26), 7:(-19,-23), 
+isolated pawn weight, opposed (by col):
+0:(-13,-15), 1:(-18,-18), 2:(-20,-18), 3:(-20,-18), 4:(-20,-18), 5:(-20,-18), 6:(-18,-18), 7:(-13,-15), 
+doubled pawn weight, unopposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+doubled pawn weight, opposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+tempo = (3,1)
+bishop pair = (5,12)
+
+completed 0 / 40
+completed 4 / 40
+completed 8 / 40
+completed 12 / 40
+completed 16 / 40
+completed 20 / 40
+completed 24 / 40
+completed 32 / 40
+completed 36 / 40
+completed 40 / 40
+-------------------------
+(w,l,d)=(0,1,1), id=288
+(w,l,d)=(2,6,0), id=287 -- culled
+(w,l,d)=(1,2,4), id=285
+(w,l,d)=(10,12,9), id=281
+(w,l,d)=(149,156,127), id=167
+(w,l,d)=(179,184,135), id=57
+(w,l,d)=(187,186,126), id=47
+(w,l,d)=(127,126,93), id=120
+(w,l,d)=(267,264,184), id=30
+(w,l,d)=(171,166,120), id=3
+(w,l,d)=(283,274,211), id=0
+(w,l,d)=(210,203,176), id=64
+(w,l,d)=(209,201,152), id=132
+(w,l,d)=(243,233,194), id=59
+(w,l,d)=(169,161,127), id=85
+(w,l,d)=(203,193,160), id=123
+(w,l,d)=(85,81,55), id=217
+(w,l,d)=(96,91,72), id=233
+(w,l,d)=(69,65,45), id=264
+(w,l,d)=(53,50,25), id=263
+(w,l,d)=(492,457,373), id=37
+(w,l,d)=(327,302,222), id=119
+(w,l,d)=(213,194,153), id=106
+(w,l,d)=(134,122,80), id=244
+(w,l,d)=(379,343,262), id=13
+(w,l,d)=(117,106,76), id=225
+(w,l,d)=(406,367,283), id=31
+(w,l,d)=(350,315,253), id=22
+(w,l,d)=(129,115,117), id=249
+(w,l,d)=(232,206,162), id=27
+(w,l,d)=(73,65,43), id=238
+(w,l,d)=(290,256,193), id=185
+(w,l,d)=(406,356,260), id=102
+(w,l,d)=(617,534,440), id=73
+(w,l,d)=(782,659,593), id=67
+(w,l,d)=(367,305,247), id=97
+(w,l,d)=(75,61,54), id=270
+(w,l,d)=(117,93,73), id=259
+(w,l,d)=(263,205,150), id=227
+(w,l,d)=(14,6,11), id=284
+completed iteration 437
+best id=284
+material weights:
+	king = 0
+	queen = 900
+	rook = 500
+	bishop = 305
+	knight = 300
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(-5,-9), 1:(-4,-7), 2:(-3,-4), 3:(-2,-1), 4:(-1,1), 5:(0,4), 6:(1,6), 7:(2,9), 8:(4,11), 9:(5,13), 10:(6,16), 11:(7,17), 12:(8,17), 13:(8,17), 14:(9,17), 15:(10,17), 16:(10,17), 17:(10,17), 18:(10,17), 19:(10,17), 20:(10,17), 21:(10,17), 22:(10,17), 23:(10,17), 24:(10,17), 25:(10,17), 26:(10,17), 27:(10,17), 28:(10,17), 29:(10,17), 30:(10,17), 31:(10,17), 
+	rook = 0:(-10,-18), 1:(-7,-10), 2:(-4,-2), 3:(-1,6), 4:(2,14), 5:(5,23), 6:(7,31), 7:(9,39), 8:(11,47), 9:(13,53), 10:(13,55), 11:(14,57), 12:(14,58), 13:(15,58), 14:(15,59), 15:(16,59), 
+	bishop = 0:(-13,-15), 1:(-6,-8), 2:(1,-1), 3:(8,6), 4:(15,13), 5:(22,20), 6:(28,26), 7:(32,30), 8:(35,32), 9:(37,34), 10:(38,35), 11:(39,36), 12:(39,37), 13:(40,37), 14:(40,38), 15:(40,38), 
+	knight = 0:(-19,-17), 1:(-13,-12), 2:(-6,-7), 3:(0,-2), 4:(6,3), 5:(12,8), 6:(15,11), 7:(19,13), 8:(19,13), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(6,6), 2:(15,12), 3:(29,21), 4:(50,32), 5:(75,46), 6:(108,63), 
+isolated pawn weight, unopposed (by col):
+0:(-19,-23), 1:(-27,-26), 2:(-30,-26), 3:(-30,-26), 4:(-30,-26), 5:(-30,-26), 6:(-27,-26), 7:(-19,-23), 
+isolated pawn weight, opposed (by col):
+0:(-13,-15), 1:(-18,-18), 2:(-20,-18), 3:(-20,-18), 4:(-20,-18), 5:(-20,-18), 6:(-18,-18), 7:(-13,-15), 
+doubled pawn weight, unopposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+doubled pawn weight, opposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+tempo = (3,1)
+bishop pair = (5,12)
+
+completed 0 / 40
+completed 4 / 40
+completed 8 / 40
+completed 12 / 40
+completed 16 / 40
+completed 24 / 40
+completed 28 / 40
+completed 32 / 40
+completed 36 / 40
+completed 40 / 40
+-------------------------
+(w,l,d)=(0,1,2), id=288
+(w,l,d)=(1,3,4), id=285 -- culled
+(w,l,d)=(10,13,9), id=281
+(w,l,d)=(149,156,128), id=167
+(w,l,d)=(180,184,135), id=57
+(w,l,d)=(0,0,1), id=289
+(w,l,d)=(127,127,93), id=120
+(w,l,d)=(187,187,126), id=47
+(w,l,d)=(268,264,184), id=30
+(w,l,d)=(171,167,120), id=3
+(w,l,d)=(283,275,211), id=0
+(w,l,d)=(210,203,177), id=64
+(w,l,d)=(209,202,152), id=132
+(w,l,d)=(96,92,72), id=233
+(w,l,d)=(53,51,25), id=263
+(w,l,d)=(203,194,160), id=123
+(w,l,d)=(244,233,194), id=59
+(w,l,d)=(69,66,45), id=264
+(w,l,d)=(85,81,56), id=217
+(w,l,d)=(170,161,127), id=85
+(w,l,d)=(492,457,374), id=37
+(w,l,d)=(327,302,223), id=119
+(w,l,d)=(213,195,153), id=106
+(w,l,d)=(379,344,262), id=13
+(w,l,d)=(117,106,77), id=225
+(w,l,d)=(350,316,253), id=22
+(w,l,d)=(407,367,283), id=31
+(w,l,d)=(135,122,80), id=244
+(w,l,d)=(130,115,117), id=249
+(w,l,d)=(232,206,163), id=27
+(w,l,d)=(73,65,44), id=238
+(w,l,d)=(291,256,193), id=185
+(w,l,d)=(410,359,260), id=102
+(w,l,d)=(619,538,442), id=73
+(w,l,d)=(785,660,594), id=67
+(w,l,d)=(367,306,251), id=97
+(w,l,d)=(78,62,55), id=270
+(w,l,d)=(121,95,74), id=259
+(w,l,d)=(267,205,154), id=227
+(w,l,d)=(14,8,12), id=284
+completed iteration 438
+best id=284
+material weights:
+	king = 0
+	queen = 900
+	rook = 500
+	bishop = 305
+	knight = 300
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(-5,-9), 1:(-4,-7), 2:(-3,-4), 3:(-2,-1), 4:(-1,1), 5:(0,4), 6:(1,6), 7:(2,9), 8:(4,11), 9:(5,13), 10:(6,16), 11:(7,17), 12:(8,17), 13:(8,17), 14:(9,17), 15:(10,17), 16:(10,17), 17:(10,17), 18:(10,17), 19:(10,17), 20:(10,17), 21:(10,17), 22:(10,17), 23:(10,17), 24:(10,17), 25:(10,17), 26:(10,17), 27:(10,17), 28:(10,17), 29:(10,17), 30:(10,17), 31:(10,17), 
+	rook = 0:(-10,-18), 1:(-7,-10), 2:(-4,-2), 3:(-1,6), 4:(2,14), 5:(5,23), 6:(7,31), 7:(9,39), 8:(11,47), 9:(13,53), 10:(13,55), 11:(14,57), 12:(14,58), 13:(15,58), 14:(15,59), 15:(16,59), 
+	bishop = 0:(-13,-15), 1:(-6,-8), 2:(1,-1), 3:(8,6), 4:(15,13), 5:(22,20), 6:(28,26), 7:(32,30), 8:(35,32), 9:(37,34), 10:(38,35), 11:(39,36), 12:(39,37), 13:(40,37), 14:(40,38), 15:(40,38), 
+	knight = 0:(-19,-17), 1:(-13,-12), 2:(-6,-7), 3:(0,-2), 4:(6,3), 5:(12,8), 6:(15,11), 7:(19,13), 8:(19,13), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(6,6), 2:(15,12), 3:(29,21), 4:(50,32), 5:(75,46), 6:(108,63), 
+isolated pawn weight, unopposed (by col):
+0:(-19,-23), 1:(-27,-26), 2:(-30,-26), 3:(-30,-26), 4:(-30,-26), 5:(-30,-26), 6:(-27,-26), 7:(-19,-23), 
+isolated pawn weight, opposed (by col):
+0:(-13,-15), 1:(-18,-18), 2:(-20,-18), 3:(-20,-18), 4:(-20,-18), 5:(-20,-18), 6:(-18,-18), 7:(-13,-15), 
+doubled pawn weight, unopposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+doubled pawn weight, opposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+tempo = (3,1)
+bishop pair = (5,12)
+
+completed 0 / 40
+completed 4 / 40
+completed 12 / 40
+completed 16 / 40
+completed 20 / 40
+completed 24 / 40
+completed 28 / 40
+completed 32 / 40
+completed 36 / 40
+completed 40 / 40
+-------------------------
+(w,l,d)=(0,1,1), id=289
+(w,l,d)=(0,1,3), id=288
+(w,l,d)=(11,13,9), id=281
+(w,l,d)=(149,156,129), id=167
+(w,l,d)=(180,185,135), id=57
+(w,l,d)=(127,128,93), id=120
+(w,l,d)=(187,188,126), id=47
+(w,l,d)=(269,264,184), id=30
+(w,l,d)=(53,52,25), id=263
+(w,l,d)=(171,167,121), id=3
+(w,l,d)=(210,204,177), id=64
+(w,l,d)=(209,203,152), id=132
+(w,l,d)=(284,275,211), id=0
+(w,l,d)=(85,82,56), id=217
+(w,l,d)=(203,195,160), id=123
+(w,l,d)=(244,234,194), id=59
+(w,l,d)=(96,92,73), id=233
+(w,l,d)=(170,162,127), id=85
+(w,l,d)=(70,66,45), id=264
+(w,l,d)=(492,458,374), id=37
+(w,l,d)=(327,303,223), id=119
+(w,l,d)=(213,196,153), id=106
+(w,l,d)=(135,123,80), id=244
+(w,l,d)=(350,317,253), id=22
+(w,l,d)=(380,344,262), id=13
+(w,l,d)=(408,367,283), id=31
+(w,l,d)=(118,106,77), id=225
+(w,l,d)=(232,207,163), id=27
+(w,l,d)=(73,65,45), id=238
+(w,l,d)=(131,115,117), id=249
+(w,l,d)=(291,257,193), id=185
+(w,l,d)=(622,541,444), id=73
+(w,l,d)=(414,359,260), id=102
+(w,l,d)=(789,662,596), id=67
+(w,l,d)=(369,308,251), id=97
+(w,l,d)=(80,66,55), id=270
+(w,l,d)=(122,98,74), id=259
+(w,l,d)=(271,206,155), id=227
+(w,l,d)=(19,9,14), id=284
+(w,l,d)=(1,0,0), id=290
+completed iteration 439
+best id=284
+material weights:
+	king = 0
+	queen = 900
+	rook = 500
+	bishop = 305
+	knight = 300
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(-5,-9), 1:(-4,-7), 2:(-3,-4), 3:(-2,-1), 4:(-1,1), 5:(0,4), 6:(1,6), 7:(2,9), 8:(4,11), 9:(5,13), 10:(6,16), 11:(7,17), 12:(8,17), 13:(8,17), 14:(9,17), 15:(10,17), 16:(10,17), 17:(10,17), 18:(10,17), 19:(10,17), 20:(10,17), 21:(10,17), 22:(10,17), 23:(10,17), 24:(10,17), 25:(10,17), 26:(10,17), 27:(10,17), 28:(10,17), 29:(10,17), 30:(10,17), 31:(10,17), 
+	rook = 0:(-10,-18), 1:(-7,-10), 2:(-4,-2), 3:(-1,6), 4:(2,14), 5:(5,23), 6:(7,31), 7:(9,39), 8:(11,47), 9:(13,53), 10:(13,55), 11:(14,57), 12:(14,58), 13:(15,58), 14:(15,59), 15:(16,59), 
+	bishop = 0:(-13,-15), 1:(-6,-8), 2:(1,-1), 3:(8,6), 4:(15,13), 5:(22,20), 6:(28,26), 7:(32,30), 8:(35,32), 9:(37,34), 10:(38,35), 11:(39,36), 12:(39,37), 13:(40,37), 14:(40,38), 15:(40,38), 
+	knight = 0:(-19,-17), 1:(-13,-12), 2:(-6,-7), 3:(0,-2), 4:(6,3), 5:(12,8), 6:(15,11), 7:(19,13), 8:(19,13), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(6,6), 2:(15,12), 3:(29,21), 4:(50,32), 5:(75,46), 6:(108,63), 
+isolated pawn weight, unopposed (by col):
+0:(-19,-23), 1:(-27,-26), 2:(-30,-26), 3:(-30,-26), 4:(-30,-26), 5:(-30,-26), 6:(-27,-26), 7:(-19,-23), 
+isolated pawn weight, opposed (by col):
+0:(-13,-15), 1:(-18,-18), 2:(-20,-18), 3:(-20,-18), 4:(-20,-18), 5:(-20,-18), 6:(-18,-18), 7:(-13,-15), 
+doubled pawn weight, unopposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+doubled pawn weight, opposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+tempo = (3,1)
+bishop pair = (5,12)
+
+completed 0 / 40
+completed 4 / 40
+completed 8 / 40
+completed 12 / 40
+completed 16 / 40
+completed 20 / 40
+completed 24 / 40
+completed 28 / 40
+completed 32 / 40
+completed 36 / 40
+completed 40 / 40
+-------------------------
+(w,l,d)=(0,2,1), id=289
+(w,l,d)=(1,4,2), id=290
+(w,l,d)=(0,1,4), id=288
+(w,l,d)=(11,13,10), id=281
+(w,l,d)=(149,156,130), id=167
+(w,l,d)=(181,185,135), id=57
+(w,l,d)=(127,128,94), id=120
+(w,l,d)=(188,188,126), id=47
+(w,l,d)=(53,52,26), id=263
+(w,l,d)=(270,264,184), id=30
+(w,l,d)=(171,167,122), id=3
+(w,l,d)=(284,276,211), id=0
+(w,l,d)=(209,203,153), id=132
+(w,l,d)=(211,204,177), id=64
+(w,l,d)=(203,196,160), id=123
+(w,l,d)=(85,82,57), id=217
+(w,l,d)=(244,234,195), id=59
+(w,l,d)=(96,92,74), id=233
+(w,l,d)=(170,162,128), id=85
+(w,l,d)=(70,66,46), id=264
+(w,l,d)=(492,458,375), id=37
+(w,l,d)=(327,304,223), id=119
+(w,l,d)=(214,196,153), id=106
+(w,l,d)=(135,123,81), id=244
+(w,l,d)=(118,107,77), id=225
+(w,l,d)=(351,317,253), id=22
+(w,l,d)=(381,344,262), id=13
+(w,l,d)=(73,66,45), id=238
+(w,l,d)=(409,367,283), id=31
+(w,l,d)=(131,116,117), id=249
+(w,l,d)=(232,207,164), id=27
+(w,l,d)=(292,257,193), id=185
+(w,l,d)=(623,541,444), id=73
+(w,l,d)=(416,359,262), id=102
+(w,l,d)=(793,665,600), id=67
+(w,l,d)=(371,311,253), id=97
+(w,l,d)=(81,67,56), id=270
+(w,l,d)=(123,99,77), id=259
+(w,l,d)=(272,209,157), id=227
+(w,l,d)=(21,10,17), id=284
+completed iteration 440
+best id=284
+material weights:
+	king = 0
+	queen = 900
+	rook = 500
+	bishop = 305
+	knight = 300
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(-5,-9), 1:(-4,-7), 2:(-3,-4), 3:(-2,-1), 4:(-1,1), 5:(0,4), 6:(1,6), 7:(2,9), 8:(4,11), 9:(5,13), 10:(6,16), 11:(7,17), 12:(8,17), 13:(8,17), 14:(9,17), 15:(10,17), 16:(10,17), 17:(10,17), 18:(10,17), 19:(10,17), 20:(10,17), 21:(10,17), 22:(10,17), 23:(10,17), 24:(10,17), 25:(10,17), 26:(10,17), 27:(10,17), 28:(10,17), 29:(10,17), 30:(10,17), 31:(10,17), 
+	rook = 0:(-10,-18), 1:(-7,-10), 2:(-4,-2), 3:(-1,6), 4:(2,14), 5:(5,23), 6:(7,31), 7:(9,39), 8:(11,47), 9:(13,53), 10:(13,55), 11:(14,57), 12:(14,58), 13:(15,58), 14:(15,59), 15:(16,59), 
+	bishop = 0:(-13,-15), 1:(-6,-8), 2:(1,-1), 3:(8,6), 4:(15,13), 5:(22,20), 6:(28,26), 7:(32,30), 8:(35,32), 9:(37,34), 10:(38,35), 11:(39,36), 12:(39,37), 13:(40,37), 14:(40,38), 15:(40,38), 
+	knight = 0:(-19,-17), 1:(-13,-12), 2:(-6,-7), 3:(0,-2), 4:(6,3), 5:(12,8), 6:(15,11), 7:(19,13), 8:(19,13), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(6,6), 2:(15,12), 3:(29,21), 4:(50,32), 5:(75,46), 6:(108,63), 
+isolated pawn weight, unopposed (by col):
+0:(-19,-23), 1:(-27,-26), 2:(-30,-26), 3:(-30,-26), 4:(-30,-26), 5:(-30,-26), 6:(-27,-26), 7:(-19,-23), 
+isolated pawn weight, opposed (by col):
+0:(-13,-15), 1:(-18,-18), 2:(-20,-18), 3:(-20,-18), 4:(-20,-18), 5:(-20,-18), 6:(-18,-18), 7:(-13,-15), 
+doubled pawn weight, unopposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+doubled pawn weight, opposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+tempo = (3,1)
+bishop pair = (5,12)
+
+completed 0 / 40
+completed 4 / 40
+completed 8 / 40
+completed 12 / 40
+completed 20 / 40
+completed 24 / 40
+completed 28 / 40
+completed 32 / 40
+completed 36 / 40
+completed 40 / 40
+-------------------------
+(w,l,d)=(0,2,2), id=289
+(w,l,d)=(1,4,3), id=290 -- culled
+(w,l,d)=(11,13,11), id=281
+(w,l,d)=(149,156,131), id=167
+(w,l,d)=(181,186,135), id=57
+(w,l,d)=(127,129,94), id=120
+(w,l,d)=(1,1,4), id=288
+(w,l,d)=(53,53,26), id=263
+(w,l,d)=(189,188,126), id=47
+(w,l,d)=(270,264,185), id=30
+(w,l,d)=(171,167,123), id=3
+(w,l,d)=(203,197,160), id=123
+(w,l,d)=(285,276,211), id=0
+(w,l,d)=(210,203,153), id=132
+(w,l,d)=(85,82,58), id=217
+(w,l,d)=(212,204,177), id=64
+(w,l,d)=(170,163,128), id=85
+(w,l,d)=(245,234,195), id=59
+(w,l,d)=(70,67,46), id=264
+(w,l,d)=(97,92,74), id=233
+(w,l,d)=(492,459,375), id=37
+(w,l,d)=(327,305,223), id=119
+(w,l,d)=(214,197,153), id=106
+(w,l,d)=(73,67,45), id=238
+(w,l,d)=(135,123,82), id=244
+(w,l,d)=(351,318,253), id=22
+(w,l,d)=(118,107,78), id=225
+(w,l,d)=(381,344,263), id=13
+(w,l,d)=(131,117,117), id=249
+(w,l,d)=(409,368,283), id=31
+(w,l,d)=(233,207,164), id=27
+(w,l,d)=(293,257,193), id=185
+(w,l,d)=(626,543,447), id=73
+(w,l,d)=(83,72,56), id=270
+(w,l,d)=(418,360,265), id=102
+(w,l,d)=(794,665,602), id=67
+(w,l,d)=(373,312,253), id=97
+(w,l,d)=(125,103,79), id=259
+(w,l,d)=(276,210,160), id=227
+(w,l,d)=(24,11,18), id=284
+completed iteration 441
+best id=284
+material weights:
+	king = 0
+	queen = 900
+	rook = 500
+	bishop = 305
+	knight = 300
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(-5,-9), 1:(-4,-7), 2:(-3,-4), 3:(-2,-1), 4:(-1,1), 5:(0,4), 6:(1,6), 7:(2,9), 8:(4,11), 9:(5,13), 10:(6,16), 11:(7,17), 12:(8,17), 13:(8,17), 14:(9,17), 15:(10,17), 16:(10,17), 17:(10,17), 18:(10,17), 19:(10,17), 20:(10,17), 21:(10,17), 22:(10,17), 23:(10,17), 24:(10,17), 25:(10,17), 26:(10,17), 27:(10,17), 28:(10,17), 29:(10,17), 30:(10,17), 31:(10,17), 
+	rook = 0:(-10,-18), 1:(-7,-10), 2:(-4,-2), 3:(-1,6), 4:(2,14), 5:(5,23), 6:(7,31), 7:(9,39), 8:(11,47), 9:(13,53), 10:(13,55), 11:(14,57), 12:(14,58), 13:(15,58), 14:(15,59), 15:(16,59), 
+	bishop = 0:(-13,-15), 1:(-6,-8), 2:(1,-1), 3:(8,6), 4:(15,13), 5:(22,20), 6:(28,26), 7:(32,30), 8:(35,32), 9:(37,34), 10:(38,35), 11:(39,36), 12:(39,37), 13:(40,37), 14:(40,38), 15:(40,38), 
+	knight = 0:(-19,-17), 1:(-13,-12), 2:(-6,-7), 3:(0,-2), 4:(6,3), 5:(12,8), 6:(15,11), 7:(19,13), 8:(19,13), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(6,6), 2:(15,12), 3:(29,21), 4:(50,32), 5:(75,46), 6:(108,63), 
+isolated pawn weight, unopposed (by col):
+0:(-19,-23), 1:(-27,-26), 2:(-30,-26), 3:(-30,-26), 4:(-30,-26), 5:(-30,-26), 6:(-27,-26), 7:(-19,-23), 
+isolated pawn weight, opposed (by col):
+0:(-13,-15), 1:(-18,-18), 2:(-20,-18), 3:(-20,-18), 4:(-20,-18), 5:(-20,-18), 6:(-18,-18), 7:(-13,-15), 
+doubled pawn weight, unopposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+doubled pawn weight, opposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+tempo = (3,1)
+bishop pair = (5,12)
+
+completed 0 / 40
+completed 4 / 40
+completed 8 / 40
+completed 12 / 40
+completed 16 / 40
+completed 24 / 40
+completed 28 / 40
+completed 32 / 40
+completed 36 / 40
+completed 40 / 40
+-------------------------
+(w,l,d)=(1,2,2), id=289
+(w,l,d)=(1,2,4), id=288
+(w,l,d)=(11,14,11), id=281
+(w,l,d)=(149,157,131), id=167
+(w,l,d)=(182,186,135), id=57
+(w,l,d)=(128,129,94), id=120
+(w,l,d)=(53,53,27), id=263
+(w,l,d)=(189,189,126), id=47
+(w,l,d)=(171,167,124), id=3
+(w,l,d)=(271,264,185), id=30
+(w,l,d)=(285,277,211), id=0
+(w,l,d)=(210,204,153), id=132
+(w,l,d)=(203,197,161), id=123
+(w,l,d)=(85,82,59), id=217
+(w,l,d)=(213,204,177), id=64
+(w,l,d)=(245,234,196), id=59
+(w,l,d)=(171,163,128), id=85
+(w,l,d)=(71,67,46), id=264
+(w,l,d)=(98,92,74), id=233
+(w,l,d)=(492,459,376), id=37
+(w,l,d)=(328,305,223), id=119
+(w,l,d)=(73,68,45), id=238
+(w,l,d)=(215,197,153), id=106
+(w,l,d)=(351,318,254), id=22
+(w,l,d)=(381,345,263), id=13
+(w,l,d)=(136,123,82), id=244
+(w,l,d)=(131,117,118), id=249
+(w,l,d)=(119,107,78), id=225
+(w,l,d)=(410,368,283), id=31
+(w,l,d)=(233,207,165), id=27
+(w,l,d)=(293,258,193), id=185
+(w,l,d)=(629,548,452), id=73
+(w,l,d)=(85,74,57), id=270
+(w,l,d)=(419,363,266), id=102
+(w,l,d)=(797,666,602), id=67
+(w,l,d)=(126,106,80), id=259
+(w,l,d)=(378,315,254), id=97
+(w,l,d)=(277,211,160), id=227
+(w,l,d)=(25,15,18), id=284
+(w,l,d)=(1,0,0), id=291
+completed iteration 442
+best id=284
+material weights:
+	king = 0
+	queen = 900
+	rook = 500
+	bishop = 305
+	knight = 300
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(-5,-9), 1:(-4,-7), 2:(-3,-4), 3:(-2,-1), 4:(-1,1), 5:(0,4), 6:(1,6), 7:(2,9), 8:(4,11), 9:(5,13), 10:(6,16), 11:(7,17), 12:(8,17), 13:(8,17), 14:(9,17), 15:(10,17), 16:(10,17), 17:(10,17), 18:(10,17), 19:(10,17), 20:(10,17), 21:(10,17), 22:(10,17), 23:(10,17), 24:(10,17), 25:(10,17), 26:(10,17), 27:(10,17), 28:(10,17), 29:(10,17), 30:(10,17), 31:(10,17), 
+	rook = 0:(-10,-18), 1:(-7,-10), 2:(-4,-2), 3:(-1,6), 4:(2,14), 5:(5,23), 6:(7,31), 7:(9,39), 8:(11,47), 9:(13,53), 10:(13,55), 11:(14,57), 12:(14,58), 13:(15,58), 14:(15,59), 15:(16,59), 
+	bishop = 0:(-13,-15), 1:(-6,-8), 2:(1,-1), 3:(8,6), 4:(15,13), 5:(22,20), 6:(28,26), 7:(32,30), 8:(35,32), 9:(37,34), 10:(38,35), 11:(39,36), 12:(39,37), 13:(40,37), 14:(40,38), 15:(40,38), 
+	knight = 0:(-19,-17), 1:(-13,-12), 2:(-6,-7), 3:(0,-2), 4:(6,3), 5:(12,8), 6:(15,11), 7:(19,13), 8:(19,13), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(6,6), 2:(15,12), 3:(29,21), 4:(50,32), 5:(75,46), 6:(108,63), 
+isolated pawn weight, unopposed (by col):
+0:(-19,-23), 1:(-27,-26), 2:(-30,-26), 3:(-30,-26), 4:(-30,-26), 5:(-30,-26), 6:(-27,-26), 7:(-19,-23), 
+isolated pawn weight, opposed (by col):
+0:(-13,-15), 1:(-18,-18), 2:(-20,-18), 3:(-20,-18), 4:(-20,-18), 5:(-20,-18), 6:(-18,-18), 7:(-13,-15), 
+doubled pawn weight, unopposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+doubled pawn weight, opposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+tempo = (3,1)
+bishop pair = (5,12)
+
+completed 0 / 40
+completed 4 / 40
+completed 8 / 40
+completed 12 / 40
+completed 16 / 40
+completed 20 / 40
+completed 24 / 40
+completed 28 / 40
+completed 32 / 40
+completed 36 / 40
+completed 40 / 40
+-------------------------
+(w,l,d)=(1,3,2), id=289
+(w,l,d)=(1,3,4), id=288 -- culled
+(w,l,d)=(12,14,11), id=281
+(w,l,d)=(150,157,131), id=167
+(w,l,d)=(183,186,135), id=57
+(w,l,d)=(189,190,126), id=47
+(w,l,d)=(53,53,28), id=263
+(w,l,d)=(129,129,94), id=120
+(w,l,d)=(271,264,186), id=30
+(w,l,d)=(210,204,154), id=132
+(w,l,d)=(172,167,124), id=3
+(w,l,d)=(286,277,211), id=0
+(w,l,d)=(204,197,161), id=123
+(w,l,d)=(213,205,177), id=64
+(w,l,d)=(245,235,196), id=59
+(w,l,d)=(171,164,128), id=85
+(w,l,d)=(86,82,59), id=217
+(w,l,d)=(73,69,45), id=238
+(w,l,d)=(71,67,47), id=264
+(w,l,d)=(492,460,376), id=37
+(w,l,d)=(328,306,223), id=119
+(w,l,d)=(99,92,74), id=233
+(w,l,d)=(216,197,153), id=106
+(w,l,d)=(351,319,254), id=22
+(w,l,d)=(136,124,82), id=244
+(w,l,d)=(131,118,118), id=249
+(w,l,d)=(119,108,78), id=225
+(w,l,d)=(382,345,263), id=13
+(w,l,d)=(410,368,284), id=31
+(w,l,d)=(233,207,166), id=27
+(w,l,d)=(293,258,194), id=185
+(w,l,d)=(629,549,452), id=73
+(w,l,d)=(87,76,60), id=270
+(w,l,d)=(419,365,267), id=102
+(w,l,d)=(799,668,603), id=67
+(w,l,d)=(379,317,256), id=97
+(w,l,d)=(128,106,82), id=259
+(w,l,d)=(282,213,162), id=227
+(w,l,d)=(26,19,19), id=284
+(w,l,d)=(7,2,1), id=291
+completed iteration 443
+best id=291
+material weights:
+	king = 0
+	queen = 900
+	rook = 500
+	bishop = 305
+	knight = 300
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(-5,-9), 1:(-4,-7), 2:(-3,-4), 3:(-2,-1), 4:(-1,1), 5:(0,4), 6:(1,6), 7:(2,9), 8:(4,11), 9:(5,13), 10:(6,16), 11:(7,17), 12:(8,17), 13:(8,17), 14:(9,17), 15:(10,17), 16:(10,17), 17:(10,17), 18:(10,17), 19:(10,17), 20:(10,17), 21:(10,17), 22:(10,17), 23:(10,17), 24:(10,17), 25:(10,17), 26:(10,17), 27:(10,17), 28:(10,17), 29:(10,17), 30:(10,17), 31:(10,17), 
+	rook = 0:(-10,-18), 1:(-7,-10), 2:(-4,-2), 3:(-1,6), 4:(2,14), 5:(5,23), 6:(7,31), 7:(9,39), 8:(11,47), 9:(13,53), 10:(13,55), 11:(14,57), 12:(14,58), 13:(15,58), 14:(15,59), 15:(16,59), 
+	bishop = 0:(-13,-15), 1:(-6,-8), 2:(1,-1), 3:(8,6), 4:(15,13), 5:(22,20), 6:(28,26), 7:(32,30), 8:(35,32), 9:(37,34), 10:(38,35), 11:(39,36), 12:(39,37), 13:(40,37), 14:(40,38), 15:(40,38), 
+	knight = 0:(-19,-17), 1:(-13,-12), 2:(-6,-7), 3:(0,-2), 4:(6,3), 5:(12,8), 6:(15,11), 7:(19,13), 8:(19,13), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(5,7), 2:(15,13), 3:(30,21), 4:(49,32), 5:(75,46), 6:(105,63), 
+isolated pawn weight, unopposed (by col):
+0:(-19,-23), 1:(-27,-26), 2:(-30,-26), 3:(-30,-26), 4:(-30,-26), 5:(-30,-26), 6:(-27,-26), 7:(-19,-23), 
+isolated pawn weight, opposed (by col):
+0:(-13,-15), 1:(-18,-18), 2:(-20,-18), 3:(-20,-18), 4:(-20,-18), 5:(-20,-18), 6:(-18,-18), 7:(-13,-15), 
+doubled pawn weight, unopposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+doubled pawn weight, opposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+tempo = (3,1)
+bishop pair = (5,12)
+
+completed 0 / 40
+completed 4 / 40
+completed 8 / 40
+completed 12 / 40
+completed 16 / 40
+completed 20 / 40
+completed 24 / 40
+completed 28 / 40
+completed 32 / 40
+completed 40 / 40
+-------------------------
+(w,l,d)=(1,4,2), id=289
+(w,l,d)=(12,14,12), id=281 -- culled
+(w,l,d)=(150,157,132), id=167
+(w,l,d)=(53,54,28), id=263
+(w,l,d)=(183,186,136), id=57
+(w,l,d)=(0,0,1), id=292
+(w,l,d)=(129,129,95), id=120
+(w,l,d)=(190,190,126), id=47
+(w,l,d)=(271,265,186), id=30
+(w,l,d)=(210,204,155), id=132
+(w,l,d)=(204,198,161), id=123
+(w,l,d)=(172,167,125), id=3
+(w,l,d)=(287,277,211), id=0
+(w,l,d)=(171,165,128), id=85
+(w,l,d)=(245,236,196), id=59
+(w,l,d)=(214,205,177), id=64
+(w,l,d)=(71,68,47), id=264
+(w,l,d)=(86,82,60), id=217
+(w,l,d)=(99,93,74), id=233
+(w,l,d)=(328,307,223), id=119
+(w,l,d)=(493,460,376), id=37
+(w,l,d)=(74,69,45), id=238
+(w,l,d)=(216,198,153), id=106
+(w,l,d)=(136,125,82), id=244
+(w,l,d)=(131,119,118), id=249
+(w,l,d)=(351,319,255), id=22
+(w,l,d)=(119,108,79), id=225
+(w,l,d)=(383,345,263), id=13
+(w,l,d)=(410,369,284), id=31
+(w,l,d)=(234,207,166), id=27
+(w,l,d)=(293,259,194), id=185
+(w,l,d)=(89,78,60), id=270
+(w,l,d)=(630,549,452), id=73
+(w,l,d)=(421,368,269), id=102
+(w,l,d)=(801,669,606), id=67
+(w,l,d)=(381,318,259), id=97
+(w,l,d)=(132,107,83), id=259
+(w,l,d)=(29,22,21), id=284
+(w,l,d)=(286,215,163), id=227
+(w,l,d)=(9,4,1), id=291
+completed iteration 444
+best id=291
+material weights:
+	king = 0
+	queen = 900
+	rook = 500
+	bishop = 305
+	knight = 300
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(-5,-9), 1:(-4,-7), 2:(-3,-4), 3:(-2,-1), 4:(-1,1), 5:(0,4), 6:(1,6), 7:(2,9), 8:(4,11), 9:(5,13), 10:(6,16), 11:(7,17), 12:(8,17), 13:(8,17), 14:(9,17), 15:(10,17), 16:(10,17), 17:(10,17), 18:(10,17), 19:(10,17), 20:(10,17), 21:(10,17), 22:(10,17), 23:(10,17), 24:(10,17), 25:(10,17), 26:(10,17), 27:(10,17), 28:(10,17), 29:(10,17), 30:(10,17), 31:(10,17), 
+	rook = 0:(-10,-18), 1:(-7,-10), 2:(-4,-2), 3:(-1,6), 4:(2,14), 5:(5,23), 6:(7,31), 7:(9,39), 8:(11,47), 9:(13,53), 10:(13,55), 11:(14,57), 12:(14,58), 13:(15,58), 14:(15,59), 15:(16,59), 
+	bishop = 0:(-13,-15), 1:(-6,-8), 2:(1,-1), 3:(8,6), 4:(15,13), 5:(22,20), 6:(28,26), 7:(32,30), 8:(35,32), 9:(37,34), 10:(38,35), 11:(39,36), 12:(39,37), 13:(40,37), 14:(40,38), 15:(40,38), 
+	knight = 0:(-19,-17), 1:(-13,-12), 2:(-6,-7), 3:(0,-2), 4:(6,3), 5:(12,8), 6:(15,11), 7:(19,13), 8:(19,13), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(5,7), 2:(15,13), 3:(30,21), 4:(49,32), 5:(75,46), 6:(105,63), 
+isolated pawn weight, unopposed (by col):
+0:(-19,-23), 1:(-27,-26), 2:(-30,-26), 3:(-30,-26), 4:(-30,-26), 5:(-30,-26), 6:(-27,-26), 7:(-19,-23), 
+isolated pawn weight, opposed (by col):
+0:(-13,-15), 1:(-18,-18), 2:(-20,-18), 3:(-20,-18), 4:(-20,-18), 5:(-20,-18), 6:(-18,-18), 7:(-13,-15), 
+doubled pawn weight, unopposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+doubled pawn weight, opposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+tempo = (3,1)
+bishop pair = (5,12)
+
+completed 0 / 40
+completed 4 / 40
+completed 8 / 40
+completed 12 / 40
+completed 16 / 40
+completed 20 / 40
+completed 24 / 40
+completed 28 / 40
+completed 32 / 40
+completed 36 / 40
+completed 40 / 40
+-------------------------
+(w,l,d)=(0,1,1), id=292
+(w,l,d)=(2,4,2), id=289 -- culled
+(w,l,d)=(53,55,28), id=263
+(w,l,d)=(151,157,132), id=167
+(w,l,d)=(184,186,136), id=57
+(w,l,d)=(0,0,1), id=293
+(w,l,d)=(129,129,96), id=120
+(w,l,d)=(191,190,126), id=47
+(w,l,d)=(272,265,186), id=30
+(w,l,d)=(210,204,156), id=132
+(w,l,d)=(71,69,47), id=264
+(w,l,d)=(172,167,126), id=3
+(w,l,d)=(287,278,211), id=0
+(w,l,d)=(245,237,196), id=59
+(w,l,d)=(205,198,161), id=123
+(w,l,d)=(172,165,128), id=85
+(w,l,d)=(215,205,177), id=64
+(w,l,d)=(86,82,61), id=217
+(w,l,d)=(99,93,75), id=233
+(w,l,d)=(494,460,376), id=37
+(w,l,d)=(329,307,223), id=119
+(w,l,d)=(216,199,153), id=106
+(w,l,d)=(75,69,45), id=238
+(w,l,d)=(351,320,255), id=22
+(w,l,d)=(137,125,82), id=244
+(w,l,d)=(132,119,118), id=249
+(w,l,d)=(119,108,80), id=225
+(w,l,d)=(383,346,263), id=13
+(w,l,d)=(410,369,285), id=31
+(w,l,d)=(234,207,167), id=27
+(w,l,d)=(294,259,194), id=185
+(w,l,d)=(89,78,61), id=270
+(w,l,d)=(631,549,454), id=73
+(w,l,d)=(424,368,272), id=102
+(w,l,d)=(383,323,262), id=97
+(w,l,d)=(803,673,608), id=67
+(w,l,d)=(132,109,84), id=259
+(w,l,d)=(287,218,165), id=227
+(w,l,d)=(31,23,22), id=284
+(w,l,d)=(11,8,3), id=291
+completed iteration 445
+best id=291
+material weights:
+	king = 0
+	queen = 900
+	rook = 500
+	bishop = 305
+	knight = 300
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(-5,-9), 1:(-4,-7), 2:(-3,-4), 3:(-2,-1), 4:(-1,1), 5:(0,4), 6:(1,6), 7:(2,9), 8:(4,11), 9:(5,13), 10:(6,16), 11:(7,17), 12:(8,17), 13:(8,17), 14:(9,17), 15:(10,17), 16:(10,17), 17:(10,17), 18:(10,17), 19:(10,17), 20:(10,17), 21:(10,17), 22:(10,17), 23:(10,17), 24:(10,17), 25:(10,17), 26:(10,17), 27:(10,17), 28:(10,17), 29:(10,17), 30:(10,17), 31:(10,17), 
+	rook = 0:(-10,-18), 1:(-7,-10), 2:(-4,-2), 3:(-1,6), 4:(2,14), 5:(5,23), 6:(7,31), 7:(9,39), 8:(11,47), 9:(13,53), 10:(13,55), 11:(14,57), 12:(14,58), 13:(15,58), 14:(15,59), 15:(16,59), 
+	bishop = 0:(-13,-15), 1:(-6,-8), 2:(1,-1), 3:(8,6), 4:(15,13), 5:(22,20), 6:(28,26), 7:(32,30), 8:(35,32), 9:(37,34), 10:(38,35), 11:(39,36), 12:(39,37), 13:(40,37), 14:(40,38), 15:(40,38), 
+	knight = 0:(-19,-17), 1:(-13,-12), 2:(-6,-7), 3:(0,-2), 4:(6,3), 5:(12,8), 6:(15,11), 7:(19,13), 8:(19,13), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(5,7), 2:(15,13), 3:(30,21), 4:(49,32), 5:(75,46), 6:(105,63), 
+isolated pawn weight, unopposed (by col):
+0:(-19,-23), 1:(-27,-26), 2:(-30,-26), 3:(-30,-26), 4:(-30,-26), 5:(-30,-26), 6:(-27,-26), 7:(-19,-23), 
+isolated pawn weight, opposed (by col):
+0:(-13,-15), 1:(-18,-18), 2:(-20,-18), 3:(-20,-18), 4:(-20,-18), 5:(-20,-18), 6:(-18,-18), 7:(-13,-15), 
+doubled pawn weight, unopposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+doubled pawn weight, opposed (by col):
+0:(-3,-11), 1:(-5,-12), 2:(-6,-12), 3:(-6,-12), 4:(-6,-12), 5:(-6,-12), 6:(-5,-12), 7:(-3,-11), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+tempo = (3,1)
+bishop pair = (5,12)
+
+completed 0 / 40
+completed 4 / 40
+completed 8 / 40

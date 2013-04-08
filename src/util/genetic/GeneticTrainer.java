@@ -3,6 +3,7 @@ package util.genetic;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -42,15 +43,16 @@ public final class GeneticTrainer {
 		final long time = 40;
 		final int hashSize = 18;
 		final int popSize = 20;
-		final int cullSize = max((int)(popSize*.05+.5), 1); //number of entries to cull
-		final int minGames = 10; //min games before entry can be culled
+		final int cullSize = max((int)(popSize*.15+.5), 1); //number of entries to cull
+		final int minGames = 5; //min games before entry can be culled
 		final Mutator m = new MutatorV1();
-		final int mutations = 3;
+		final int mutations = 1;
 		final double gameCutoffPercent = .2; //only play games against the top X percent of solutions
 		final double reproduceCutoffPercent = .4; //only clone and mutate entites in top X percent of solutions
 		MutatorV1.mDist = .1;
+		final double initialVariance = 10;
 		
-		final File file = new File("genetic-results/genetic-results-mac-4");
+		final File file = new File("genetic-results/genetic-results-mac-6");
 		if(file.exists()){
 			System.out.println("log file already exists, exiting");
 			System.exit(0);
@@ -63,7 +65,8 @@ public final class GeneticTrainer {
 		for(int a = 0; a < population.length; a++){
 			population[a] = new GEntity();
 			population[a].p = DefaultEvalWeights.defaultEval();
-			if(a != 0) m.mutate(population[a].p, mutations);
+			population[a].variance = initialVariance;
+			if(a != 0) m.mutate(population[a].p, mutations, population[a]);
 			log.recordGEntity(population[a]);
 		}
 		
@@ -71,12 +74,17 @@ public final class GeneticTrainer {
 			simulate(population, q, tests, gameCutoffPercent);
 			log.recordIteration(i, population);
 			List<Integer> culled = cull(population, cullSize, minGames);
-			generate(culled, population, m, mutations, reproduceCutoffPercent);
+			for(int a = 0; a < population.length; a++){ //decrease variance for surviving entries
+				if(population[a] != null){
+					population[a].variance *= .97;
+				}
+			}
+			generate(culled, population, m, mutations, reproduceCutoffPercent, initialVariance);
 			recordNewEntities(culled, population, log);
 			
 			System.out.println("completed iteration "+i);
 			
-			//record data
+			//print data for inspection while simulating
 			GEntity e;
 			final Queue<GEntity> tempq = new PriorityQueue<GEntity>(population.length, sortBestFirst);
 			for(int a = 0; a < population.length; a++) tempq.add(population[a]);
@@ -112,7 +120,7 @@ public final class GeneticTrainer {
 			
 			for(int w = 0; w < tests; w++){
 				int index;
-				while(sorted.get(index = (int)(Math.random()*population.length*gameCutoffPercent)) == population[a]);
+				while(sorted.get(index = (int)(Math.random()*population.length*gameCutoffPercent+.5)) == population[a]);
 				final GameQueue.Game g = new GameQueue.Game(population[a], sorted.get(index));
 				q.submit(g);
 			}
@@ -136,7 +144,7 @@ public final class GeneticTrainer {
 	
 	/** culls bad solutions from population, returns list of culled indeces*/
 	public static List<Integer> cull(final GEntity[] population, int cullSize, final int minGames){
-		final Comparator<GEntity> c = new Comparator<GEntity>() {
+		final Comparator<GEntity> sortWorstFirst = new Comparator<GEntity>() {
 			public int compare(GEntity e1, GEntity e2) {
 				if(e1.score() < e2.score()){
 					return -1;
@@ -147,7 +155,7 @@ public final class GeneticTrainer {
 				}
 			}
 		};
-		final Queue<GEntity> q = new PriorityQueue<GEntity>(population.length, c);
+		final Queue<GEntity> q = new PriorityQueue<GEntity>(population.length, sortWorstFirst);
 		for(int a = 0; a < population.length; a++) q.add(population[a]);
 		
 		final boolean print = true;
@@ -181,23 +189,26 @@ public final class GeneticTrainer {
 	
 	/** generates new solutions from population , replacing culled entries*/
 	public static void generate(final List<Integer> culled, final GEntity[] population, final Mutator m,
-			final int mutations, final double reproduceCutoffPercent){
+			final int mutations, final double reproduceCutoffPercent, final double initialVariance){
 		final List<GEntity> sorted = new ArrayList<GEntity>();
 		for(int a = 0; a < population.length; a++) sorted.add(population[a]);
 		Collections.sort(sorted, sortBestFirst);
 		
 		for(int index: culled){
-			int r; //index of entity to clone and mutate
+			//select non-null entity to clone from top surviving entries
+			int r;
 			while(sorted.get(r = (int)(Math.random()*population.length*reproduceCutoffPercent)) == null);
 			
+			final GEntity parent = sorted.get(r);
 			b.clear();
-			sorted.get(r).p.write(b);
+			parent.p.write(b);
 			b.rewind();
 			final EvalParameters p = new EvalParameters();
 			p.read(b);
-			m.mutate(p, mutations); 
+			m.mutate(p, mutations, parent); 
 			GEntity temp = new GEntity();
 			temp.p = p;
+			temp.variance = initialVariance;
 			
 			population[index] = temp;
 		}

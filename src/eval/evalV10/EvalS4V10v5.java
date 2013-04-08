@@ -1,22 +1,22 @@
 package eval.evalV10;
 
-import static eval.evalV10.EvalWeights2.BONUS_BISHOP_PAIR;
-import static eval.evalV10.EvalWeights2.BONUS_MATERIAL_ADVANTAGE;
-import static eval.evalV10.EvalWeights2.BONUS_ROOK_HALF_OPEN_FILE;
-import static eval.evalV10.EvalWeights2.BONUS_ROOK_ON_7TH;
-import static eval.evalV10.EvalWeights2.BONUS_ROOK_OPEN_FILE;
-import static eval.evalV10.EvalWeights2.BONUS_TEMPO;
-import static eval.evalV10.EvalWeights2.DANGER_KING_ATTACKS;
-import static eval.evalV10.EvalWeights2.DANGER_PAWN_SHIELD_GAP;
-import static eval.evalV10.EvalWeights2.DANGER_STORMING_PAWN;
-import static eval.evalV10.EvalWeights2.MOBILITY_BONUSES;
-import static eval.evalV10.EvalWeights2.PENALTY_DOUBLED_PAWNS;
-import static eval.evalV10.EvalWeights2.PENALTY_ISOLATED_PAWN;
-import static eval.evalV10.EvalWeights2.PENALTY_TRIPLED_PAWNS;
-import static eval.evalV10.EvalWeights2.kingDangerSquares;
-import static eval.evalV10.EvalWeights2.kingDangerValues;
-import static eval.evalV10.EvalWeights2.pieceSquareTables;
-import static eval.evalV10.EvalWeights2.pieceValues;
+import static eval.evalV10.Eval10Weights2.BONUS_BISHOP_PAIR;
+import static eval.evalV10.Eval10Weights2.BONUS_MATERIAL_ADVANTAGE;
+import static eval.evalV10.Eval10Weights2.BONUS_ROOK_HALF_OPEN_FILE;
+import static eval.evalV10.Eval10Weights2.BONUS_ROOK_ON_7TH;
+import static eval.evalV10.Eval10Weights2.BONUS_ROOK_OPEN_FILE;
+import static eval.evalV10.Eval10Weights2.BONUS_TEMPO;
+import static eval.evalV10.Eval10Weights2.DANGER_KING_ATTACKS;
+import static eval.evalV10.Eval10Weights2.DANGER_PAWN_SHIELD_GAP;
+import static eval.evalV10.Eval10Weights2.DANGER_STORMING_PAWN;
+import static eval.evalV10.Eval10Weights2.MOBILITY_BONUSES;
+import static eval.evalV10.Eval10Weights2.PENALTY_DOUBLED_PAWNS;
+import static eval.evalV10.Eval10Weights2.PENALTY_ISOLATED_PAWN;
+import static eval.evalV10.Eval10Weights2.PENALTY_TRIPLED_PAWNS;
+import static eval.evalV10.Eval10Weights2.kingDangerSquares;
+import static eval.evalV10.Eval10Weights2.kingDangerValues;
+import static eval.evalV10.Eval10Weights2.pieceSquareTables;
+import static eval.evalV10.Eval10Weights2.pieceValues;
 import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
@@ -58,7 +58,7 @@ public final class EvalS4V10v5 implements Evaluator2
 
 		initStartingValues(s, 0);
 		initStartingValues(s, 1);
-		Weight2.updateWeight2Scaling(materialScore[0] + materialScore[1]);
+		Weight10v2.updateWeight2Scaling(materialScore[0] + materialScore[1]);
 		initPositionValues(s, 0);
 		initPositionValues(s, 1);
 		updateFileInfo(s);
@@ -108,7 +108,7 @@ public final class EvalS4V10v5 implements Evaluator2
 	@Override
 	public int eval(State4 s, int player)
 	{
-		Weight2.updateWeight2Scaling(materialScore[player] + materialScore[1 - player]);
+		Weight10v2.updateWeight2Scaling(materialScore[player] + materialScore[1 - player]);
 		int score = BONUS_TEMPO.getScore();
 
 		// ratio bonus should make trading when ahead attractive
@@ -133,7 +133,7 @@ public final class EvalS4V10v5 implements Evaluator2
 	{
 		initStartingValues(s, 0);
 		initStartingValues(s, 1);
-		Weight2.updateWeight2Scaling(materialScore[0] + materialScore[1]);
+		Weight10v2.updateWeight2Scaling(materialScore[0] + materialScore[1]);
 		initPositionValues(s, 0);
 		initPositionValues(s, 1);
 		updateFileInfo(s);
@@ -477,7 +477,7 @@ public final class EvalS4V10v5 implements Evaluator2
 			positionScore[player] -= pieceSquareTables[player][pieceType][fromSq].getScore();
 		}
 
-		Weight2.updateWeight2Scaling(materialScore[player] + materialScore[1 - player]);
+		Weight10v2.updateWeight2Scaling(materialScore[player] + materialScore[1 - player]);
 
 		if (MoveEncoder.isEnPassanteTake(encoding) != 0)
 		{
@@ -540,7 +540,7 @@ public final class EvalS4V10v5 implements Evaluator2
 			positionScore[player] -= pieceSquareTables[player][pieceType][toSq].getScore();
 		}
 
-		Weight2.updateWeight2Scaling(materialScore[player] + materialScore[1 - player]);
+		Weight10v2.updateWeight2Scaling(materialScore[player] + materialScore[1 - player]);
 
 		if (takenType != State4.PIECE_TYPE_EMPTY)
 		{

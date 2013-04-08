@@ -1,22 +1,22 @@
 package eval.evalV8;
 
-import static eval.evalV8.EvalWeights.BONUS_BISHOP_PAIR;
-import static eval.evalV8.EvalWeights.BONUS_MATERIAL_ADVANTAGE;
-import static eval.evalV8.EvalWeights.BONUS_ROOK_HALF_OPEN_FILE;
-import static eval.evalV8.EvalWeights.BONUS_ROOK_ON_7TH;
-import static eval.evalV8.EvalWeights.BONUS_ROOK_OPEN_FILE;
-import static eval.evalV8.EvalWeights.BONUS_TEMPO;
-import static eval.evalV8.EvalWeights.DANGER_KING_ATTACKS;
-import static eval.evalV8.EvalWeights.DANGER_PAWN_SHIELD_GAP;
-import static eval.evalV8.EvalWeights.GRAIN_SIZE;
-import static eval.evalV8.EvalWeights.MOBILITY_BONUSES;
-import static eval.evalV8.EvalWeights.PENALTY_DOUBLED_PAWNS;
-import static eval.evalV8.EvalWeights.PENALTY_ISOLATED_PAWN;
-import static eval.evalV8.EvalWeights.PENALTY_TRIPLED_PAWNS;
-import static eval.evalV8.EvalWeights.kingDangerSquares;
-import static eval.evalV8.EvalWeights.kingDangerValues;
-import static eval.evalV8.EvalWeights.pieceSquareTables;
-import static eval.evalV8.EvalWeights.pieceValues;
+import static eval.evalV8.Eval8Weights.BONUS_BISHOP_PAIR;
+import static eval.evalV8.Eval8Weights.BONUS_MATERIAL_ADVANTAGE;
+import static eval.evalV8.Eval8Weights.BONUS_ROOK_HALF_OPEN_FILE;
+import static eval.evalV8.Eval8Weights.BONUS_ROOK_ON_7TH;
+import static eval.evalV8.Eval8Weights.BONUS_ROOK_OPEN_FILE;
+import static eval.evalV8.Eval8Weights.BONUS_TEMPO;
+import static eval.evalV8.Eval8Weights.DANGER_KING_ATTACKS;
+import static eval.evalV8.Eval8Weights.DANGER_PAWN_SHIELD_GAP;
+import static eval.evalV8.Eval8Weights.GRAIN_SIZE;
+import static eval.evalV8.Eval8Weights.MOBILITY_BONUSES;
+import static eval.evalV8.Eval8Weights.PENALTY_DOUBLED_PAWNS;
+import static eval.evalV8.Eval8Weights.PENALTY_ISOLATED_PAWN;
+import static eval.evalV8.Eval8Weights.PENALTY_TRIPLED_PAWNS;
+import static eval.evalV8.Eval8Weights.kingDangerSquares;
+import static eval.evalV8.Eval8Weights.kingDangerValues;
+import static eval.evalV8.Eval8Weights.pieceSquareTables;
+import static eval.evalV8.Eval8Weights.pieceValues;
 import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
@@ -49,7 +49,7 @@ public class SuperEvalS4V8 implements Evaluator2
 
 		initStartingValues(s, 0);
 		initStartingValues(s, 1);
-		Weight.updateWeightScaling(materialScore[0] + materialScore[1]);
+		Weight8.updateWeightScaling(materialScore[0] + materialScore[1]);
 		initPositionValues(s, 0);
 		initPositionValues(s, 1);
 		updateFileInfo(s);
@@ -99,7 +99,7 @@ public class SuperEvalS4V8 implements Evaluator2
 	@Override
 	public int eval(State4 s, int player)
 	{
-		Weight.updateWeightScaling(materialScore[player] + materialScore[1 - player]);
+		Weight8.updateWeightScaling(materialScore[player] + materialScore[1 - player]);
 		int score = BONUS_TEMPO.getScore();
 
 		// ratio bonus should make trading when ahead attractive
@@ -124,7 +124,7 @@ public class SuperEvalS4V8 implements Evaluator2
 	{
 		initStartingValues(s, 0);
 		initStartingValues(s, 1);
-		Weight.updateWeightScaling(materialScore[0] + materialScore[1]);
+		Weight8.updateWeightScaling(materialScore[0] + materialScore[1]);
 		initPositionValues(s, 0);
 		initPositionValues(s, 1);
 		updateFileInfo(s);
@@ -518,7 +518,7 @@ public class SuperEvalS4V8 implements Evaluator2
 			positionScore[player] -= pieceSquareTables[player][pieceType][fromSq].getScore();
 		}
 
-		Weight.updateWeightScaling(materialScore[player] + materialScore[1 - player]);
+		Weight8.updateWeightScaling(materialScore[player] + materialScore[1 - player]);
 
 		if (MoveEncoder.isEnPassanteTake(encoding) != 0)
 		{
@@ -581,7 +581,7 @@ public class SuperEvalS4V8 implements Evaluator2
 			positionScore[player] -= pieceSquareTables[player][pieceType][toSq].getScore();
 		}
 
-		Weight.updateWeightScaling(materialScore[player] + materialScore[1 - player]);
+		Weight8.updateWeightScaling(materialScore[player] + materialScore[1 - player]);
 
 		if (takenType != State4.PIECE_TYPE_EMPTY)
 		{

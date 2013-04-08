@@ -1,8 +1,9 @@
 package util.genetic.mutatorV1;
 
+import util.genetic.GEntity;
 import util.genetic.Mutator;
+import eval.Weight;
 import eval.expEvalV3.EvalParameters;
-import eval.expEvalV3.Weight;
 
 public final class MutatorV1 implements Mutator{
 	/** max dist a value can move as a percent*/
@@ -38,10 +39,10 @@ public final class MutatorV1 implements Mutator{
 	}
 	
 	@Override
-	public void mutate(EvalParameters p, int mutations) {
+	public void mutate(EvalParameters p, int mutations, GEntity parent) {
 		final MutatorPoint[] m = getMutationPoints(p);
 		for(int a = 0; a < mutations; a++){
-			m[(int)(Math.random()*m.length)].mutate();
+			m[(int)(Math.random()*m.length)].mutate(parent);
 		}
 	}
 }

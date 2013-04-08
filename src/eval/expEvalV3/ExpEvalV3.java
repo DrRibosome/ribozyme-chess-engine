@@ -5,6 +5,7 @@ import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
 import eval.Evaluator2;
+import eval.Weight;
 
 public final class ExpEvalV3 implements Evaluator2{
 	private final static class WeightAgg{
@@ -38,7 +39,6 @@ public final class ExpEvalV3 implements Evaluator2{
 	private final int[] materialScore = new int[2];
 	/** current max number of moves by piece type*/
 	private final int[][] maxMobility = new int[2][7];
-	private final FeatureExtractor2.FeatureSet fset = new FeatureExtractor2.FeatureSet();
 	private final EvalParameters p;
 	/** weight aggregator*/
 	private final WeightAgg agg = new WeightAgg();
@@ -80,8 +80,6 @@ public final class ExpEvalV3 implements Evaluator2{
 	}
 	
 	private int score(final int player, final State4 s, final double scale){
-		FeatureExtractor2.loadFeatures(fset, player, s, true);
-		
 		int score = materialScore[player];
 		scoreMobility(player, s, agg, p);
 		scorePawns(player, s, agg, p);

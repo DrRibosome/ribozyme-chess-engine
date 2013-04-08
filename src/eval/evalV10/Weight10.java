@@ -2,22 +2,22 @@ package eval.evalV10;
 
 import state4.State4;
 
-final class Weight{
+final class Weight10{
 	public final int startScore, scoreDiff;
 	public static int startMaterial, endMaterial, currentMargin, margin; 
 	
 	static {
 		startMaterial = 
-				  EvalWeights.pieceValues[State4.PIECE_TYPE_PAWN]*8
-				+ EvalWeights.pieceValues[State4.PIECE_TYPE_KNIGHT]*2
-				+ EvalWeights.pieceValues[State4.PIECE_TYPE_BISHOP]*2
-				+ EvalWeights.pieceValues[State4.PIECE_TYPE_ROOK]*2
-				+ EvalWeights.pieceValues[State4.PIECE_TYPE_QUEEN];
+				  Eval10Weights.pieceValues[State4.PIECE_TYPE_PAWN]*8
+				+ Eval10Weights.pieceValues[State4.PIECE_TYPE_KNIGHT]*2
+				+ Eval10Weights.pieceValues[State4.PIECE_TYPE_BISHOP]*2
+				+ Eval10Weights.pieceValues[State4.PIECE_TYPE_ROOK]*2
+				+ Eval10Weights.pieceValues[State4.PIECE_TYPE_QUEEN];
 		startMaterial *= 2;
 		
 		endMaterial = 
-				EvalWeights.pieceValues[State4.PIECE_TYPE_ROOK]
-				+ EvalWeights.pieceValues[State4.PIECE_TYPE_QUEEN];
+				Eval10Weights.pieceValues[State4.PIECE_TYPE_ROOK]
+				+ Eval10Weights.pieceValues[State4.PIECE_TYPE_QUEEN];
 		
 		endMaterial *= 2;
 		
@@ -25,13 +25,13 @@ final class Weight{
 		currentMargin = 0;
 	}
 	
-	public Weight(int s, int e){
+	public Weight10(int s, int e){
 		startScore = s;
 		scoreDiff = e-s;
 	}
 	
-	public static Weight W(int m, int e){
-		return new Weight(m, e);
+	public static Weight10 W(int m, int e){
+		return new Weight10(m, e);
 	} 
 	
 	public static void updateWeightScaling(int materialTotal){

@@ -1,4 +1,4 @@
-package eval.expEvalV3;
+package eval.eval12;
 
 import state4.BitUtil;
 import state4.Masks;
@@ -8,7 +8,7 @@ import eval.Evaluator2;
 import eval.PositionMasks;
 import eval.Weight;
 
-public final class ExpEvalV3v4 implements Evaluator2{
+public final class Eval12 implements Evaluator2{
 	private final static class WeightAgg{
 		int start;
 		int end;
@@ -44,14 +44,14 @@ public final class ExpEvalV3v4 implements Evaluator2{
 	private final int[] materialScore = new int[2];
 	/** current max number of moves by piece type*/
 	private final int[][] maxMobility = new int[2][7];
-	private final EvalParameters p;
+	private final Eval12Parameters p;
 	/** weight aggregator*/
 	private final WeightAgg agg = new WeightAgg();
 	
 	private final int margin;
 	private final int endMaterial;
 	
-	public ExpEvalV3v4(EvalParameters p){
+	public Eval12(Eval12Parameters p){
 		this.p = p;
 		int startMaterial = (
 				  p.materialWeights[State4.PIECE_TYPE_PAWN]*8
@@ -68,8 +68,8 @@ public final class ExpEvalV3v4 implements Evaluator2{
 		margin = Weight.margin(startMaterial, endMaterial);
 	}
 	
-	public ExpEvalV3v4(){
-		this(DefaultEvalWeights.defaultEval());
+	public Eval12(){
+		this(DefaultEval12Weights.defaultEval());
 	}
 	
 	@Override
@@ -114,7 +114,7 @@ public final class ExpEvalV3v4 implements Evaluator2{
 	}
 	
 	private static void scorePawns(final int player, final State4 s, final WeightAgg agg,
-			final EvalParameters p, final int[] pawnCount){
+			final Eval12Parameters p, final int[] pawnCount){
 		final long enemyPawns = s.pawns[1-player];
 		final long alliedPawns = s.pawns[player];
 		for(long pawns = alliedPawns; pawns != 0; pawns &= pawns-1){
@@ -156,7 +156,7 @@ public final class ExpEvalV3v4 implements Evaluator2{
 	}
 	
 	/** gets the king danger for the passed player*/
-	private void getKingDanger(final int player, final State4 s, final WeightAgg w, final EvalParameters p){
+	private void getKingDanger(final int player, final State4 s, final WeightAgg w, final Eval12Parameters p){
 		final long kingRing = State4.getKingMoves(player, s.pieces, s.kings[player]);
 		final long king = s.kings[player];
 		final int kingSq = BitUtil.lsbIndex(s.kings[player]);
@@ -291,7 +291,7 @@ public final class ExpEvalV3v4 implements Evaluator2{
 		}
 	}
 	
-	private static void scoreMobility(final int player, final State4 s, final WeightAgg agg, final EvalParameters c){
+	private static void scoreMobility(final int player, final State4 s, final WeightAgg agg, final Eval12Parameters c){
 		final long enemyPawnAttaks = Masks.getRawPawnAttacks(1-player, s.pawns[1-player]);
 		for(long bishops = s.bishops[player]; bishops != 0; bishops &= bishops-1){
 			final long moves = State4.getBishopMoves(player, s.pieces, bishops&-bishops) & ~enemyPawnAttaks;

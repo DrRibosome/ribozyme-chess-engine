@@ -1,27 +1,27 @@
 package util.genetic.mutatorV1;
 
-import eval.expEvalV3.Weight;
+import java.util.Random;
+
+import util.genetic.GEntity;
+import eval.Weight;
 
 abstract class WeightMutator implements MutatorPoint{
 	private final Weight w;
+	
 	WeightMutator(Weight w){
 		this.w = w;
 	}
-	public void mutate() {
-		setWeight(mutateWeight(w));
+	
+	public void mutate(GEntity parent) {
+		setWeight(mutateWeight(w, parent.variance));
 	}
 	
-	static Weight mutateWeight(Weight w){
+	static Weight mutateWeight(Weight w, double variance){
 		int start = w.start;
 		int end = w.end;
-		final int choice = (int)(Math.random()*2);
-		if(choice == 0){
-			final double offset = -start*MutatorV1.mDist + start*MutatorV1.mDist*2*Math.random();
-			start += max((int)Math.abs(offset), 1) * sign(offset);
-		} else{
-			final double offset = -end*MutatorV1.mDist + end*MutatorV1.mDist*2*Math.random();
-			end += max((int)Math.abs(offset), 1) * sign(offset);
-		}
+		final Random r = new Random();
+		start += Math.sqrt(variance)*r.nextGaussian();
+		end += Math.sqrt(variance)*r.nextGaussian();
 		return new Weight(start, end);
 	}
 	

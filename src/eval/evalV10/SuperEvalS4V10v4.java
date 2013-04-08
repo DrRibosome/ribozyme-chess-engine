@@ -1,6 +1,6 @@
 package eval.evalV10;
 
-import static eval.evalV10.EvalWeights.*;
+import static eval.evalV10.Eval10Weights.*;
 import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
@@ -43,7 +43,7 @@ public final class SuperEvalS4V10v4 implements Evaluator2
 
 		initStartingValues(s, 0);
 		initStartingValues(s, 1);
-		Weight.updateWeightScaling(materialScore[0] + materialScore[1]);
+		Weight10.updateWeightScaling(materialScore[0] + materialScore[1]);
 		initPositionValues(s, 0);
 		initPositionValues(s, 1);
 		updateFileInfo(s);
@@ -93,7 +93,7 @@ public final class SuperEvalS4V10v4 implements Evaluator2
 	@Override
 	public int eval(State4 s, int player)
 	{
-		Weight.updateWeightScaling(materialScore[player] + materialScore[1 - player]);
+		Weight10.updateWeightScaling(materialScore[player] + materialScore[1 - player]);
 		int score = BONUS_TEMPO.getScore();
 
 		// ratio bonus should make trading when ahead attractive
@@ -118,7 +118,7 @@ public final class SuperEvalS4V10v4 implements Evaluator2
 	{
 		initStartingValues(s, 0);
 		initStartingValues(s, 1);
-		Weight.updateWeightScaling(materialScore[0] + materialScore[1]);
+		Weight10.updateWeightScaling(materialScore[0] + materialScore[1]);
 		initPositionValues(s, 0);
 		initPositionValues(s, 1);
 		updateFileInfo(s);
@@ -467,7 +467,7 @@ public final class SuperEvalS4V10v4 implements Evaluator2
 			positionScore[player] -= pieceSquareTables[player][pieceType][fromSq].getScore();
 		}
 
-		Weight.updateWeightScaling(materialScore[player] + materialScore[1 - player]);
+		Weight10.updateWeightScaling(materialScore[player] + materialScore[1 - player]);
 
 		if (MoveEncoder.isEnPassanteTake(encoding) != 0)
 		{
@@ -530,7 +530,7 @@ public final class SuperEvalS4V10v4 implements Evaluator2
 			positionScore[player] -= pieceSquareTables[player][pieceType][toSq].getScore();
 		}
 
-		Weight.updateWeightScaling(materialScore[player] + materialScore[1 - player]);
+		Weight10.updateWeightScaling(materialScore[player] + materialScore[1 - player]);
 
 		if (takenType != State4.PIECE_TYPE_EMPTY)
 		{

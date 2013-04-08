@@ -1,17 +1,17 @@
-package eval.expEvalV3;
+package eval.eval12;
 
-import eval.Weight;
 import state4.State4;
+import eval.Weight;
 
-public final class DefaultEvalWeights {
+public final class DefaultEval12Weights {
 
 	private static Weight W(int start, int end){
 		final int shift = 1;
 		return new Weight(start >> shift, end >> shift);
 	}
 	
-	public static EvalParameters defaultEval(){
-		EvalParameters p = new EvalParameters();
+	public static Eval12Parameters defaultEval(){
+		Eval12Parameters p = new Eval12Parameters();
 		
 		//--------------------------------------------------------------
 		//general weights

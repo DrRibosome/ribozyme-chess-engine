@@ -42,20 +42,24 @@ public final class GLogCLI {
 			public void execute(Matcher m) {
 				final int iteration = Integer.parseInt(m.group(1));
 				if(log.iterationResults.containsKey(iteration)){
-					final List<int[]> results = log.iterationResults.get(iteration).results;
-					final Comparator<int[]> sortBestLast = new Comparator<int[]>() {
-						public int compare(int[] r1, int[] r2) {
-							final double score1 = (r1[1]+.5*r1[3])/(r1[1]+r1[2]+r1[3]);
-							final double score2 = (r2[1]+.5*r2[3])/(r2[1]+r2[2]+r2[3]);
-							return score1 > score2? 1: -1;
+					final List<GEntity> results = log.iterationResults.get(iteration).results;
+					final Comparator<GEntity> sortWorstFirst = new Comparator<GEntity>() {
+						public int compare(GEntity e1, GEntity e2) {
+							if(e1.score() < e2.score()){
+								return -1;
+							} else if(e1.score() > e2.score()){
+								return 1;
+							} else{
+								return e1.totalGames() < e2.totalGames()? -1: 1;
+							}
 						}
 					};
-					Collections.sort(results, sortBestLast);
+					Collections.sort(results, sortWorstFirst);
 					System.out.println("rank\t(w,l,d)");
-					System.out.println("---------------------------");
+					System.out.println("------------------------------------------------");
 					for(int a = 0; a < results.size(); a++){
-						int[] r = results.get(a);
-						System.out.println((results.size()-a)+"\t("+r[1]+","+r[2]+","+r[3]+"), id = "+r[0]);
+						GEntity r = results.get(a);
+						System.out.println((results.size()-a)+"\t"+r);
 					}
 				} else{
 					System.out.println("no iteration '"+iteration+"', max iteration = "+(log.iterationResults.size()-1));
@@ -82,7 +86,7 @@ public final class GLogCLI {
 				log = GeneticLogger.loadLog(logF);
 			}
 		}*/
-		log = GeneticLogger.loadLog(new File("genetic-results/genetic-results-mac-2"));
+		log = GeneticLogger.loadLog(new File("genetic-results/genetic-results-mac-5"));
 		
 		while(scanner.hasNext()){
 			String line = scanner.nextLine();

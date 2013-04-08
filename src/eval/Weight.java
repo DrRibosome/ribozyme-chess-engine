@@ -1,7 +1,8 @@
-package eval.expEvalV3;
+package eval;
 
 import java.nio.ByteBuffer;
 
+/** defines a scaling eval weight*/
 public final class Weight {
 	public final int start, end;
 	

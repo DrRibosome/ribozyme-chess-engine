@@ -5,6 +5,7 @@ import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
 import eval.Evaluator2;
+import eval.Weight;
 
 public final class ExpEvalV3v3 implements Evaluator2{
 	private final static class WeightAgg{

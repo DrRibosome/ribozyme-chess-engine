@@ -1,12 +1,11 @@
-package eval.expEvalV3;
+package eval.eval12;
 
 import java.nio.ByteBuffer;
 
+import state4.State4;
 import eval.Weight;
 
-import state4.State4;
-
-public final class EvalParameters {
+public final class Eval12Parameters {
 
 	//-------------------------------------------------
 	//general weights

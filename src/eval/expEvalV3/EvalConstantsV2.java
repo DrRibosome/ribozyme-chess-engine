@@ -1,6 +1,6 @@
 package eval.expEvalV3;
 
-import static eval.evalV8.Weight.W;
+import static eval.evalV8.Weight8.W;
 
 import java.awt.dnd.DnDConstants;
 import java.io.DataInputStream;
@@ -8,6 +8,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import eval.Weight;
 
 import state4.State4;
 

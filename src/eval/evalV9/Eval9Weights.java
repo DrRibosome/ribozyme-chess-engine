@@ -1,8 +1,8 @@
-package eval.evalV10;
+package eval.evalV9;
 
-import static eval.evalV10.Weight.W;
+import static eval.evalV9.Weight9.W;
 
-final class EvalWeights
+final class Eval9Weights
 {
 	final static int pieceValues[] = {
 		0,
@@ -18,32 +18,32 @@ final class EvalWeights
 	final static int GRAIN_SIZE = 3;
 
 	//arbitrary bonus for having the side to move
-	final static Weight BONUS_TEMPO = W(24, 11);
+	final static Weight9 BONUS_TEMPO = W(24, 11);
 
 	//bonus for being ahead 10% on material, used to reward trading when ahead on material
 	final static int BONUS_MATERIAL_ADVANTAGE = 10;
 
 	//pawn evaluation weights 
-	final static Weight PENALTY_DOUBLED_PAWNS = W(39, 39);
-	final static Weight PENALTY_TRIPLED_PAWNS = W(78, 78);
+	final static Weight9 PENALTY_DOUBLED_PAWNS = W(39, 39);
+	final static Weight9 PENALTY_TRIPLED_PAWNS = W(78, 78);
 	//pawn with no allied pawns in adjacent columns
-	final static Weight PENALTY_ISOLATED_PAWN = W(25, 40);
+	final static Weight9 PENALTY_ISOLATED_PAWN = W(25, 40);
 
 	//bishop evaluation weights
-	final static Weight BONUS_BISHOP_PAIR = W(40, 100);
+	final static Weight9 BONUS_BISHOP_PAIR = W(40, 100);
 
 	//rook evaluation weights
-	final static Weight BONUS_ROOK_ON_7TH = W(3, 20);
-	final static Weight BONUS_ROOK_OPEN_FILE = W(38, 21);
-	final static Weight BONUS_ROOK_HALF_OPEN_FILE = W(19, 10);
+	final static Weight9 BONUS_ROOK_ON_7TH = W(3, 20);
+	final static Weight9 BONUS_ROOK_OPEN_FILE = W(38, 21);
+	final static Weight9 BONUS_ROOK_HALF_OPEN_FILE = W(19, 10);
 
 	//king weights		
-	final static Weight BONUS_CAN_CASTLE_KINGSIDE = W(10, 0);
-	final static Weight BONUS_CAN_CASTLE_QUEENSIDE = W(10, 0);
-	final static Weight BONUS_CASTLED = W(35, 0);
+	final static Weight9 BONUS_CAN_CASTLE_KINGSIDE = W(10, 0);
+	final static Weight9 BONUS_CAN_CASTLE_QUEENSIDE = W(10, 0);
+	final static Weight9 BONUS_CASTLED = W(35, 0);
 
 	//bonus indexed by number of squares attacked that arent occupied by friendly pieces
-	final static Weight[][] MOBILITY_BONUSES = {
+	final static Weight9[][] MOBILITY_BONUSES = {
 		{}, {}, {},
 		{W(-20,-36), W(-14,-19), W( -8, -3), W(-2, 13), W( 4, 29), W(10, 46), // Rooks
 			W( 14, 62), W( 19, 79), W( 23, 95), W(26,106), W(27,111), W(28,114),
@@ -56,7 +56,7 @@ final class EvalWeights
 					{},
 	};
 
-	public final static Weight[][][] pieceSquareTables = {
+	public final static Weight9[][][] pieceSquareTables = {
 		{
 			{
 				W(  0, 0), W( 0, 0), W( 0, 0), W( 0, 0), W(  0, 0), W( 0, 0), W( 0, 0), W( 0, 0),
@@ -134,7 +134,7 @@ final class EvalWeights
 	}; 
 
 	//table to get the final king danger value from
-	final static Weight[] kingDangerValues = new Weight[128];
+	final static Weight9[] kingDangerValues = new Weight9[128];
 
 	//danger bonus to add to king danger index
 	final static int DANGER_PAWN_SHIELD_GAP = 3;
@@ -172,7 +172,7 @@ final class EvalWeights
 
 	static
 	{
-		pieceSquareTables[1] = new Weight[7][64];
+		pieceSquareTables[1] = new Weight9[7][64];
 		for(int i = 1; i < 7; i++)
 		{
 			for(int j = 0; j < 64; j++)

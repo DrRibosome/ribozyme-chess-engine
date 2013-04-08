@@ -1,5 +1,6 @@
 package util.genetic;
 
+import java.text.DecimalFormat;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import eval.expEvalV3.EvalParameters;
@@ -10,18 +11,25 @@ public final class GEntity{
 	final AtomicInteger wins = new AtomicInteger();
 	final AtomicInteger losses = new AtomicInteger();
 	final AtomicInteger draws = new AtomicInteger();
-	public final int id;
+	public int id;
+	public double variance;
+	private final DecimalFormat df = new DecimalFormat("#.####");
+	
 	GEntity(){
 		id = idIndex++;
 	}
+	
 	public double score(){
 		final double score = wins.get()+draws.get()/2.;
 		return score/totalGames();
 	}
+	
 	public int totalGames(){
 		return wins.get() + losses.get() + draws.get();
 	}
+	
+	@Override
 	public String toString(){
-		return "(w,l,d)=("+wins.get()+","+losses.get()+","+draws.get()+"), id="+id;
+		return "(w,l,d)=("+wins.get()+","+losses.get()+","+draws.get()+"), id="+id+", variance="+df.format(variance);
 	}
 }

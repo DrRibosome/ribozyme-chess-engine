@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import eval.expEvalV3.EvalParameters;
 
@@ -48,6 +49,7 @@ public final class GeneticLogger {
 			b.putInt(p[a].wins.get());
 			b.putInt(p[a].losses.get());
 			b.putInt(p[a].draws.get());
+			b.putDouble(p[a].variance);
 		}
 		
 		b.limit(b.position());
@@ -58,7 +60,7 @@ public final class GeneticLogger {
 	public final static class IterationResult{
 		public int iteration;
 		/** stores results, each entry formatted [id,wins,losses,draws]*/
-		public final List<int[]> results = new ArrayList<int[]>();
+		public final List<GEntity> results = new ArrayList<GEntity>();
 	}
 	/** representation for genetic lods*/
 	public final static class GLog{
@@ -69,8 +71,11 @@ public final class GeneticLogger {
 	/** probes passed file for list of game iterations*/
 	public static GLog loadLog(final File file) throws IOException{
 		final GLog offsets = new GLog();
-		final byte[] buff = new byte[1<<15];
 		final DataInputStream dis = new DataInputStream(new FileInputStream(file));
+		
+		//buffer for reading eval parameters, must be large enough to store one parameter object dump
+		final byte[] buff = new byte[1<<15];
+		
 		while(dis.available() > 0){
 			final int type = dis.read();
 			if(type == typeEntityRecord){
@@ -88,11 +93,13 @@ public final class GeneticLogger {
 				temp.iteration = iteration;
 				final int len = dis.readInt();
 				for(int a = 0; a < len; a++){
-					final int[] r = new int[4];
-					for(int q = 0; q < 4; q++){
-						r[q] = dis.readInt();
-					}
-					temp.results.add(r);
+					GEntity e = new GEntity();
+					e.id = dis.readInt();
+					e.wins.set(dis.readInt());
+					e.losses.set(dis.readInt());
+					e.draws.set(dis.readInt());
+					e.variance = dis.readDouble();
+					temp.results.add(e);
 				}
 				offsets.iterationResults.put(iteration, temp);
 			}
