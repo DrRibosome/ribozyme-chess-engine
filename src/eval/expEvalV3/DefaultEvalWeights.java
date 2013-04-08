@@ -98,7 +98,7 @@ public final class DefaultEvalWeights {
 		
 		final Weight[][] passedPawnRowWeight = new Weight[][]{
 				{
-				new Weight(0, 3),
+				new Weight(-999, -999),
 				new Weight(5, 6),
 				new Weight(15, 13),
 				new Weight(30, 21),

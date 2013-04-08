@@ -45,13 +45,14 @@ public final class GLogCLI {
 					final List<int[]> results = log.iterationResults.get(iteration).results;
 					final Comparator<int[]> sortBestLast = new Comparator<int[]>() {
 						public int compare(int[] r1, int[] r2) {
-							final double score1 = r1[1]+.5*r1[3]/(r1[1]+r1[2]+r1[3]);
-							final double score2 = r2[1]+.5*r2[3]/(r2[1]+r2[2]+r2[3]);
+							final double score1 = (r1[1]+.5*r1[3])/(r1[1]+r1[2]+r1[3]);
+							final double score2 = (r2[1]+.5*r2[3])/(r2[1]+r2[2]+r2[3]);
 							return score1 > score2? 1: -1;
 						}
 					};
 					Collections.sort(results, sortBestLast);
 					System.out.println("rank\t(w,l,d)");
+					System.out.println("---------------------------");
 					for(int a = 0; a < results.size(); a++){
 						int[] r = results.get(a);
 						System.out.println((results.size()-a)+"\t("+r[1]+","+r[2]+","+r[3]+"), id = "+r[0]);
