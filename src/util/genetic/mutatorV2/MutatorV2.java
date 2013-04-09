@@ -2,52 +2,21 @@ package util.genetic.mutatorV2;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import state4.State4;
 import util.genetic.GEntity;
+import util.genetic.mutatorV2.getters.MaterialWeightGetter;
+import util.genetic.mutatorV2.getters.PassedPawnGetter;
+import util.genetic.mutatorV2.getters.PawnChainGetter;
 import eval.expEvalV3.EvalParameters;
 
 public final class MutatorV2 implements Mutator2{
-	/** max dist a value can move as a percent*/
-	public static double mDist = .1;
-	
-	interface Getter{
-		int get(EvalParameters p);
-		void set(EvalParameters p, int i);
-	}
-	
 	private final static List<Getter> l;
 	
 	static {
 		l = new ArrayList<Getter>();
-		final int[] pieces = new int[]{
-				State4.PIECE_TYPE_BISHOP,
-				State4.PIECE_TYPE_KNIGHT,
-				State4.PIECE_TYPE_QUEEN,
-				State4.PIECE_TYPE_ROOK
-		};
-		final String[] pieceNames = new String[]{
-				"bishop",
-				"knight",
-				"queen",
-				"rook"
-		};
-		
-		for(int a = 0; a < pieces.length; a++){
-			final int index = a;
-			l.add(new Getter(){
-				public int get(EvalParameters p){
-					return p.materialWeights[pieces[index]];
-				}
-				public void set(EvalParameters p, int i){
-					p.materialWeights[pieces[index]] = i; 
-				}
-				public String toString(){
-					return pieceNames[index]+" weight";
-				}
-			});
-		}
+		MaterialWeightGetter.build(l);
+		PassedPawnGetter.build(l);
+		PawnChainGetter.build(l);
 	}
 	
 	private static double stdDev(Getter g, GEntity[] population, int exclude){
@@ -72,7 +41,7 @@ public final class MutatorV2 implements Mutator2{
 		for(Getter g: l){
 			double stdDev = stdDev(g, population, excludeIndex);
 			int v = g.get(p);
-			g.set(p, (int)((Math.random()-.5)*stdDev*multiplier+v));
+			g.set(p, generateSample(v, stdDev, multiplier));
 		}
 	}
 
@@ -81,7 +50,7 @@ public final class MutatorV2 implements Mutator2{
 		for(Getter g: l){
 			int v = g.get(p);
 			//g.set(p, (int)(r.nextGaussian()*stdDev+v));
-			g.set(p, (int)((Math.random()-.5)*stdDev+v));
+			g.set(p, generateSample(v, stdDev, 1));
 		}
 	}
 
@@ -91,5 +60,9 @@ public final class MutatorV2 implements Mutator2{
 			double stdDev = stdDev(g, population, -1);
 			System.out.println(g+" = "+stdDev);
 		}
+	}
+	
+	private static int generateSample(final int v, final double stdDev, final double multiplier){
+		return (int)((Math.random()-.5)*stdDev*multiplier+v);
 	}
 }
