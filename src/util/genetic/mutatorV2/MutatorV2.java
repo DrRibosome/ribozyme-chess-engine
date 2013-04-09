@@ -20,7 +20,7 @@ public final class MutatorV2 implements Mutator2{
 	private final static List<Getter> l;
 	
 	static {
-		l = new ArrayList<>();
+		l = new ArrayList<Getter>();
 		final int[] pieces = new int[]{
 				State4.PIECE_TYPE_BISHOP,
 				State4.PIECE_TYPE_KNIGHT,

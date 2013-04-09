@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.Set;
 
 import util.genetic.mutatorV2.Mutator2;
@@ -102,7 +100,7 @@ public final class GeneticTrainer2 {
 	
 	/** runs the simulation, accumulating a score for each entity*/
 	public static Map<GEntity, GameQueue.Game[]> simulate(final GEntity[] population, final GameQueue q){
-		Map<GEntity, GameQueue.Game[]> m = new HashMap<>();
+		Map<GEntity, GameQueue.Game[]> m = new HashMap<GEntity, GameQueue.Game[]>();
 		for(int a = 0; a < population.length-1; a++){
 			final int index = (int)(Math.random()*(population.length-a-1))+1+a;
 			final GameQueue.Game[] temp = new GameQueue.Game[2];
@@ -133,7 +131,7 @@ public final class GeneticTrainer2 {
 	
 	/** culls bad solutions from population, returns list of culled indeces*/
 	public static void cull(final GEntity[] population, final Map<GEntity, GameQueue.Game[]> m, final Mutator2 mutator){
-		Set<Integer> exclude = new HashSet<>();
+		Set<Integer> exclude = new HashSet<Integer>();
 		for(int a = 0; a < population.length-1; a++){
 			if(!exclude.contains(a)){
 				final GEntity e = population[a];
