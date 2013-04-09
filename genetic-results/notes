@@ -1,5 +1,0 @@
---------------------------------------------------------
-genetic-results-pc-1
-
-run under slower exp eval v3v3, which used feature set extraction for no reason.
-Also, might have had issues with aggregating scores, and no granularity function used
