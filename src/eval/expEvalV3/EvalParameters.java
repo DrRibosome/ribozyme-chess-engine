@@ -117,7 +117,6 @@ public final class EvalParameters {
 			s += a+":"+doubledPawns[0][a]+", ";
 		}
 		s += "\n";
-		
 		s += "doubled pawn weight, opposed (by col):\n";
 		for(int a = 0; a < 8; a++){
 			s += a+":"+doubledPawns[1][a]+", ";
@@ -129,10 +128,15 @@ public final class EvalParameters {
 			s += a+":"+backwardPawns[0][a]+", ";
 		}
 		s += "\n";
-		
 		s += "backward pawn weight, opposed (by col):\n";
 		for(int a = 0; a < 8; a++){
 			s += a+":"+backwardPawns[1][a]+", ";
+		}
+		s += "\n";
+		
+		s += "pawn chain weight:\n";
+		for(int a = 0; a < 8; a++){
+			s += a+":"+pawnChain[a]+", ";
 		}
 		s += "\n";
 		
