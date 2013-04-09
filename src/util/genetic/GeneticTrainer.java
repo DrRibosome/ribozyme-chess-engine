@@ -3,7 +3,6 @@ package util.genetic;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,10 +10,20 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+import util.genetic.mutatorV1.Mutator;
 import util.genetic.mutatorV1.MutatorV1;
 import eval.expEvalV3.DefaultEvalWeights;
 import eval.expEvalV3.EvalParameters;
 
+/**
+ * genetic trainer
+ * <p>
+ * population created with random mutations, and initial variance parameter.
+ * As entities survive each iteration, their variance parameter is reducted.
+ * New entities are created with randomly mutated attributes based off the
+ * variance parameter of the parent and its pre-existing values
+ *
+ */
 public final class GeneticTrainer {
 	private final static Comparator<GEntity> sortBestFirst = new Comparator<GEntity>() {
 		public int compare(GEntity e1, GEntity e2) {

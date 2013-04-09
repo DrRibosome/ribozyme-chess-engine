@@ -7,12 +7,14 @@ import eval.expEvalV3.EvalParameters;
 
 public final class GEntity{
 	private static int idIndex = 0;
-	EvalParameters p;
+	public EvalParameters p;
 	final AtomicInteger wins = new AtomicInteger();
 	final AtomicInteger losses = new AtomicInteger();
 	final AtomicInteger draws = new AtomicInteger();
 	public int id;
 	public double variance;
+	/** index of entity in population vector*/
+	public int index;
 	private final DecimalFormat df = new DecimalFormat("#.####");
 	
 	GEntity(){
@@ -30,6 +32,6 @@ public final class GEntity{
 	
 	@Override
 	public String toString(){
-		return "(w,l,d)=("+wins.get()+","+losses.get()+","+draws.get()+"), id="+id+", variance="+df.format(variance);
+		return "(w,l,d)=("+wins.get()+","+losses.get()+","+draws.get()+"), id="+id;
 	}
 }

@@ -15,13 +15,24 @@ import eval.expEvalV3.ExpEvalV3v4;
 /** plays queued games*/
 public final class GameQueue {
 	public final static class Game{
+		public final static int draw = 2;
 		final GEntity[] e;
+		/** result record result of game, either r\in{0,1} if win/loss, r=2 if draw*/
+		public int result;
 		public Game(GEntity e1, GEntity e2){
-			if(Math.random() < .5){
-				e = new GEntity[]{e1, e2};
-			} else{
-				e = new GEntity[]{e2, e1};
+			e = new GEntity[]{e1, e2};
+		}
+		/** gets which score the passed entity started as */
+		public int getScore(GEntity ge){
+			int index = ge == e[0]? 0: 1;
+			return result == 2? 1: result == index? 2: 0;
+		}
+		/** gets the opponent*/
+		public GEntity getOpponent(GEntity ge){
+			if(ge == e[0]){
+				return e[1];
 			}
+			return e[0];
 		}
 	}
 	
@@ -86,10 +97,12 @@ public final class GameQueue {
 							//if(print) System.out.println("draw");
 							g.e[0].draws.incrementAndGet();
 							g.e[1].draws.incrementAndGet();
+							g.result = Game.draw;
 						} else{
 							final int winner = 1-turn;
 							g.e[winner].wins.incrementAndGet();
 							g.e[1-winner].losses.incrementAndGet();
+							g.result = winner;
 							//if(print) System.out.println("player "+winner+" wins");
 						}
 						

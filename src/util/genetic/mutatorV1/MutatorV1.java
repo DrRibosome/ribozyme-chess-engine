@@ -1,7 +1,6 @@
 package util.genetic.mutatorV1;
 
 import util.genetic.GEntity;
-import util.genetic.Mutator;
 import eval.Weight;
 import eval.expEvalV3.EvalParameters;
 
