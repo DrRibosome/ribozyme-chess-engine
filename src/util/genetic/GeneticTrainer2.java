@@ -39,7 +39,7 @@ public final class GeneticTrainer2 {
 	public static void main(String[] args) throws Exception{
 
 		final int threads = 4;
-		final long time = 40;
+		final long time = 30*1000;
 		final int hashSize = 18;
 		final int popSize = 40;
 		final Mutator2 m = new MutatorV2();
@@ -56,7 +56,7 @@ public final class GeneticTrainer2 {
 		final GEntity[] population = new GEntity[popSize];
 		final GameQueue q = new GameQueue(threads, time, hashSize);
 		
-		//generate initial population
+		//generate initial population 
 		for(int a = 0; a < population.length; a++){
 			population[a] = new GEntity();
 			population[a].p = DefaultEvalWeights.defaultEval();

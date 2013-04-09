@@ -9,6 +9,7 @@ import search.Search4;
 import search.search33.SearchS4V33t;
 import state4.BitUtil;
 import state4.State4;
+import time.TimerThread4;
 import util.opening2.Book;
 import eval.expEvalV3.ExpEvalV3v4;
 
@@ -70,9 +71,10 @@ public final class GameQueue {
 						int turn = 0;
 						boolean draw = false;
 						boolean outOfBook = false;
+						final long[] time = new long[]{this.time, this.time};
 
 						while(state.pieceCounts[turn][State4.PIECE_TYPE_KING] != 0 &&
-								!isMate(turn, state) && !state.isForcedDraw()){
+								!isMate(turn, state) && !state.isForcedDraw() && time[turn] > 0){
 
 							int[] bookMove = b.getRandomMove(turn, state, 100);
 							if(bookMove != null && !outOfBook){
@@ -80,17 +82,22 @@ public final class GameQueue {
 								//if(print) System.out.println("book move");
 							} else{
 								outOfBook = true;
-								search(turn, state, search[turn], move, time);
+								//search(turn, state, search[turn], move, time);
 								//search[turn].search(turn, state, move, 5);
+								final long start = System.currentTimeMillis();
+								TimerThread4.searchBlocking(search[turn], state, turn, time[turn], 0, move);
+								time[turn] -= System.currentTimeMillis()-start;
 							}
 							
 							if(move[0] == move[1]){ //draw, no moves remaining
-								draw = true;
-								break;
+								if(time[turn] > 0){
+									draw = true;
+									break;
+								}
+							} else{
+								state.executeMove(turn, 1L<<move[0], 1L<<move[1]);
+								turn = 1-turn;
 							}
-							
-							state.executeMove(turn, 1L<<move[0], 1L<<move[1]);
-							turn = 1-turn;
 						}
 
 						if(state.isForcedDraw() || draw){
