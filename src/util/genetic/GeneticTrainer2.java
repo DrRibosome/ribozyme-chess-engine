@@ -3,10 +3,8 @@ package util.genetic;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,39 +13,26 @@ import util.genetic.mutatorV2.MutatorV2;
 import eval.expEvalV3.DefaultEvalWeights;
 import eval.expEvalV3.EvalParameters;
 
+/**
+ * genetic trainer, implements ideas from paper
+ * 'an evolutionary approach for the tuning of a chess evaluation'
+ * @author jdc2172
+ *
+ */
 public final class GeneticTrainer2 {
-	private final static Comparator<GEntity> sortBestFirst = new Comparator<GEntity>() {
-		public int compare(GEntity e1, GEntity e2) {
-			if(e1 == null){
-				return 1;
-			} else if(e2 == null){
-				return -1;
-			}
-			
-			if(e1.score() > e2.score()){
-				return -1;
-			} else if(e1.score() < e2.score()){
-				return 1;
-			} else{
-				return e1.totalGames() > e2.totalGames()? -1: 1;
-			}
-		}
-	};
-	
 	private final static ByteBuffer b = ByteBuffer.allocate(1<<15);
 	
 	public static void main(String[] args) throws Exception{
 
 		final int threads = 4;
-		final long time = 30*1000;
+		final long time = 2*60*1000;
 		final int hashSize = 18;
 		final int popSize = 40;
 		final Mutator2 m = new MutatorV2();
-		final double initialVariance = 10;
-		final double initialMutationStdDev = 3; //standard deviation to apply during the initial mutating phase
+		final double initialMutationStdDev = 10; //standard deviation to apply during the initial mutating phase
 		
 		final File file = new File("genetic-results/genetic-results-mac-7");
-		if(1==2&& file.exists()){
+		if(file.exists()){
 			System.out.println("log file already exists, exiting");
 			System.exit(0);
 		}
@@ -60,7 +45,6 @@ public final class GeneticTrainer2 {
 		for(int a = 0; a < population.length; a++){
 			population[a] = new GEntity();
 			population[a].p = DefaultEvalWeights.defaultEval();
-			population[a].variance = initialVariance;
 			if(a != 0) m.initialMutate(population[a].p, initialMutationStdDev);
 			log.recordGEntity(population[a]);
 			population[a].index = a;
@@ -68,9 +52,8 @@ public final class GeneticTrainer2 {
 		
 		for(int i = 0; ; i++){
 			final Map<GEntity, GameQueue.Game[]> results = simulate(population, q);
-			//log.recordIteration(i, population);
-			cull(population, results, m);
-			//recordNewEntities(culled, population, log);
+			log.recordIteration(i, population);
+			cull(population, results, m, log);
 			
 			System.out.println("completed iteration "+i);
 			System.out.println("-------------------------------");
@@ -86,14 +69,6 @@ public final class GeneticTrainer2 {
 		}
 	}
 	
-	private static void recordNewEntities(final List<Integer> newEntities, final GEntity[] p,
-			final GeneticLogger log) throws IOException{
-		for(int index: newEntities){
-			final GEntity temp = p[index];
-			log.recordGEntity(temp);
-		}
-	}
-	
 	private static int max(final int i1, final int i2){
 		return i1 > i2? i1: i2;
 	}
@@ -101,6 +76,7 @@ public final class GeneticTrainer2 {
 	/** runs the simulation, accumulating a score for each entity*/
 	public static Map<GEntity, GameQueue.Game[]> simulate(final GEntity[] population, final GameQueue q){
 		Map<GEntity, GameQueue.Game[]> m = new HashMap<GEntity, GameQueue.Game[]>();
+		System.out.println("matchmaking...");
 		for(int a = 0; a < population.length-1; a++){
 			final int index = (int)(Math.random()*(population.length-a-1))+1+a;
 			final GameQueue.Game[] temp = new GameQueue.Game[2];
@@ -130,9 +106,9 @@ public final class GeneticTrainer2 {
 	}
 	
 	/** culls bad solutions from population, returns list of culled indeces*/
-	public static void cull(final GEntity[] population, final Map<GEntity, GameQueue.Game[]> m, final Mutator2 mutator){
+	public static void cull(final GEntity[] population, final Map<GEntity, GameQueue.Game[]> m, final Mutator2 mutator, final GeneticLogger log){
 		Set<Integer> exclude = new HashSet<Integer>();
-		for(int a = 0; a < population.length-1; a++){
+		for(int a = population.length-2; a >= 0; a--){ //best entry plays no games, skip it
 			if(!exclude.contains(a)){
 				final GEntity e = population[a];
 				final GameQueue.Game[] g = m.get(population[a]);
@@ -149,6 +125,9 @@ public final class GeneticTrainer2 {
 					mutator.mutate(temp.p, population, index, mult);
 					population[index] = temp;
 					exclude.add(index);
+					try{
+						log.recordGEntity(temp);
+					} catch(IOException q){q.printStackTrace();}
 				} else if(score == 2){ //2 draw
 					//self mutate
 					double mult = .5;
@@ -158,6 +137,9 @@ public final class GeneticTrainer2 {
 					temp.p = cloneParams(e.p);
 					mutator.mutate(temp.p, population, index, mult);
 					population[index] = temp;
+					try{
+						log.recordGEntity(temp);
+					} catch(IOException q){q.printStackTrace();}
 				}
 			}
 		}

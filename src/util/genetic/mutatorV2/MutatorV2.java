@@ -62,26 +62,26 @@ public final class MutatorV2 implements Mutator2{
 				len++;
 			}
 		}
+		len--; //to compute unbiased variance estimator
 		assert len != 0;
 		return Math.sqrt(sqrdSum/len - Math.pow(sum/len, 2));
 	}
 	
 	@Override
 	public void mutate(EvalParameters p, GEntity[] population, int excludeIndex, double multiplier) {
-		final Random r = new Random();
 		for(Getter g: l){
 			double stdDev = stdDev(g, population, excludeIndex);
 			int v = g.get(p);
-			g.set(p, (int)(r.nextGaussian()*stdDev+v));
+			g.set(p, (int)((Math.random()-.5)*stdDev*multiplier+v));
 		}
 	}
 
 	@Override
 	public void initialMutate(EvalParameters p, double stdDev) {
-		final Random r = new Random();
 		for(Getter g: l){
 			int v = g.get(p);
-			g.set(p, (int)(r.nextGaussian()*stdDev+v));
+			//g.set(p, (int)(r.nextGaussian()*stdDev+v));
+			g.set(p, (int)((Math.random()-.5)*stdDev+v));
 		}
 	}
 

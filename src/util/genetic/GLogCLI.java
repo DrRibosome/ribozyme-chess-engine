@@ -86,7 +86,7 @@ public final class GLogCLI {
 				log = GeneticLogger.loadLog(logF);
 			}
 		}*/
-		log = GeneticLogger.loadLog(new File("genetic-results/genetic-results-mac-6"));
+		log = GeneticLogger.loadLog(new File("genetic-results/genetic-results-mac-7"));
 		
 		while(scanner.hasNext()){
 			String line = scanner.nextLine();

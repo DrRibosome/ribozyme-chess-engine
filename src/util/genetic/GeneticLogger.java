@@ -49,7 +49,6 @@ public final class GeneticLogger {
 			b.putInt(p[a].wins.get());
 			b.putInt(p[a].losses.get());
 			b.putInt(p[a].draws.get());
-			b.putDouble(p[a].variance);
 		}
 		
 		b.limit(b.position());
@@ -98,7 +97,6 @@ public final class GeneticLogger {
 					e.wins.set(dis.readInt());
 					e.losses.set(dis.readInt());
 					e.draws.set(dis.readInt());
-					e.variance = dis.readDouble();
 					temp.results.add(e);
 				}
 				offsets.iterationResults.put(iteration, temp);
