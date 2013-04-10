@@ -1,12 +1,27 @@
 package eval.evalV10;
 
-import static eval.evalV10.Eval10Weights.*;
+import static eval.evalV10.Eval10Weights.BONUS_BISHOP_PAIR;
+import static eval.evalV10.Eval10Weights.BONUS_MATERIAL_ADVANTAGE;
+import static eval.evalV10.Eval10Weights.BONUS_ROOK_HALF_OPEN_FILE;
+import static eval.evalV10.Eval10Weights.BONUS_ROOK_ON_7TH;
+import static eval.evalV10.Eval10Weights.BONUS_ROOK_OPEN_FILE;
+import static eval.evalV10.Eval10Weights.BONUS_TEMPO;
+import static eval.evalV10.Eval10Weights.DANGER_KING_ATTACKS;
+import static eval.evalV10.Eval10Weights.DANGER_PAWN_SHIELD_GAP;
+import static eval.evalV10.Eval10Weights.DANGER_STORMING_PAWN;
+import static eval.evalV10.Eval10Weights.MOBILITY_BONUSES;
+import static eval.evalV10.Eval10Weights.PENALTY_DOUBLED_PAWNS;
+import static eval.evalV10.Eval10Weights.PENALTY_ISOLATED_PAWN;
+import static eval.evalV10.Eval10Weights.PENALTY_TRIPLED_PAWNS;
+import static eval.evalV10.Eval10Weights.kingDangerSquares;
+import static eval.evalV10.Eval10Weights.kingDangerValues;
+import static eval.evalV10.Eval10Weights.pieceSquareTables;
+import static eval.evalV10.Eval10Weights.pieceValues;
 import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
 import eval.Evaluator2;
-import eval.expEvalV3.EvalConstantsV2;
 /*
  * Changes from v7
  * -now always checks for holes in the king's pawn shield and for storming enemy 
