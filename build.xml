@@ -1,0 +1,33 @@
+<project>
+
+	<property name="build" location="build"/>
+
+	<target name="clean">
+		<delete dir="${build}"/>
+	</target>
+
+	<target name="compile">
+		<mkdir dir="${build}"/>
+		<!-- failoneerror="false" -->
+		<javac destdir="${build}">
+			<src path="src"/>
+			<src path="websocket-lib"/>
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile">
+		<mkdir dir="${build}/jar"/>
+		<jar destfile="${build}/jar/genetic-trainer2.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Main-Class" value="util.genetic.GeneticTrainer2"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="run">
+		<java jar="${build}/jar/genetic-trainer2.jar" fork="true"/>
+	</target>
+
+
+
+</project>
