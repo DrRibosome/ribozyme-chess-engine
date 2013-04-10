@@ -79,15 +79,10 @@ public final class GLogCLI {
 	}
 	
 	public static void main(String[] args) throws IOException{
+		//log = GeneticLogger.loadLog(new File("genetic-results/log1"));
+		log = GeneticLogger.loadLog(new File(args[0]));
+
 		final Scanner scanner = new Scanner(System.in);
-		/*if(args.length != 1){
-			while(log == null){
-				File logF = new File(scanner.nextLine().trim());
-				log = GeneticLogger.loadLog(logF);
-			}
-		}*/
-		log = GeneticLogger.loadLog(new File("genetic-results/genetic-results-mac-7"));
-		
 		while(scanner.hasNext()){
 			String line = scanner.nextLine();
 			for(int a = 0; a < c.size(); a++){
