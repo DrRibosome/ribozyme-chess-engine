@@ -8,7 +8,7 @@ import eval.expEvalV3.EvalParameters;
 
 public final class PassedPawnGetter{
 	public static void build(List<Getter> l){
-		for(int a = 0; a < 8; a++){
+		for(int a = 1; a < 7; a++){
 			final int index = a;
 			l.add(new Getter(){
 				public int get(EvalParameters p){

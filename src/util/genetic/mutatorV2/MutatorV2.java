@@ -63,6 +63,6 @@ public final class MutatorV2 implements Mutator2{
 	}
 	
 	private static int generateSample(final int v, final double stdDev, final double multiplier){
-		return (int)((Math.random()-.5)*stdDev*multiplier+v);
+		return (int)((Math.random()-.5)*stdDev*multiplier+v+.5);
 	}
 }
