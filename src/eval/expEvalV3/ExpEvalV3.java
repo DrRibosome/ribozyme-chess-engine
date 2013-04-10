@@ -120,9 +120,9 @@ public final class ExpEvalV3 implements Evaluator2{
 			final long q = queens&-queens;
 			final long moves = Masks.getRawQueenMoves(agg, q);
 			if((q & kingRing) != 0){ //contact check
-				dindex += EvalConstantsV2.contactCheckQueen;
+				dindex += p.contactCheckQueen;
 			} else if((moves & king) != 0){ //non-contact check
-				dindex += EvalConstantsV2.queenCheck;
+				dindex += p.queenCheck;
 			}
 			dindex += p.dangerKingAttacks[State4.PIECE_TYPE_QUEEN] * BitUtil.getSetBits(moves & kingRing);
 		}
@@ -132,9 +132,9 @@ public final class ExpEvalV3 implements Evaluator2{
 			final long moves = Masks.getRawRookMoves(agg, r);
 			 if((moves & king) != 0){
 				if((r & kingRing) != 0){ //contact check
-					dindex += EvalConstantsV2.contactCheckRook;
+					dindex += p.contactCheckRook;
 				} else{ //non-contact check
-					dindex += EvalConstantsV2.rookCheck;
+					dindex += p.rookCheck;
 				}
 			}
 			dindex += p.dangerKingAttacks[State4.PIECE_TYPE_ROOK] * BitUtil.getSetBits(moves & kingRing);
@@ -143,7 +143,7 @@ public final class ExpEvalV3 implements Evaluator2{
 		for(long bishops = s.bishops[1-player]; bishops != 0; bishops &= bishops-1){
 			final long moves = Masks.getRawBishopMoves(agg, bishops);
 			if((moves & king) != 0){ //non-contact check
-				dindex += EvalConstantsV2.bishopCheck;
+				dindex += p.bishopCheck;
 			}
 			dindex += p.dangerKingAttacks[State4.PIECE_TYPE_BISHOP] * BitUtil.getSetBits(moves & kingRing);
 		}
@@ -151,7 +151,7 @@ public final class ExpEvalV3 implements Evaluator2{
 		for(long knights = s.knights[1-player]; knights != 0; knights &= knights-1){
 			final long moves = Masks.getRawKnightMoves(knights);
 			if((moves & king) != 0){ //non-contact check
-				dindex += EvalConstantsV2.knightCheck;
+				dindex += p.knightCheck;
 			}
 			dindex += p.dangerKingAttacks[State4.PIECE_TYPE_KNIGHT] * BitUtil.getSetBits(moves & kingRing);
 		}
@@ -205,19 +205,19 @@ public final class ExpEvalV3 implements Evaluator2{
 		for(int a = 0; a < 2; a++){
 			final int b = State4.PIECE_TYPE_BISHOP;
 			materialScore[a] += s.pieceCounts[a][b] * p.materialWeights[b];
-			maxMobility[a][b] += s.pieceCounts[a][b] * EvalConstantsV2.maxPieceMobility[b];
+			maxMobility[a][b] += s.pieceCounts[a][b] * maxPieceMobility[b];
 			
 			final int n = State4.PIECE_TYPE_KNIGHT;
 			materialScore[a] += s.pieceCounts[a][n] * p.materialWeights[n];
-			maxMobility[a][n] += s.pieceCounts[a][n] * EvalConstantsV2.maxPieceMobility[n];
+			maxMobility[a][n] += s.pieceCounts[a][n] * maxPieceMobility[n];
 			
 			final int q = State4.PIECE_TYPE_QUEEN;
 			materialScore[a] += s.pieceCounts[a][q] * p.materialWeights[q];
-			maxMobility[a][q] += s.pieceCounts[a][q] * EvalConstantsV2.maxPieceMobility[q];
+			maxMobility[a][q] += s.pieceCounts[a][q] * maxPieceMobility[q];
 			
 			final int r = State4.PIECE_TYPE_ROOK;
 			materialScore[a] += s.pieceCounts[a][r] * p.materialWeights[r];
-			maxMobility[a][r] += s.pieceCounts[a][r] * EvalConstantsV2.maxPieceMobility[r];
+			maxMobility[a][r] += s.pieceCounts[a][r] * maxPieceMobility[r];
 			
 			final int p = State4.PIECE_TYPE_PAWN;
 			materialScore[a] += s.pieceCounts[a][p] * this.p.materialWeights[p];

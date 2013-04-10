@@ -148,9 +148,9 @@ public final class ExpEvalV3v3 implements Evaluator2{
 			final long q = queens&-queens;
 			final long moves = Masks.getRawQueenMoves(agg, q);
 			if((q & kingRing) != 0){ //contact check
-				dindex += EvalConstantsV2.contactCheckQueen;
+				dindex += p.contactCheckQueen;
 			} else if((moves & king) != 0){ //non-contact check
-				dindex += EvalConstantsV2.queenCheck;
+				dindex += p.queenCheck;
 			}
 			dindex += p.dangerKingAttacks[State4.PIECE_TYPE_QUEEN] * BitUtil.getSetBits(moves & kingRing);
 		}
@@ -160,9 +160,9 @@ public final class ExpEvalV3v3 implements Evaluator2{
 			final long moves = Masks.getRawRookMoves(agg, r);
 			 if((moves & king) != 0){
 				if((r & kingRing) != 0){ //contact check
-					dindex += EvalConstantsV2.contactCheckRook;
+					dindex += p.contactCheckRook;
 				} else{ //non-contact check
-					dindex += EvalConstantsV2.rookCheck;
+					dindex += p.rookCheck;
 				}
 			}
 			dindex += p.dangerKingAttacks[State4.PIECE_TYPE_ROOK] * BitUtil.getSetBits(moves & kingRing);
@@ -171,7 +171,7 @@ public final class ExpEvalV3v3 implements Evaluator2{
 		for(long bishops = s.bishops[1-player]; bishops != 0; bishops &= bishops-1){
 			final long moves = Masks.getRawBishopMoves(agg, bishops);
 			if((moves & king) != 0){ //non-contact check
-				dindex += EvalConstantsV2.bishopCheck;
+				dindex += p.bishopCheck;
 			}
 			dindex += p.dangerKingAttacks[State4.PIECE_TYPE_BISHOP] * BitUtil.getSetBits(moves & kingRing);
 		}
@@ -179,7 +179,7 @@ public final class ExpEvalV3v3 implements Evaluator2{
 		for(long knights = s.knights[1-player]; knights != 0; knights &= knights-1){
 			final long moves = Masks.getRawKnightMoves(knights);
 			if((moves & king) != 0){ //non-contact check
-				dindex += EvalConstantsV2.knightCheck;
+				dindex += p.knightCheck;
 			}
 			dindex += p.dangerKingAttacks[State4.PIECE_TYPE_KNIGHT] * BitUtil.getSetBits(moves & kingRing);
 		}
