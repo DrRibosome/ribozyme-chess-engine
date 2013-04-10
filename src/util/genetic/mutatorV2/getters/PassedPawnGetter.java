@@ -7,7 +7,7 @@ import eval.Weight;
 import eval.expEvalV3.EvalParameters;
 
 public final class PassedPawnGetter{
-	public static void build(List<Getter> l){
+	public static void add(List<Getter> l){
 		for(int a = 1; a < 7; a++){
 			final int index = a;
 			l.add(new Getter(){

@@ -7,7 +7,7 @@ import util.genetic.mutatorV2.Getter;
 import eval.expEvalV3.EvalParameters;
 
 public final class MaterialWeightGetter{
-	public static void build(List<Getter> l){
+	public static void add(List<Getter> l){
 		final int[] pieces = new int[]{
 				State4.PIECE_TYPE_BISHOP,
 				State4.PIECE_TYPE_KNIGHT,

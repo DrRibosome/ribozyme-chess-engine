@@ -7,7 +7,7 @@ import eval.Weight;
 import eval.expEvalV3.EvalParameters;
 
 public final class PawnChainGetter{
-	public static void build(List<Getter> l){
+	public static void add(List<Getter> l){
 		for(int a = 0; a < 4; a++){
 			final int index = a;
 			l.add(new Getter(){

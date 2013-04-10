@@ -5,6 +5,7 @@ import java.util.List;
 
 import util.genetic.GEntity;
 import util.genetic.mutatorV2.getters.MaterialWeightGetter;
+import util.genetic.mutatorV2.getters.MobilityGetter;
 import util.genetic.mutatorV2.getters.PassedPawnGetter;
 import util.genetic.mutatorV2.getters.PawnChainGetter;
 import eval.expEvalV3.EvalParameters;
@@ -14,9 +15,10 @@ public final class MutatorV2 implements Mutator2{
 	
 	static {
 		l = new ArrayList<Getter>();
-		MaterialWeightGetter.build(l);
-		PassedPawnGetter.build(l);
-		PawnChainGetter.build(l);
+		MaterialWeightGetter.add(l);
+		PassedPawnGetter.add(l);
+		PawnChainGetter.add(l);
+		MobilityGetter.add(l);
 	}
 	
 	private static double stdDev(Getter g, GEntity[] population, int exclude){
