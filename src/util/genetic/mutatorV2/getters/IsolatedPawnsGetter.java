@@ -6,10 +6,10 @@ import util.genetic.mutatorV2.Getter;
 import eval.Weight;
 import eval.expEvalV3.EvalParameters;
 
-public final class DoubledPawnsGetter{
+public final class IsolatedPawnsGetter{
 	public static void add(List<Getter> l){
 		
-		final String name = "doubled pawns";
+		final String name = "isolated pawns";
 		
 		for(int q = 0; q < 2; q++){
 			final int opp = q; //opposed flag
@@ -17,12 +17,12 @@ public final class DoubledPawnsGetter{
 				final int index = a;
 				l.add(new Getter(){
 					public int get(EvalParameters p){
-						return p.doubledPawns[opp][index].start;
+						return p.isolatedPawns[opp][index].start;
 					}
 					public void set(EvalParameters p, int i){
-						final int end = p.doubledPawns[opp][index].end;
-						p.doubledPawns[opp][index] = new Weight(i, end);
-						p.doubledPawns[opp][7-index] = new Weight(i, end);
+						final int end = p.isolatedPawns[opp][index].end;
+						p.isolatedPawns[opp][index] = new Weight(i, end);
+						p.isolatedPawns[opp][7-index] = new Weight(i, end);
 					}
 					public String toString(){
 						return name+" (c="+index+",start,opp="+opp+") weight";
@@ -30,12 +30,12 @@ public final class DoubledPawnsGetter{
 				});
 				l.add(new Getter(){
 					public int get(EvalParameters p){
-						return p.doubledPawns[opp][index].end;
+						return p.isolatedPawns[opp][index].end;
 					}
 					public void set(EvalParameters p, int i){
-						final int start = p.doubledPawns[opp][index].start;
-						p.doubledPawns[opp][index] = new Weight(start, i);
-						p.doubledPawns[opp][7-index] = new Weight(start, i);
+						final int start = p.isolatedPawns[opp][index].start;
+						p.isolatedPawns[opp][index] = new Weight(start, i);
+						p.isolatedPawns[opp][7-index] = new Weight(start, i);
 					}
 					public String toString(){
 						return name+" (c="+index+",end,opp="+opp+") weight";
