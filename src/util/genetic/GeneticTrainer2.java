@@ -16,6 +16,17 @@ import eval.expEvalV3.EvalParameters;
 /**
  * genetic trainer, implements ideas from paper
  * 'an evolutionary approach for the tuning of a chess evaluation'
+ * 
+ * <p> in simulation, entities play 2 games against a randomly selected
+ * enty somewhere ahead in the population vector. If an entity has 2 wins
+ * or 1 win and 1 draw, then it is said to win the encounter, and duplicates
+ * itself with mutations into the position of the defeated entity. As a result,
+ * the best entries will tend to cluster at the end, with the last entry being
+ * the best entry (eventually)
+ * 
+ * <p> mutation carried out by randomly purterbing entity values by an amount
+ * drawn from a uniform distribution about the current value, with standard
+ * deviation equal to the population standard deviation for that value
  * @author jdc2172
  *
  */
