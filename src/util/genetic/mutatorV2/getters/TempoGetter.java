@@ -9,6 +9,7 @@ import util.genetic.mutatorV2.Getter;
 
 public final class TempoGetter {
 	public static void add(List<Getter> l){
+		final String name = "tempo";
 		l.add(new Getter() {
 			@Override
 			public int get(EvalParameters p) {
@@ -17,6 +18,10 @@ public final class TempoGetter {
 			@Override
 			public void set(EvalParameters p, int i) {
 				p.tempo = new Weight(i, p.tempo.end);
+			}
+			@Override
+			public String toString(){
+				return name+", start";
 			}
 		});
 		l.add(new Getter() {
@@ -27,6 +32,10 @@ public final class TempoGetter {
 			@Override
 			public void set(EvalParameters p, int i) {
 				p.tempo = new Weight(p.tempo.start, i);
+			}
+			@Override
+			public String toString(){
+				return name+", end";
 			}
 		});
 	}
