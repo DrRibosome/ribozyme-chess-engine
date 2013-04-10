@@ -24,14 +24,17 @@ public final class GeneticTrainer2 {
 	
 	public static void main(String[] args) throws Exception{
 
-		final int threads = 4;
+		//final int threads = 4;
+		final int threads = Integer.parseInt(args[0]);
+		//final File file = new File("genetic-results/genetic-results-mac-7");
+		final File file = new File(args[1]);
+		
 		final long time = 2*60*1000;
 		final int hashSize = 18;
 		final int popSize = 40;
 		final Mutator2 m = new MutatorV2();
 		final double initialMutationStdDev = 10; //standard deviation to apply during the initial mutating phase
 		
-		final File file = new File("genetic-results/genetic-results-mac-7");
 		if(file.exists()){
 			System.out.println("log file already exists, exiting");
 			System.exit(0);
