@@ -3,13 +3,17 @@ package util.genetic.mutatorV2;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.transform.Templates;
+
 import util.genetic.GEntity;
+import util.genetic.mutatorV2.getters.BishopPairGetter;
 import util.genetic.mutatorV2.getters.DoubledPawnsGetter;
 import util.genetic.mutatorV2.getters.IsolatedPawnsGetter;
 import util.genetic.mutatorV2.getters.MaterialWeightGetter;
 import util.genetic.mutatorV2.getters.MobilityGetter;
 import util.genetic.mutatorV2.getters.PassedPawnGetter;
 import util.genetic.mutatorV2.getters.PawnChainGetter;
+import util.genetic.mutatorV2.getters.TempoGetter;
 import eval.expEvalV3.EvalParameters;
 
 public final class MutatorV2 implements Mutator2{
@@ -23,6 +27,9 @@ public final class MutatorV2 implements Mutator2{
 		MobilityGetter.add(l);
 		DoubledPawnsGetter.add(l);
 		IsolatedPawnsGetter.add(l);
+		
+		BishopPairGetter.add(l);
+		TempoGetter.add(l);
 	}
 	
 	private static double stdDev(Getter g, GEntity[] population, int exclude){
