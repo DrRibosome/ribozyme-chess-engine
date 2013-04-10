@@ -16,6 +16,12 @@ public final class MobilityGetter{
 		movement[State4.PIECE_TYPE_ROOK] = 16;
 		movement[State4.PIECE_TYPE_QUEEN] = 32;
 		
+		final String[] names = new String[7];
+		names[State4.PIECE_TYPE_BISHOP] = "bishop";
+		names[State4.PIECE_TYPE_KNIGHT] = "knight";
+		names[State4.PIECE_TYPE_ROOK] = "rook";
+		names[State4.PIECE_TYPE_QUEEN] = "queen";
+		
 		final String name = "mobility";
 		
 		for(int a = 0; a < 7; a++){
@@ -32,7 +38,7 @@ public final class MobilityGetter{
 									p.mobilityWeights[ptype][mov].end);
 						}
 						public String toString(){
-							return name+" (m="+mov+",start) weight";
+							return name+" (m="+mov+",start,"+names[ptype]+") weight";
 						}
 					});
 					l.add(new Getter(){
@@ -44,7 +50,7 @@ public final class MobilityGetter{
 									p.mobilityWeights[ptype][mov].start, i);
 						}
 						public String toString(){
-							return name+" (m="+mov+",end) weight";
+							return name+" (m="+mov+",end,"+names[ptype]+") weight";
 						}
 					});
 				}
