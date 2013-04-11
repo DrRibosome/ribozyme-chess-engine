@@ -33,14 +33,17 @@ public final class GeneticTrainer2 {
 	
 	public static void main(String[] args) throws Exception{
 
+		int argIndex = 0;
+		
+		//final int popSize = 15;
+		final int popSize = Integer.parseInt(args[argIndex++]);
 		//final int threads = 4;
-		final int threads = Integer.parseInt(args[0]);
+		final int threads = Integer.parseInt(args[argIndex++]);
 		//final File file = new File("genetic-results/genetic-results-mac-7");
-		final File file = new File(args[1]);
+		final File file = new File(args[argIndex++]);
 		
 		final long time = 2*60*1000;
 		final int hashSize = 18;
-		final int popSize = 15;
 		final Mutator2 m = new MutatorV2();
 		final double initialVariancePercent = .5; //determines range of starting values generated
 		
