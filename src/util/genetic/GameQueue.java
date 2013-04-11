@@ -66,7 +66,7 @@ public final class GameQueue {
 								new SearchS4V33t(new ExpEvalV3v4(g.e[1].p), hashSize, false),
 						};
 						
-						final State4 state = new State4(b.getSeed());
+						final State4 state = new State4(b.getSeed(), 40);
 						state.initialize();
 						int turn = 0;
 						boolean draw = false;
@@ -92,8 +92,8 @@ public final class GameQueue {
 							if(move[0] == move[1]){ //draw, no moves remaining
 								if(time[turn] > 0){
 									draw = true;
-									break;
 								}
+								break;
 							} else{
 								state.executeMove(turn, 1L<<move[0], 1L<<move[1]);
 								turn = 1-turn;

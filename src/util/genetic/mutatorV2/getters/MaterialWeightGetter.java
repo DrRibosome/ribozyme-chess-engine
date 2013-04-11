@@ -22,16 +22,18 @@ public final class MaterialWeightGetter{
 		};
 		
 		for(int a = 0; a < pieces.length; a++){
-			final int index = a;
+			final int ptype = pieces[a];
+			final String pname = pieceNames[a];
 			l.add(new Getter(){
 				public int get(EvalParameters p){
-					return p.materialWeights[pieces[index]];
+					return p.materialWeights[ptype];
 				}
 				public void set(EvalParameters p, int i){
-					p.materialWeights[pieces[index]] = i; 
+					assert i != 0;
+					p.materialWeights[ptype] = i; 
 				}
 				public String toString(){
-					return pieceNames[index]+" weight";
+					return pname+" weight";
 				}
 			});
 		}

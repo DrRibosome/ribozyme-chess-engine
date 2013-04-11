@@ -54,15 +54,21 @@ public final class State4 {
 	public final boolean[][] rookMoved = new boolean[2][2];
 	/** count since last pawn move or take (for 50-move draw)*/
 	public int drawCount = 0;
+	private final int maxDrawCount;
 	
-	public State4(final long zkeySeed){
+	public State4(final long zkeySeed, final int maxDrawCount){
+		this.maxDrawCount = maxDrawCount;
 		zhash = new ZHash(zkeySeed);
 		appHashs = new long[]{0, 0, zhash.appeared2, zhash.appeared3};
 		this.zkeySeed = zkeySeed;
 	}
 	
+	public State4(final long zkeySeed){
+		this(zkeySeed, 100);
+	}
+	
 	public State4(){
-		this(47388L);
+		this(47388L, 100);
 	}
 	
 	/** returns the seed used to generate the zobrist hash keys*/
@@ -176,7 +182,7 @@ public final class State4 {
 	/** if true, game is a forced draw (via 50 move draw)*/
 	public boolean isForcedDraw(){
 		final boolean onlyKings = pieces[0] == kings[0] && pieces[1] == kings[1];
-		return drawCount >= 100 || onlyKings;
+		return drawCount >= maxDrawCount || onlyKings;
 	}
 	
 	/**

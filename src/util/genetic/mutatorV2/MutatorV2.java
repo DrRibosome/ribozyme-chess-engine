@@ -3,8 +3,6 @@ package util.genetic.mutatorV2;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.Templates;
-
 import util.genetic.GEntity;
 import util.genetic.mutatorV2.getters.BishopPairGetter;
 import util.genetic.mutatorV2.getters.DoubledPawnsGetter;
@@ -44,7 +42,6 @@ public final class MutatorV2 implements Mutator2{
 				len++;
 			}
 		}
-		len--; //to compute unbiased variance estimator
 		assert len != 0;
 		return Math.sqrt(sqrdSum/len - Math.pow(sum/len, 2));
 	}
@@ -59,11 +56,11 @@ public final class MutatorV2 implements Mutator2{
 	}
 
 	@Override
-	public void initialMutate(EvalParameters p, double stdDev) {
+	public void initialMutate(EvalParameters p, double variancePercent) {
 		for(Getter g: l){
 			int v = g.get(p);
 			//g.set(p, (int)(r.nextGaussian()*stdDev+v));
-			g.set(p, generateSample(v, stdDev, 1));
+			g.set(p, (int)((Math.random()-.5)*variancePercent*v + v + .5));
 		}
 	}
 
@@ -76,6 +73,7 @@ public final class MutatorV2 implements Mutator2{
 	}
 	
 	private static int generateSample(final int v, final double stdDev, final double multiplier){
-		return (int)((Math.random()-.5)*stdDev*multiplier+v+.5);
+		assert multiplier != 0;
+		return (int)((Math.random()-.5)*stdDev*multiplier + v + .5);
 	}
 }

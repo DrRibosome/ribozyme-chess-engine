@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import util.genetic.mutatorV2.Mutator2;
 import util.genetic.mutatorV2.MutatorV2;
@@ -42,9 +40,9 @@ public final class GeneticTrainer2 {
 		
 		final long time = 2*60*1000;
 		final int hashSize = 18;
-		final int popSize = 40;
+		final int popSize = 15;
 		final Mutator2 m = new MutatorV2();
-		final double initialMutationStdDev = 10; //standard deviation to apply during the initial mutating phase
+		final double initialVariancePercent = .5; //determines range of starting values generated
 		
 		if(file.exists()){
 			System.out.println("log file already exists, exiting");
@@ -59,7 +57,7 @@ public final class GeneticTrainer2 {
 		for(int a = 0; a < population.length; a++){
 			population[a] = new GEntity();
 			population[a].p = DefaultEvalWeights.defaultEval();
-			if(a != 0) m.initialMutate(population[a].p, initialMutationStdDev);
+			if(a != 0) m.initialMutate(population[a].p, initialVariancePercent);
 			log.recordGEntity(population[a]);
 			population[a].index = a;
 		}
@@ -121,40 +119,36 @@ public final class GeneticTrainer2 {
 	
 	/** culls bad solutions from population, returns list of culled indeces*/
 	public static void cull(final GEntity[] population, final Map<GEntity, GameQueue.Game[]> m, final Mutator2 mutator, final GeneticLogger log){
-		Set<Integer> exclude = new HashSet<Integer>();
-		for(int a = population.length-2; a >= 0; a--){ //best entry plays no games, skip it
-			if(!exclude.contains(a)){
-				final GEntity e = population[a];
-				final GameQueue.Game[] g = m.get(population[a]);
-				final int score = g[0].getScore(e) + g[1].getScore(e);
+		
+		//highest ranked entity to win against another entity will clone and mutate itself
+		//into the index of the defeated entity
+		
+		for(int a = 0; a < population.length-1; a++){ //best entry plays no games, skip it
+			final GEntity e = population[a];
+			final GameQueue.Game[] g = m.get(population[a]);
+			final int score = g[0].getScore(e) + g[1].getScore(e);
+			final GEntity opp = g[0].getOpponent(e); //opponent
+			
+			if(score >= 2){
+				double mult = score == 2? .5: score == 3? 1: 2;
 				
-				if(score >= 3){ //2 wins, or 1 win 1 draw
-					//mutate and replace bad entry
-					double mult = score == 3? 1: 2;
-					final GEntity opp = g[0].getOpponent(e);
-					final int index = opp.index;
-					final GEntity temp = new GEntity();
-					temp.index = index;
-					temp.p = cloneParams(e.p);
-					mutator.mutate(temp.p, population, index, mult);
-					population[index] = temp;
-					exclude.add(index);
-					try{
-						log.recordGEntity(temp);
-					} catch(IOException q){q.printStackTrace();}
-				} else if(score == 2){ //2 draw
-					//self mutate
-					double mult = .5;
-					final int index = e.index;
-					final GEntity temp = new GEntity();
-					temp.index = index;
-					temp.p = cloneParams(e.p);
-					mutator.mutate(temp.p, population, index, mult);
-					population[index] = temp;
-					try{
-						log.recordGEntity(temp);
-					} catch(IOException q){q.printStackTrace();}
+				final int index;
+				if(score >= 3){
+					//mutate at opponent index
+					index = opp.index; 
+				} else{
+					//mutate at self index
+					index = e.index;
 				}
+				
+				final GEntity temp = new GEntity();
+				temp.index = index;
+				temp.p = cloneParams(e.p);
+				mutator.mutate(temp.p, population, index, mult);
+				population[index] = temp;
+				try{
+					log.recordGEntity(temp);
+				} catch(IOException q){q.printStackTrace();}
 			}
 		}
 	}
