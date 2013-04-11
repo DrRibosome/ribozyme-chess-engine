@@ -127,31 +127,33 @@ public final class GeneticTrainer2 {
 		//into the index of the defeated entity
 		
 		for(int a = 0; a < population.length-1; a++){ //best entry plays no games, skip it
-			final GEntity e = population[a];
-			final GameQueue.Game[] g = m.get(population[a]);
-			final int score = g[0].getScore(e) + g[1].getScore(e);
-			final GEntity opp = g[0].getOpponent(e); //opponent
-			
-			if(score >= 2){
-				double mult = score == 2? .5: score == 3? 1: 2;
+			if(m.containsKey(population[a])){
+				final GEntity e = population[a];
+				final GameQueue.Game[] g = m.get(population[a]);
+				final int score = g[0].getScore(e) + g[1].getScore(e);
+				final GEntity opp = g[0].getOpponent(e); //opponent
 				
-				final int index;
-				if(score >= 3){
-					//mutate at opponent index
-					index = opp.index; 
-				} else{
-					//mutate at self index
-					index = e.index;
+				if(score >= 2){
+					double mult = score == 2? .5: score == 3? 1: 2;
+					
+					final int index;
+					if(score >= 3){
+						//mutate at opponent index
+						index = opp.index; 
+					} else{
+						//mutate at self index
+						index = e.index;
+					}
+					
+					final GEntity temp = new GEntity();
+					temp.index = index;
+					temp.p = cloneParams(e.p);
+					mutator.mutate(temp.p, population, index, mult);
+					population[index] = temp;
+					try{
+						log.recordGEntity(temp);
+					} catch(IOException q){q.printStackTrace();}
 				}
-				
-				final GEntity temp = new GEntity();
-				temp.index = index;
-				temp.p = cloneParams(e.p);
-				mutator.mutate(temp.p, population, index, mult);
-				population[index] = temp;
-				try{
-					log.recordGEntity(temp);
-				} catch(IOException q){q.printStackTrace();}
 			}
 		}
 	}
