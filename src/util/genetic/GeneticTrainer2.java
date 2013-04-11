@@ -45,7 +45,7 @@ public final class GeneticTrainer2 {
 		final long time = 2*60*1000;
 		final int hashSize = 18;
 		final Mutator2 m = new MutatorV2();
-		final double initialVariancePercent = .5; //determines range of starting values generated
+		final double initialVariancePercent = .3; //determines range of starting values generated
 		
 		if(file.exists()){
 			System.out.println("log file already exists, exiting");
