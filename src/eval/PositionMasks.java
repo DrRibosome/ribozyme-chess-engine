@@ -39,8 +39,8 @@ public final class PositionMasks {
 		
 		pawnChainMask = new long[2][64];
 		for(int a = 0; a < 64; a++){
-			pawnChainMask[0][a] = pawnAttacks[0][a];
-			pawnChainMask[1][a] = pawnAttacks[1][a];
+			pawnChainMask[0][a] = pawnAttacks[1][a];
+			pawnChainMask[1][a] = pawnAttacks[0][a];
 			if(a%8 != 0){
 				pawnChainMask[0][a] |= 1L << a-1;
 				pawnChainMask[1][a] |= 1L << a-1;
@@ -53,7 +53,10 @@ public final class PositionMasks {
 	}
 	
 	public static void main(String[] args){
-		for(int a = 0; a < 64; a++)
-			System.out.println(Masks.getString(pawnChainMask[0][a]));
+		for(int a = 0; a < 64; a++){
+			System.out.println("a="+a);
+			System.out.println(Masks.getString(pawnChainMask[1][a]));
+			//System.out.println(Masks.getString(isolatedPawnMask[a]));
+		}
 	}
 }
