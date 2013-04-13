@@ -90,8 +90,10 @@ public class GParams3Base {
 		};
 		
 		p.pawnShelter = new int[][]{ //only need 7 indeces, pawn cant be on last row
-				{0, 30, 20, 8, 2, 0, 0},
-				{0, 70, 45, 20, 5, 0, 0},
+				//{0, 30, 20, 8, 2, 0, 0},
+				//{0, 70, 45, 20, 5, 0, 0},
+				{0, 60, 40, 25, 10, 0, 0},
+				{0, 130, 70, 35, 15, 0, 0},
 		};
 		
 		p.pawnStorm = new int[][]{ //indexed [type][distance]
