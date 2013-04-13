@@ -195,11 +195,11 @@ public final class E4 implements Evaluator2{
 		int pawnWallDanger = pawnShelterStormDanger(player, s, kingIndex, p);
 		if(!s.kingMoved[player]){
 			//if we can castle, count the pawn wall/storm weight as best available after castle
-			if(s.rookMoved[player][0]){
+			if(!s.rookMoved[player][0]){
 				final int left = pawnShelterStormDanger(player, s, player == 0? 2: 58, p);
 				pawnWallDanger = left > pawnWallDanger? left: pawnWallDanger;
 			}
-			if(s.rookMoved[player][1]){
+			if(!s.rookMoved[player][1]){
 				final int left = pawnShelterStormDanger(player, s, player == 0? 6: 62, p);
 				pawnWallDanger = left > pawnWallDanger? left: pawnWallDanger;
 			}
