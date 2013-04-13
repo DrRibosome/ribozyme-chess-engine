@@ -11,8 +11,8 @@ import state4.State4;
 import state4.StateUtil;
 import util.opening2.Book;
 import eval.Evaluator2;
-import eval.evalV8.SuperEvalS4V8;
 import eval.expEvalV3.E4;
+import eval.expEvalV3.E4v2;
 import eval.expEvalV3.gparams.GParams1v2;
 
 /**
@@ -136,8 +136,9 @@ public class GauntletP {
 					//new SuperEvalS4V10();
 					//new E4(GParams3Base.buildEval());
 					//new ExpEvalV3v4(GParams3.buildEval());
-					new SuperEvalS4V8();
+					//new SuperEvalS4V8();
 					//new ExpEvalV1();
+					new E4v2(GParams1v2.buildEval());
 			
 			final Search4[] search = new Search4[2];
 			search[0] = new SearchS4V33t(e1, hashSize, false);

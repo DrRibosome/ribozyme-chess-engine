@@ -197,20 +197,20 @@ public final class E4 implements Evaluator2{
 		
 		
 		//pawn wall, storm
-		int pawnWallDanger = pawnShelterStormDanger(player, s, kingIndex, p);
-		if(!s.kingMoved[player]){
+		int pawnWallBonus = pawnShelterStormDanger(player, s, kingIndex, p);
+		final long cmoves = State4.getCastleMoves(player, s);
+		if(cmoves != 0){
 			//if we can castle, count the pawn wall/storm weight as best available after castle
-			//NOTE: PROBABLY SHOULD USE CASTLE MOVES FROM STATE, RATHER THAN GUESSING
-			if(!s.rookMoved[player][0]){
+			if((player == 0 && (cmoves & 1L<<2) != 0) || (player == 1 && (cmoves & 1L<<58) != 0)){
 				final int left = pawnShelterStormDanger(player, s, player == 0? 2: 58, p);
-				pawnWallDanger = left > pawnWallDanger? left: pawnWallDanger;
+				pawnWallBonus = left > pawnWallBonus? left: pawnWallBonus;
 			}
-			if(!s.rookMoved[player][1]){
-				final int left = pawnShelterStormDanger(player, s, player == 0? 6: 62, p);
-				pawnWallDanger = left > pawnWallDanger? left: pawnWallDanger;
+			if((player == 0 && (cmoves & 1L<<6) != 0) || (player == 1 && (cmoves & 1L<<62) != 0)){
+				final int right = pawnShelterStormDanger(player, s, player == 0? 6: 62, p);
+				pawnWallBonus = right > pawnWallBonus? right: pawnWallBonus;
 			}
 		}
-		w.add(pawnWallDanger, 0);
+		w.add(pawnWallBonus, 0);
 		
 		
 		//case that checking piece not defended should be handled by qsearch
