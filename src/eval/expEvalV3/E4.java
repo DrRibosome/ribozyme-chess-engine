@@ -27,6 +27,9 @@ public final class E4 implements Evaluator2{
 		int score(final double p){
 			return start + (int)((end-start)*p);
 		}
+		public String toString(){
+			return "("+start+","+end+")";
+		}
 	}
 
 	/** stores max number of moves by piece type (major minor pieces only)*/
@@ -72,6 +75,46 @@ public final class E4 implements Evaluator2{
 		
 		margin = Weight.margin(startMaterial, endMaterial);
 		granularity = p.granularity;
+	}
+	
+	public void traceEval(final State4 s){
+		initialize(s);
+		
+		System.out.println("------------------------------");
+		System.out.println("note, scores do not take into account tempo="+p.tempo);
+		final int totalMaterialScore = materialScore[0]+materialScore[1];
+		final double scale = Weight.getScale(totalMaterialScore, endMaterial, margin);
+		System.out.println("total material score = "+totalMaterialScore);
+		System.out.println("weight scaling = "+scale);
+		
+		for(int a = 0; a < 2; a++){
+			System.out.println("------------------------------");
+			System.out.println("player "+a);
+			System.out.println("material = "+materialScore[a]);
+			
+			agg.clear();
+			int pawnWallBonus = pawnShelterStormDanger(a, s, BitUtil.lsbIndex(s.kings[a]), p);
+			System.out.println("current pawn shelter bonus = "+pawnWallBonus);
+			final long cmoves = State4.getCastleMoves(a, s);
+			if(cmoves != 0){
+				//if we can castle, count the pawn wall/storm weight as best available after castle
+				if((a == 0 && (cmoves & 1L<<2) != 0) || (a == 1 && (cmoves & 1L<<58) != 0)){
+					final int left = pawnShelterStormDanger(a, s, a == 0? 2: 58, p);
+					System.out.println("castle left pawn shelter bonus = "+left);
+					pawnWallBonus = left > pawnWallBonus? left: pawnWallBonus;
+				}
+				if((a == 0 && (cmoves & 1L<<6) != 0) || (a == 1 && (cmoves & 1L<<62) != 0)){
+					final int right = pawnShelterStormDanger(a, s, a == 0? 6: 62, p);
+					System.out.println("castle right pawn shelter bonus = "+right);
+					pawnWallBonus = right > pawnWallBonus? right: pawnWallBonus;
+				}
+			}
+			agg.add(pawnWallBonus, 0);
+			System.out.println("scaled pawn shelter bonus = "+agg.score(scale));
+			
+			final int scaledScore = score(a, s, scale, false);
+			System.out.println("score = "+agg+", scaled = "+scaledScore);
+		}
 	}
 	
 	public E4(){
@@ -194,7 +237,6 @@ public final class E4 implements Evaluator2{
 		final long agg = s.pieces[0]|s.pieces[1];
 		
 		int dindex = p.kingDangerSquares[player][kingIndex]; //danger index
-		
 		
 		//pawn wall, storm
 		int pawnWallBonus = pawnShelterStormDanger(player, s, kingIndex, p);

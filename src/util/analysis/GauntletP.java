@@ -13,7 +13,6 @@ import util.opening2.Book;
 import eval.Evaluator2;
 import eval.expEvalV3.E4;
 import eval.expEvalV3.gparams.GParams1v2;
-import eval.expEvalV3.gparams.GParams4;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -135,7 +134,7 @@ public class GauntletP {
 					//new ExpEvalV3v4(GParams3.buildEval());
 					//new SuperEvalS4V10();
 					//new E4(GParams3Base.buildEval());
-					new E4(GParams4.buildEval());
+					new E4(GParams1v2.buildEval());
 					//new SuperEvalS4V8();
 					//new ExpEvalV1();
 					//new E4v2(GParams1v2.buildEval());

@@ -55,7 +55,7 @@ public class Debug {
 		//Position p = FenParser.parse("4q1kr/p6p/1prQPppB/4n3/4P3/2P5/PP2B2P/R5K1 w - - 0 0");
 		//Position p = FenParser.parse("2k5/pp1r2b1/2p5/7P/2P2r1q/5pN1/PPb2P1P/2Q1RRK1 w - - 0 27"); //c1c2 leads to loss by checkmate
 		//Position p = FenParser.parse("r1bq1rk1/p1pp1ppp/2p5/3nP3/8/2B5/PPPQ1PPP/R3KB1R w - - - -"); //c4d3 blunder
-		Position p = FenParser.parse("rn1qkb1r/1b3ppp/p3p3/2np4/Np1N1B2/1B3P2/PPP3PP/R2QR2K b qk - 2 -");
+		Position p = FenParser.parse("6k1/1b3pp1/3bp1qp/8/Np1P1nP1/1P4R1/r2N1P1P/3QKB2 w - - 0 -");
 		
 		
 		System.out.println(StateUtil.fen(p.sideToMove, p.s));
@@ -63,11 +63,13 @@ public class Debug {
 		int player = p.sideToMove;
 		
 		System.out.println(s);
-		Evaluator2 e = new E4(GParams3Base.buildEval());
+		E4 e = new E4(GParams3Base.buildEval());
 		//Evaluator2<State4> e = new IncrementalPieceScore();
 		
-		e.initialize(s);
-		//e.traceEval(s, State4.WHITE);
+		//e.initialize(s);
+		e.traceEval(s);
+		
+		System.out.println("\n");
 		
 		final int maxDepth = 40;
 		Search4 search = new SearchS4V33t(e, 20, true);
