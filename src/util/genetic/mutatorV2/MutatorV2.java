@@ -32,8 +32,8 @@ public final class MutatorV2 implements Mutator2{
 		DoubledPawnsGetter.add(l);
 		IsolatedPawnsGetter.add(l);
 		
-		KingDangerSquareGetter.add(l);
-		KingDangerAttacksGetter.add(l);
+		//KingDangerSquareGetter.add(l);
+		//KingDangerAttacksGetter.add(l);
 		PawnShelterGetter.add(l);
 		PawnStormGetter.add(l);
 		
