@@ -9,7 +9,7 @@ import java.util.Map;
 import util.genetic.mutatorV2.Mutator2;
 import util.genetic.mutatorV2.MutatorV2;
 import eval.expEvalV3.EvalParameters;
-import eval.expEvalV3.gparams.GParams3Base;
+import eval.expEvalV3.gparams.GParams1v2Base;
 
 /**
  * genetic trainer, implements ideas from paper
@@ -45,7 +45,7 @@ public final class GeneticTrainer2 {
 		final long time = 2*60*1000; //2*60*1000
 		final int hashSize = 18;
 		final Mutator2 m = new MutatorV2();
-		final double initialVariancePercent = .5; //determines range of starting values generated
+		final double initialVariancePercent = .3; //determines range of starting values generated
 		
 		if(file.exists()){
 			System.out.println("log file already exists, exiting");
@@ -59,7 +59,7 @@ public final class GeneticTrainer2 {
 		//generate initial population 
 		for(int a = 0; a < population.length; a++){
 			population[a] = new GEntity();
-			population[a].p = GParams3Base.buildEval();
+			population[a].p = GParams1v2Base.buildEval();
 			if(a != 0) m.initialMutate(population[a].p, initialVariancePercent);
 			log.recordGEntity(population[a]);
 			population[a].index = a;

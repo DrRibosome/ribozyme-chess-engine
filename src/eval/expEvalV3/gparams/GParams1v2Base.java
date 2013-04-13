@@ -4,44 +4,51 @@ import state4.State4;
 import eval.Weight;
 import eval.expEvalV3.EvalParameters;
 
-
-public class GParams4 {
+public class GParams1v2Base {
 
 	private static Weight W(int start, int end){
-		return new Weight(start, end);
+		final int shift = 1;
+		return new Weight(start >> shift, end >> shift);
 	}
 	
 	public static EvalParameters buildEval(){
 		EvalParameters p = new EvalParameters();
+		
 		p.granularity = 1;
 		
 		//--------------------------------------------------------------
 		//general weights
 		
 		p.materialWeights = new int[7];
-		p.materialWeights[State4.PIECE_TYPE_QUEEN] = 954;
-		p.materialWeights[State4.PIECE_TYPE_ROOK] = 468;
-		p.materialWeights[State4.PIECE_TYPE_BISHOP] = 297;
-		p.materialWeights[State4.PIECE_TYPE_KNIGHT] = 280;
+		p.materialWeights[State4.PIECE_TYPE_QUEEN] = 898;
+		p.materialWeights[State4.PIECE_TYPE_ROOK] = 487;
+		p.materialWeights[State4.PIECE_TYPE_BISHOP] = 291;
+		p.materialWeights[State4.PIECE_TYPE_KNIGHT] = 288;
 		p.materialWeights[State4.PIECE_TYPE_PAWN] = 100;
 		
 		p.tempo = new Weight(3, 1);
-		p.bishopPair = new Weight(4, 14);
+		p.bishopPair = new Weight(5, 12);
 
 		//note, all values here divided by 8
 		final Weight[][] mobilityWeights = new Weight[7][];
 		mobilityWeights[State4.PIECE_TYPE_KNIGHT] = new Weight[]{
-				W(-2,1), W(0,1), W(0,0), W(0,0), W(6,3), W(11,9), W(15,11), W(21,13), W(19,14)
-		};
+				W(-38,-33), W(-25,-23), W(-12,-13), W( 0, -3), W(12,  7), W(25, 17), //knights
+				W( 31, 22), W( 38, 27), W( 38, 27) };
 		mobilityWeights[State4.PIECE_TYPE_BISHOP] = new Weight[]{
-				W(0,1), W(0,0), W(1,0), W(8,6), W(16,14), W(18,21), W(30,32), W(33,31), W(34,33), W(33,31), W(38,37), W(42,34), W(41,40), W(40,38), W(39,42), W(39,40)
-		};
+				W(-25,-30), W(-11,-16), W(  3, -2), W(17, 12), W(31, 26), W(45, 40), // Bishops
+				W( 57, 52), W( 65, 60), W( 71, 65), W(74, 69), W(76, 71), W(78, 73),
+				W( 79, 74), W( 80, 75), W( 81, 76), W(81, 76) };
 		mobilityWeights[State4.PIECE_TYPE_ROOK] = new Weight[]{
-				W(0,1), W(0,0), W(0,0), W(0,6), W(2,15), W(5,21), W(7,35), W(10,34), W(9,46), W(14,51), W(13,48), W(15,53), W(14,59), W(15,50), W(16,60), W(14,59)
-		};
+				W(-20,-36), W(-14,-19), W( -8, -3), W(-2, 13), W( 4, 29), W(10, 46), // Rooks
+				W( 14, 62), W( 19, 79), W( 23, 95), W(26,106), W(27,111), W(28,114),
+				W( 29,116), W( 30,117), W( 31,118), W(32,118) };
 		mobilityWeights[State4.PIECE_TYPE_QUEEN] = new Weight[]{
-				W(0,0), W(0,0), W(0,0), W(0,0), W(0,1), W(0,4), W(1,5), W(2,9), W(5,10), W(5,15), W(6,16), W(7,14), W(8,15), W(8,17), W(9,19), W(11,17), W(10,19), W(11,18), W     (10,15), W(9,18), W(10,19), W(10,16), W(9,19), W(10,17), W(10,18), W(11,16), W(10,18), W(10,17), W(10,16), W(10,17), W(11,19), W(10,18)
-		};
+				W(-10,-18), W( -8,-13), W( -6, -7), W(-3, -2), W(-1,  3), W( 1,  8), // Queens
+				W(  3, 13), W(  5, 19), W(  8, 23), W(10, 27), W(12, 32), W(15, 34),
+				W( 16, 35), W( 17, 35), W( 18, 35), W(20, 35), W(20, 35), W(20, 35),
+				W( 20, 35), W( 20, 35), W( 20, 35), W(20, 35), W(20, 35), W(20, 35),
+				W( 20, 35), W( 20, 35), W( 20, 35), W(20, 35), W(20, 35), W(20, 35),
+				W( 20, 35), W( 20, 35) };
 		mobilityWeights[State4.PIECE_TYPE_EMPTY] = new Weight[0];
 		mobilityWeights[State4.PIECE_TYPE_KING] = new Weight[0];
 		mobilityWeights[State4.PIECE_TYPE_PAWN] = new Weight[0];
@@ -77,7 +84,7 @@ public class GParams4 {
 		final int maxDanger = 800;
 		for(int x = 0, i = 0; i < p.kingDangerValues.length; i++){
 			x = Math.min(maxDanger, Math.min((i * i) / 2, x + maxSlope));
-		p.kingDangerValues[i] = W(x, 0);
+			p.kingDangerValues[i] = W(x, 0);
 		}
 		
 		p.dangerKingAttacks = new int[]{
@@ -89,16 +96,18 @@ public class GParams4 {
 				1,	    //knight
 				0		//pawn
 		};
-		
+
 		p.pawnShelter = new int[][]{ //only need 7 indeces, pawn cant be on last row
-				{0, 40, 31, 22, 7, 0, 1},
-				{0, 91, 53, 21, 18, 1, 1},
+				{0, 30, 20, 8, 2, 0, 0},
+				{0, 70, 45, 20, 5, 0, 0},
+				//{0, 61, 45, 17, 5, 0, 0},
+				//{0, 141, 103, 39, 13, 0, 0},
 		};
 		
 		p.pawnStorm = new int[][]{ //indexed [type][distance]
-				{-15, -16, -5, -3, 0, 1}, //no allied pawn
-				{-7, -9, 0, 0, 0, 1}, //has allied pawn, enemy not blocked
-				{-1, 0, 0, 0, 0, 0}, //enemy pawn blocked by allied pawn
+				{-20, -18, -14, -10, -5, 0}, //no allied pawn
+				{-15, -13, -10, -6, -5, 0}, //has allied pawn, enemy not blocked
+				{-6, -5, -4, -3, -1, 0}, //enemy pawn blocked by allied pawn
 		};
 		
 		//-------------------------------------------------------------------------
@@ -107,7 +116,12 @@ public class GParams4 {
 		final Weight[][] passedPawnRowWeight = new Weight[][]{
 				{
 				new Weight(-999, -999), //unused
-				W(5,6), W(13,13), W(31,21), W(49,35), W(70,44), W(105,77),
+				new Weight(0, 0),
+				new Weight(5, 5),
+				new Weight(23, 17),
+				new Weight(44, 31),
+				new Weight(67, 43),
+				new Weight(96, 60),
 				new Weight(-999, -999),}, //unused
 				new Weight[8]
 		};
@@ -115,15 +129,19 @@ public class GParams4 {
 		p.passedPawnRowWeight = passedPawnRowWeight;
 
 		final Weight[][] isolatedPawns = new Weight[][]{
-				{W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5)},
-				{W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5)},
+				{W(-37, -45), W(-54, -52), W(-60, -52), W(-60, -52), W(-60, -52), W(-60, -52), W(-54, -52), W(-37, -45)},
+				{W(-25, -30), W(-36, -35), W(-40, -35), W(-40, -35), W(-40, -35), W(-40, -35), W(-36, -35), W(-25, -30)},
 		};
 		p.isolatedPawns = isolatedPawns;
 
 		//doubled pawn weights halved because added twice (once for each doubled pawn)
-		p.doubledPawns = new Weight[][]{
-				{W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5)},
-				{W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5), W(-5,-5)},
+		p.doubledPawns = new Weight[][]{{
+				W(-13/2, -43/2), W(-20/2, -48/2), W(-23/2, -48/2), W(-23/2, -48/2),
+				W(-23/2, -48/2), W(-23/2, -48/2), W(-20/2, -48/2), W(-13/2, -43/2)
+			},{
+				W(-13/2, -43/2), W(-20/2, -48/2), W(-23/2, -48/2), W(-23/2, -48/2),
+				W(-23/2, -48/2), W(-23/2, -48/2), W(-20/2, -48/2), W(-13/2, -43/2)
+			},
 		};
 
 		p.backwardPawns = new Weight[][]{
@@ -132,7 +150,8 @@ public class GParams4 {
 		};
 		
 		p.pawnChain = new Weight[]{
-				W(3,0), W(4,0), W(6,0), W(11,3), W(11,3), W(6,0), W(4,0), W(3,0)
+				W(5,0), W(6,0), W(8,0), W(10,0),
+			    W(10,0), W(8,0), W(6,0), W(5,0)
 		};
 		
 		return p;
