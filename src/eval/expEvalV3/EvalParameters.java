@@ -263,7 +263,7 @@ public final class EvalParameters {
 	}
 	
 	private static void writeIntMatrix(final int[][] w, final ByteBuffer b){
-		b.putInt((short)w.length);
+		b.putShort((short)w.length);
 		for(int a = 0; a < w.length; a++){
 			b.putShort((short)w[a].length);
 			for(int q = 0; q < w[a].length; q++){
