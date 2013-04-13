@@ -51,3 +51,7 @@ shift 1
 v3v4 - v3v4 with gparams1
 1000ms
 (w0,w1,d) = (69,80,68)
+
+v3v4 - v3v4 with gparams2
+1000ms
+(w0,w1,d) = (3,2,1)
