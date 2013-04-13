@@ -11,11 +11,9 @@ import state4.State4;
 import state4.StateUtil;
 import util.opening2.Book;
 import eval.Evaluator2;
+import eval.evalV8.SuperEvalS4V8;
 import eval.expEvalV3.E4;
-import eval.expEvalV3.ExpEvalV3v4;
-import eval.expEvalV3.gparams.GParams1;
 import eval.expEvalV3.gparams.GParams1v2;
-import eval.expEvalV3.gparams.GParams3Base;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -115,7 +113,7 @@ public class GauntletP {
 	public static void main(String[] args) throws IOException{
 		
 		final int hashSize = 20;
-		final long time = 500;
+		final long time = 50;
 		final int maxDrawCount = 50;
 
 		final int threads = 3;
@@ -136,9 +134,9 @@ public class GauntletP {
 					//new SuperEvalS4V10v4();
 					//new ExpEvalV3v4(GParams3.buildEval());
 					//new SuperEvalS4V10();
-					new E4(GParams3Base.buildEval());
+					//new E4(GParams3Base.buildEval());
 					//new ExpEvalV3v4(GParams3.buildEval());
-					//new SuperEvalS4V8();
+					new SuperEvalS4V8();
 					//new ExpEvalV1();
 			
 			final Search4[] search = new Search4[2];

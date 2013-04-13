@@ -167,8 +167,13 @@ public final class E4 implements Evaluator2{
 			final long colMask = Masks.colMask[f+a];
 			
 			final long allied = wallPawns & colMask;
-			final int rankAllied = allied != 0? (player == 0? BitUtil.lsbIndex(allied)>>>3: 7-(BitUtil.msbIndex(allied)>>>3)): 0;
-			pawnWallDanger += p.pawnShelter[f != kc? 0: 1][rankAllied];
+			final int rankAllied;
+			if(allied != 0){
+				rankAllied = player == 0? BitUtil.lsbIndex(allied)>>>3: 7-(BitUtil.msbIndex(allied)>>>3);
+				pawnWallDanger += p.pawnShelter[f != kc? 0: 1][rankAllied];
+			} else{
+				rankAllied = 0;
+			}
 			
 			final long enemy = stormPawns & colMask;
 			if(enemy != 0){

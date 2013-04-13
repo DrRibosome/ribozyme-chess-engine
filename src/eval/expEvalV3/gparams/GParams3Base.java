@@ -76,7 +76,7 @@ public class GParams3Base {
 		final int maxDanger = 800;
 		for(int x = 0, i = 0; i < p.kingDangerValues.length; i++){
 			x = Math.min(maxDanger, Math.min((i * i) / 2, x + maxSlope));
-			p.kingDangerValues[i] = W(x, 0);
+		p.kingDangerValues[i] = W(x, 0);
 		}
 		
 		p.dangerKingAttacks = new int[]{
