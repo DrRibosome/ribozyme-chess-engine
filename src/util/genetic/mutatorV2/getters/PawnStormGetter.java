@@ -8,8 +8,9 @@ import eval.expEvalV3.EvalParameters;
 public final class PawnStormGetter {
 	public static void add(List<Getter> l){
 		final String[] names = new String[]{
-				"adj king file",
-				"in king file",
+				"no allied pawn",
+				"allied pawn",
+				"blocked enemy pawn",
 		};
 		
 		for(int q = 0; q < 3; q++){
