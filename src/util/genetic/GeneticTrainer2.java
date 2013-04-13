@@ -42,12 +42,12 @@ public final class GeneticTrainer2 {
 		//final File file = new File("genetic-results/genetic-results-mac-7");
 		final File file = new File(args[argIndex++]);
 		
-		final long time = 5*1000; //2*60*1000
+		final long time = 2*60*1000; //2*60*1000
 		final int hashSize = 18;
 		final Mutator2 m = new MutatorV2();
 		final double initialVariancePercent = .5; //determines range of starting values generated
 		
-		if(1==2&& file.exists()){
+		if(file.exists()){
 			System.out.println("log file already exists, exiting");
 			System.exit(0);
 		}
