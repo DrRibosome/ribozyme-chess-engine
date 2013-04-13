@@ -11,9 +11,11 @@ import state4.State4;
 import state4.StateUtil;
 import util.opening2.Book;
 import eval.Evaluator2;
+import eval.expEvalV3.E4;
 import eval.expEvalV3.ExpEvalV3v4;
 import eval.expEvalV3.gparams.GParams1;
-import eval.expEvalV3.gparams.GParams3;
+import eval.expEvalV3.gparams.GParams1v2;
+import eval.expEvalV3.gparams.GParams3Base;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -124,8 +126,8 @@ public class GauntletP {
 			Evaluator2 e1 =
 					//new SuperEvalS4V10();
 					//new ExpEvalV3v4();
-					new ExpEvalV3v4(GParams1.buildEval());
-					//new E4(GParams1v2.buildEval());
+					//new ExpEvalV3v4(GParams1.buildEval());
+					new E4(GParams1v2.buildEval());
 					//new ExpEvalV3();
 					//new SuperEvalS4V10v4();
 					//new EvalS4V10v5();
@@ -134,8 +136,8 @@ public class GauntletP {
 					//new SuperEvalS4V10v4();
 					//new ExpEvalV3v4(GParams3.buildEval());
 					//new SuperEvalS4V10();
-					//new ExpEvalV3();
-					new ExpEvalV3v4(GParams3.buildEval());
+					new E4(GParams3Base.buildEval());
+					//new ExpEvalV3v4(GParams3.buildEval());
 					//new SuperEvalS4V8();
 					//new ExpEvalV1();
 			

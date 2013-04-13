@@ -9,6 +9,7 @@ import java.util.Map;
 import util.genetic.mutatorV2.Mutator2;
 import util.genetic.mutatorV2.MutatorV2;
 import eval.expEvalV3.EvalParameters;
+import eval.expEvalV3.gparams.GParams1v2;
 import eval.expEvalV3.gparams.GParams3Base;
 
 /**
@@ -59,7 +60,7 @@ public final class GeneticTrainer2 {
 		//generate initial population 
 		for(int a = 0; a < population.length; a++){
 			population[a] = new GEntity();
-			population[a].p = GParams3Base.buildEval();
+			population[a].p = GParams1v2.buildEval();
 			if(a != 0) m.initialMutate(population[a].p, initialVariancePercent);
 			log.recordGEntity(population[a]);
 			population[a].index = a;
