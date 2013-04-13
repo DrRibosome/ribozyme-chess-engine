@@ -38,6 +38,7 @@ public final class KingDangerSquareGetter {
 				}
 				@Override
 				public void set(EvalParameters p, int i) {
+					if(i < 0) i = 0;
 					for(int q = 0; q < zones[index].length; q++){
 						p.kingDangerSquares[0][zones[index][q]] = i;
 					}

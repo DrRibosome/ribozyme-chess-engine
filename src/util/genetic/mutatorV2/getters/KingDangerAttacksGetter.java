@@ -25,6 +25,7 @@ public final class KingDangerAttacksGetter {
 				}
 				@Override
 				public void set(EvalParameters p, int i) {
+					if(i < 0) i = 0;
 					p.dangerKingAttacks[index] = i;
 				}
 				@Override
@@ -36,32 +37,32 @@ public final class KingDangerAttacksGetter {
 		
 		l.add(new Getter() {
 			public int get(EvalParameters p) { return p.contactCheckQueen;}
-			public void set(EvalParameters p, int i) { p.contactCheckQueen = i;}
+			public void set(EvalParameters p, int i) { if(i < 0) i = 0; p.contactCheckQueen = i;}
 			public String toString(){ return "contact check, queen";}
 		});
 		l.add(new Getter() {
 			public int get(EvalParameters p) { return p.contactCheckRook;}
-			public void set(EvalParameters p, int i) { p.contactCheckRook = i;}
+			public void set(EvalParameters p, int i) { if(i < 0) i = 0; p.contactCheckRook = i;}
 			public String toString(){ return "contact check, rook";}
 		});
 		l.add(new Getter() {
 			public int get(EvalParameters p) { return p.queenCheck;}
-			public void set(EvalParameters p, int i) { p.queenCheck = i;}
+			public void set(EvalParameters p, int i) { if(i < 0) i = 0; p.queenCheck = i;}
 			public String toString(){ return "check, queen";}
 		});
 		l.add(new Getter() {
 			public int get(EvalParameters p) { return p.rookCheck;}
-			public void set(EvalParameters p, int i) { p.rookCheck = i;}
+			public void set(EvalParameters p, int i) { if(i < 0) i = 0; p.rookCheck = i;}
 			public String toString(){ return "check, rook";}
 		});
 		l.add(new Getter() {
 			public int get(EvalParameters p) { return p.knightCheck;}
-			public void set(EvalParameters p, int i) { p.knightCheck = i;}
+			public void set(EvalParameters p, int i) { if(i < 0) i = 0; p.knightCheck = i;}
 			public String toString(){ return "check, knight";}
 		});
 		l.add(new Getter() {
 			public int get(EvalParameters p) { return p.bishopCheck;}
-			public void set(EvalParameters p, int i) { p.bishopCheck = i;}
+			public void set(EvalParameters p, int i) { if(i < 0) i = 0; p.bishopCheck = i;}
 			public String toString(){ return "check, bishop";}
 		});
 	}
