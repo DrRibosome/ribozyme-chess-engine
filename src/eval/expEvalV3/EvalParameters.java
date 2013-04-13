@@ -88,6 +88,8 @@ public final class EvalParameters {
 		for(int a = 1; a < 7; a++){
 			s += "\t"+names[a]+" = "+dangerKingAttacks[a]+"\n";
 		}
+		s += "contact check, queen = "+contactCheckQueen+"\n";
+		s += "contact check, rook = "+contactCheckRook+"\n";
 		
 		s += "king danger function:\n";
 		for(int a = 0; a < kingDangerValues.length; a++){

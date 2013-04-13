@@ -5,7 +5,7 @@ import eval.Weight;
 import eval.expEvalV3.EvalParameters;
 
 
-public class GParams3Base {
+public class GParams4 {
 
 	private static Weight W(int start, int end){
 		return new Weight(start, end);
