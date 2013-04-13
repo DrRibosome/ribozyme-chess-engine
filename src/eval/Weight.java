@@ -31,13 +31,13 @@ public final class Weight {
 	}
 	
 	public void writeWeight(final ByteBuffer buff){
-		buff.putShort((short)start);
-		buff.putShort((short)end);
+		buff.putInt(start);
+		buff.putInt(end);
 	}
 	
 	public static Weight readWeight(final ByteBuffer buff){
-		int start = buff.getShort();
-		int end = buff.getShort();
+		int start = buff.getInt();
+		int end = buff.getInt();
 		return new Weight(start, end);
 	}
 	

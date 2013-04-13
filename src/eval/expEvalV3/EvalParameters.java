@@ -149,6 +149,26 @@ public final class EvalParameters {
 		}
 		s += "\n";
 		
+		final String[] pawnShelterNames = new String[]{"adj king file", "in king file"};
+		s += "pawn shelter:\n";
+		for(int q = 0; q < 2; q++){
+			s += "  "+pawnShelterNames[q]+": ";
+			for(int a = 0; a < 7; a++){
+				s += a+":"+pawnShelter[q][a]+", ";
+			}
+			s+="\n";
+		}
+		
+		final String[] pawnStormNames = new String[]{"no allied", "allied", "blocked enemy"};
+		s += "pawn storm:\n";
+		for(int q = 0; q < 3; q++){
+			s += "  "+pawnStormNames[q]+": ";
+			for(int a = 0; a < 6; a++){
+				s += a+":"+pawnStorm[q][a]+", ";
+			}
+			s+="\n";
+		}
+		
 		s += "tempo = "+tempo+"\n";
 		s += "bishop pair = "+bishopPair+"\n";
 		
@@ -243,11 +263,11 @@ public final class EvalParameters {
 	}
 	
 	private static void writeIntMatrix(final int[][] w, final ByteBuffer b){
-		b.putShort((short)w.length);
+		b.putInt((short)w.length);
 		for(int a = 0; a < w.length; a++){
 			b.putShort((short)w[a].length);
 			for(int q = 0; q < w[a].length; q++){
-				b.putShort((short)w[a][q]);
+				b.putInt(w[a][q]);
 			}
 		}
 	}
@@ -257,7 +277,7 @@ public final class EvalParameters {
 		for(int a = 0; a < w.length; a++){
 			w[a] = new int[b.getShort()];
 			for(int q = 0; q < w[a].length; q++){
-				w[a][q] = b.getShort();
+				w[a][q] = b.getInt();
 			}
 		}
 		return w;
