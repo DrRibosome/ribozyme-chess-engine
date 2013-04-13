@@ -2,7 +2,26 @@ search = search33t, hash = 20, minBookCount = 100
 book = megabook.mk
 base eval = v3v4
 
+================================================= gparams1v2
+E4, gparams1v2 - E4 gparams3Base
+50 ms
+(w0,w1,d) = (18,7,10)
+
+E4, gparams1v2 - super eval v8
+50 ms
+(w0,w1,d) = (102,1,1)
+
 ================================================= gparams1
+gparams1 - E4, gparams1v2
+50 ms
+(w0,w1,d) = (32,72,34)
+
+gparams1 - E4, gparams3Base
+50 ms
+(w0,w1,d) = (15,19,11)
+
+-----------------------------
+
 gparams1 - super eval v10v4
 500 ms
 (w0,w1,d) = (145,2,0)
@@ -26,11 +45,8 @@ gparams1 - gparams3
 
 gparams1 - E4, gparams1v2
 500 ms
-(w0,w1,d) = (5,7,6)
 
 -----------------------------
 
 gparams1 - E4, gparams1v2
 4000 ms
-
-(w0,w1,d) = (1,2,0)
