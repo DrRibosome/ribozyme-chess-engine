@@ -7,6 +7,9 @@ import eval.Weight;
 import state4.State4;
 
 public final class EvalParameters {
+	
+	/** controls score granularity, must be power of 2*/
+	public int granularity = 8;
 
 	//-------------------------------------------------
 	//general weights
@@ -20,7 +23,7 @@ public final class EvalParameters {
 	//-------------------------------------------------
 	//king danger
 	
-	/** danger for attacks on the king, indexed [piece-type]*/
+	/** danger for attacks on the squares around the king, indexed [piece-type]*/
 	public int[] dangerKingAttacks;
 	/** king danger index, indexed [danger]*/
 	public Weight[] kingDangerValues;
@@ -32,6 +35,12 @@ public final class EvalParameters {
 	public int rookCheck;
 	public int knightCheck;
 	public int bishopCheck;
+	/** pawn shelter, indexed [pawnCol==kingCol? 1: 0][pawnRow] */
+	public int[][] pawnShelter = new int[0][0];
+	/** pawn shelter, indexed [type][enemyPawn dist from king]
+	 * <p> type = 0:no allied pawn on file; 1=allied pawn on file;
+	 * 2=allied pawn blocking enemy pawn */
+	public int[][] pawnStorm = new int[0][0];
 	
 	//-------------------------------------------------
 	//pawns weights
@@ -177,6 +186,9 @@ public final class EvalParameters {
 		b.putShort((short)knightCheck);
 		b.putShort((short)bishopCheck);
 		
+		writeIntMatrix(pawnShelter, b);
+		writeIntMatrix(pawnStorm, b);		
+		
 		//pawn values
 		
 		writeMatrix(passedPawnRowWeight, b);
@@ -217,6 +229,9 @@ public final class EvalParameters {
 		rookCheck = b.getShort();
 		knightCheck = b.getShort();
 		bishopCheck = b.getShort();
+
+		pawnShelter = readIntMatrix(b);
+		pawnStorm = readIntMatrix(b);
 		
 		//pawn values
 		
@@ -225,6 +240,27 @@ public final class EvalParameters {
 		isolatedPawns = readMatrix(b);
 		backwardPawns = readMatrix(b);
 		pawnChain = readArray(b);
+	}
+	
+	private static void writeIntMatrix(final int[][] w, final ByteBuffer b){
+		b.putShort((short)w.length);
+		for(int a = 0; a < w.length; a++){
+			b.putShort((short)w[a].length);
+			for(int q = 0; q < w[a].length; q++){
+				b.putShort((short)w[a][q]);
+			}
+		}
+	}
+	
+	private static int[][] readIntMatrix(final ByteBuffer b){
+		int[][] w = new int[b.getShort()][];
+		for(int a = 0; a < w.length; a++){
+			w[a] = new int[b.getShort()];
+			for(int q = 0; q < w[a].length; q++){
+				w[a][q] = b.getShort();
+			}
+		}
+		return w;
 	}
 	
 	private static void writeMatrix(final Weight[][] w, final ByteBuffer b){

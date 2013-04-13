@@ -11,7 +11,7 @@ import state4.BitUtil;
 import state4.State4;
 import time.TimerThread4;
 import util.opening2.Book;
-import eval.expEvalV3.ExpEvalV3v4;
+import eval.expEvalV3.E4;
 
 /** plays queued games*/
 public final class GameQueue {
@@ -62,8 +62,8 @@ public final class GameQueue {
 					
 					if(g != null){
 						final Search4[] search = new Search4[]{
-								new SearchS4V33t(new ExpEvalV3v4(g.e[0].p), hashSize, false),
-								new SearchS4V33t(new ExpEvalV3v4(g.e[1].p), hashSize, false),
+								new SearchS4V33t(new E4(g.e[0].p), hashSize, false),
+								new SearchS4V33t(new E4(g.e[1].p), hashSize, false),
 						};
 						
 						final State4 state = new State4(b.getSeed(), 40);
@@ -72,6 +72,7 @@ public final class GameQueue {
 						boolean draw = false;
 						boolean outOfBook = false;
 						final long[] time = new long[]{this.time, this.time};
+						boolean error = false;
 
 						while(state.pieceCounts[turn][State4.PIECE_TYPE_KING] != 0 &&
 								!isMate(turn, state) && !state.isForcedDraw() && time[turn] > 0){
@@ -95,25 +96,34 @@ public final class GameQueue {
 								}
 								break;
 							} else{
-								state.executeMove(turn, 1L<<move[0], 1L<<move[1]);
-								turn = 1-turn;
+								try{
+									state.executeMove(turn, 1L<<move[0], 1L<<move[1]);
+									turn = 1-turn;
+								} catch(Exception e){
+									e.printStackTrace();
+									System.out.println("game error, requeing...");
+									q.add(g);
+									error = true;
+									break;
+								}
 							}
 						}
 
-						if(state.isForcedDraw() || draw){
-							//if(print) System.out.println("draw");
-							g.e[0].draws.incrementAndGet();
-							g.e[1].draws.incrementAndGet();
-							g.result = Game.draw;
-						} else{
-							final int winner = 1-turn;
-							g.e[winner].wins.incrementAndGet();
-							g.e[1-winner].losses.incrementAndGet();
-							g.result = winner;
-							//if(print) System.out.println("player "+winner+" wins");
+						if(!error){
+							if(state.isForcedDraw() || draw){
+								//if(print) System.out.println("draw");
+								g.e[0].draws.incrementAndGet();
+								g.e[1].draws.incrementAndGet();
+								g.result = Game.draw;
+							} else{
+								final int winner = 1-turn;
+								g.e[winner].wins.incrementAndGet();
+								g.e[1-winner].losses.incrementAndGet();
+								g.result = winner;
+								//if(print) System.out.println("player "+winner+" wins");
+							}
+							outstanding.decrementAndGet();
 						}
-						
-						outstanding.decrementAndGet();
 					}
 				}
 				

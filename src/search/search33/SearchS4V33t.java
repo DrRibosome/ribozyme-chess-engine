@@ -102,7 +102,7 @@ public final class SearchS4V33t implements Search4{
 	private final Hash m;
 	private FileWriter f;
 	private SearchListener2 l;
-	private final static int stackSize = 128;
+	private final static int stackSize = 256;
 	/** sequence number for hash entries*/
 	private int seq;
 	

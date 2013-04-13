@@ -8,13 +8,17 @@ import eval.Evaluator2;
 import eval.PositionMasks;
 import eval.Weight;
 
-public final class ExpEvalV3v4 implements Evaluator2{
+public final class E4 implements Evaluator2{
 	private final static class WeightAgg{
 		int start;
 		int end;
 		void add(final Weight w){
 			start += w.start;
 			end += w.end;
+		}
+		void add(final int start, final int end){
+			this.start += start;
+			this.end += end;
 		}
 		void clear(){
 			start = 0;
@@ -52,7 +56,7 @@ public final class ExpEvalV3v4 implements Evaluator2{
 	private final int endMaterial;
 	private final int granularity;
 	
-	public ExpEvalV3v4(EvalParameters p){
+	public E4(EvalParameters p){
 		this.p = p;
 		int startMaterial = (
 				  p.materialWeights[State4.PIECE_TYPE_PAWN]*8
@@ -70,7 +74,7 @@ public final class ExpEvalV3v4 implements Evaluator2{
 		granularity = p.granularity;
 	}
 	
-	public ExpEvalV3v4(){
+	public E4(){
 		this(DefaultEvalWeights.defaultEval());
 	}
 	
@@ -131,6 +135,7 @@ public final class ExpEvalV3v4 implements Evaluator2{
 			//final boolean attacksEnemyPawn = (attacks & enemyPawns) != 0;
 			//final boolean adjPawnSupport = (PositionMasks.pawnAttacks[1-player][index] & alliedPawns) != 0;
 			final boolean chain = (PositionMasks.pawnChainMask[player][index] & alliedPawns) != 0;
+			final boolean doubled = (PositionMasks.opposedPawnMask[player][index] & alliedPawns) != 0;
 			
 			if(passed){
 				agg.add(p.passedPawnRowWeight[player][index >> 3]); //index >>> 3 == index/8 == row
@@ -138,32 +143,69 @@ public final class ExpEvalV3v4 implements Evaluator2{
 			if(isolated){ //pawn isolated
 				agg.add(p.isolatedPawns[opposedFlag][col]);
 			}
-			if(pawnCount[col] >= 2){
+			if(doubled){
 				agg.add(p.doubledPawns[opposedFlag][col]);
 			}
-			/*if(!passed && !isolated && !attacksEnemyPawn && !adjPawnSupport){ //check for backwards pawn
-				long b = attacks | (player == 0? 1L<<index+8: 1L<<index-8);
-				while((b & (alliedPawns | enemyPawns)) == 0){
-					b = player == 0? b << 8: b >>> 8; //scan downwards until pawn encountered
-					assert b != 0;
-				}
-				if(((b | (player == 0? b<<8: b>>>8)) & enemyPawns) != 0){ //backward
-					agg.add(p.backwardPawns[opposedFlag][col]);
-				}
-			}*/
 			if(chain){
 				agg.add(p.pawnChain[col]);
 			}
 		}
 	}
 	
+	/** calculates danger associated with pawn wall weaknesses or storming enemy pawns*/
+	private int pawnShelterStormDanger(final int player, final State4 s, final int kingIndex, final EvalParameters p){
+		final int kc = kingIndex%8; //king column
+		final int kr = player == 0? kingIndex >>> 3: 7-(kingIndex>>>3); //king rank
+		final long mask = Masks.passedPawnMasks[player][kingIndex];
+		final long wallPawns = s.pawns[player] & mask; //pawns in front of the king
+		final long stormPawns = s.pawns[1-player] & mask; //pawns in front of the king
+		final int f = kc == 0? 1: kc == 7? 6: kc; //file, eval as if not on edge
+		
+		int pawnWallDanger = 0;
+		
+		for(int a = -1; a <= 1; a++){
+			final long colMask = Masks.colMask[f+a];
+			
+			final long allied = wallPawns & colMask;
+			final int rankAllied = allied != 0? (player == 0? BitUtil.lsbIndex(allied)>>>3: 7-(BitUtil.msbIndex(allied)>>>3)): 0;
+			pawnWallDanger += p.pawnShelter[f != kc? 0: 1][rankAllied];
+			
+			final long enemy = stormPawns & colMask;
+			if(enemy != 0){
+				final int rankEnemy = player == 0? BitUtil.lsbIndex(enemy)>>>3: 7-(BitUtil.msbIndex(enemy)>>>3);
+				final int type = allied == 0? 0: rankAllied+1 != rankEnemy? 1: 2;
+				assert rankEnemy > kr;
+				pawnWallDanger += p.pawnStorm[type][rankEnemy-kr-1];
+			}
+		}
+		return pawnWallDanger;
+	}
+	
 	/** gets the king danger for the passed player*/
 	private void getKingDanger(final int player, final State4 s, final WeightAgg w, final EvalParameters p){
 		final long kingRing = State4.getKingMoves(player, s.pieces, s.kings[player]);
 		final long king = s.kings[player];
-		final int kingSq = BitUtil.lsbIndex(s.kings[player]);
-		int dindex = p.kingDangerSquares[player][kingSq]; //danger index
+		final int kingIndex = BitUtil.lsbIndex(s.kings[player]);
 		final long agg = s.pieces[0]|s.pieces[1];
+		
+		int dindex = p.kingDangerSquares[player][kingIndex]; //danger index
+		
+		
+		//pawn wall, storm
+		int pawnWallDanger = pawnShelterStormDanger(player, s, kingIndex, p);
+		if(!s.kingMoved[player]){
+			//if we can castle, count the pawn wall/storm weight as best available after castle
+			if(s.rookMoved[player][0]){
+				final int left = pawnShelterStormDanger(player, s, player == 0? 2: 58, p);
+				pawnWallDanger = left > pawnWallDanger? left: pawnWallDanger;
+			}
+			if(s.rookMoved[player][1]){
+				final int left = pawnShelterStormDanger(player, s, player == 0? 6: 62, p);
+				pawnWallDanger = left > pawnWallDanger? left: pawnWallDanger;
+			}
+		}
+		w.add(pawnWallDanger, 0);
+		
 		
 		//case that checking piece not defended should be handled by qsearch
 		//(ie, it will just be taken by king, etc, and a better move will be chosen)

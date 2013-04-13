@@ -12,15 +12,33 @@ public final class BitUtil {
 	    13, 18,  8, 12,  7,  6,  5, 63
 	};
 	private final static long debruijn64 = 0x03f79d71b4cb0a89L;
-	
+
+	/** returns the index of the least significant bit*/
 	public static int lsbIndex(long l){
 		//second method supposedly slighty faster, but noticed no improvement
 		//return index64[(int)(((l & -l) * debruijn64) >>> 58)];
 		return debruijnIndex[(int)(((l ^ (l-1)) * debruijn64) >>> 58)];
 	}
 	
-	/** masks lsb bit*/
-	public static long lsbMask(long l){
+	/** masks the msb
+	 * <p> returns passed long with only the most significant bit set*/
+	public static long msb(long l){
+		l |= (l >>> 1);
+        l |= (l >>> 2);
+        l |= (l >>> 4);
+        l |= (l >>> 8);
+        l |= (l >>> 16);
+        l |= (l >>> 32);
+        return l & ~(l >>> 1);
+	}
+	
+	/** returns the index of the most significant bit*/
+	public static int msbIndex(final long l){
+		return lsbIndex(msb(l));
+	}
+	
+	/** masks the lsb*/
+	public static long lsb(long l){
 		return l & -l;
 	}
 	

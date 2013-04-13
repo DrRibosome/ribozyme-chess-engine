@@ -13,6 +13,7 @@ import util.opening2.Book;
 import eval.Evaluator2;
 import eval.expEvalV3.ExpEvalV3v4;
 import eval.expEvalV3.gparams.GParams1;
+import eval.expEvalV3.gparams.GParams3;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -27,10 +28,12 @@ public class GauntletP {
 		private final long time;
 		private final Search4[] search;
 		public final AtomicInteger[] counts = new AtomicInteger[3];
+		private final int maxDrawCount;
 		
-		GauntletThread(long time, Search4[] search){
+		GauntletThread(long time, Search4[] search, int maxDrawCount){
 			this.time = time;
 			this.search = search;
+			this.maxDrawCount = maxDrawCount;
 			for(int a = 0; a < counts.length; a++){
 				counts[a] = new AtomicInteger(0);
 			}
@@ -45,7 +48,7 @@ public class GauntletP {
 
 			int[] move = new int[2];
 			for(int w = 0; ; w++){
-				State4 state = new State4(b.getSeed());
+				State4 state = new State4(b.getSeed(), maxDrawCount);
 				state.initialize();
 				int turn = 0;
 				final int searchOffset = w%2;
@@ -110,7 +113,8 @@ public class GauntletP {
 	public static void main(String[] args) throws IOException{
 		
 		final int hashSize = 20;
-		final long time = 1000;
+		final long time = 500;
+		final int maxDrawCount = 50;
 
 		final int threads = 3;
 		final GauntletThread[] t = new GauntletThread[threads];
@@ -119,24 +123,26 @@ public class GauntletP {
 		for(int a = 0; a < threads; a++){
 			Evaluator2 e1 =
 					//new SuperEvalS4V10();
-					new ExpEvalV3v4();
+					//new ExpEvalV3v4();
+					new ExpEvalV3v4(GParams1.buildEval());
+					//new E4(GParams1v2.buildEval());
 					//new ExpEvalV3();
 					//new SuperEvalS4V10v4();
 					//new EvalS4V10v5();
 
 			Evaluator2 e2 = 
 					//new SuperEvalS4V10v4();
-					new ExpEvalV3v4(GParams1.buildEval());
+					//new ExpEvalV3v4(GParams3.buildEval());
 					//new SuperEvalS4V10();
 					//new ExpEvalV3();
-					//new ExpEvalV3v3();
+					new ExpEvalV3v4(GParams3.buildEval());
 					//new SuperEvalS4V8();
 					//new ExpEvalV1();
 			
 			final Search4[] search = new Search4[2];
 			search[0] = new SearchS4V33t(e1, hashSize, false);
 			search[1] = new SearchS4V33t(e2, hashSize, false);
-			t[a] = new GauntletThread(time, search);
+			t[a] = new GauntletThread(time, search, maxDrawCount);
 			t[a].setDaemon(true);
 		}
 		System.out.println("complete");

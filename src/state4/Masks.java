@@ -104,6 +104,9 @@ public final class Masks {
 				if(a%8 != 7){
 					l[p][a] |= p==0? col<<(a+1+8): col>>>64-(a+1);
 				}
+				
+				if(p == 0 && a >= 56) l[p][a] = 0;
+				if(p == 1 && a <= 7) l[p][a] = 0;
 			}
 		}
 		return l;
@@ -275,6 +278,8 @@ public final class Masks {
 	}
 	
 	public static void main(String[] args){
+		System.out.println(getString(passedPawnMasks[1][2]));
+		
 		//System.out.println("here");
 		/*long l = 982312;
 		System.out.println(getString(l));
