@@ -57,6 +57,14 @@ public final class MutatorV2 implements Mutator2{
 		return Math.sqrt(sqrdSum/len - Math.pow(sum/len, 2));
 	}
 	
+	private static double avg(Getter g, GEntity[] p){
+		double sum = 0;
+		for(int a = 0; a < p.length; a++){
+			sum += g.get(p[a].p);
+		}
+		return sum/p.length;
+	}
+	
 	@Override
 	public void mutate(EvalParameters p, GEntity[] population, int excludeIndex, double multiplier) {
 		for(Getter g: l){
@@ -81,7 +89,7 @@ public final class MutatorV2 implements Mutator2{
 	public void printStdDev(GEntity[] population) {
 		for(Getter g: l){
 			double stdDev = stdDev(g, population, -1);
-			System.out.println(g+" = "+stdDev);
+			System.out.println(g+" = "+stdDev+" (avg = "+avg(g, population)+")");
 		}
 	}
 	
