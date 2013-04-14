@@ -8,7 +8,9 @@ import eval.Evaluator2;
 import eval.PositionMasks;
 import eval.Weight;
 
-public final class E4 implements Evaluator2{
+/** same as E4 standard, except uses pawn wall/storm score for where the king
+ * is only, not best option if king can castle*/
+public final class E4v2 implements Evaluator2{
 	private final static class WeightAgg{
 		int start;
 		int end;
@@ -59,7 +61,7 @@ public final class E4 implements Evaluator2{
 	private final int endMaterial;
 	private final int granularity;
 	
-	public E4(EvalParameters p){
+	public E4v2(EvalParameters p){
 		this.p = p;
 		int startMaterial = (
 				  p.materialWeights[State4.PIECE_TYPE_PAWN]*8
@@ -113,11 +115,11 @@ public final class E4 implements Evaluator2{
 			System.out.println("scaled pawn shelter bonus = "+agg.score(scale));
 			
 			final int scaledScore = score(a, s, scale, false);
-			System.out.println("total scaled score = "+scaledScore);
+			System.out.println("score = "+agg+", scaled = "+scaledScore);
 		}
 	}
 	
-	public E4(){
+	public E4v2(){
 		this(DefaultEvalWeights.defaultEval());
 	}
 	
@@ -240,7 +242,7 @@ public final class E4 implements Evaluator2{
 		
 		//pawn wall, storm
 		int pawnWallBonus = pawnShelterStormDanger(player, s, kingIndex, p);
-		final long cmoves = State4.getCastleMoves(player, s);
+		/*final long cmoves = State4.getCastleMoves(player, s);
 		if(cmoves != 0){
 			//if we can castle, count the pawn wall/storm weight as best available after castle
 			if((player == 0 && (cmoves & 1L<<2) != 0) || (player == 1 && (cmoves & 1L<<58) != 0)){
@@ -251,7 +253,7 @@ public final class E4 implements Evaluator2{
 				final int right = pawnShelterStormDanger(player, s, player == 0? 6: 62, p);
 				pawnWallBonus = right > pawnWallBonus? right: pawnWallBonus;
 			}
-		}
+		}*/
 		w.add(pawnWallBonus, 0);
 		
 		
