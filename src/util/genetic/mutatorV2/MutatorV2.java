@@ -81,7 +81,7 @@ public final class MutatorV2 implements Mutator2{
 			final int min = 10;
 			final int x = Math.abs(v) <= min? min: v;
 			//g.set(p, (int)(r.nextGaussian()*stdDev+v));
-			g.set(p, (int)((Math.random()-.5)*variancePercent*x + v + .5));
+			g.set(p, (int)Math.floor((Math.random()-.5)*variancePercent*x + v + .5));
 		}
 	}
 
@@ -95,6 +95,6 @@ public final class MutatorV2 implements Mutator2{
 	
 	private static int generateSample(final int v, final double stdDev, final double multiplier){
 		assert multiplier != 0;
-		return (int)((Math.random()-.5)*stdDev*multiplier + v + .5);
+		return (int)Math.floor((Math.random()-.5)*stdDev*multiplier + v + .5);
 	}
 }

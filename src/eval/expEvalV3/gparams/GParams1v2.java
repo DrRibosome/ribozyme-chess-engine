@@ -17,6 +17,13 @@ public class GParams1v2 {
 		//--------------------------------------------------------------
 		//general weights
 		
+		/*king = 0
+		queen = 889
+		rook = 428
+		bishop = 258
+		knight = 153
+		pawn = 100*/
+		
 		p.materialWeights = new int[7];
 		p.materialWeights[State4.PIECE_TYPE_QUEEN] = 898;
 		p.materialWeights[State4.PIECE_TYPE_ROOK] = 487;

@@ -15,7 +15,8 @@ public final class State4 {
 	public static final int PIECE_TYPE_KNIGHT = 5;
 	public static final int PIECE_TYPE_PAWN = 6;
 	
-	private final long[][] pieceMasks = new long[7][2];
+	/** piece masks, indexed [piece-type][player]*/
+	public final long[][] pieceMasks = new long[7][2];
 	
 	/** stores piece counts for each player, total pieces
 	 * stored in {@link #PIECE_TYPE_EMPTY} index*/

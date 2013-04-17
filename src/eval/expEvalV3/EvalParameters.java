@@ -48,7 +48,7 @@ public final class EvalParameters {
 	/** passed pawn weight, indexed [row] from white perspective*/
 	public Weight[][] passedPawnRowWeight;
 	/** doubled pawns penalty, indexed [opposed-flag][col]
-	 * <p> note, this value will be added FOR EACH pawn in a row with 2 or more pawns*/
+	 * <p> note, this value will be added once for each pawn that has another allied pawn in front of it*/
 	public Weight[][] doubledPawns;
 	/** weight for pawns with no supportind pawn in either adjacent col, indexed [opposed-flag][col]*/
 	public Weight[][] isolatedPawns;

@@ -55,7 +55,7 @@ public class Debug {
 		//Position p = FenParser.parse("4q1kr/p6p/1prQPppB/4n3/4P3/2P5/PP2B2P/R5K1 w - - 0 0");
 		//Position p = FenParser.parse("2k5/pp1r2b1/2p5/7P/2P2r1q/5pN1/PPb2P1P/2Q1RRK1 w - - 0 27"); //c1c2 leads to loss by checkmate
 		//Position p = FenParser.parse("r1bq1rk1/p1pp1ppp/2p5/3nP3/8/2B5/PPPQ1PPP/R3KB1R w - - - -"); //c4d3 blunder
-		Position p = FenParser.parse("6k1/1b3pp1/3bp1qp/8/Np1P1nP1/1P4R1/r2N1P1P/3QKB2 w - - 0 -");
+		Position p = FenParser.parse("1r2r2k/p1b2pp1/Q1p5/2P5/P2Pp2p/4BqP1/R4P1P/5RK1 w - - 0 24"); //missed mate threat on low depths
 		
 		
 		System.out.println(StateUtil.fen(p.sideToMove, p.s));

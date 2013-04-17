@@ -247,6 +247,7 @@ public final class SearchS4V33t implements Search4{
 			final TTEntry tte;
 			if((tte = m.get(s.zkey())) != null && tte.move != 0 && !cutoffSearch.get()){
 				bestMove = tte.move;
+				stats.predictedScore = tte.score;
 				if(l != null){
 					l.plySearched(bestMove, i, score);
 				}

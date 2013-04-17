@@ -42,7 +42,7 @@ public final class GeneticTrainer2 {
 		//final File file = new File("genetic-results/genetic-results-mac-7");
 		final File file = new File(args[argIndex++]);
 		
-		final long time = 2*60*1000; //2*60*1000
+		final long time = 5*1000; //2*60*1000
 		final int hashSize = 18;
 		final Mutator2 m = new MutatorV2();
 		final double initialVariancePercent = .3; //determines range of starting values generated
@@ -69,8 +69,12 @@ public final class GeneticTrainer2 {
 			final Map<GEntity, GameQueue.Game[]> results = simulate(population, q);
 			log.recordIteration(i, population);
 			cull(population, results, m, log);
-			
+
+			System.out.println("-------------------------------");
 			System.out.println("completed iteration "+i);
+			System.out.println("time = "+time);
+			System.out.println("threads = "+threads);
+			System.out.println("log file = "+file);
 			System.out.println("-------------------------------");
 			m.printStdDev(population);
 			

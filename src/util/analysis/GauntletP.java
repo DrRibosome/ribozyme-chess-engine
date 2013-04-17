@@ -13,6 +13,7 @@ import util.opening2.Book;
 import eval.Evaluator2;
 import eval.expEvalV3.E4;
 import eval.expEvalV3.gparams.GParams1v2;
+import eval.expEvalV3.gparams.HParams2;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -112,7 +113,7 @@ public class GauntletP {
 	public static void main(String[] args) throws IOException{
 		
 		final int hashSize = 20;
-		final long time = 50;
+		final long time = 150;
 		final int maxDrawCount = 50;
 
 		final int threads = 3;
@@ -124,17 +125,18 @@ public class GauntletP {
 					//new SuperEvalS4V10();
 					//new ExpEvalV3v4();
 					//new ExpEvalV3v4(GParams1.buildEval());
-					new E4(GParams1v2.buildEval());
+					new E4(HParams2.buildEval());
+					//new E4(HParams1.buildEval());
 					//new ExpEvalV3();
 					//new SuperEvalS4V10v4();
 					//new EvalS4V10v5();
 
 			Evaluator2 e2 = 
+					new E4(GParams1v2.buildEval());
 					//new SuperEvalS4V10v4();
 					//new ExpEvalV3v4(GParams3.buildEval());
 					//new SuperEvalS4V10();
-					//new E4(GParams3Base.buildEval());
-					new E4(GParams1v2.buildEval());
+					//new E4(SFParams.buildEval());
 					//new SuperEvalS4V8();
 					//new ExpEvalV1();
 					//new E4v2(GParams1v2.buildEval());

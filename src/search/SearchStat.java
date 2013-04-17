@@ -7,6 +7,7 @@ public class SearchStat {
 	/** empirical branching factor*/
 	public double empBranchingFactor;
 	public long hashHits;
+	public int predictedScore;
 	
 	public static void agg(SearchStat src, SearchStat agg){
 		agg.nodesSearched += src.nodesSearched;

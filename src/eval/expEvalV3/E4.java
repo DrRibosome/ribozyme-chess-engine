@@ -218,6 +218,8 @@ public final class E4 implements Evaluator2{
 				rankAllied = 0;
 			}
 			
+			//probably should use the opposed mask and check with the king
+			//that way, pieces behind the king dont mess things up
 			final long enemy = stormPawns & colMask;
 			if(enemy != 0){
 				final int rankEnemy = player == 0? BitUtil.lsbIndex(enemy)>>>3: 7-(BitUtil.msbIndex(enemy)>>>3);
