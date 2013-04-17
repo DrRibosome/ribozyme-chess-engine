@@ -113,7 +113,7 @@ public class GauntletP {
 	public static void main(String[] args) throws IOException{
 		
 		final int hashSize = 20;
-		final long time = 150;
+		final long time = 50;
 		final int maxDrawCount = 50;
 
 		final int threads = 3;
