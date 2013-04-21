@@ -1,0 +1,36 @@
+search = search33t, hash = 20, minBookCount = 100
+book = megabook.mk
+base eval = v3v4
+zscore giving prob better included
+prob better calculated via wilcoxon rank sum test
+
+
+================================================= e5params1
+
+e5params2 - e5params1
+depth 7
+(w0,w1,d) = (86,49,63)
+
+e5params2 - gparams1v2 
+depth 7
+(w0,w1,d) = (835,668,672)
+z = 5.6426011905019955
+
+================================================= e5params1
+
+e5params1 - gparams1v3
+depth 7
+(w0,w1,d) = (858,734,685)
+z = 3.757396449704142
+
+e5params1 - e5params2
+depth 7
+(w0,w1,d) = (53,88,55)
+z = -3.9194242089796276
+
+
+================================================= gparams1v2
+
+gparams1v2 - e5params1
+depth 7
+(w0,w1,d) = (23,9,19)
