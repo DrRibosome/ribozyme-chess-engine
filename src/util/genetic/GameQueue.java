@@ -84,10 +84,10 @@ public final class GameQueue {
 							} else{
 								outOfBook = true;
 								//search(turn, state, search[turn], move, time);
-								//search[turn].search(turn, state, move, 5);
-								final long start = System.currentTimeMillis();
+								search[turn].search(turn, state, move, 5);
+								/*final long start = System.currentTimeMillis();
 								TimerThread4.searchBlocking(search[turn], state, turn, time[turn], 0, move);
-								time[turn] -= System.currentTimeMillis()-start;
+								time[turn] -= System.currentTimeMillis()-start;*/
 							}
 							
 							if(move[0] == move[1]){ //draw, no moves remaining

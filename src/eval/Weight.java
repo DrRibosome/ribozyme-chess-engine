@@ -5,10 +5,12 @@ import java.nio.ByteBuffer;
 /** defines a scaling eval weight*/
 public final class Weight {
 	public final int start, end;
+	private final int diff;
 	
 	public Weight(final int start, final int end){
 		this.start = start;
 		this.end = end;
+		diff = end-start;
 	}
 	
 	/**  calculates the margin to use in {@link #getScale(int, int, int)}*/
@@ -23,7 +25,7 @@ public final class Weight {
 	
 	/** calculates score, interpolating with scale calculated from {@link #getScale(int, int, int)}*/
 	public int score(final double p){
-		return start + (int)((end-start)*p);
+		return start + (int)(diff*p);
 	}
 	
 	private static double min(final double d1, final double d2){

@@ -1,4 +1,4 @@
-package search.search32k;
+package search.legacy.search32k;
 
 
 public final class ZMap4 implements Hash{

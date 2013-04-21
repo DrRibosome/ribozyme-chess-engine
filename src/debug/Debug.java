@@ -1,6 +1,7 @@
 package debug;
 
 import search.Search4;
+import search.exp.search34.SearchV34;
 import search.search33.SearchS4V33t;
 import state4.BitUtil;
 import state4.Masks;
@@ -8,9 +9,8 @@ import state4.State4;
 import state4.StateUtil;
 import uci.Position;
 import util.FenParser;
-import eval.Evaluator2;
-import eval.expEvalV3.E4;
-import eval.expEvalV3.gparams.GParams3Base;
+import eval.e5.E5;
+import eval.e5.GParams1v3;
 
 
 public class Debug {
@@ -52,18 +52,18 @@ public class Debug {
 		//Position p = FenParser.parse("1r5k/1P3pp1/B3pn1p/8/R7/1r3P2/5P1P/R4K2 w - - - -");
 		//Position p = FenParser.parse("2r2bk1/pp3p2/1n2q2B/1P3N1Q/2p5/4P3/P4PP1/3R2K1 b - - - -");
 		//Position p = FenParser.parse("8/4kp2/p2b1r2/2p1Q3/P1P2p1P/1P6/5PP1/1R4K1 b - - - -");
-		//Position p = FenParser.parse("4q1kr/p6p/1prQPppB/4n3/4P3/2P5/PP2B2P/R5K1 w - - 0 0");
+		//Position p = FenParser.parse("r1qnk2r/1ppb1ppp/4p2n/p2PP1NP/2P1B1P1/P1B2P2/8/1R1QK2R b KQkq - 0 20");
 		//Position p = FenParser.parse("2k5/pp1r2b1/2p5/7P/2P2r1q/5pN1/PPb2P1P/2Q1RRK1 w - - 0 27"); //c1c2 leads to loss by checkmate
 		//Position p = FenParser.parse("r1bq1rk1/p1pp1ppp/2p5/3nP3/8/2B5/PPPQ1PPP/R3KB1R w - - - -"); //c4d3 blunder
-		Position p = FenParser.parse("1r2r2k/p1b2pp1/Q1p5/2P5/P2Pp2p/4BqP1/R4P1P/5RK1 w - - 0 24"); //missed mate threat on low depths
-		
+		//Position p = FenParser.parse("1r2r2k/p1b2pp1/Q1p5/2P5/P2Pp2p/4BqP1/R4P1P/5RK1 w - - 0 24"); //missed mate threat on low depths
+		Position p = FenParser.parse("2r2rkn/pp3p1p/1q2p1pP/3pP1N1/b1nP4/P2B1QP1/1PN2P2/1R2K2R b - - - -"); //missed mate threat on depth 10, choose c4b2
 		
 		System.out.println(StateUtil.fen(p.sideToMove, p.s));
 		State4 s = p.s;
 		int player = p.sideToMove;
 		
 		System.out.println(s);
-		E4 e = new E4(GParams3Base.buildEval());
+		E5 e = new E5(GParams1v3.buildEval());
 		//Evaluator2<State4> e = new IncrementalPieceScore();
 		
 		//e.initialize(s);

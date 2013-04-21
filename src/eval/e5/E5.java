@@ -7,7 +7,6 @@ import state4.State4;
 import eval.Evaluator2;
 import eval.PositionMasks;
 import eval.Weight;
-import eval.expEvalV3.DefaultEvalWeights;
 import eval.expEvalV3.EvalParameters;
 
 public final class E5 implements Evaluator2{
@@ -121,7 +120,7 @@ public final class E5 implements Evaluator2{
 	}
 	
 	public E5(){
-		this(DefaultEvalWeights.defaultEval());
+		this(GParams1v3.buildEval());
 	}
 
 	final WeightAgg endgameBonus = new WeightAgg();
@@ -142,12 +141,11 @@ public final class E5 implements Evaluator2{
 		
 		//E5 - E4
 		//(w0,w1,d) = (28,27,18), .2
-		//(w0,w1,d) = (53,44,57), .1
+		//(w0,w1,d) = (110,83,91), .1
 		//(w0,w1,d) = (23,23,14), .05
 		endgameBonus.start = (int)(.1*(p1End-p2End)+.5);
 		endgameBonus.end = 0;
-		//return p1 - p2 + (p1End > p2End? endgameBonus.score(scale): -endgameBonus.score(scale));
-		return score + endgameBonus.score(scale);
+		return score + endgameBonus.score(scale) + p.tempo.score(scale);
 	}
 
 	@Override
@@ -171,10 +169,6 @@ public final class E5 implements Evaluator2{
 			getKingDanger(player, s, agg, p);
 		}
 		
-		if(tempo){
-			agg.add(p.tempo);
-		}
-		
 		agg.start += score;
 		agg.end += score;
 	}
@@ -185,10 +179,29 @@ public final class E5 implements Evaluator2{
 		return (score+grainSize>>1) & ~(grainSize-1);
 	}
 	
+	private static void scoreRooks(final int player, final State4 s, final WeightAgg agg){
+		//test for trapped rook
+		
+		final int kingIndex = BitUtil.lsbIndex(s.kings[player]);
+		final int kCol = kingIndex%8;
+		final int kRow = kingIndex/8;
+		
+		for(long rooks = s.rooks[player]; rooks != 0; rooks &= rooks-1){
+			final int rIndex = BitUtil.lsbIndex(rooks);
+			final int rCol = rIndex%8;
+			final int rRow = rIndex/8;
+			if(kCol >= 4 && rCol >= 4 && kRow == rRow &&
+					player == 0? kRow == 0: kRow == 7){
+				
+			}
+		}
+	}
+	
 	private static void scorePawns(final int player, final State4 s, final WeightAgg agg,
 			final EvalParameters p, final int[] pawnCount){
 		final long enemyPawns = s.pawns[1-player];
 		final long alliedPawns = s.pawns[player];
+		final long all = alliedPawns | enemyPawns;
 		for(long pawns = alliedPawns; pawns != 0; pawns &= pawns-1){
 			final int index = BitUtil.lsbIndex(pawns);
 			final int col = index%8;
@@ -214,6 +227,28 @@ public final class E5 implements Evaluator2{
 			}
 			if(chain){
 				agg.add(p.pawnChain[col]);
+			}
+			
+			//backward pawn checking
+			final long attackSpan = PositionMasks.isolatedPawnMask[col] & Masks.passedPawnMasks[player][index];
+			/*System.out.println(Masks.getString(enemyPawns));
+			System.out.println(Masks.getString(attackSpan & enemyPawns)+", index="+index+", player="+player+", col="+col);
+			System.out.println((!passed && !isolated && !chain)+", passed="+passed+", iso="+isolated+", doubled="+chain);
+			System.out.println((attackSpan & enemyPawns) != 0);
+			System.out.println((PositionMasks.pawnAttacks[player][index] & enemyPawns) == 0);*/
+			if(!passed && !isolated && !chain &&
+					(attackSpan & enemyPawns) != 0 && //enemy pawns that can attack our pawns
+					(PositionMasks.pawnAttacks[player][index] & enemyPawns) == 0){ //not attacking enemy pawns
+				long b = PositionMasks.pawnAttacks[player][index];
+				while((b & all) == 0){
+					b = player == 0? b << 8: b >>> 8;
+					assert b != 0;
+				}
+				
+				final boolean backward = ((b | (player == 0? b << 8: b >>> 8)) & enemyPawns) != 0;
+				if(backward){
+					agg.add(p.backwardPawns[opposedFlag][col]);
+				}
 			}
 		}
 	}

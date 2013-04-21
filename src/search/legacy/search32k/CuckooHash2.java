@@ -1,4 +1,4 @@
-package search.search32k;
+package search.legacy.search32k;
 
 
 /** rough but working implementation of cuckoo hashing*/

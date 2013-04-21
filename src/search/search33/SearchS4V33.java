@@ -7,7 +7,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import search.Search4;
 import search.SearchListener2;
 import search.SearchStat;
-import search.legacy.ZMap;
 import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
@@ -514,7 +513,7 @@ public final class SearchS4V33 implements Search4{
 		long bestMove = 0;
 		final int initialBestScore = -99999;
 		int bestScore = initialBestScore;
-		int cutoffFlag = ZMap.CUTOFF_TYPE_UPPER;
+		int cutoffFlag = TTEntry.CUTOFF_TYPE_UPPER;
 		
 		final int drawCount = s.drawCount; //stored for error checking purposes
 		
@@ -602,7 +601,7 @@ public final class SearchS4V33 implements Search4{
 					bestMove = encoding;
 					if(g > alpha){
 						alpha = g;
-						cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
+						cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 						if(alpha >= beta){
 							if(!cutoffSearch.get()){
 								//m.put2(zkey, bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
@@ -627,7 +626,7 @@ public final class SearchS4V33 implements Search4{
 			//no moves except king into death - draw
 			bestMove = 0;
 			bestScore = 0;
-			cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
+			cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 		}
 		
 		if(!cutoffSearch.get()){
@@ -661,7 +660,7 @@ public final class SearchS4V33 implements Search4{
 			stats.hashHits++;
 			if(e.depth >= depth){
 				if(pv ? e.cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (e.score >= beta?
-						e.cutoffType == TTEntry.CUTOFF_TYPE_LOWER: e.cutoffType == ZMap.CUTOFF_TYPE_UPPER)){
+						e.cutoffType == TTEntry.CUTOFF_TYPE_LOWER: e.cutoffType == TTEntry.CUTOFF_TYPE_UPPER)){
 					return e.score;
 				}
 			}

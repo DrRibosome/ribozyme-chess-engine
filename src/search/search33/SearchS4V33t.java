@@ -7,13 +7,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import search.Search4;
 import search.SearchListener2;
 import search.SearchStat;
-import search.legacy.ZMap;
 import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
 import eval.Evaluator2;
-import eval.evalV9.SuperEvalS4V9;
 
 public final class SearchS4V33t implements Search4{
 	public final static class SearchStat32k extends SearchStat{
@@ -31,7 +29,7 @@ public final class SearchS4V33t implements Search4{
 		}
 	}
 	
-	final MoveList[] stack;
+	private final MoveList[] stack;
 	
 	private final static class MoveList{
 		private final static int defSize = 128;
@@ -167,6 +165,8 @@ public final class SearchS4V33t implements Search4{
 		e.initialize(s);
 		cutoffSearch.set(false);
 		
+		final boolean debugPrint = false;
+		
 		long bestMove = 0;
 		int score = 0;
 		
@@ -196,50 +196,19 @@ public final class SearchS4V33t implements Search4{
 			//System.out.println("starting depth "+i);
 			score = recurse(player, alpha, beta, i, true, true, 0, s);
 			
-			
-			if(score <= alpha && !cutoffSearch.get()){
-				//System.out.println("search failed low, researching");
-				if(l != null){
-					l.failLow(i);
-				}
-				alpha = score-failOffset;
-				beta = score+5;
+			if((score <= alpha || score >= beta) && !cutoffSearch.get()){
+				final boolean failLow = score <= alpha;
+				if(failLow) alpha = score-failOffset;
+				else beta = score+failOffset;
 				score = recurse(player, alpha, beta, i, true, true, 0, s);
-				if((score <= alpha || score >= beta)  && !cutoffSearch.get()){
-					//System.out.println("double fail");
-					if(l != null){
-						if(score <= alpha){
-							l.failLow(i);
-						} else if(score >= beta){
-							l.failHigh(i);
-						}
-					}
-					alpha = min;
-					beta = max;
-					score = recurse(player, alpha, beta, i, true, true, 0, s);
-				}
-			} else if(score >= beta && !cutoffSearch.get()){
-				//System.out.println("search failed high, researching");
-				if(l != null){
-					l.failHigh(i);
-				}
-				alpha = score-5;
-				beta = score+failOffset;
-				score = recurse(player, alpha, beta, i, true, true, 0, s);
-				if((score <= alpha || score >= beta)  && !cutoffSearch.get()){
-					//System.out.println("double fail");
-					if(l != null){
-						if(score <= alpha){
-							l.failLow(i);
-						} else if(score >= beta){
-							l.failHigh(i);
-						}
-					}
-					alpha = min;
-					beta = max;
+				if((score <= alpha || score >= beta) && !cutoffSearch.get()){
+					final boolean failLow2 = score <= alpha;
+					if(failLow2) alpha = min;
+					else beta = max;
 					score = recurse(player, alpha, beta, i, true, true, 0, s);
 				}
 			}
+			
 			if(!cutoffSearch.get()){
 				nodesSearched = stats.nodesSearched;
 				stats.maxPlySearched = i;
@@ -560,7 +529,7 @@ public final class SearchS4V33t implements Search4{
 		long bestMove = 0;
 		final int initialBestScore = -99999;
 		int bestScore = initialBestScore;
-		int cutoffFlag = ZMap.CUTOFF_TYPE_UPPER;
+		int cutoffFlag = TTEntry.CUTOFF_TYPE_UPPER;
 		int moveCount = 0;
 		
 		final int drawCount = s.drawCount; //stored for error checking purposes
@@ -665,7 +634,7 @@ public final class SearchS4V33t implements Search4{
 					bestMove = encoding;
 					if(g > alpha){
 						alpha = g;
-						cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
+						cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 						if(alpha >= beta){
 							if(!cutoffSearch.get()){
 								//m.put2(zkey, bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
@@ -690,7 +659,7 @@ public final class SearchS4V33t implements Search4{
 			//no moves except king into death - draw
 			bestMove = 0;
 			bestScore = 0;
-			cutoffFlag = ZMap.CUTOFF_TYPE_EXACT;
+			cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 		}
 		
 		if(!cutoffSearch.get()){
@@ -724,7 +693,7 @@ public final class SearchS4V33t implements Search4{
 			stats.hashHits++;
 			if(e.depth >= depth){
 				if(pv ? e.cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (e.score >= beta?
-						e.cutoffType == TTEntry.CUTOFF_TYPE_LOWER: e.cutoffType == ZMap.CUTOFF_TYPE_UPPER)){
+						e.cutoffType == TTEntry.CUTOFF_TYPE_LOWER: e.cutoffType == TTEntry.CUTOFF_TYPE_UPPER)){
 					return e.score;
 				}
 			}

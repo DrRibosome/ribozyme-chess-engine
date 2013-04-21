@@ -1,4 +1,4 @@
-package search.search32k;
+package search.legacy.search32k;
 
 public final class TTEntry {
 	public final static int CUTOFF_TYPE_EXACT = 0;

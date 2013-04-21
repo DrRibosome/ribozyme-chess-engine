@@ -11,9 +11,8 @@ import state4.State4;
 import state4.StateUtil;
 import util.opening2.Book;
 import eval.Evaluator2;
-import eval.expEvalV3.E4;
-import eval.expEvalV3.gparams.GParams1v2;
-import eval.expEvalV3.gparams.HParams2;
+import eval.e5.E5;
+import eval.e5.GParams1v3;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -74,7 +73,7 @@ public class GauntletP {
 						if(print) System.out.println("book move");
 					} else{
 						outOfBook = true;
-						//search[(turn+searchOffset)%2].search(turn, state, move, maxDepth);
+						//search[(turn+searchOffset)%2].search(turn, state, move, 7);
 						//RawTimerThread3.search(search[(turn+searchOffset)%2], state, turn, time, 0, move);
 						search(turn, state, search[(turn+searchOffset)%2], move, time);
 					}
@@ -84,6 +83,7 @@ public class GauntletP {
 					if(print) System.out.println();
 					
 					if(move[0] == move[1]){
+						System.out.println("bad move draw");
 						draw = true;
 						break;
 					}
@@ -113,33 +113,19 @@ public class GauntletP {
 	public static void main(String[] args) throws IOException{
 		
 		final int hashSize = 20;
-		final long time = 50;
+		final long time = 100;
 		final int maxDrawCount = 50;
 
-		final int threads = 3;
+		final int threads = 2;
 		final GauntletThread[] t = new GauntletThread[threads];
 		
 		System.out.print("initializing... ");
 		for(int a = 0; a < threads; a++){
 			Evaluator2 e1 =
-					//new SuperEvalS4V10();
-					//new ExpEvalV3v4();
-					//new ExpEvalV3v4(GParams1.buildEval());
-					new E4(HParams2.buildEval());
-					//new E4(HParams1.buildEval());
-					//new ExpEvalV3();
-					//new SuperEvalS4V10v4();
-					//new EvalS4V10v5();
+					new E5(GParams1v3.buildEval());
 
 			Evaluator2 e2 = 
-					new E4(GParams1v2.buildEval());
-					//new SuperEvalS4V10v4();
-					//new ExpEvalV3v4(GParams3.buildEval());
-					//new SuperEvalS4V10();
-					//new E4(SFParams.buildEval());
-					//new SuperEvalS4V8();
-					//new ExpEvalV1();
-					//new E4v2(GParams1v2.buildEval());
+					new E5(GParams1v3.buildEval());
 			
 			final Search4[] search = new Search4[2];
 			search[0] = new SearchS4V33t(e1, hashSize, false);
