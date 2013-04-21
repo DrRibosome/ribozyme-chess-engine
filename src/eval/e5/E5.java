@@ -7,6 +7,7 @@ import state4.State4;
 import eval.Evaluator2;
 import eval.PositionMasks;
 import eval.Weight;
+import eval.e5.params.GParams1v3;
 import eval.expEvalV3.EvalParameters;
 
 public final class E5 implements Evaluator2{
@@ -120,7 +121,7 @@ public final class E5 implements Evaluator2{
 	}
 	
 	public E5(){
-		this(GParams1v3.buildEval());
+		this(E5Params2.buildEval());
 	}
 
 	final WeightAgg endgameBonus = new WeightAgg();
@@ -231,11 +232,6 @@ public final class E5 implements Evaluator2{
 			
 			//backward pawn checking
 			final long attackSpan = PositionMasks.isolatedPawnMask[col] & Masks.passedPawnMasks[player][index];
-			/*System.out.println(Masks.getString(enemyPawns));
-			System.out.println(Masks.getString(attackSpan & enemyPawns)+", index="+index+", player="+player+", col="+col);
-			System.out.println((!passed && !isolated && !chain)+", passed="+passed+", iso="+isolated+", doubled="+chain);
-			System.out.println((attackSpan & enemyPawns) != 0);
-			System.out.println((PositionMasks.pawnAttacks[player][index] & enemyPawns) == 0);*/
 			if(!passed && !isolated && !chain &&
 					(attackSpan & enemyPawns) != 0 && //enemy pawns that can attack our pawns
 					(PositionMasks.pawnAttacks[player][index] & enemyPawns) == 0){ //not attacking enemy pawns

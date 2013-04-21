@@ -22,7 +22,7 @@ import util.AlgebraicNotation2;
 import util.opening1.SuperBook;
 import eval.Evaluator2;
 import eval.e5.E5;
-import eval.e5.GParams1v3;
+import eval.e5.params.GParams1v3;
 
 /*
 char[] buf = "[{\"channel\":\"/service/user\",\"data\"\"basetime\":9000,\"timeinc\":0,\"rated\":true,\"color\":null,\"minrating\":800,\"maxrating\":2000,\"from\":\"drribosome\",\"sid\":\"gserv\",\"tid\":\"Challenge\"},\"id\":\"917\",\"clientId\":\"6lfamft3cpmoalbn91vyk8nnxb67hx\"}]".toCharArray();

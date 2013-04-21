@@ -1,7 +1,6 @@
 package debug;
 
 import search.Search4;
-import search.exp.search34.SearchV34;
 import search.search33.SearchS4V33t;
 import state4.BitUtil;
 import state4.Masks;
@@ -10,7 +9,7 @@ import state4.StateUtil;
 import uci.Position;
 import util.FenParser;
 import eval.e5.E5;
-import eval.e5.GParams1v3;
+import eval.e5.params.GParams1v3;
 
 
 public class Debug {
