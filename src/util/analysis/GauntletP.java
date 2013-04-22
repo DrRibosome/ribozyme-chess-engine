@@ -13,6 +13,7 @@ import util.opening2.Book;
 import eval.Evaluator2;
 import eval.e5.E5;
 import eval.e5.E5Params2;
+import eval.e5.E5;
 import eval.e5.params.E5Params1;
 
 /**

@@ -7,7 +7,6 @@ import state4.State4;
 import eval.Evaluator2;
 import eval.PositionMasks;
 import eval.Weight;
-import eval.e5.params.GParams1v3;
 import eval.expEvalV3.EvalParameters;
 
 public final class E5 implements Evaluator2{
@@ -21,6 +20,10 @@ public final class E5 implements Evaluator2{
 		void add(final int start, final int end){
 			this.start += start;
 			this.end += end;
+		}
+		void add(final int v){
+			this.start += v;
+			this.end += v;
 		}
 		void clear(){
 			start = 0;
@@ -198,7 +201,36 @@ public final class E5 implements Evaluator2{
 		}
 	}
 	
-	private static void scorePawns(final int player, final State4 s, final WeightAgg agg,
+	private void analyzePassedPawn(final int player, final long p, final State4 s, final WeightAgg agg){
+		final int index = BitUtil.lsbIndex(p);
+		final int row = player == 0? index>>>3: 7-(index>>>3);
+		final int pawnDist = 7-row;
+
+		assert (Masks.passedPawnMasks[player][index] & s.pawns[1-player]) == 0;
+		
+		//calculate king distance to promote square
+		final int kingIndex = BitUtil.lsbIndex(s.kings[1-player]);
+		final int kingXDist = Math.abs(kingIndex%8 - index%8);
+		final int promoteRow = 1-player == 0? 7: 0; 
+		final int kingYDist = Math.abs((kingIndex>>>3) - promoteRow);
+		final int enemyKingDist = kingXDist > kingYDist? kingXDist: kingYDist;
+		
+		//our pawn closer to promotion than enemy king
+		if(pawnDist < enemyKingDist){
+			final int diff = enemyKingDist-pawnDist;
+			assert diff < 8;
+			agg.add(0, diff*diff);
+		}
+		
+		//pawn closer than enemy king and no material remaining
+		if(pawnDist < enemyKingDist &&
+				materialScore[1-player] - s.pieceCounts[1-player][State4.PIECE_TYPE_PAWN]
+					*this.p.materialWeights[State4.PIECE_TYPE_PAWN] == 0){
+			agg.add(500);
+		}
+	}
+	
+	private void scorePawns(final int player, final State4 s, final WeightAgg agg,
 			final EvalParameters p, final int[] pawnCount){
 		final long enemyPawns = s.pawns[1-player];
 		final long alliedPawns = s.pawns[player];
@@ -211,16 +243,14 @@ public final class E5 implements Evaluator2{
 			final boolean isolated = (PositionMasks.isolatedPawnMask[col] & alliedPawns) == 0;
 			final boolean opposed = (PositionMasks.opposedPawnMask[player][index] & enemyPawns) != 0;
 			final int opposedFlag = opposed? 1: 0;
-			//final long attacks = PositionMasks.pawnAttacks[player][index];
-			//final boolean attacksEnemyPawn = (attacks & enemyPawns) != 0;
-			//final boolean adjPawnSupport = (PositionMasks.pawnAttacks[1-player][index] & alliedPawns) != 0;
 			final boolean chain = (PositionMasks.pawnChainMask[player][index] & alliedPawns) != 0;
 			final boolean doubled = (PositionMasks.opposedPawnMask[player][index] & alliedPawns) != 0;
 			
 			if(passed){
-				agg.add(p.passedPawnRowWeight[player][index >> 3]); //index >>> 3 == index/8 == row
+				agg.add(p.passedPawnRowWeight[player][index >>> 3]); //index >>> 3 == index/8 == row
+				analyzePassedPawn(player, pawns&-pawns, s, agg);
 			}
-			if(isolated){ //pawn isolated
+			if(isolated){
 				agg.add(p.isolatedPawns[opposedFlag][col]);
 			}
 			if(doubled){
