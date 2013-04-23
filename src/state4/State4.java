@@ -19,7 +19,8 @@ public final class State4 {
 	public final long[][] pieceMasks = new long[7][2];
 	
 	/** stores piece counts for each player, total pieces
-	 * stored in {@link #PIECE_TYPE_EMPTY} index*/
+	 * stored in {@link #PIECE_TYPE_EMPTY} index
+	 * <p> indexed [player][piece-type]*/
 	public final int[][] pieceCounts = new int[2][7];
 	
 	/** aggregate piece mask*/

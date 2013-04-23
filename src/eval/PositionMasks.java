@@ -11,6 +11,8 @@ public final class PositionMasks {
 	/** single pawn attacks, index [player][position-64]*/
 	public final static long[][] pawnAttacks;
 	public final static long[][] pawnChainMask;
+	/** mask for bishop square type (ie, light/dark), index=0: dark, index=1, light*/
+	public final static long[] bishopSquareMask;
 	
 	static{
 		isolatedPawnMask = new long[8];
@@ -50,14 +52,34 @@ public final class PositionMasks {
 				pawnChainMask[1][a] |= 1L << a+1;
 			}
 		}
+		
+		bishopSquareMask = new long[2];
+		for(int a = 0; a < 64; a++){
+			if(squareColor(a) == 0) bishopSquareMask[0] |= 1L << a;
+			else bishopSquareMask[1] |= 1L << a;
+		}
+	}
+	
+	/** gets the color of the specified square index, can be used in conjunction with
+	 * {@link #bishopSquareMask} to get correspond mask for that color squares*/
+	public static int squareColor(final int index){
+		if((index>>>3)%2 == 1){ //odd row
+			return index%2 == 0? 1: 0;
+		}
+		return index%2;
 	}
 	
 	public static void main(String[] args){
 		for(int a = 0; a < 64; a++){
+			//System.out.println("a="+a);
+			//System.out.println(Masks.getString(isolatedPawnMask[a]));
+			//System.out.println(Masks.getString(isolatedPawnMask[a%8]));// & Masks.passedPawnMasks[1][a]));
+			//System.out.println(Masks.getString(isolatedPawnMask[a]));
+		}
+		
+		for(int a = 0; a < 2; a++){
 			System.out.println("a="+a);
-			//System.out.println(Masks.getString(isolatedPawnMask[a]));
-			System.out.println(Masks.getString(isolatedPawnMask[a%8]));// & Masks.passedPawnMasks[1][a]));
-			//System.out.println(Masks.getString(isolatedPawnMask[a]));
+			System.out.println(Masks.getString(bishopSquareMask[a]));
 		}
 	}
 }

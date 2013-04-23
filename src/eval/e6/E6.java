@@ -1,4 +1,4 @@
-package eval.e5;
+package eval.e6;
 
 import state4.BitUtil;
 import state4.Masks;
@@ -9,7 +9,7 @@ import eval.PositionMasks;
 import eval.Weight;
 import eval.expEvalV3.EvalParameters;
 
-public final class E5 implements Evaluator2{
+public final class E6 implements Evaluator2{
 	private final static class WeightAgg{
 		int start;
 		int end;
@@ -59,12 +59,14 @@ public final class E5 implements Evaluator2{
 	private final EvalParameters p;
 	/** weight aggregator*/
 	private final WeightAgg agg = new WeightAgg();
+	/** aggregator to hold space evaluations*/
+	private final long[] space = new long[2];
 	
 	private final int margin;
 	private final int endMaterial;
 	private final int granularity;
 	
-	public E5(EvalParameters p){
+	public E6(EvalParameters p){
 		this.p = p;
 		int startMaterial = (
 				  p.materialWeights[State4.PIECE_TYPE_PAWN]*8
@@ -123,8 +125,8 @@ public final class E5 implements Evaluator2{
 		}
 	}
 	
-	public E5(){
-		this(E5Params2.buildEval());
+	public E6(){
+		this(E6Params.buildEval());
 	}
 
 	final WeightAgg endgameBonus = new WeightAgg();
@@ -143,13 +145,30 @@ public final class E5 implements Evaluator2{
 		
 		final int score = p1-p2;
 		
-		//E5 - E4
-		//(w0,w1,d) = (28,27,18), .2
-		//(w0,w1,d) = (110,83,91), .1
-		//(w0,w1,d) = (23,23,14), .05
+		//evaluate space
+		final long uncontrolled = ~(space[0]|space[1]);
+		final long contested = space[0] & space[1];
+		final long alliedControlled = space[player] & ~contested & ~uncontrolled;
+		final long enemyControlled = space[1-player] & ~contested & ~uncontrolled;
+		
+		//evaluate space
+		final long totalSpace = BitUtil.getSetBits(~uncontrolled);
+		final int mult = 5;
+		final int alliedSpaceScore = (int)(square(mult*BitUtil.getSetBits(alliedControlled)*1./totalSpace)+.5);
+		final int enemySpaceScore = (int)(square(mult*BitUtil.getSetBits(enemyControlled)*1./totalSpace)+.5);
+		agg.clear();
+		agg.add(alliedSpaceScore-enemySpaceScore, 0);
+		final int spaceScore = agg.score(scale);
+		
+		//evaluate endgame bonus
 		endgameBonus.start = (int)(.1*(p1End-p2End)+.5);
 		endgameBonus.end = 0;
-		return score + endgameBonus.score(scale) + p.tempo.score(scale);
+		
+		return score + endgameBonus.score(scale) + p.tempo.score(scale) + spaceScore;
+	}
+	
+	private static double square(final double x){
+		return x*x;
 	}
 
 	@Override
@@ -162,7 +181,7 @@ public final class E5 implements Evaluator2{
 		agg.clear();
 		
 		int score = materialScore[player];
-		scoreMobility(player, s, agg, p);
+		scoreMobility(player, s, agg, p, space);
 		scorePawns(player, s, agg, p, pawnCount[player]);
 		
 		if(s.pieceCounts[player][State4.PIECE_TYPE_BISHOP] == 2){
@@ -183,7 +202,7 @@ public final class E5 implements Evaluator2{
 		return (score+grainSize>>1) & ~(grainSize-1);
 	}
 	
-	private static void scoreRooks(final int player, final State4 s, final WeightAgg agg){
+	private static void scoreRooks(final int player, final long rook, final State4 s, final WeightAgg agg){
 		//test for trapped rook
 		
 		final int kingIndex = BitUtil.lsbIndex(s.kings[player]);
@@ -194,23 +213,28 @@ public final class E5 implements Evaluator2{
 			final int rIndex = BitUtil.lsbIndex(rooks);
 			final int rCol = rIndex%8;
 			final int rRow = rIndex/8;
-			if(kCol >= 4 && rCol >= 4 && kRow == rRow &&
-					player == 0? kRow == 0: kRow == 7){
+			if(kCol >= 4 && rCol >= 4 && kRow == rRow && player == 0? kRow == 0: kRow == 7){
 				
 			}
 		}
 	}
 	
+	private static int max(final int a1, final int a2){
+		return a1 > a2? a1: a2;
+	}
+	
 	private void analyzePassedPawn(final int player, final long p, final State4 s, final WeightAgg agg){
-		final int index = BitUtil.lsbIndex(p);
-		final int row = player == 0? index>>>3: 7-(index>>>3);
-		final int pawnDist = 7-row;
+		final int pawnIndex = BitUtil.lsbIndex(p);
+		//agg.add(this.p.passedPawnRowWeight[player][index >>> 3]);s
+		
+		final int row = player == 0? pawnIndex>>>3: 7-(pawnIndex>>>3);
+		final int pawnDist = 7-row; //distance of pawn from promotion square
 
-		assert (Masks.passedPawnMasks[player][index] & s.pawns[1-player]) == 0;
+		assert (Masks.passedPawnMasks[player][pawnIndex] & s.pawns[1-player]) == 0;
 		
 		//calculate king distance to promote square
 		final int kingIndex = BitUtil.lsbIndex(s.kings[1-player]);
-		final int kingXDist = Math.abs(kingIndex%8 - index%8);
+		final int kingXDist = Math.abs(kingIndex%8 - pawnIndex%8);
 		final int promoteRow = 1-player == 0? 7: 0; 
 		final int kingYDist = Math.abs((kingIndex>>>3) - promoteRow);
 		final int enemyKingDist = kingXDist > kingYDist? kingXDist: kingYDist;
@@ -219,7 +243,7 @@ public final class E5 implements Evaluator2{
 		if(pawnDist < enemyKingDist){
 			final int diff = enemyKingDist-pawnDist;
 			assert diff < 8;
-			agg.add(0, diff*diff);
+			agg.add(0, max(diff*diff, 15));
 		}
 		
 		//pawn closer than enemy king and no material remaining
@@ -228,6 +252,52 @@ public final class E5 implements Evaluator2{
 					*this.p.materialWeights[State4.PIECE_TYPE_PAWN] == 0){
 			agg.add(500);
 		}
+		
+		//checks for support by same color bishop
+		//performs badly by several indications
+		/*final int endIndex = index%8 + (player == 0? 56: 0);
+		final int endColor = PositionMasks.squareColor(endIndex);
+		final int enemyBishopSupport = -25;
+		final long squareMask = PositionMasks.bishopSquareMask[endColor];
+		if((s.bishops[1-player] & squareMask) != 0){ //allied supporting bishop
+			agg.add(0, enemyBishopSupport/(pawnDist*pawnDist));
+		}*/
+
+		final int rr = row*(row-1);
+		final int start = 18*rr/2;
+		final int end = 10*(rr+row+1)/2;
+		agg.add(start, end);
+		
+		
+		//checks for pawn advancement blocked
+		final long nextPos = player == 0? p << 8: p >>> 8;
+		final long allPieces = s.pieces[0]|s.pieces[1];
+		final boolean isBlocked = (nextPos & allPieces) != 0;
+		if(isBlocked){ //pawn adancement blocked
+			agg.add(-start/6/pawnDist, -end/6/pawnDist);
+			//agg.add(-10/pawnDist, -30/pawnDist);
+		}
+		
+		//checks to see whether we have a non-pawn material disadvantage,
+		//its very hard to keep a passed pawn when behind
+		final int pawnType = State4.PIECE_TYPE_PAWN;
+		final int pawnWeight = this.p.materialWeights[pawnType];
+		final int nonPawnMaterialDiff = 
+				(materialScore[player]-s.pieceCounts[player][pawnType]*pawnWeight) - 
+				(materialScore[1-player]-s.pieceCounts[1-player][pawnType]*pawnWeight);
+		if(nonPawnMaterialDiff < 0){
+			agg.add(-start*2/3, -end*2/3);
+		}
+		
+		//passed pawn supported by rook bonus and free to advance
+		/*if(!isBlocked && (s.rooks[player] & PositionMasks.opposedPawnMask[1-player][pawnIndex]) != 0){
+			agg.add(20/pawnDist);
+		}*/
+		
+		final boolean chain = (PositionMasks.pawnChainMask[player][pawnIndex] & s.pawns[player]) != 0;
+		if(chain){
+			agg.add(35/pawnDist);
+		}
 	}
 	
 	private void scorePawns(final int player, final State4 s, final WeightAgg agg,
@@ -235,6 +305,9 @@ public final class E5 implements Evaluator2{
 		final long enemyPawns = s.pawns[1-player];
 		final long alliedPawns = s.pawns[player];
 		final long all = alliedPawns | enemyPawns;
+		final int kingIndex = BitUtil.lsbIndex(s.kings[player]);
+		
+		int kingDistAgg = 0; //king distance aggregator
 		for(long pawns = alliedPawns; pawns != 0; pawns &= pawns-1){
 			final int index = BitUtil.lsbIndex(pawns);
 			final int col = index%8;
@@ -247,7 +320,7 @@ public final class E5 implements Evaluator2{
 			final boolean doubled = (PositionMasks.opposedPawnMask[player][index] & alliedPawns) != 0;
 			
 			if(passed){
-				agg.add(p.passedPawnRowWeight[player][index >>> 3]); //index >>> 3 == index/8 == row
+				//agg.add(p.passedPawnRowWeight[player][index >>> 3]); //index >>> 3 == index/8 == row
 				analyzePassedPawn(player, pawns&-pawns, s, agg);
 			}
 			if(isolated){
@@ -276,7 +349,18 @@ public final class E5 implements Evaluator2{
 					agg.add(p.backwardPawns[opposedFlag][col]);
 				}
 			}
+			
+			//allied king distance, used to encourage king supporting pawns in endgame
+			final int kingXDist = Math.abs(kingIndex%8 - index%8);
+			final int kingYDist = Math.abs((kingIndex>>>3) - (index>>>3));
+			final int alliedKingDist = kingXDist > kingYDist? kingXDist: kingYDist;
+			assert alliedKingDist < 8;
+			kingDistAgg += alliedKingDist-1;
 		}
+		
+		//minimize avg king dist from pawns in endgame
+		final double n = s.pieceCounts[player][State4.PIECE_TYPE_PAWN];
+		if(n > 0) agg.add(0, (int)(-kingDistAgg/n*5+.5));
 	}
 	
 	/** calculates danger associated with pawn wall weaknesses or storming enemy pawns*/
@@ -479,30 +563,64 @@ public final class E5 implements Evaluator2{
 		}
 	}
 	
-	private static void scoreMobility(final int player, final State4 s, final WeightAgg agg, final EvalParameters c){
-		final long enemyPawnAttaks = Masks.getRawPawnAttacks(1-player, s.pawns[1-player]);
+	private static void scoreMobility(final int player, final State4 s, final WeightAgg agg, final EvalParameters c, final long[] space){
+		final long enemyPawnAttacks = Masks.getRawPawnAttacks(1-player, s.pawns[1-player]);
+		
+		final long king = s.kings[player];
+		space[player] = s.pieces[player] | Masks.getRawPawnAttacks(player, s.pawns[player]) |
+				king | Masks.kingMoves[BitUtil.lsbIndex(king)];
+		
+		long enemyAttacks = enemyPawnAttacks;
 		for(long bishops = s.bishops[player]; bishops != 0; bishops &= bishops-1){
-			final long moves = State4.getBishopMoves(player, s.pieces, bishops&-bishops) & ~enemyPawnAttaks;
+			final long moves = State4.getBishopMoves(player, s.pieces, bishops&-bishops) & ~enemyAttacks;
 			final int count = (int)BitUtil.getSetBits(moves);
 			agg.add(c.mobilityWeights[State4.PIECE_TYPE_BISHOP][count]);
+			space[player] |= moves;
 		}
-		
 		for(long knights = s.knights[player]; knights != 0; knights &= knights-1){
-			final long moves = State4.getKnightMoves(player, s.pieces, knights&-knights) & ~enemyPawnAttaks;
+			final long moves = State4.getKnightMoves(player, s.pieces, knights&-knights) & ~enemyAttacks;
 			final int count = (int)BitUtil.getSetBits(moves);
 			agg.add(c.mobilityWeights[State4.PIECE_TYPE_KNIGHT][count]);
+			space[player] |= moves;
+		}
+		
+		final long allPieces = s.pieces[0]|s.pieces[1];
+		final long enemyPawns = s.pawns[1-player];
+		for(long rooks = s.rooks[player]; rooks != 0; rooks &= rooks-1){
+			final long r = rooks&-rooks;
+			final long moves = State4.getRookMoves(player, s.pieces, r) & ~enemyAttacks;
+			final int count = (int)BitUtil.getSetBits(moves);
+			agg.add(c.mobilityWeights[State4.PIECE_TYPE_ROOK][count]);
+			space[player] |= moves;
+			
+			final int rindex = BitUtil.lsbIndex(r);
+			final int col = rindex%8;
+			if(isHalfOpen(col, enemyPawns, allPieces & ~r)){ //tests file half open
+				agg.add(10, 25);
+				if(((allPieces & ~r) & Masks.colMask[col]) == 0){ //tests file open
+					agg.add(10, 30);
+				}
+			}
 		}
 		
 		for(long queens = s.queens[player]; queens != 0; queens &= queens-1){
-			final long moves = State4.getQueenMoves(player, s.pieces, queens&-queens) & ~enemyPawnAttaks;
+			final long moves = State4.getQueenMoves(player, s.pieces, queens&-queens) & ~enemyAttacks;
+			space[player] |= moves;
 			final int count = (int)BitUtil.getSetBits(moves);
 			agg.add(c.mobilityWeights[State4.PIECE_TYPE_QUEEN][count]);
 		}
-		
-		for(long rooks = s.rooks[player]; rooks != 0; rooks &= rooks-1){
-			final long moves = State4.getRookMoves(player, s.pieces, rooks&-rooks) & ~enemyPawnAttaks;
-			final int count = (int)BitUtil.getSetBits(moves);
-			agg.add(c.mobilityWeights[State4.PIECE_TYPE_ROOK][count]);
+	}
+	
+	private static boolean isHalfOpen(final int col, final long pawns, final long pieces){
+		final long mask = Masks.colMask[col];
+		if((mask & pieces) == 0) return true;
+		if((mask & (pieces & ~pawns)) == 0){
+			//no pieces except for pawns
+			final long c = pawns & mask;
+			if((c & (c-1)) == 0){
+				return true;
+			}
 		}
+		return false;
 	}
 }

@@ -11,10 +11,9 @@ import state4.State4;
 import state4.StateUtil;
 import util.opening2.Book;
 import eval.Evaluator2;
-import eval.e5.E5;
 import eval.e5.E5Params2;
-import eval.e5.E5;
-import eval.e5.params.E5Params1;
+import eval.e6.E6;
+import eval.e6.E6temp;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -30,14 +29,16 @@ public class GauntletP {
 		private final Search4[] search;
 		public final AtomicInteger[] counts = new AtomicInteger[3];
 		private final int maxDrawCount;
+		private final int minCutoffScore;
 		
-		GauntletThread(long time, Search4[] search, int maxDrawCount){
+		GauntletThread(long time, Search4[] search, int maxDrawCount, int minCutoffScore){
 			this.time = time;
 			this.search = search;
 			this.maxDrawCount = maxDrawCount;
 			for(int a = 0; a < counts.length; a++){
 				counts[a] = new AtomicInteger(0);
 			}
+			this.minCutoffScore = minCutoffScore;
 		}
 		
 		public void run(){
@@ -56,6 +57,8 @@ public class GauntletP {
 				boolean draw = false;
 				for(int a = 0; a < 2; a++) search[a].resetSearch();
 				boolean outOfBook = false;
+				
+				boolean[] endScore = new boolean[2];
 
 				while(state.pieceCounts[turn][State4.PIECE_TYPE_KING] != 0 &&
 						!isMate(turn, state) && !state.isForcedDraw()){
@@ -68,6 +71,17 @@ public class GauntletP {
 					if(print) System.out.println(StateUtil.fen(turn, state));
 					if(print) System.out.println("search state:\n"+state);
 					if(print) System.out.println("draw count = "+state.drawCount);
+					
+					
+					int depth = 6;
+					for(int a = 0; a < 2; a++){
+						if(state.pieceCounts[a][State4.PIECE_TYPE_QUEEN] == 0) depth++;
+						int pieces = state.pieceCounts[a][State4.PIECE_TYPE_BISHOP]+
+								state.pieceCounts[a][State4.PIECE_TYPE_KNIGHT]+
+								state.pieceCounts[a][State4.PIECE_TYPE_ROOK];
+						if(pieces == 0) depth++;
+						if(pieces <= 3) depth++;
+					}
 
 					int[] bookMove = b.getRandomMove(turn, state, 100);
 					if(bookMove != null && !outOfBook){
@@ -75,9 +89,16 @@ public class GauntletP {
 						if(print) System.out.println("book move");
 					} else{
 						outOfBook = true;
-						search[(turn+searchOffset)%2].search(turn, state, move, 7);
+						search[(turn+searchOffset)%2].search(turn, state, move, depth);
 						//RawTimerThread3.search(search[(turn+searchOffset)%2], state, turn, time, 0, move);
 						//search(turn, state, search[(turn+searchOffset)%2], move, time);
+						
+						
+						endScore[(turn+searchOffset)%2] = Math.abs(search[(turn+searchOffset)%2].getStats().predictedScore) >= minCutoffScore;
+						if(endScore[0] && endScore[1]){
+							turn = search[(turn+searchOffset)%2].getStats().predictedScore < 0? turn: 1-turn;
+							break;
+						}
 					}
 					
 					if(print) System.out.println("search time = "+search[turn].getStats().searchTime);
@@ -85,7 +106,7 @@ public class GauntletP {
 					if(print) System.out.println();
 					
 					if(move[0] == move[1]){
-						System.out.println("bad move draw");
+						System.out.println("no move draw");
 						draw = true;
 						break;
 					}
@@ -117,6 +138,9 @@ public class GauntletP {
 		final int hashSize = 20;
 		final long time = 100;
 		final int maxDrawCount = 50;
+		
+		final int minCutoffScore = 800; //score before cutting off a game
+		
 
 		final int threads = 3;
 		final GauntletThread[] t = new GauntletThread[threads];
@@ -124,15 +148,16 @@ public class GauntletP {
 		System.out.print("initializing... ");
 		for(int a = 0; a < threads; a++){
 			Evaluator2 e1 =
-					new E5(E5Params1.buildEval());
+					//new E5(E5Params2.buildEval());
+					new E6(E5Params2.buildEval());
 
 			Evaluator2 e2 = 
-					new E5(E5Params2.buildEval());
+					new E6temp(E5Params2.buildEval());
 			
 			final Search4[] search = new Search4[2];
 			search[0] = new SearchS4V33t(e1, hashSize, false);
 			search[1] = new SearchS4V33t(e2, hashSize, false);
-			t[a] = new GauntletThread(time, search, maxDrawCount);
+			t[a] = new GauntletThread(time, search, maxDrawCount, minCutoffScore);
 			t[a].setDaemon(true);
 		}
 		System.out.println("complete");
