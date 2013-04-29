@@ -9,9 +9,8 @@ import search.Search4;
 import search.search33.SearchS4V33t;
 import state4.BitUtil;
 import state4.State4;
-import time.TimerThread4;
 import util.opening2.Book;
-import eval.expEvalV3.E4;
+import eval.legacy.expEvalV3.E4;
 
 /** plays queued games*/
 public final class GameQueue {

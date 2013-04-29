@@ -8,8 +8,9 @@ import state4.State4;
 import state4.StateUtil;
 import uci.Position;
 import util.FenParser;
-import eval.e5.E5;
-import eval.e5.params.GParams1v3;
+import eval.Evaluator2;
+import eval.e5.E5v2;
+import eval.e5.E5Params3;
 
 
 public class Debug {
@@ -62,11 +63,11 @@ public class Debug {
 		int player = p.sideToMove;
 		
 		System.out.println(s);
-		E5 e = new E5(GParams1v3.buildEval());
+		Evaluator2 e = new E5v2(E5Params3.buildEval());
 		//Evaluator2<State4> e = new IncrementalPieceScore();
 		
 		//e.initialize(s);
-		e.traceEval(s);
+		//e.traceEval(s);
 		
 		System.out.println("\n");
 		

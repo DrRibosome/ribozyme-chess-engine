@@ -3,7 +3,7 @@ package util.genetic.mutatorV2.getters;
 import java.util.List;
 
 import util.genetic.mutatorV2.Getter;
-import eval.expEvalV3.EvalParameters;
+import eval.EvalParameters;
 
 public final class PawnStormGetter {
 	public static void add(List<Getter> l){

@@ -7,8 +7,6 @@ import util.genetic.GEntity;
 import util.genetic.mutatorV2.getters.BishopPairGetter;
 import util.genetic.mutatorV2.getters.DoubledPawnsGetter;
 import util.genetic.mutatorV2.getters.IsolatedPawnsGetter;
-import util.genetic.mutatorV2.getters.KingDangerAttacksGetter;
-import util.genetic.mutatorV2.getters.KingDangerSquareGetter;
 import util.genetic.mutatorV2.getters.MaterialWeightGetter;
 import util.genetic.mutatorV2.getters.MobilityGetter;
 import util.genetic.mutatorV2.getters.PassedPawnGetter;
@@ -16,7 +14,7 @@ import util.genetic.mutatorV2.getters.PawnChainGetter;
 import util.genetic.mutatorV2.getters.PawnShelterGetter;
 import util.genetic.mutatorV2.getters.PawnStormGetter;
 import util.genetic.mutatorV2.getters.TempoGetter;
-import eval.expEvalV3.EvalParameters;
+import eval.EvalParameters;
 
 public final class MutatorV2 implements Mutator2{
 	private final static List<Getter> l;

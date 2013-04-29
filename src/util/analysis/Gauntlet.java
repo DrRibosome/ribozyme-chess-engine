@@ -10,8 +10,8 @@ import state4.State4;
 import state4.StateUtil;
 import util.opening2.Book;
 import eval.Evaluator2;
-import eval.evalV10.SuperEvalS4V10;
-import eval.evalV9.SuperEvalS4V9;
+import eval.legacy.evalV10.SuperEvalS4V10;
+import eval.legacy.evalV9.SuperEvalS4V9;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move

@@ -1,6 +1,6 @@
 package util.genetic.mutatorV2;
 
-import eval.expEvalV3.EvalParameters;
+import eval.EvalParameters;
 
 public interface Getter{
 	int get(EvalParameters p);

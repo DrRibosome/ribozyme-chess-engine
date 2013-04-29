@@ -4,8 +4,8 @@ import java.util.List;
 
 import state4.State4;
 import util.genetic.mutatorV2.Getter;
+import eval.EvalParameters;
 import eval.Weight;
-import eval.expEvalV3.EvalParameters;
 
 public final class MobilityGetter{
 	public static void add(List<Getter> l){

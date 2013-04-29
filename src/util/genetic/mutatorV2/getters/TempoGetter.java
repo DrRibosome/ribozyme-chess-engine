@@ -2,10 +2,9 @@ package util.genetic.mutatorV2.getters;
 
 import java.util.List;
 
-import eval.Weight;
-import eval.expEvalV3.EvalParameters;
-
 import util.genetic.mutatorV2.Getter;
+import eval.EvalParameters;
+import eval.Weight;
 
 public final class TempoGetter {
 	public static void add(List<Getter> l){

@@ -3,8 +3,8 @@ package util.genetic.mutatorV2.getters;
 import java.util.List;
 
 import util.genetic.mutatorV2.Getter;
+import eval.EvalParameters;
 import eval.Weight;
-import eval.expEvalV3.EvalParameters;
 
 public final class PawnChainGetter{
 	public static void add(List<Getter> l){

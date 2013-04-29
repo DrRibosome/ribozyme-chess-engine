@@ -1,7 +1,7 @@
 package util.genetic.mutatorV2;
 
 import util.genetic.GEntity;
-import eval.expEvalV3.EvalParameters;
+import eval.EvalParameters;
 
 public interface Mutator2 {
 	/** mutates based off population*/

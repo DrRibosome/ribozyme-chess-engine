@@ -43,6 +43,8 @@ public final class State4 {
 	
 	/** zobrist hash key*/
 	private long zkey = 0;
+	/** zobrist hash for pawn, undifferentiated for player*/
+	private long pawnZkey = 0;
 	private final ZHash zhash;
 	private final HistoryMap2 hm = new HistoryMap2(10);
 	/** appearance hash, applied to zkey to denote how many times a positions hash appeared*/
@@ -171,6 +173,12 @@ public final class State4 {
 		return 0;
 	}
 	
+	/** copies history into passed buffer, returns length of history*/
+	public int copyHistory(final long[] buff){
+		System.arraycopy(history, 0, buff, 0, hindex);
+		return hindex;
+	}
+	
 	/** clears stored history, should be called just before beginning a new search*/
 	public void resetHistory(){
 		hindex = 0;
@@ -238,9 +246,9 @@ public final class State4 {
 	}
 	
 	/** conveneince method for executing a move stored in a move encoding*/
-	public long executeMove(int player, long encoding){
-		long pieceMask = 1L<<MoveEncoder.getPos1(encoding);
-		long moveMask = 1L<<MoveEncoder.getPos2(encoding);
+	public long executeMove(final int player, final long encoding){
+		final long pieceMask = 1L<<MoveEncoder.getPos1(encoding);
+		final long moveMask = 1L<<MoveEncoder.getPos2(encoding);
 		return executeMove(player, pieceMask, moveMask);
 	}
 	
@@ -269,6 +277,10 @@ public final class State4 {
 		assert movingType != 0;
 		
 		zkey ^= zhash.zhash[player][movingType][pos1] ^ zhash.zhash[player][movingType][pos2];
+		if(movingType == PIECE_TYPE_PAWN){
+			pawnZkey ^= zhash.zhash[player][PIECE_TYPE_PAWN][pos1] ^
+					zhash.zhash[player][PIECE_TYPE_PAWN][pos2];
+		}
 
 		long encoding = MoveEncoder.encode(pos1, pos2, movingType, takenType, player);
 		
@@ -357,6 +369,9 @@ public final class State4 {
 			
 			zkey ^= zhash.zhash[1-player][mailbox[pos2]][pos2];
 		}*/
+		if(takenType == PIECE_TYPE_PAWN){
+			pawnZkey ^= zhash.zhash[1-player][PIECE_TYPE_PAWN][pos2];
+		}
 		
 		assert pos1 != pos2;
 		
@@ -372,7 +387,7 @@ public final class State4 {
 		
 		enPassante = 0;
 		if(movingType == PIECE_TYPE_PAWN){
-			if((moveMask & Masks.pawnPromotionMask[player]) != 0){
+			if((moveMask & Masks.pawnPromotionMask[player]) != 0){ //pawn promotion
 				//pawn promotion
 				mailbox[pos2] = PIECE_TYPE_QUEEN;
 				pawns[player] &= ~moveMask;
@@ -383,6 +398,7 @@ public final class State4 {
 				
 				zkey ^= zhash.zhash[player][PIECE_TYPE_PAWN][pos2] ^
 						zhash.zhash[player][PIECE_TYPE_QUEEN][pos2];
+				pawnZkey ^= zhash.zhash[player][PIECE_TYPE_PAWN][pos2];
 				//System.out.println("pawn promoted");
 			} else if((player == 0 && (pieceMask & 0xFF00L) != 0 && (moveMask & 0xFF000000L) != 0) ||
 					(player == 1 && (pieceMask & 0xFF000000000000L) != 0 && (moveMask & 0xFF00000000L) != 0)){
@@ -400,6 +416,7 @@ public final class State4 {
 				encoding = MoveEncoder.setEnPassanteTake(encoding);
 				pieceCounts[1-player][PIECE_TYPE_EMPTY]--;
 				zkey ^= zhash.zhash[1-player][PIECE_TYPE_PAWN][pos3];
+				pawnZkey ^= zhash.zhash[1-player][PIECE_TYPE_PAWN][pos3];
 			}
 		}
 		
@@ -467,6 +484,10 @@ public final class State4 {
 		
 		
 		zkey ^= zhash.zhash[player][type][pos2] ^ zhash.zhash[player][type][pos1];
+		if(type == PIECE_TYPE_PAWN){
+			pawnZkey ^= zhash.zhash[player][PIECE_TYPE_PAWN][pos2] ^
+					zhash.zhash[player][PIECE_TYPE_PAWN][pos1];
+		}
 		
 		//final long[] b1 = getBoard(mailbox[pos2]);
 		final long[] b1 = pieceMasks[mailbox[pos2]];
@@ -543,6 +564,9 @@ public final class State4 {
 			pieceCounts[1-player][PIECE_TYPE_EMPTY]++;
 			zkey ^= zhash.zhash[1-player][taken][pos2];
 		}*/
+		if(takenType == PIECE_TYPE_PAWN){
+			pawnZkey ^= zhash.zhash[1-player][PIECE_TYPE_PAWN][pos2];
+		}
 		
 		//pawn promotion
 		if(MoveEncoder.isPawnPromoted(encoding)){
@@ -556,6 +580,7 @@ public final class State4 {
 			/*System.out.println(this);*/
 			zkey ^= zhash.zhash[player][PIECE_TYPE_PAWN][pos1] ^
 					zhash.zhash[player][PIECE_TYPE_QUEEN][pos1];
+			pawnZkey ^= zhash.zhash[player][PIECE_TYPE_PAWN][pos1];
 		}
 		
 		//clear any current en passant square (non-branching)
@@ -600,6 +625,7 @@ public final class State4 {
 			//enPassante = takePos;
 			pieceCounts[1-player][PIECE_TYPE_EMPTY]++;
 			zkey ^= zhash.zhash[1-player][PIECE_TYPE_PAWN][pos3];
+			pawnZkey ^= zhash.zhash[1-player][PIECE_TYPE_PAWN][pos3];
 		}
 
 		collect();
@@ -656,6 +682,7 @@ public final class State4 {
 		return s;
 	}
 	
+	/** initializes all pieces to starting locations and clears history map and list*/
 	public void initialize(){
 		long p = 0xFFL;
 		long q = 0x8L;
@@ -699,6 +726,10 @@ public final class State4 {
 		if(!kingMoved[1] && !rookMoved[1][1]) castleKey ^= zhash.canCastle[1][1];
 		
 		return zkey ^ appHashs[count < 4? count: 3] ^ castleKey;
+	}
+	
+	public long pawnZkey(){
+		return pawnZkey;
 	}
 	
 	/**
@@ -754,6 +785,9 @@ public final class State4 {
 					int pos = BitUtil.lsbIndex(w&-w);
 					w &= w-1;
 					zkey ^= zhash.zhash[i][rep[f]][pos];
+					if(rep[f] == PIECE_TYPE_PAWN){
+						pawnZkey ^= zhash.zhash[i][rep[f]][pos];
+					}
 				}
 			}
 		}
@@ -776,6 +810,7 @@ public final class State4 {
 
 		hm.clear();
 		hm.put(zkey);
+		resetHistory();
 		collect();
 	}
 }

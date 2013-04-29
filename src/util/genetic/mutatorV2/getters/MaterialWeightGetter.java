@@ -4,7 +4,7 @@ import java.util.List;
 
 import state4.State4;
 import util.genetic.mutatorV2.Getter;
-import eval.expEvalV3.EvalParameters;
+import eval.EvalParameters;
 
 public final class MaterialWeightGetter{
 	public static void add(List<Getter> l){

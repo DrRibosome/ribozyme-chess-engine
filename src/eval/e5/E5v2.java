@@ -4,10 +4,10 @@ import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
+import eval.EvalParameters;
 import eval.Evaluator2;
 import eval.PositionMasks;
 import eval.Weight;
-import eval.expEvalV3.EvalParameters;
 
 public final class E5v2 implements Evaluator2{
 	private final static class WeightAgg{
@@ -124,7 +124,7 @@ public final class E5v2 implements Evaluator2{
 	}
 	
 	public E5v2(){
-		this(E5Params2.buildEval());
+		this(E5Params3.buildEval());
 	}
 
 	final WeightAgg endgameBonus = new WeightAgg();

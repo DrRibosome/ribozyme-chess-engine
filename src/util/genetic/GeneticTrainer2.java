@@ -8,9 +8,7 @@ import java.util.Map;
 
 import util.genetic.mutatorV2.Mutator2;
 import util.genetic.mutatorV2.MutatorV2;
-import eval.expEvalV3.EvalParameters;
-import eval.expEvalV3.gparams.GParams1v2Base;
-import eval.expEvalV3.gparams.HParams2;
+import eval.EvalParameters;
 
 /**
  * genetic trainer, implements ideas from paper

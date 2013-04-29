@@ -3,7 +3,7 @@ package util.genetic;
 import java.text.DecimalFormat;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import eval.expEvalV3.EvalParameters;
+import eval.EvalParameters;
 
 public final class GEntity{
 	private static int idIndex = 0;

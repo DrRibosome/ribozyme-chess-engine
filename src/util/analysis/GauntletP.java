@@ -11,9 +11,9 @@ import state4.State4;
 import state4.StateUtil;
 import util.opening2.Book;
 import eval.Evaluator2;
-import eval.e5.E5Params2;
-import eval.e6.E6;
-import eval.e6.E6temp;
+import eval.e5.E5v2;
+import eval.e5.E5Params3;
+import eval.legacy.e6.E6;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -136,7 +136,7 @@ public class GauntletP {
 	public static void main(String[] args) throws IOException{
 		
 		final int hashSize = 20;
-		final long time = 100;
+		final long time = 500;
 		final int maxDrawCount = 50;
 		
 		final int minCutoffScore = 800; //score before cutting off a game
@@ -148,11 +148,10 @@ public class GauntletP {
 		System.out.print("initializing... ");
 		for(int a = 0; a < threads; a++){
 			Evaluator2 e1 =
-					//new E5(E5Params2.buildEval());
-					new E6(E5Params2.buildEval());
+					new E6(E5Params3.buildEval());
 
 			Evaluator2 e2 = 
-					new E6temp(E5Params2.buildEval());
+					new E5v2(E5Params3.buildEval());
 			
 			final Search4[] search = new Search4[2];
 			search[0] = new SearchS4V33t(e1, hashSize, false);

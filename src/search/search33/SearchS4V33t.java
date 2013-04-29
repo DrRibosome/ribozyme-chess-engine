@@ -532,7 +532,8 @@ public final class SearchS4V33t implements Search4{
 		int cutoffFlag = TTEntry.CUTOFF_TYPE_UPPER;
 		int moveCount = 0;
 		
-		final int drawCount = s.drawCount; //stored for error checking purposes
+		final int drawCount = s.drawCount; //stored for error checking
+		final long pawnZkey = s.pawnZkey(); //stored for error checking
 		
 		boolean hasMove = ml.kingAttacked[player];
 		final boolean inCheck = ml.kingAttacked[player];
@@ -623,6 +624,7 @@ public final class SearchS4V33t implements Search4{
 				this.e.undoMove(encoding);
 				assert zkey == s.zkey(); //keys should be unchanged after undo
 				assert drawCount == s.drawCount;
+				assert pawnZkey == s.pawnZkey();
 				
 				if(isDrawable && 0 > g){ //can take a draw instead of making the move
 					g = 0;

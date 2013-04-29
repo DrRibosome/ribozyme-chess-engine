@@ -16,12 +16,12 @@ public final class MoveEncoder {
 	 * bit 2: rook moved/taken, player 1
 	 * bit 3: which rook was moved/taken for player 0
 	 * bit 4: which rook was moved/taken for player 1
-	 * bit 5: unused
 	 */
 	private final static int castleCodeOffset = 19; //new castle code uses 5 bits, reserves 6
 	private final static int isEnPassanteTakeOffset = 32;
 	private final static int isCastleOffset = 33;
 	private final static int prevDrawCountOffset = 34;
+	private final static int splitPointOffset = 24;
 	
 	public static int getPos1(final long encoding){
 		return (int)(encoding & posMask);
@@ -29,6 +29,14 @@ public final class MoveEncoder {
 	
 	public static int getPos2(final long encoding){
 		return (int)((encoding & (posMask<<6)) >>> 6);
+	}
+	
+	public static long setSplitNode(final long encoding){
+		return encoding | (1L << splitPointOffset);
+	}
+	
+	public static boolean isSplitPoint(final long encoding){
+		return (encoding & 1L<<splitPointOffset) != 0;
 	}
 	
 	/** gets the type of piece taken*/

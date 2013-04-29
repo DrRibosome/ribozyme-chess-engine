@@ -11,9 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import eval.expEvalV3.EvalParameters;
+import eval.EvalParameters;
 
 /** logs and loads the logs for genetic simuations*/
 public final class GeneticLogger {

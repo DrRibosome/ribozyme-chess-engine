@@ -12,7 +12,7 @@ import search.search33.SearchS4V33t;
 import uci.Position;
 import util.FenParser;
 import eval.Evaluator2;
-import eval.evalV10.SuperEvalS4V10;
+import eval.legacy.evalV10.SuperEvalS4V10;
 
 /**
  * tests search implementations by running through random test positions
