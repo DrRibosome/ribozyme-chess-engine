@@ -206,23 +206,6 @@ public final class E5v3 implements Evaluator2{
 		return (score+grainSize>>1) & ~(grainSize-1);
 	}
 	
-	private static void scoreRooks(final int player, final long rook, final State4 s, final WeightAgg agg){
-		//test for trapped rook
-		
-		final int kingIndex = BitUtil.lsbIndex(s.kings[player]);
-		final int kCol = kingIndex%8;
-		final int kRow = kingIndex/8;
-		
-		for(long rooks = s.rooks[player]; rooks != 0; rooks &= rooks-1){
-			final int rIndex = BitUtil.lsbIndex(rooks);
-			final int rCol = rIndex%8;
-			final int rRow = rIndex/8;
-			if(kCol >= 4 && rCol >= 4 && kRow == rRow && player == 0? kRow == 0: kRow == 7){
-				
-			}
-		}
-	}
-	
 	private static int max(final int a1, final int a2){
 		return a1 > a2? a1: a2;
 	}
