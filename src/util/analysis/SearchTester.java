@@ -13,7 +13,7 @@ import uci.Position;
 import util.FenParser;
 import eval.Evaluator2;
 import eval.e5.E5Params3;
-import eval.e5.E5v3;
+import eval.legacy.e5.E5v3;
 
 /**
  * tests search implementations by running through random test positions

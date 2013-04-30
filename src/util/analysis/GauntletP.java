@@ -14,7 +14,7 @@ import util.opening2.Book;
 import eval.Evaluator2;
 import eval.e5.E5Params3;
 import eval.e5.E5v2;
-import eval.e5.E5v3;
+import eval.legacy.e5.E5v3;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -150,7 +150,7 @@ public class GauntletP {
 		
 		final int minCutoffScore = 800; //score before cutting off a game
 		
-		final SearchType searchType = SearchType.FixedTime;
+		final SearchType searchType = SearchType.Depth;
 
 		final int threads = 3;
 		final GauntletThread[] t = new GauntletThread[threads];

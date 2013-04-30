@@ -1,4 +1,4 @@
-package eval.e5;
+package eval.legacy.e5;
 
 import state4.BitUtil;
 import state4.Masks;
@@ -8,7 +8,10 @@ import eval.EvalParameters;
 import eval.Evaluator2;
 import eval.PositionMasks;
 import eval.Weight;
+import eval.e5.E5Params3;
 
+/** E5v2 eval with memorized values, sometimes incorrect*/
+@Deprecated
 public final class E5v3 implements Evaluator2{
 	private final static class WeightAgg{
 		int start;
