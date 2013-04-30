@@ -9,11 +9,12 @@ import search.search33.SearchS4V33t;
 import state4.BitUtil;
 import state4.State4;
 import state4.StateUtil;
+import time.RawTimerThread3;
 import util.opening2.Book;
 import eval.Evaluator2;
-import eval.e5.E5v2;
 import eval.e5.E5Params3;
-import eval.legacy.e6.E6;
+import eval.e5.E5v2;
+import eval.e5.E5v3;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -24,14 +25,21 @@ import eval.legacy.e6.E6;
 public class GauntletP {
 	final static Book b = new Book(new File("megabook.bk"));
 	
+	private enum SearchType{
+		Depth,
+		FixedTime,
+		ControlledTime
+	}
+	
 	private final static class GauntletThread extends Thread{
 		private final long time;
 		private final Search4[] search;
 		public final AtomicInteger[] counts = new AtomicInteger[3];
 		private final int maxDrawCount;
 		private final int minCutoffScore;
+		private final SearchType type;
 		
-		GauntletThread(long time, Search4[] search, int maxDrawCount, int minCutoffScore){
+		GauntletThread(long time, Search4[] search, int maxDrawCount, int minCutoffScore, SearchType type){
 			this.time = time;
 			this.search = search;
 			this.maxDrawCount = maxDrawCount;
@@ -39,6 +47,7 @@ public class GauntletP {
 				counts[a] = new AtomicInteger(0);
 			}
 			this.minCutoffScore = minCutoffScore;
+			this.type = type;
 		}
 		
 		public void run(){
@@ -58,7 +67,7 @@ public class GauntletP {
 				for(int a = 0; a < 2; a++) search[a].resetSearch();
 				boolean outOfBook = false;
 				
-				boolean[] endScore = new boolean[2];
+				boolean[] endScoreCutoff = new boolean[2];
 
 				while(state.pieceCounts[turn][State4.PIECE_TYPE_KING] != 0 &&
 						!isMate(turn, state) && !state.isForcedDraw()){
@@ -89,13 +98,13 @@ public class GauntletP {
 						if(print) System.out.println("book move");
 					} else{
 						outOfBook = true;
-						search[(turn+searchOffset)%2].search(turn, state, move, depth);
-						//RawTimerThread3.search(search[(turn+searchOffset)%2], state, turn, time, 0, move);
-						//search(turn, state, search[(turn+searchOffset)%2], move, time);
+						if(type == SearchType.Depth) search[(turn+searchOffset)%2].search(turn, state, move, depth);
+						if(type == SearchType.ControlledTime) RawTimerThread3.search(search[(turn+searchOffset)%2], state, turn, time, 0, move);
+						if(type == SearchType.FixedTime) search(turn, state, search[(turn+searchOffset)%2], move, time);
 						
 						
-						endScore[(turn+searchOffset)%2] = Math.abs(search[(turn+searchOffset)%2].getStats().predictedScore) >= minCutoffScore;
-						if(endScore[0] && endScore[1]){
+						endScoreCutoff[(turn+searchOffset)%2] = Math.abs(search[(turn+searchOffset)%2].getStats().predictedScore) >= minCutoffScore;
+						if(endScoreCutoff[0] && endScoreCutoff[1]){
 							turn = search[(turn+searchOffset)%2].getStats().predictedScore < 0? turn: 1-turn;
 							break;
 						}
@@ -141,6 +150,7 @@ public class GauntletP {
 		
 		final int minCutoffScore = 800; //score before cutting off a game
 		
+		final SearchType searchType = SearchType.FixedTime;
 
 		final int threads = 3;
 		final GauntletThread[] t = new GauntletThread[threads];
@@ -148,15 +158,15 @@ public class GauntletP {
 		System.out.print("initializing... ");
 		for(int a = 0; a < threads; a++){
 			Evaluator2 e1 =
-					new E6(E5Params3.buildEval());
+					new E5v2(E5Params3.buildEval());
 
 			Evaluator2 e2 = 
-					new E5v2(E5Params3.buildEval());
+					new E5v3(E5Params3.buildEval());
 			
 			final Search4[] search = new Search4[2];
 			search[0] = new SearchS4V33t(e1, hashSize, false);
 			search[1] = new SearchS4V33t(e2, hashSize, false);
-			t[a] = new GauntletThread(time, search, maxDrawCount, minCutoffScore);
+			t[a] = new GauntletThread(time, search, maxDrawCount, minCutoffScore, searchType);
 			t[a].setDaemon(true);
 		}
 		System.out.println("complete");

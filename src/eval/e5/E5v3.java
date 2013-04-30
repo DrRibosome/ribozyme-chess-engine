@@ -9,7 +9,7 @@ import eval.Evaluator2;
 import eval.PositionMasks;
 import eval.Weight;
 
-public final class E5v2 implements Evaluator2{
+public final class E5v3 implements Evaluator2{
 	private final static class WeightAgg{
 		int start;
 		int end;
@@ -20,6 +20,10 @@ public final class E5v2 implements Evaluator2{
 		void add(final int start, final int end){
 			this.start += start;
 			this.end += end;
+		}
+		void add(WeightAgg w){
+			this.start += w.start;
+			this.end += w.end;
 		}
 		void add(final int v){
 			this.start += v;
@@ -59,12 +63,21 @@ public final class E5v2 implements Evaluator2{
 	private final EvalParameters p;
 	/** weight aggregator*/
 	private final WeightAgg agg = new WeightAgg();
-	
+	/** stores whether king has moved since last eval*/
+	private boolean kingMoved;
+	/** stores whether a pawn has moved since last eval*/
+	private boolean pawnMoved;
+
 	private final int margin;
 	private final int endMaterial;
 	private final int granularity;
 	
-	public E5v2(EvalParameters p){
+	//cached values
+	private final int[] pawnShieldStorm = new int[2];
+	private final WeightAgg[] pawnScore = new WeightAgg[]{new WeightAgg(), new WeightAgg()};
+	
+	
+	public E5v3(EvalParameters p){
 		this.p = p;
 		int startMaterial = (
 				  p.materialWeights[State4.PIECE_TYPE_PAWN]*8
@@ -123,7 +136,7 @@ public final class E5v2 implements Evaluator2{
 		}
 	}
 	
-	public E5v2(){
+	public E5v3(){
 		this(E5Params3.buildEval());
 	}
 
@@ -149,6 +162,10 @@ public final class E5v2 implements Evaluator2{
 		//(w0,w1,d) = (23,23,14), .05
 		endgameBonus.start = (int)(.1*(p1End-p2End)+.5);
 		endgameBonus.end = 0;
+		
+		kingMoved = false;
+		pawnMoved = false;
+		
 		return score + endgameBonus.score(scale) + p.tempo.score(scale);
 	}
 
@@ -163,7 +180,13 @@ public final class E5v2 implements Evaluator2{
 		
 		int score = materialScore[player];
 		scoreMobility(player, s, agg, p);
-		scorePawns(player, s, agg, p, pawnCount[player]);
+		if(pawnMoved || kingMoved){
+			pawnScore[player].clear();
+			scorePawns(player, s, pawnScore[player], p, pawnCount[player]);
+			agg.add(pawnScore[player]);
+		} else{
+			agg.add(pawnScore[player]);
+		}
 		
 		if(s.pieceCounts[player][State4.PIECE_TYPE_BISHOP] == 2){
 			agg.add(p.bishopPair);
@@ -399,20 +422,25 @@ public final class E5v2 implements Evaluator2{
 		int dindex = p.kingDangerSquares[player][kingIndex]; //danger index
 		
 		//pawn wall, storm
-		int pawnWallBonus = pawnShelterStormDanger(player, s, kingIndex, p);
-		final long cmoves = State4.getCastleMoves(player, s);
-		if(cmoves != 0){
-			//if we can castle, count the pawn wall/storm weight as best available after castle
-			if((player == 0 && (cmoves & 1L<<2) != 0) || (player == 1 && (cmoves & 1L<<58) != 0)){
-				final int left = pawnShelterStormDanger(player, s, player == 0? 2: 58, p);
-				pawnWallBonus = left > pawnWallBonus? left: pawnWallBonus;
+		if(kingMoved || pawnMoved){
+			int pawnWallBonus = pawnShelterStormDanger(player, s, kingIndex, p);
+			final long cmoves = State4.getCastleMoves(player, s);
+			if(cmoves != 0){
+				//if we can castle, count the pawn wall/storm weight as best available after castle
+				if((player == 0 && (cmoves & 1L<<2) != 0) || (player == 1 && (cmoves & 1L<<58) != 0)){
+					final int left = pawnShelterStormDanger(player, s, player == 0? 2: 58, p);
+					pawnWallBonus = left > pawnWallBonus? left: pawnWallBonus;
+				}
+				if((player == 0 && (cmoves & 1L<<6) != 0) || (player == 1 && (cmoves & 1L<<62) != 0)){
+					final int right = pawnShelterStormDanger(player, s, player == 0? 6: 62, p);
+					pawnWallBonus = right > pawnWallBonus? right: pawnWallBonus;
+				}
 			}
-			if((player == 0 && (cmoves & 1L<<6) != 0) || (player == 1 && (cmoves & 1L<<62) != 0)){
-				final int right = pawnShelterStormDanger(player, s, player == 0? 6: 62, p);
-				pawnWallBonus = right > pawnWallBonus? right: pawnWallBonus;
-			}
+			w.add(pawnWallBonus, 0);
+			pawnShieldStorm[player] = pawnWallBonus;
+		} else{
+			w.add(pawnShieldStorm[player], 0);
 		}
-		w.add(pawnWallBonus, 0);
 		
 		w.add(0, centerDanger[kingIndex]);
 		
@@ -480,6 +508,7 @@ public final class E5v2 implements Evaluator2{
 	private void update(long encoding, boolean undo){
 		final int dir = undo? -1: 1;
 		final int player = MoveEncoder.getPlayer(encoding);
+		final int moveType = MoveEncoder.getMovePieceType(encoding);
 		final int taken = MoveEncoder.getTakenType(encoding);
 		final int pos1Col = MoveEncoder.getPos1(encoding)%8;
 		final int pos2Col = MoveEncoder.getPos2(encoding)%8;
@@ -504,6 +533,9 @@ public final class E5v2 implements Evaluator2{
 			
 			pawnCount[player][pos1Col] -= dir;
 		}
+		
+		pawnMoved |= moveType == State4.PIECE_TYPE_PAWN || taken == State4.PIECE_TYPE_PAWN;
+		kingMoved |= moveType == State4.PIECE_TYPE_KING || taken == State4.PIECE_TYPE_KING;
 	}
 
 	@Override
@@ -542,6 +574,9 @@ public final class E5v2 implements Evaluator2{
 				pawnCount[a][index%8]++;
 			}
 		}
+		
+		kingMoved = true;
+		pawnMoved = true;
 	}
 	
 	private static void scoreMobility(final int player, final State4 s, final WeightAgg agg, final EvalParameters c){
