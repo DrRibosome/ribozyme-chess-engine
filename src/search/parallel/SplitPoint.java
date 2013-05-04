@@ -11,7 +11,7 @@ public final class SplitPoint {
 	/** move index to search next*/
 	public int moveIndex;
 	/** stores number of completed moves*/
-	public int completed ;
+	public AtomicInteger completed ;
 	/** stores total number of moves to search in this node*/
 	public int totalMoves;
 	public int alpha;

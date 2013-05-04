@@ -158,42 +158,23 @@ public final class SearchThread extends Thread{
 					cutoffSearch.set(false);
 					final int player = splitState.sideToMove;
 					final State4 s = splitState.s;
+					final int alpha = splitState.alpha;
 					final int beta = splitState.beta;
 					final boolean pv = splitState.pv;
 					final int depth = splitState.depth;
 					
-					
-					final int moveIndex = splitState.moveIndex;
-					final MoveList ml = stack[0];
-					genMoves(player, s, ml, m, false);
-					final int length = ml.length;
-					isort(ml.pieceMasks, ml.moves, ml.ranks, length);
-					final TreeStack next = t[1];
-					for(long piece = ml.pieceMasks[moveIndex]; piece != 0 && !splitState.betaCufoff.get(); piece &= piece-1){
-						descend(1-player, s, depth-1, -beta, -splitState.alpha.get(), pv, 1);
-						
-						
-						//note: also need to store a mask in addition to move index to tell how far along we are
-						
-						if(next.splitHit){
-							
+					final TreeStack t = descend(player, s, depth, alpha, beta, pv, 0);
+					final SplitPoint sp = splitState.sp;
+					final int score = t.score;
+					if(splitState.sp.score.get() < score){
+						int exp;
+						while((exp = splitState.sp.score.get()) < score){
+							splitState.sp.score.compareAndSet(exp, score);
 						}
-						
-						final int g = next.score;
-						
-						if(g >= beta){
-							splitState.betaCufoff.set(true);
-						}
-						
-						boolean done = false;
-						do{
-							final int alpha = splitState.alpha.get();
-							if(g > splitState.alpha.get()){
-								done = splitState.alpha.compareAndSet(alpha, g);
-							} else{
-								done = true;
-							}
-						} while(!done);
+					}
+					final int completionIndex = sp.completed.incrementAndGet();
+					if(completionIndex == sp.totalMoves){
+						//completed a split point, time to load and continue parent
 					}
 				}
 			}
@@ -223,6 +204,7 @@ public final class SearchThread extends Thread{
 		final TreeStack t = this.t[stackIndex];
 		stats.nodesSearched++;
 
+		//record node
 		t.ab[0] = alpha;
 		t.ab[1] = beta;
 		t.pv = pv;
@@ -243,7 +225,6 @@ public final class SearchThread extends Thread{
 			t.cutoff = true;
 			return t;
 		}
-		
 
 		final MoveList ml = stack[stackIndex];
 		final long[] pieceMasks = ml.pieceMasks; //piece moving
@@ -251,8 +232,6 @@ public final class SearchThread extends Thread{
 		final int[] ranks = ml.ranks; //move ranking
 		ml.killer[0] = 0;
 		ml.killer[1] = 0;
-		
-		int w = 0;
 
 		final long zkey = s.zkey();
 		final TTEntry e = m.get(zkey);
@@ -282,10 +261,6 @@ public final class SearchThread extends Thread{
 		genMoves(player, s, ml, m, false);
 		final int length = ml.length;
 		if(length == 0){ //no moves, draw
-			/*fillEntry.fill(zkey, 0, 0, depth, TTEntry.CUTOFF_TYPE_EXACT, seq);
-			m.put(zkey, fillEntry);*/
-
-			//return 0;
 			t.score = 0;
 			return t;
 		}
@@ -307,44 +282,46 @@ public final class SearchThread extends Thread{
 		//final TreeStack next = this.t[stackIndex+1];
 		for(int i = 0; i < length && !t.cutoff; i++){
 			for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
-				
-				moveCount++;
-				long encoding = s.executeMove(player, pieceMasks[i], movesTemp&-movesTemp);
-				this.e.processMove(encoding);
-				boolean isDrawable = s.isDrawable(); //player can take a draw
+				if(moveCount++ == t.moveCount){
+					t.moveCount++;
+					long encoding = s.executeMove(player, pieceMasks[i], movesTemp&-movesTemp);
+					this.e.processMove(encoding);
+					boolean isDrawable = s.isDrawable(); //player can take a draw
 
-				if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
-					//king in check after move
-					g = -88888+stackIndex+1;
-				} else{
-					hasMove = true;
-					final TreeStack temp = descend(1-player, s, depth-1, -beta, -alpha, false, stackIndex+1);
-					t.cutoff |= temp.cutoff;
-					g = -temp.score;
-				}
-				s.undoMove();
-				this.e.undoMove(encoding);
-				assert zkey == s.zkey(); //keys should be unchanged after undo
-				assert drawCount == s.drawCount;
-				
-				if(isDrawable && 0 > g){ //can take a draw instead of making the move
-					g = 0;
-					encoding = 0;
-				} 
-				
-				if(g > bestScore){
-					bestScore = g;
-					bestMove = encoding;
-					if(g > alpha){
-						alpha = g;
-						cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
-						if(alpha >= beta){
-							if(!t.cutoff){
-								fillEntry.fill(zkey, encoding, alpha, depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
-								m.put(zkey, fillEntry);
+					if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
+						//king in check after move
+						g = -88888+stackIndex+1;
+					} else{
+						hasMove = true;
+						final TreeStack temp = descend(1-player, s, depth-1, -beta, -alpha, false, stackIndex+1);
+						t.cutoff |= temp.cutoff;
+						g = -temp.score;
+					}
+					s.undoMove();
+					this.e.undoMove(encoding);
+					assert zkey == s.zkey(); //keys should be unchanged after undo
+					assert drawCount == s.drawCount;
+					
+					if(isDrawable && 0 > g){ //can take a draw instead of making the move
+						g = 0;
+						encoding = 0;
+					} 
+					
+					if(g > bestScore){
+						bestScore = g;
+						t.score = bestScore;
+						bestMove = encoding;
+						if(g > alpha){
+							alpha = g;
+							cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
+							if(alpha >= beta){
+								if(!t.cutoff){
+									fillEntry.fill(zkey, encoding, alpha, depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
+									m.put(zkey, fillEntry);
+								}
+								t.score = g;
+								return t;
 							}
-							t.score = g;
-							return t;
 						}
 					}
 				}

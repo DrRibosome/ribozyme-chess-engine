@@ -12,8 +12,7 @@ import search.search33.SearchS4V33t;
 import uci.Position;
 import util.FenParser;
 import eval.Evaluator2;
-import eval.e5.E5Params3;
-import eval.legacy.e5.E5v3;
+import eval.e7.E7v2;
 
 /**
  * tests search implementations by running through random test positions
@@ -38,7 +37,9 @@ public final class SearchTester {
 		//initialize search
 		final int searchDepth = 5;
 		final int hashSize = 20;
-		final Evaluator2 e = new E5v3(E5Params3.buildEval());
+		final Evaluator2 e =
+				//new E5v2(E5Params3.buildEval());
+				new E7v2();
 		final Search4 searcher =
 				//new SearchS4V32k(e, hashSize, false);
 				new SearchS4V33t(e, hashSize, false);

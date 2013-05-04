@@ -13,11 +13,13 @@ public final class SplitQueue {
 		/** node score <p> note, this could be out of date for the final thread*/
 		public AtomicInteger score;
 		public int sideToMove;
-		public AtomicInteger alpha = new AtomicInteger();
+		public int alpha;
 		public int beta;
 		public boolean pv;
 		public int depth;
 		public AtomicBoolean betaCufoff = new AtomicBoolean();
+		public SplitPoint sp;
+		public SplitPoint parent;
 		public SplitState(State4 s){
 			this.s = s;
 		}

@@ -12,9 +12,8 @@ import state4.StateUtil;
 import time.RawTimerThread3;
 import util.opening2.Book;
 import eval.Evaluator2;
-import eval.e5.E5Params3;
-import eval.e5.E5v2;
-import eval.legacy.e5.E5v3;
+import eval.e7.E7;
+import eval.e7.E7v2;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -152,16 +151,18 @@ public class GauntletP {
 		
 		final SearchType searchType = SearchType.Depth;
 
-		final int threads = 3;
+		final int threads = 4;
 		final GauntletThread[] t = new GauntletThread[threads];
+		
+		//(w0,w1,d) = (4,11,?)
 		
 		System.out.print("initializing... ");
 		for(int a = 0; a < threads; a++){
 			Evaluator2 e1 =
-					new E5v2(E5Params3.buildEval());
+					new E7();
 
 			Evaluator2 e2 = 
-					new E5v3(E5Params3.buildEval());
+					new E7v2();
 			
 			final Search4[] search = new Search4[2];
 			search[0] = new SearchS4V33t(e1, hashSize, false);
