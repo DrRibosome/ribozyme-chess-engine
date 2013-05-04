@@ -8,7 +8,6 @@ import eval.EvalParameters;
 import eval.Evaluator2;
 import eval.PositionMasks;
 import eval.Weight;
-import eval.e5.E5Params3;
 
 public final class E7v2 implements Evaluator2{
 	private final static class WeightAgg{
@@ -41,22 +40,6 @@ public final class E7v2 implements Evaluator2{
 			return "("+start+","+end+")";
 		}
 	}
-
-	/** stores max number of moves by piece type (major minor pieces only)*/
-	public final static int[] maxPieceMobility;
-	static{
-		maxPieceMobility = new int[7];
-		maxPieceMobility[State4.PIECE_TYPE_BISHOP] = 14;
-		maxPieceMobility[State4.PIECE_TYPE_KNIGHT] = 8;
-		maxPieceMobility[State4.PIECE_TYPE_ROOK] = 15;
-		maxPieceMobility[State4.PIECE_TYPE_QUEEN] = 28;
-	}
-	
-	private final static int[] zeroi7 = new int[7];
-	private final static int[] zeroi8 = new int[8];
-	
-	/** counts pawns in each column*/
-	private final int[][] pawnCount = new int[2][8];
 	
 	private final int[] materialScore = new int[2];
 	/** current max number of moves by piece type*/
@@ -182,7 +165,7 @@ public final class E7v2 implements Evaluator2{
 		
 		int score = materialScore[player];
 		scoreMobility(player, s, agg, p, clutterMult);
-		scorePawns(player, s, agg, p, pawnCount[player]);
+		scorePawns(player, s, agg, p);
 		
 		if(s.pieceCounts[player][State4.PIECE_TYPE_BISHOP] == 2){
 			agg.add(p.bishopPair);
@@ -279,7 +262,7 @@ public final class E7v2 implements Evaluator2{
 	}
 	
 	private void scorePawns(final int player, final State4 s, final WeightAgg agg,
-			final EvalParameters p, final int[] pawnCount){
+			final EvalParameters p){
 		final long enemyPawns = s.pawns[1-player];
 		final long alliedPawns = s.pawns[player];
 		final long all = alliedPawns | enemyPawns;
@@ -487,24 +470,12 @@ public final class E7v2 implements Evaluator2{
 		final int pos2Col = MoveEncoder.getPos2(encoding)%8;
 		if(taken != 0){
 			materialScore[1-player] -= dir*p.materialWeights[taken];
-			maxMobility[1-player][taken] -= dir*maxPieceMobility[taken];
-			if(taken == State4.PIECE_TYPE_PAWN){
-				pawnCount[1-player][pos2Col] -= dir;
-			}
-			if(MoveEncoder.getMovePieceType(encoding) == State4.PIECE_TYPE_PAWN){
-				pawnCount[player][pos1Col] -= dir;
-				pawnCount[player][pos2Col] += dir;
-			}
 		} else if(MoveEncoder.isEnPassanteTake(encoding) != 0){
 			materialScore[1-player] -= dir*p.materialWeights[State4.PIECE_TYPE_PAWN];
 		}
 		if(MoveEncoder.isPawnPromoted(encoding)){
 			materialScore[player] += dir*(p.materialWeights[State4.PIECE_TYPE_QUEEN]-
 					p.materialWeights[State4.PIECE_TYPE_PAWN]);
-			maxMobility[1-player][State4.PIECE_TYPE_QUEEN] +=
-					dir*maxPieceMobility[State4.PIECE_TYPE_QUEEN];
-			
-			pawnCount[player][pos1Col] -= dir;
 		}
 	}
 
@@ -513,36 +484,22 @@ public final class E7v2 implements Evaluator2{
 		//initialize raw material scores
 		materialScore[0] = 0;
 		materialScore[1] = 0;
-		System.arraycopy(zeroi7, 0, maxMobility[0], 0, 7);
-		System.arraycopy(zeroi7, 0, maxMobility[1], 0, 7);
 		
 		for(int a = 0; a < 2; a++){
 			final int b = State4.PIECE_TYPE_BISHOP;
 			materialScore[a] += s.pieceCounts[a][b] * p.materialWeights[b];
-			maxMobility[a][b] += s.pieceCounts[a][b] * maxPieceMobility[b];
 			
 			final int n = State4.PIECE_TYPE_KNIGHT;
 			materialScore[a] += s.pieceCounts[a][n] * p.materialWeights[n];
-			maxMobility[a][n] += s.pieceCounts[a][n] * maxPieceMobility[n];
 			
 			final int q = State4.PIECE_TYPE_QUEEN;
 			materialScore[a] += s.pieceCounts[a][q] * p.materialWeights[q];
-			maxMobility[a][q] += s.pieceCounts[a][q] * maxPieceMobility[q];
 			
 			final int r = State4.PIECE_TYPE_ROOK;
 			materialScore[a] += s.pieceCounts[a][r] * p.materialWeights[r];
-			maxMobility[a][r] += s.pieceCounts[a][r] * maxPieceMobility[r];
 			
 			final int p = State4.PIECE_TYPE_PAWN;
 			materialScore[a] += s.pieceCounts[a][p] * this.p.materialWeights[p];
-		}
-		
-		for(int a = 0; a < 2; a++){
-			System.arraycopy(zeroi8, 0, pawnCount[a], 0, 8);
-			for(long p = s.pawns[a]; p != 0; p &= p-1){
-				final int index = BitUtil.lsbIndex(p);
-				pawnCount[a][index%8]++;
-			}
 		}
 	}
 	
