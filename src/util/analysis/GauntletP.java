@@ -6,13 +6,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import search.Search4;
 import search.search33.SearchS4V33t;
+import search.search33.SearchS4V33temp;
 import state4.BitUtil;
 import state4.State4;
 import state4.StateUtil;
 import time.RawTimerThread3;
 import util.opening2.Book;
 import eval.Evaluator2;
-import eval.e7.E7;
 import eval.e7.E7v2;
 
 /**
@@ -149,9 +149,9 @@ public class GauntletP {
 		
 		final int minCutoffScore = 800; //score before cutting off a game
 		
-		final SearchType searchType = SearchType.Depth;
+		final SearchType searchType = SearchType.FixedTime;
 
-		final int threads = 4;
+		final int threads = 2;
 		final GauntletThread[] t = new GauntletThread[threads];
 		
 		//(w0,w1,d) = (4,11,?)
@@ -159,14 +159,17 @@ public class GauntletP {
 		System.out.print("initializing... ");
 		for(int a = 0; a < threads; a++){
 			Evaluator2 e1 =
-					new E7();
+					new E7v2();
 
 			Evaluator2 e2 = 
 					new E7v2();
 			
 			final Search4[] search = new Search4[2];
 			search[0] = new SearchS4V33t(e1, hashSize, false);
-			search[1] = new SearchS4V33t(e2, hashSize, false);
+			search[1] =
+					//new SearchS4V33t(e2, hashSize, false);
+					new SearchS4V33temp(e2, hashSize, false);
+			
 			t[a] = new GauntletThread(time, search, maxDrawCount, minCutoffScore, searchType);
 			t[a].setDaemon(true);
 		}
