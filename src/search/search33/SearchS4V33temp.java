@@ -341,22 +341,22 @@ public final class SearchS4V33temp implements Search4{
 		return State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
 	}
 	
-	private static int razorMargin(final int depth){
-		return 512+16*depth;
+	private static int razorMargin(final double depth){
+		return 512+16*(int)depth;
 	}
 	
-	private static int lmrReduction(final boolean pv, final int depth, final double ext, final int moveCount){
-		return reductions[pv? 1: 0][depth+ext < 64? (int)(depth+ext): 63][moveCount < 64? moveCount: 63];
+	private static int lmrReduction(final boolean pv, final double depth, final int moveCount){
+		return reductions[pv? 1: 0][depth < 64? (int)depth: 63][moveCount < 64? moveCount: 63];
 	}
 	
-	private int recurse(final int player, int alpha, int beta, int depth,
+	private int recurse(final int player, int alpha, final int beta, final double depth,
 			final boolean pv, final boolean rootNode, final int stackIndex, final State4 s){
 		stats.nodesSearched++;
 		assert alpha < beta;
 		
 		if(s.isForcedDraw()){
 			return 0;
-		} else if(depth+stack[stackIndex].ext <= 0){
+		} else if(depth <= 0){
 			/*if(!isChecked(player, s)){
 				return qsearch(player, alpha, beta, 0, stackIndex, pv, s);
 			}
@@ -373,7 +373,6 @@ public final class SearchS4V33temp implements Search4{
 		final int[] ranks = ml.ranks; //move ranking
 		ml.killer[0] = 0;
 		ml.killer[1] = 0;
-		stack[stackIndex+1].ext = ml.ext;
 		
 		int w = 0;
 
@@ -415,7 +414,7 @@ public final class SearchS4V33temp implements Search4{
 				!pawnPrePromotion &&
 				lazyEval + razorMargin(depth) < beta){
 			final int rbeta = beta-razorMargin(depth);
-			final int v = qsearch(player, rbeta-1, rbeta, depth, stackIndex+1, false, s);
+			final int v = qsearch(player, rbeta-1, rbeta, 0, stackIndex+1, false, s);
 			if(v <= rbeta){
 				return v+rbeta;
 			}
@@ -464,7 +463,7 @@ public final class SearchS4V33temp implements Search4{
 		if(!pv && !ml.skipNullMove && depth > 0 &&  !cutoffSearch.get() &&
 				!ml.kingAttacked[player] && hasNonPawnMaterial){
 			
-			int r = 3 + depth/4;
+			final double r = 3 + depth/4;
 			
 			//note, non-pv nodes are null window searched - no need to do it here explicitly
 			stack[stackIndex+1].skipNullMove = true;
@@ -504,7 +503,7 @@ public final class SearchS4V33temp implements Search4{
 
 		//internal iterative deepening
 		if(!tteMove && depth >= (pv? 5: 8) && (pv || (!ml.kingAttacked[player] && lazyEval+256 >= beta))){
-			int d = pv? depth-2: depth/2;
+			final double d = pv? depth-2: depth/2;
 			stack[stackIndex+1].skipNullMove = true;
 			recurse(player, alpha, beta, d, pv, rootNode, stackIndex+1, s);
 			stack[stackIndex+1].skipNullMove = false;
@@ -525,7 +524,7 @@ public final class SearchS4V33temp implements Search4{
 		final int length = ml.length;
 		if(length == 0){ //no moves, draw
 			//m.put2(zkey, 0, 0, depth, ZMap.CUTOFF_TYPE_EXACT);
-			fillEntry.fill(zkey, 0, 0, depth, TTEntry.CUTOFF_TYPE_EXACT, seq);
+			fillEntry.fill(zkey, 0, 0, (int)depth, TTEntry.CUTOFF_TYPE_EXACT, seq);
 			m.put(zkey, fillEntry);
 			return 0;
 		}
@@ -544,7 +543,6 @@ public final class SearchS4V33temp implements Search4{
 		
 		boolean hasMove = ml.kingAttacked[player];
 		final boolean inCheck = ml.kingAttacked[player];
-		final double currentExt = ml.ext;
 		for(int i = 0; i < length; i++){
 			for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
 				moveCount++;
@@ -571,11 +569,11 @@ public final class SearchS4V33temp implements Search4{
 							isPassedPawnPush;
 					
 					final double dangerExt = isDangerous? (pv? 1: .5): 0;
-					final double threatExt = threatMove? (pv? 1: .5): 0;
+					final double threatExt = threatMove? (pv? .5: .25): 0;
 					final double ext = dangerExt + threatExt;
 					
 					//futility pruning
-					if(!pv && !isPawnPromotion &&
+					if(1==2 && !pv && !isPawnPromotion &&
 							bestScore != initialBestScore && //check already found a move
 							!inCheck &&
 							!isTTEMove &&
@@ -590,8 +588,8 @@ public final class SearchS4V33temp implements Search4{
 						
 						if(depth < 7){
 							final int gain = materialGain[MoveEncoder.getTakenType(encoding)];
-							final int reduction = lmrReduction(pv, depth, currentExt, moveCount);
-							final int reducedDepth = depth-(reduction > depth? depth: reduction);
+							final int reduction = lmrReduction(pv, depth, moveCount);
+							final int reducedDepth = (int)(depth-(reduction > depth? depth: reduction));
 							final int mc = moveCount < 64? moveCount: 63;
 							final int futilityScore = lazyEval+gain+futilityMargins[reducedDepth][mc];
 							if(futilityScore < alpha){
@@ -610,9 +608,9 @@ public final class SearchS4V33temp implements Search4{
 							(encoding&0xFFF) != ml.killer[0] &&
 							(encoding&0xFFF) != ml.killer[1] &&
 							!isTTEMove &&
-							(reduction = lmrReduction(pv, depth, currentExt, moveCount)+1) > 1){
+							(reduction = lmrReduction(pv, depth, moveCount)+1) > 1){
 						//int reducedDepth = pv? depth-2: depth-3;
-						final int reducedDepth = depth-reduction;
+						final double reducedDepth = depth-reduction;
 						g = -recurse(1-player, -alpha-1, -alpha, reducedDepth, false, false, stackIndex+1, s);
 						fullSearch = g > alpha;
 					} else{
@@ -621,16 +619,14 @@ public final class SearchS4V33temp implements Search4{
 					
 					if(fullSearch){
 						//descend negascout style
+						final double nextDepth = depth-1+ext;
 						if(!pvMove){
-							stack[stackIndex+1].ext = currentExt+ext;
-							g = -recurse(1-player, -(alpha+1), -alpha, depth-1, false, false, stackIndex+1, s);
+							g = -recurse(1-player, -(alpha+1), -alpha, nextDepth, false, false, stackIndex+1, s);
 							if(alpha < g && g < beta && pv){
-								stack[stackIndex+1].ext = currentExt+ext;
-								g = -recurse(1-player, -beta, -alpha, depth-1, pv, false, stackIndex+1, s);
+								g = -recurse(1-player, -beta, -alpha, nextDepth, pv, false, stackIndex+1, s);
 							}
 						} else{
-							stack[stackIndex+1].ext = currentExt+ext;
-							g = -recurse(1-player, -beta, -alpha, depth-1, pv, false, stackIndex+1, s);
+							g = -recurse(1-player, -beta, -alpha, nextDepth, pv, false, stackIndex+1, s);
 						}
 					}
 				}
@@ -654,7 +650,7 @@ public final class SearchS4V33temp implements Search4{
 						if(alpha >= beta){
 							if(!cutoffSearch.get()){
 								//m.put2(zkey, bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
-								fillEntry.fill(zkey, encoding, alpha, (int)(depth+currentExt), TTEntry.CUTOFF_TYPE_LOWER, seq);
+								fillEntry.fill(zkey, encoding, alpha, (int)depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
 								m.put(zkey, fillEntry);
 							}
 							
@@ -680,7 +676,7 @@ public final class SearchS4V33temp implements Search4{
 		
 		if(!cutoffSearch.get()){
 			//m.put2(zkey, bestMove, bestScore, depth, cutoffFlag);
-			fillEntry.fill(zkey, bestMove, bestScore, (int)(depth+currentExt), pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
+			fillEntry.fill(zkey, bestMove, bestScore, (int)depth, pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
 			m.put(zkey, fillEntry);
 		}
 		return bestScore;
