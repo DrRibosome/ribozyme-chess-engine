@@ -42,8 +42,6 @@ public final class E7v2 implements Evaluator2{
 	}
 	
 	private final int[] materialScore = new int[2];
-	/** current max number of moves by piece type*/
-	private final int[][] maxMobility = new int[2][7];
 	private final EvalParameters p;
 	/** weight aggregator*/
 	private final WeightAgg agg = new WeightAgg();
@@ -466,8 +464,6 @@ public final class E7v2 implements Evaluator2{
 		final int dir = undo? -1: 1;
 		final int player = MoveEncoder.getPlayer(encoding);
 		final int taken = MoveEncoder.getTakenType(encoding);
-		final int pos1Col = MoveEncoder.getPos1(encoding)%8;
-		final int pos2Col = MoveEncoder.getPos2(encoding)%8;
 		if(taken != 0){
 			materialScore[1-player] -= dir*p.materialWeights[taken];
 		} else if(MoveEncoder.isEnPassanteTake(encoding) != 0){
@@ -502,6 +498,9 @@ public final class E7v2 implements Evaluator2{
 			materialScore[a] += s.pieceCounts[a][p] * this.p.materialWeights[p];
 		}
 	}
+	
+	@Override
+	public void reset(){}
 	
 	private static void scoreMobility(final int player, final State4 s, final WeightAgg agg, final EvalParameters c, final double clutterMult){
 		final long enemyPawnAttacks = Masks.getRawPawnAttacks(1-player, s.pawns[1-player]);

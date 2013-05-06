@@ -1,7 +1,7 @@
 package debug;
 
 import search.Search4;
-import search.search33.SearchS4V33t;
+import search.search33.SearchS4V33temp;
 import state4.BitUtil;
 import state4.Masks;
 import state4.State4;
@@ -9,8 +9,7 @@ import state4.StateUtil;
 import uci.Position;
 import util.FenParser;
 import eval.Evaluator2;
-import eval.e5.E5v2;
-import eval.e5.E5Params3;
+import eval.e7.E7v2temp;
 
 
 public class Debug {
@@ -56,15 +55,15 @@ public class Debug {
 		//Position p = FenParser.parse("2k5/pp1r2b1/2p5/7P/2P2r1q/5pN1/PPb2P1P/2Q1RRK1 w - - 0 27"); //c1c2 leads to loss by checkmate
 		//Position p = FenParser.parse("r1bq1rk1/p1pp1ppp/2p5/3nP3/8/2B5/PPPQ1PPP/R3KB1R w - - - -"); //c4d3 blunder
 		//Position p = FenParser.parse("1r2r2k/p1b2pp1/Q1p5/2P5/P2Pp2p/4BqP1/R4P1P/5RK1 w - - 0 24"); //missed mate threat on low depths
-		//Position p = FenParser.parse("2r2rkn/pp3p1p/1q2p1pP/3pP1N1/b1nP4/P2B1QP1/1PN2P2/1R2K2R b - - - -"); //missed mate threat on depth 10, choose c4b2
-		Position p = FenParser.parse("1r4k1/p2p1rpp/B2Qp3/5p2/2P5/B1P3P1/q3PP1P/5RK1 b - - 0 17");
+		Position p = FenParser.parse("2r2rkn/pp3p1p/1q2p1pP/3pP1N1/b1nP4/P2B1QP1/1PN2P2/1R2K2R b - - - -"); //missed mate threat on depth 10, choose c4b2
+		//Position p = FenParser.parse("6k1/3q1rpp/r4b2/1p1p1p1P/p1pPpP2/P1P1P1B1/KP2B1R1/4Q3 b - - 0 84");
 		
 		System.out.println(StateUtil.fen(p.sideToMove, p.s));
 		State4 s = p.s;
 		int player = p.sideToMove;
 		
 		System.out.println(s);
-		Evaluator2 e = new E5v2(E5Params3.buildEval());
+		Evaluator2 e = new E7v2temp();
 		//Evaluator2<State4> e = new IncrementalPieceScore();
 		
 		//e.initialize(s);
@@ -73,7 +72,7 @@ public class Debug {
 		System.out.println("\n");
 		
 		final int maxDepth = 40;
-		Search4 search = new SearchS4V33t(e, 20, true);
+		Search4 search = new SearchS4V33temp(e, 20, true);
 		int[] move = new int[2];
 		search.search(player, s, move, maxDepth);
 		System.out.println("\n"+getMoveString(move, 0)+" -> "+getMoveString(move, 1));

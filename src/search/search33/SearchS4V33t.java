@@ -149,6 +149,7 @@ public final class SearchS4V33t implements Search4{
 	public void resetSearch(){
 		m.clear();
 		seq = 0;
+		e.reset();
 	}
 	
 	public void search(final int player, final State4 s, final int[] moveStore, final int maxPly){

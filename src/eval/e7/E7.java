@@ -648,4 +648,8 @@ public final class E7 implements Evaluator2{
 		}
 		return false;
 	}
+
+	@Override
+	public void reset() {
+	}
 }

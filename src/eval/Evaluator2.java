@@ -27,4 +27,6 @@ public interface Evaluator2 {
 	public void undoMove(long encoding);
 	
 	public void initialize(State4 state);
+	
+	public void reset();
 }

@@ -116,6 +116,10 @@ public final class SearchS4V33temp implements Search4{
 	/** rank set to the first of the non takes*/
 	private final static int killerMoveRank = 5;
 	
+
+	/** rate at which the score degrades*/
+	private final double degAmount = .97;
+	
 	
 	private final AtomicBoolean cutoffSearch = new AtomicBoolean(false);
 	
@@ -150,6 +154,7 @@ public final class SearchS4V33temp implements Search4{
 	public void resetSearch(){
 		m.clear();
 		seq = 0;
+		e.reset();
 	}
 	
 	public void search(final int player, final State4 s, final int[] moveStore, final int maxPly){
@@ -568,9 +573,7 @@ public final class SearchS4V33temp implements Search4{
 							MoveEncoder.isCastle(encoding) != 0 ||
 							isPassedPawnPush;
 					
-					final double dangerExt = isDangerous? (pv? 1: .5): 0;
-					final double threatExt = threatMove? (pv? .5: .25): 0;
-					final double ext = dangerExt + threatExt;
+					final double ext = (givesCheck && pv? 1: 0) + (threatMove && pv? 0: 0);
 					
 					//futility pruning
 					if(1==2 && !pv && !isPawnPromotion &&
