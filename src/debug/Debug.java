@@ -1,7 +1,7 @@
 package debug;
 
 import search.Search4;
-import search.search33.Search33v2;
+import search.search33.Search33v3;
 import state4.BitUtil;
 import state4.Masks;
 import state4.State4;
@@ -9,7 +9,7 @@ import state4.StateUtil;
 import uci.Position;
 import util.FenParser;
 import eval.Evaluator2;
-import eval.e7.E7v2temp;
+import eval.e7.E7v3;
 
 
 public class Debug {
@@ -52,18 +52,18 @@ public class Debug {
 		//Position p = FenParser.parse("2r2bk1/pp3p2/1n2q2B/1P3N1Q/2p5/4P3/P4PP1/3R2K1 b - - - -");
 		//Position p = FenParser.parse("8/4kp2/p2b1r2/2p1Q3/P1P2p1P/1P6/5PP1/1R4K1 b - - - -");
 		//Position p = FenParser.parse("r1qnk2r/1ppb1ppp/4p2n/p2PP1NP/2P1B1P1/P1B2P2/8/1R1QK2R b KQkq - 0 20");
-		//Position p = FenParser.parse("2k5/pp1r2b1/2p5/7P/2P2r1q/5pN1/PPb2P1P/2Q1RRK1 w - - 0 27"); //c1c2 leads to loss by checkmate
+		Position p = FenParser.parse("2k5/pp1r2b1/2p5/7P/2P2r1q/5pN1/PPb2P1P/2Q1RRK1 w - - 0 27"); //c1c2 leads to loss by checkmate
 		//Position p = FenParser.parse("r1bq1rk1/p1pp1ppp/2p5/3nP3/8/2B5/PPPQ1PPP/R3KB1R w - - - -"); //c4d3 blunder
 		//Position p = FenParser.parse("1r2r2k/p1b2pp1/Q1p5/2P5/P2Pp2p/4BqP1/R4P1P/5RK1 w - - 0 24"); //missed mate threat on low depths
-		Position p = FenParser.parse("2r2rkn/pp3p1p/1q2p1pP/3pP1N1/b1nP4/P2B1QP1/1PN2P2/1R2K2R b - - - -"); //missed mate threat on depth 10, choose c4b2
-		//Position p = FenParser.parse("6k1/3q1rpp/r4b2/1p1p1p1P/p1pPpP2/P1P1P1B1/KP2B1R1/4Q3 b - - 0 84");
+		//Position p = FenParser.parse("2r2rkn/pp3p1p/1q2p1pP/3pP1N1/b1nP4/P2B1QP1/1PN2P2/1R2K2R b - - - -"); //missed mate threat on depth 10, choose c4b2
+		//Position p = FenParser.parse("5rk1/2pbQp1p/n3p1p1/4P3/r3B3/5P2/3B2PP/5RK1 b - - 0 27");
 		
 		System.out.println(StateUtil.fen(p.sideToMove, p.s));
 		State4 s = p.s;
 		int player = p.sideToMove;
 		
 		System.out.println(s);
-		Evaluator2 e = new E7v2temp();
+		Evaluator2 e = new E7v3();
 		//Evaluator2<State4> e = new IncrementalPieceScore();
 		
 		//e.initialize(s);
@@ -72,7 +72,7 @@ public class Debug {
 		System.out.println("\n");
 		
 		final int maxDepth = 40;
-		Search4 search = new Search33v2(e, 20, true);
+		Search4 search = new Search33v3(e, 20, true);
 		int[] move = new int[2];
 		search.search(player, s, move, maxDepth);
 		System.out.println("\n"+getMoveString(move, 0)+" -> "+getMoveString(move, 1));

@@ -72,8 +72,8 @@ public final class TimerThread5 extends Thread{
 		long start = System.currentTimeMillis();
 		final int material = getMaterial(s);
 		long target = time / (getHalfMovesRemaining(material)/2);
-		target *= .95;
-		target += .8*inc;
+		target *= .8;
+		target += .9*inc;
 		
 		
 		search.setListener(l);
@@ -102,7 +102,19 @@ public final class TimerThread5 extends Thread{
 		final boolean checking = isChecked(0, s) | isChecked(1, s);
 		
 		
-		int minDepth = 17;
+		int minDepth = 16;
+		for(int a = 0; a < 2; a++){
+			if(s.pieceCounts[a][State4.PIECE_TYPE_QUEEN] == 0) minDepth++;
+			int pieces = s.pieceCounts[a][State4.PIECE_TYPE_BISHOP]+
+					s.pieceCounts[a][State4.PIECE_TYPE_KNIGHT]+
+					s.pieceCounts[a][State4.PIECE_TYPE_ROOK];
+			if(pieces == 0) minDepth++;
+			if(pieces <= 3) minDepth++;
+		}
+		final int pawns = s.pieceCounts[0][State4.PIECE_TYPE_PAWN] + s.pieceCounts[1][State4.PIECE_TYPE_PAWN];
+		if(pawns <= 8) minDepth++;
+		if(pawns <= 4) minDepth++;
+		if(checking) minDepth++;
 		
 		
 		while(System.currentTimeMillis()-start < target &&
@@ -120,7 +132,7 @@ public final class TimerThread5 extends Thread{
 			}
 			
 			if(currentScore < 70000){
-				if(!checking && currentPly-lastpvChange+1 > 7 && currentPly >= 17){ //perhaps increase difficulty with fail lows
+				if(!checking && currentPly-lastpvChange+1 > 7 && currentPly >= minDepth){ //perhaps increase difficulty with fail lows
 					break;
 					//target -= target*.2;
 				} else if(checking && currentPly-lastpvChange+1 > 8 && currentPly >= 19){

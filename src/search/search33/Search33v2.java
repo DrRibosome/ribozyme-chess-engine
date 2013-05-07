@@ -366,7 +366,12 @@ public final class Search33v2 implements Search4{
 				return qsearch(player, alpha, beta, 0, stackIndex, pv, s);
 			}
 			depth = 1;*/
-			return qsearch(player, alpha, beta, 0, stackIndex, pv, s);
+			final int q = qsearch(player, alpha, beta, 0, stackIndex, pv, s);
+			if(q > 70000 && pv){
+				return recurse(player, alpha, beta, 1, true, false, stackIndex, s);
+			} else{
+				return q;
+			}
 		} else if(cutoffSearch.get()){
 			return 0;
 		}
@@ -573,7 +578,7 @@ public final class Search33v2 implements Search4{
 							MoveEncoder.isCastle(encoding) != 0 ||
 							isPassedPawnPush;
 					
-					final double ext = (givesCheck && pv? 1: 0) + (threatMove && pv? 0: 0);
+					final double ext = (isDangerous && pv? 1: 0) + (threatMove && pv? 0: 0);
 					
 					//futility pruning
 					/*if(!pv && !isPawnPromotion &&
@@ -589,7 +594,7 @@ public final class Search33v2 implements Search4{
 							continue;
 						}
 						
-						if(depth < 7){
+						if(depth < 7 && depth >= 3){
 							final int gain = materialGain[MoveEncoder.getTakenType(encoding)];
 							final int reduction = lmrReduction(pv, depth, moveCount);
 							final int reducedDepth = (int)(depth-(reduction > depth? depth: reduction));

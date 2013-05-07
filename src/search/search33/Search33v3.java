@@ -186,8 +186,8 @@ public final class Search33v3 implements Search4{
 		long nodesSearched = 0;
 		boolean skipAdjust = false;
 		int minRestartDepth = 7;
-		final int backDist = 4; //amount to back up the search
-		assert minRestartDepth-backDist >= 3;
+		final int backDist = 5; //amount to back up the search
+		//assert minRestartDepth-backDist >= 3;
 		for(int i = 1; (maxPly == -1 || i <= maxPly) && !cutoffSearch.get() && i <= stackSize; i++){
 			s.resetHistory();
 			
@@ -203,8 +203,8 @@ public final class Search33v3 implements Search4{
 				est /= 2;
 				final double dir = stats.scores[index]-stats.scores[index-1];
 				est += dir/2;
-				alpha = est-35;
-				beta = est+35;
+				alpha = est-40;
+				beta = est+40;
 				//System.out.println("adjusting");
 			}
 			skipAdjust = false;
@@ -215,37 +215,24 @@ public final class Search33v3 implements Search4{
 			score = recurse(player, alpha, beta, i, true, true, 0, s);
 			
 			if((score <= alpha || score >= beta) && !cutoffSearch.get()){
-				final boolean failLow = score <= alpha;
+				//final boolean failLow = score <= alpha;
 				//if(score <= alpha || score > beta) System.out.println("fail, score = "+score+", fail low = "+failLow);
-				if(failLow) alpha -= failOffset;
-				else beta += failOffset;
-				score = recurse(player, alpha, beta, i, true, true, 0, s);
-				if((score <= alpha || score >= beta) && !cutoffSearch.get()){
-					final boolean failLow2 = score <= alpha;
-					//if(score <= alpha || score > beta) System.out.println("fail, score = "+score+", fail low = "+failLow2);
-					if(failLow2){
-						alpha = min;
-						beta = max;
-					}
-					else{
-						beta = max;
-						alpha = min;
-					}
-					if(i < minRestartDepth){
-						score = recurse(player, alpha, beta, i, true, true, 0, s);
-					} else{
-						/*final TTEntry tte;
-						if((tte = m.get(s.zkey())) != null && tte.move != 0 && tte.move != bestMove && !cutoffSearch.get()){
-							i = 3;
-							skipAdjust = true;
-							continue;
-						}
-						score = recurse(player, alpha, beta, i, true, true, 0, s);*/
-						minRestartDepth += 1;
-						i -= backDist;
+				alpha = min;
+				beta = max;
+				if(i < minRestartDepth){
+					score = recurse(player, alpha, beta, i, true, true, 0, s);
+				} else{
+					/*final TTEntry tte;
+					if((tte = m.get(s.zkey())) != null && tte.move != 0 && tte.move != bestMove && !cutoffSearch.get()){
+						i = 3;
 						skipAdjust = true;
 						continue;
 					}
+					score = recurse(player, alpha, beta, i, true, true, 0, s);*/
+					minRestartDepth += 1;
+					i -= i/3+.5;//backDist;
+					skipAdjust = true;
+					continue;
 				}
 			}
 			

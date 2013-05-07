@@ -1,8 +1,9 @@
 package uci;
 
 import search.Search4;
-import search.search33.Search33v2;
+import search.search33.Search33v3;
 import time.TimerThread4;
+import time.TimerThread5;
 import eval.Evaluator2;
 import eval.e7.E7v3;
 
@@ -24,7 +25,7 @@ public final class RibozymeEngine implements UCIEngine{
 				//new E5v2(E5Params3.buildEval());
 				new E7v3();
 		
-		s = new Search33v2(e, 22, true);
+		s = new Search33v3(e, 22, true);
 	}
 	
 	@Override
@@ -39,7 +40,7 @@ public final class RibozymeEngine implements UCIEngine{
 			t = new Thread(){
 				public void run(){
 					final int inc = 0;
-					TimerThread4.searchBlocking(s, p.s, player, params.time[player], inc, moveStore);
+					TimerThread5.searchBlocking(s, p.s, player, params.time[player], inc, moveStore);
 					String promotion = (p.s.pawns[player] & 1L<<moveStore[0]) != 0 && (moveStore[1]/8==7 || moveStore[1]/8==0)? "q": "";
 					String move = posString(moveStore[0])+posString(moveStore[1]);
 					System.out.println("bestmove "+move+promotion);
