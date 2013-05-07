@@ -1,7 +1,7 @@
 package debug;
 
 import search.Search4;
-import search.search33.SearchS4V33temp;
+import search.search33.Search33v2;
 import state4.BitUtil;
 import state4.Masks;
 import state4.State4;
@@ -72,7 +72,7 @@ public class Debug {
 		System.out.println("\n");
 		
 		final int maxDepth = 40;
-		Search4 search = new SearchS4V33temp(e, 20, true);
+		Search4 search = new Search33v2(e, 20, true);
 		int[] move = new int[2];
 		search.search(player, s, move, maxDepth);
 		System.out.println("\n"+getMoveString(move, 0)+" -> "+getMoveString(move, 1));

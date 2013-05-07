@@ -13,7 +13,7 @@ import state4.MoveEncoder;
 import state4.State4;
 import eval.Evaluator2;
 
-public final class SearchS4V33temp implements Search4{
+public final class Search33v2 implements Search4{
 	public final static class SearchStat32k extends SearchStat{
 		/** scores returned from quiet search without bottoming out*/
 		public long forcedQuietCutoffs;
@@ -123,11 +123,11 @@ public final class SearchS4V33temp implements Search4{
 	
 	private final AtomicBoolean cutoffSearch = new AtomicBoolean(false);
 	
-	public SearchS4V33temp(Evaluator2 e, int hashSize){
+	public Search33v2(Evaluator2 e, int hashSize){
 		this(e, hashSize, false);
 	}
 	
-	public SearchS4V33temp(Evaluator2 e, int hashSize, boolean printPV){
+	public Search33v2(Evaluator2 e, int hashSize, boolean printPV){
 		this.e = e;
 		
 		//m = new ZMap3(hashSize);
@@ -576,18 +576,18 @@ public final class SearchS4V33temp implements Search4{
 					final double ext = (givesCheck && pv? 1: 0) + (threatMove && pv? 0: 0);
 					
 					//futility pruning
-					if(1==2 && !pv && !isPawnPromotion &&
+					/*if(!pv && !isPawnPromotion &&
 							bestScore != initialBestScore && //check already found a move
 							!inCheck &&
 							!isTTEMove &&
 							!isCapture &&
 							!isDangerous){
 						
-						/*if(depth < 16 && moveCount >= futilityMoveCounts[depth] && !threatMove){
+						if(depth < 16 && moveCount >= futilityMoveCounts[depth] && !threatMove){
 							s.undoMove();
 							this.e.undoMove(encoding);
 							continue;
-						}*/
+						}
 						
 						if(depth < 7){
 							final int gain = materialGain[MoveEncoder.getTakenType(encoding)];
@@ -601,7 +601,7 @@ public final class SearchS4V33temp implements Search4{
 								continue;
 							}
 						}
-					}
+					}*/
 					
 					//LMR
 					final boolean fullSearch;

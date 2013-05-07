@@ -6,14 +6,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import search.Search4;
 import search.search33.SearchS4V33t;
+import search.search33.Search33v2;
 import state4.BitUtil;
 import state4.State4;
 import state4.StateUtil;
 import time.RawTimerThread3;
 import util.opening2.Book;
 import eval.Evaluator2;
-import eval.e7.E7;
 import eval.e7.E7v2;
+import eval.e7.E7v3;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -81,7 +82,7 @@ public class GauntletP {
 					if(print) System.out.println("draw count = "+state.drawCount);
 					
 					
-					int depth = 6;
+					int depth = 3; //default 6
 					for(int a = 0; a < 2; a++){
 						if(state.pieceCounts[a][State4.PIECE_TYPE_QUEEN] == 0) depth++;
 						int pieces = state.pieceCounts[a][State4.PIECE_TYPE_BISHOP]+
@@ -159,16 +160,16 @@ public class GauntletP {
 		System.out.print("initializing... ");
 		for(int a = 0; a < threads; a++){
 			Evaluator2 e1 =
-					new E7();
+					new E7v2();
 
 			Evaluator2 e2 = 
-					new E7v2();
+					new E7v3();
 			
 			final Search4[] search = new Search4[2];
 			search[0] = new SearchS4V33t(e1, hashSize, false);
 			search[1] =
-					new SearchS4V33t(e2, hashSize, false);
-					//new SearchS4V33temp(e2, hashSize, false);
+					//new SearchS4V33t(e2, hashSize, false);
+					new Search33v2(e2, hashSize, false);
 			
 			t[a] = new GauntletThread(time, search, maxDrawCount, minCutoffScore, searchType);
 			t[a].setDaemon(true);
