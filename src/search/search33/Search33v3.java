@@ -13,6 +13,7 @@ import state4.MoveEncoder;
 import state4.State4;
 import eval.Evaluator2;
 
+/** same as v2 but with search backtracking on failure (low or high)*/
 public final class Search33v3 implements Search4{
 	public final static class SearchStat32k extends SearchStat{
 		/** scores returned from quiet search without bottoming out*/

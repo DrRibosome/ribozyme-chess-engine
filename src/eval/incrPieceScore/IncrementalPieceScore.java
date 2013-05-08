@@ -73,4 +73,8 @@ public final class IncrementalPieceScore implements Evaluator2{
 		}
 	}
 
+	@Override
+	public void reset() {
+	}
+
 }

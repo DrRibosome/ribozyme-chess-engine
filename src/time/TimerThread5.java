@@ -73,7 +73,7 @@ public final class TimerThread5 extends Thread{
 		final int material = getMaterial(s);
 		long target = time / (getHalfMovesRemaining(material)/2);
 		target *= .8;
-		target += .9*inc;
+		target += .8*inc;
 		
 		
 		search.setListener(l);
