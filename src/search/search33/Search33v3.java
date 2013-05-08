@@ -117,11 +117,6 @@ public final class Search33v3 implements Search4{
 	/** rank set to the first of the non takes*/
 	private final static int killerMoveRank = 5;
 	
-
-	/** rate at which the score degrades*/
-	private final double degAmount = .97;
-	
-	
 	private final AtomicBoolean cutoffSearch = new AtomicBoolean(false);
 	
 	public Search33v3(Evaluator2 e, int hashSize){
