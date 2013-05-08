@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import search.Search4;
 import search.search33.Search33v3;
+import search.search33.Search33v4;
 import state4.BitUtil;
 import state4.State4;
 import state4.StateUtil;
@@ -143,7 +144,7 @@ public class GauntletP {
 	public static void main(String[] args) throws IOException{
 		
 		final int hashSize = 20;
-		final long time = 500;
+		final long time = 1500;
 		final int maxDrawCount = 50;
 		
 		final int minCutoffScore = 800; //score before cutting off a game
@@ -158,7 +159,7 @@ public class GauntletP {
 		System.out.print("initializing... ");
 		for(int a = 0; a < threads; a++){
 			Evaluator2 e1 =
-					new E7v3(E7Params2.buildEval());
+					new E7v3();
 
 			Evaluator2 e2 = 
 					new E7v3();
@@ -169,7 +170,7 @@ public class GauntletP {
 					new Search33v3(e1, hashSize, false);
 			search[1] =
 					//new SearchS4V33t(e2, hashSize, false);
-					new Search33v3(e2, hashSize, false);
+					new Search33v4(e2, hashSize, false);
 			
 			t[a] = new GauntletThread(time, search, maxDrawCount, minCutoffScore, searchType);
 			t[a].setDaemon(true);

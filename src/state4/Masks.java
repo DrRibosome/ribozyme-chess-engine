@@ -269,9 +269,12 @@ public final class Masks {
 		return Masks.kingMoves[index];
 	}
 	
+	private final static long[] pawnColMasks = new long[]{Masks.colMaskExc[7], Masks.colMaskExc[0]};
 	public static long getRawPawnAttacks(final int player, final long pawns){
-		final long colMask1 = player == 0? Masks.colMaskExc[7]: Masks.colMaskExc[0];
-		final long colMask2 = player == 0? Masks.colMaskExc[0]: Masks.colMaskExc[7];
+		//final long colMask1 = player == 0? Masks.colMaskExc[7]: Masks.colMaskExc[0];
+		//final long colMask2 = player == 0? Masks.colMaskExc[0]: Masks.colMaskExc[7];
+		final long colMask1 = pawnColMasks[player];
+		final long colMask2 = pawnColMasks[1-player];
 		final long attacks1 = player == 0? (pawns << 7) & colMask1: (pawns >>> 7) & colMask1;
 		final long attacks2 = player == 0? (pawns << 9) & colMask2: (pawns >>> 9) & colMask2;
 		return attacks1 | attacks2;

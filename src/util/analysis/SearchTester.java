@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 import search.Search4;
 import search.SearchStat;
-import search.search33.SearchS4V33t;
+import search.search33.prof.Search33v3prof;
 import uci.Position;
 import util.FenParser;
 import eval.Evaluator2;
@@ -33,16 +33,15 @@ public final class SearchTester {
 		}
 		scanner.close();
 		
+		final File log = new File("search-test.log");
 		
 		//initialize search
-		final int searchDepth = 5;
+		final int searchDepth = 10;
 		final int hashSize = 20;
 		final Evaluator2 e =
-				//new E5v2(E5Params3.buildEval());
 				new E7v3();
 		final Search4 searcher =
-				//new SearchS4V32k(e, hashSize, false);
-				new SearchS4V33t(e, hashSize, false);
+				new Search33v3prof(e, hashSize, false, log);
 		
 		//search positions
 		final int len = pos.size();
