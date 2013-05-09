@@ -2,7 +2,6 @@ package search.search33;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.BatchUpdateException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import search.Search4;
