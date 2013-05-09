@@ -45,7 +45,6 @@ public final class Search33v4 implements Search4{
 		public boolean skipNullMove = false;
 		/** holds killer moves as first 12 bits (ie, masked 0xFFF) of move encoding*/
 		public final long[] killer = new long[2];
-		public double ext;
 	}
 	
 	private final static int[] pawnOffset = new int[]{9,7,8,16};
@@ -446,7 +445,6 @@ public final class Search33v4 implements Search4{
 				return v+rbeta;
 			}
 		}
-		stack[stackIndex+1].ext = ml.ext;
 		
 		//load killer moves
 		if(stackIndex-1 >= 0 && !ml.skipNullMove){
@@ -498,7 +496,6 @@ public final class Search33v4 implements Search4{
 			int n = -recurse(1-player, -beta, -alpha, depth-r, pv, rootNode, stackIndex+1, s);
 			s.undoNullMove();
 			stack[stackIndex+1].skipNullMove = false;
-			stack[stackIndex+1].ext = ml.ext;
 			
 			threatMove = n < alpha;
 			
@@ -516,7 +513,6 @@ public final class Search33v4 implements Search4{
 				stack[stackIndex+1].skipNullMove = true;
 				double v = recurse(player, alpha, beta, depth-r, pv, rootNode, stackIndex+1, s);
 				stack[stackIndex+1].skipNullMove = false;
-				stack[stackIndex+1].ext = ml.ext;
 				if(v >= beta){
 					stats.nullMoveCutoffs++;
 					return n;
@@ -543,7 +539,6 @@ public final class Search33v4 implements Search4{
 				ranks[w++] = tteMoveRank;
 			}
 		}
-		stack[stackIndex+1].ext = ml.ext;
 
 		//move generation
 		ml.length = w;
