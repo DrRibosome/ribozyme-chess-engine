@@ -10,10 +10,11 @@ import search.search33.Search33v4;
 import state4.BitUtil;
 import state4.State4;
 import state4.StateUtil;
-import time.RawTimerThread3;
+import time.TimerThread5;
 import util.opening2.Book;
 import eval.Evaluator2;
 import eval.e7.E7v3;
+import eval.e7.E7v4;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -98,7 +99,7 @@ public class GauntletP {
 					} else{
 						outOfBook = true;
 						if(type == SearchType.Depth) search[(turn+searchOffset)%2].search(turn, state, move, depth);
-						if(type == SearchType.ControlledTime) RawTimerThread3.search(search[(turn+searchOffset)%2], state, turn, time, 0, move);
+						if(type == SearchType.ControlledTime) TimerThread5.searchBlocking(search[(turn+searchOffset)%2], state, turn, time, 0, move);
 						if(type == SearchType.FixedTime) search(turn, state, search[(turn+searchOffset)%2], move, time);
 						
 						
@@ -144,7 +145,7 @@ public class GauntletP {
 	public static void main(String[] args) throws IOException{
 		
 		final int hashSize = 20;
-		final long time = 1500;
+		final long time = 500;
 		final int maxDrawCount = 50;
 		
 		final int minCutoffScore = 800; //score before cutting off a game
@@ -154,7 +155,8 @@ public class GauntletP {
 		final int threads = 4;
 		final GauntletThread[] t = new GauntletThread[threads];
 		
-		//(w0,w1,d) = (4,11,?)
+		//search33v3 - search33v4
+		//(w0,w1,d) = (294,316,290)
 		
 		System.out.print("initializing... ");
 		for(int a = 0; a < threads; a++){
@@ -162,7 +164,7 @@ public class GauntletP {
 					new E7v3();
 
 			Evaluator2 e2 = 
-					new E7v3();
+					new E7v4();
 			
 			final Search4[] search = new Search4[2];
 			search[0] = 

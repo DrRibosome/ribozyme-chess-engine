@@ -1,7 +1,7 @@
 package debug;
 
 import search.Search4;
-import search.search33.Search33v3;
+import search.search33.Search33v4;
 import state4.BitUtil;
 import state4.Masks;
 import state4.State4;
@@ -41,23 +41,14 @@ public class Debug {
 		//State4 s = loadConfig(c);
 		//State4 s = loadConfig(c2);
 		
-		//Position p = FenParser.parse("7r/p1pk4/5p2/1p1r2p1/7p/P3PN1P/1P3KPB/2R5 b - - - -");
-		//Position p = FenParser.parse("8/8/2p3p1/2pp1b2/1n1k4/1P3P2/1P1K4/R7 w - - - -");
-		//Position p = FenParser.parse("2r1r1k1/p4ppp/3Bp3/2P5/1p2P2P/6Q1/qb3PP1/1R1R2K1 w - - - -"); //bm Rb2
-		//Position p = FenParser.parse("1q1rkb1r/pp2pppp/2n2n2/1N1P4/5P2/4BB2/PP3P1P/R2Q1RK1 b - - - -");
-		//Position p = FenParser.parse("r1b1kb1r/ppp1qppp/2n5/1B1n4/3Q4/2P2N2/PP3PPP/RNB2K1R b - - - -");
-		//Position p = FenParser.parse("2kr1b1r/ppp3pp/4qp2/3P4/3Q3B/5N2/PP1N1PPP/5K1R b - - - -");
-		//Position p = FenParser.parse("7r/p1pk4/5p2/1p1r2p1/7p/P3PN1P/1P3KPB/2R5 b - - - -");
-		//Position p = FenParser.parse("1r5k/1P3pp1/B3pn1p/8/R7/1r3P2/5P1P/R4K2 w - - - -");
-		//Position p = FenParser.parse("2r2bk1/pp3p2/1n2q2B/1P3N1Q/2p5/4P3/P4PP1/3R2K1 b - - - -");
 		//Position p = FenParser.parse("8/4kp2/p2b1r2/2p1Q3/P1P2p1P/1P6/5PP1/1R4K1 b - - - -");
 		//Position p = FenParser.parse("r1qnk2r/1ppb1ppp/4p2n/p2PP1NP/2P1B1P1/P1B2P2/8/1R1QK2R b KQkq - 0 20");
 		//Position p = FenParser.parse("2k5/pp1r2b1/2p5/7P/2P2r1q/5pN1/PPb2P1P/2Q1RRK1 w - - 0 27"); //c1c2 leads to loss by checkmate
 		//Position p = FenParser.parse("r1bq1rk1/p1pp1ppp/2p5/3nP3/8/2B5/PPPQ1PPP/R3KB1R w - - - -"); //c4d3 blunder
 		//Position p = FenParser.parse("1r2r2k/p1b2pp1/Q1p5/2P5/P2Pp2p/4BqP1/R4P1P/5RK1 w - - 0 24"); //missed mate threat on low depths
 		//Position p = FenParser.parse("2r2rkn/pp3p1p/1q2p1pP/3pP1N1/b1nP4/P2B1QP1/1PN2P2/1R2K2R b - - - -"); //missed mate threat on depth 10, choose c4b2
-		Position p = FenParser.parse("1q5r/8/2nbNk1p/3p1B2/1n1P2P1/4Q2P/5PK1/4R3 w kq - 0 35"); //very hard best move, probably Nf4
-		//Position p = FenParser.parse("7r/q7/2nbNk1p/3p1B2/1n1P2P1/4Q2P/5PK1/4R3 b - - 0 34"); //a7b8 huge blunder, almost certainly causes game loss (white responds Nf4)
+		//Position p = FenParser.parse("1q5r/8/2nbNk1p/3p1B2/1n1P2P1/4Q2P/5PK1/4R3 w - - 0 35"); //very hard best move, probably Nf4
+		Position p = FenParser.parse("7r/q7/2nbNk1p/3p1B2/1n1P2P1/4Q2P/5PK1/4R3 b - - 0 34"); //a7b8 huge blunder, almost certainly causes game loss (white responds Nf4)
 		
 		System.out.println(StateUtil.fen(p.sideToMove, p.s));
 		State4 s = p.s;
@@ -73,7 +64,7 @@ public class Debug {
 		System.out.println("\n");
 		
 		final int maxDepth = 40;
-		Search4 search = new Search33v3(e, 20, true);
+		Search4 search = new Search33v4(e, 20, true);
 		int[] move = new int[2];
 		search.search(player, s, move, maxDepth);
 		System.out.println("\n"+getMoveString(move, 0)+" -> "+getMoveString(move, 1));

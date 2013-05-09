@@ -195,6 +195,7 @@ public final class State4 {
 		return drawCount >= maxDrawCount || onlyKings;
 	}
 	
+	private final static long[] pawnColMask = new long[]{Masks.colMaskExc[7], Masks.colMaskExc[0]};
 	/**
 	 * quicker check to see if a single position index is attacked.
 	 * use {@link #isAttacked(long, int, State4)} to handle entire position masks
@@ -205,11 +206,17 @@ public final class State4 {
 	public static boolean isAttacked2(final int pos, final int player, final State4 s){
 		final long l = 1L<<pos;
 		
-		long colMask = player == 0? Masks.colMaskExc[7]: Masks.colMaskExc[0];
+		/*long colMask = player == 0? Masks.colMaskExc[7]: Masks.colMaskExc[0];
 		final long pawns = s.pawns[player];
 		long temp = player == 0? (pawns << 7) & colMask & l: (pawns >>> 7) & colMask & l;
 		colMask = player == 0? Masks.colMaskExc[0]: Masks.colMaskExc[7];
-		temp |= player == 0? (pawns << 9) & colMask & l: (pawns >>> 9) & colMask & l;
+		temp |= player == 0? (pawns << 9) & colMask & l: (pawns >>> 9) & colMask & l;*/
+		final long colMask = pawnColMask[player];
+		final long pawns = s.pawns[player];
+		final long attacks1 = (player == 0? pawns << 7: pawns >>> 7) & colMask & l;
+		final long colMask2 = pawnColMask[1-player];
+		final long attacks2 =  (player == 0? pawns << 9: pawns >>> 9) & colMask2 & l;
+		final long pawnAttacks = attacks1 | attacks2;
 
 		final long agg = s.pieces[0] | s.pieces[1] | l;
 		
@@ -222,11 +229,17 @@ public final class State4 {
 		System.out.println(Masks.getString(getBishopMoves(1-player, s.pieces, l)));
 		System.out.println(Masks.getString(agg));*/
 		
-		return temp != 0 ||
+		/*return pawnAttacks != 0 ||
 				((Masks.getRawBishopMoves(agg, l) & (s.queens[player]|s.bishops[player])) |
 				(Masks.getRawRookMoves(agg, l) & (s.queens[player]|s.rooks[player])) |
 				(Masks.getRawKnightMoves(l) & s.knights[player]) |
-				(Masks.getRawKingMoves(l) & s.kings[player])) != 0;
+				(Masks.getRawKingMoves(l) & s.kings[player])) != 0;*/
+		
+		return pawnAttacks != 0 ||
+				(Masks.getRawBishopMoves(agg, l) & (s.queens[player]|s.bishops[player])) != 0 ||
+				(Masks.getRawRookMoves(agg, l) & (s.queens[player]|s.rooks[player])) != 0 ||
+				(Masks.getRawKnightMoves(l) & s.knights[player]) != 0 ||
+				(Masks.getRawKingMoves(l) & s.kings[player]) != 0;
 	}
 	
 	/**

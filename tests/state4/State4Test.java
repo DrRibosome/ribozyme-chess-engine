@@ -47,6 +47,7 @@ public class State4Test {
 		
 		final List<TestCase> l = new ArrayList<>();
 		l.add(new TestCase("r1bk3r/ppp1nppp/2np1q2/1N6/2B1P3/2P1P3/PP4PP/RN1QK2R b KQ - - -", 38, true));
+		l.add(new TestCase("4rrk1/2q5/p1Ppbb2/1p2n2R/4P3/P1Q2PB1/3P2P1/2R1KBN1 b - - 0 30", 8, true));
 		
 		for(TestCase c: l){
 			final boolean attacked = State4.isAttacked2(c.loc, c.p.sideToMove, c.p.s);

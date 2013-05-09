@@ -281,7 +281,7 @@ public final class Masks {
 	}
 	
 	public static void main(String[] args){
-		System.out.println(getString(passedPawnMasks[1][2]));
+		System.out.println(getString(passedPawnMasks[0][56-8]));
 		
 		//System.out.println("here");
 		/*long l = 982312;
