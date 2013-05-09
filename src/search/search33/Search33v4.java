@@ -431,7 +431,7 @@ public final class Search33v4 implements Search4{
 		
 		//razoring
 		final int lazyEval = this.e.lazyEval(s, player);
-		final boolean pawnPrePromotion = (s.pawns[player] & Masks.pawnPrePromote[player]) != 0;
+		/*final boolean pawnPrePromotion = (s.pawns[player] & Masks.pawnPrePromote[player]) != 0;
 		if(!pv &&
 				Math.abs(beta) < 70000 &&
 				depth < 4 &&
@@ -444,7 +444,7 @@ public final class Search33v4 implements Search4{
 			if(v <= rbeta){
 				return v+rbeta;
 			}
-		}
+		}*/
 		
 		//load killer moves
 		if(stackIndex-1 >= 0 && !ml.skipNullMove){
