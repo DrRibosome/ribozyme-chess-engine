@@ -405,6 +405,16 @@ public final class E7v4 implements Evaluator2{
 		-15, -10, -10, -10, -10, -10, -10, -15,
 		-30, -15, -10, -10, -10, -10, -15, -30,
 	};
+	/*private static int[] centerDanger = new int[]{
+		-45, -30, -20, -20, -20, -20, -30, -45,
+		-30, -25, -15, -15, -15, -15, -15, -30,
+		-20, -15, -8, -8, -8, -8, -15, -20,
+		-20, -15, -8, -4, -4, -8, -15, -20,
+		-20, -15, -8, -4, -4, -8, -15, -20,
+		-20, -15, -8, -8, -8, -8, -15, -20,
+		-30, -25, -15, -15, -15, -15, -15, -30,
+		-45, -30, -20, -20, -20, -20, -30, -45,
+	};*/
 	
 	/** stores castling positions indexed [side = left? 0: 1][player]*/
 	private final static long[][] castleOffsets = new long[][]{
@@ -434,17 +444,13 @@ public final class E7v4 implements Evaluator2{
 			int pawnWallBonus = pawnShelterStormDanger(player, s, kingIndex, p);
 			if(cmoves != 0){
 				//if we can castle, count the pawn wall/storm weight as best available after castle
-				//if((player == 0 && (cmoves & 1L<<2) != 0) || (player == 1 && (cmoves & 1L<<58) != 0)){
 				if((castleOffsets[0][player] & cmoves) != 0){
 					final int leftIndex = castleIndex[0][player];
-					//final int left = pawnShelterStormDanger(player, s, player == 0? 2: 58, p);
 					final int leftScore = pawnShelterStormDanger(player, s, leftIndex, p);
 					pawnWallBonus = leftScore > pawnWallBonus? leftScore: pawnWallBonus;
 				}
-				//if((player == 0 && (cmoves & 1L<<6) != 0) || (player == 1 && (cmoves & 1L<<62) != 0)){
 				if((castleOffsets[1][player] & cmoves) != 0){
 					final int rightIndex = castleIndex[1][player];
-					//final int right = pawnShelterStormDanger(player, s, player == 0? 6: 62, p);
 					final int rightScore = pawnShelterStormDanger(player, s, rightIndex, p);
 					pawnWallBonus = rightScore > pawnWallBonus? rightScore: pawnWallBonus;
 				}
@@ -456,9 +462,10 @@ public final class E7v4 implements Evaluator2{
 			w.add(temp.start, temp.end);
 		}
 		
+		w.add(-p.kingDangerSquares[player][kingIndex], 0);
 		w.add(0, centerDanger[kingIndex]);
 		
-		int kingPressureScore = evalKingPressureDanger(kingIndex, player, s);
+		/*int kingPressureScore = evalKingPressureDanger(kingIndex, player, s);
 		if(cmoves != 0){
 			if((castleOffsets[0][player] & cmoves) != 0){
 				final int leftIndex = castleIndex[0][player];
@@ -471,7 +478,7 @@ public final class E7v4 implements Evaluator2{
 				kingPressureScore = rightScore < kingPressureScore? rightScore: kingPressureScore;
 			}
 		}
-		w.add(-kingPressureScore, 0);
+		w.add(-kingPressureScore, 0);*/
 	}
 	
 	/** evaluates king danger from pressure of coordinated attacking pieces*/
@@ -484,7 +491,7 @@ public final class E7v4 implements Evaluator2{
 		long pressureSquares = Masks.getRawKingMoves(k) & ~mask; //king squares in front and on sides of king
 		final long alliedPawns = s.pawns[player];
 		int score = 0;
-		//int dangerousAttacks = 0;
+		
 		for(;pressureSquares != 0; pressureSquares &= pressureSquares-1){
 			final long l = pressureSquares & -pressureSquares;
 			int danger = 0; //pawns blocking
@@ -497,21 +504,9 @@ public final class E7v4 implements Evaluator2{
 			danger += BitUtil.getSetBits(s.bishops[1-player] & bishopMoves) * 1;
 			danger += BitUtil.getSetBits(s.rooks[1-player] & rookMoves) * 1;
 			danger += BitUtil.getSetBits(s.queens[1-player] & queenMoves) * 2;
-			final int dangerScore = (danger*(danger-1)*10) >>> 1;
+			final int dangerScore = (danger*(danger-1)*3) >>> 1;
 			score += (alliedPawns & l) != 0? dangerScore>>>1: dangerScore;
-			
-			
-			/*int attackDiff = -1;
-			attackDiff += BitUtil.getSetBits(s.knights[1-player] & knightMoves) - BitUtil.getSetBits(s.knights[player] & knightMoves);
-			attackDiff += BitUtil.getSetBits(s.bishops[1-player] & bishopMoves) - BitUtil.getSetBits(s.bishops[player] & bishopMoves);
-			attackDiff += BitUtil.getSetBits(s.rooks[1-player] & rookMoves) - BitUtil.getSetBits(s.rooks[player] & rookMoves);
-			attackDiff += BitUtil.getSetBits(s.queens[1-player] & queenMoves) - BitUtil.getSetBits(s.queens[player] & queenMoves);
-			if(attackDiff > 0){
-				//dangerousAttacks++;
-				score += attackDiff*(attackDiff-1) * 10;
-			}*/
 		}
-		//if(dangerousAttacks > 0) score += dangerousAttacks*(dangerousAttacks-1) * 5; //scaling for multiple attacks
 		return score;
 	}
 	
