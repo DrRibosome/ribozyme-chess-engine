@@ -1,5 +1,7 @@
 package eval.e7;
 
+import eval.Weight;
+
 public final class E7Weights {
 	/**
 	 * gives bonus multiplier to the value of sliding pieces
@@ -22,4 +24,22 @@ public final class E7Weights {
 			clutterIndex[a] = start + diff*(a/64.);
 		}
 	}
+	
+	private static Weight S(int start, int end){
+		return new Weight(start, end);
+	}
+	
+	public final static Weight[][] isolatedPawns = new Weight[][]{
+			{S(-25, -25), S(-25, -25), S(-25, -25), S(-25, -25), S(-25, -25), S(-25, -25), S(-25, -25), S(-25, -25)},
+			{S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17)},
+	};
+	
+	public final static Weight[] pawnChain = new Weight[]{
+			S(10,0), S(13,0), S(15,1), S(20,5), S(20,5), S(15,1), S(13,0), S(10,0)
+	};
+	
+	public final static Weight[][] doubledPawns = new Weight[][]{
+			{S(-17,-17), S(-17,-17), S(-17,-17), S(-17,-17), S(-17,-17), S(-17,-17), S(-17,-17), S(-17,-17)},
+			{S(-17,-17), S(-17,-17), S(-17,-17), S(-17,-17), S(-17,-17), S(-17,-17), S(-17,-17), S(-17,-17)},
+	};
 }

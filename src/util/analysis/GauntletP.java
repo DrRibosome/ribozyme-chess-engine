@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import search.Search4;
-import search.search33.Search33v3;
 import search.search33.Search33v4;
 import state4.BitUtil;
 import state4.State4;
@@ -13,8 +12,8 @@ import state4.StateUtil;
 import time.TimerThread5;
 import util.opening2.Book;
 import eval.Evaluator2;
-import eval.e7.E7v3;
-import eval.e7.E7v4;
+import eval.e7.E7;
+import eval.e7.E7v5;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -82,7 +81,7 @@ public class GauntletP {
 					if(print) System.out.println("draw count = "+state.drawCount);
 					
 					
-					int depth = 6; //default 6
+					int depth = 3; //default 6
 					for(int a = 0; a < 2; a++){
 						if(state.pieceCounts[a][State4.PIECE_TYPE_QUEEN] == 0) depth++;
 						int pieces = state.pieceCounts[a][State4.PIECE_TYPE_BISHOP]+
@@ -161,15 +160,15 @@ public class GauntletP {
 		System.out.print("initializing... ");
 		for(int a = 0; a < threads; a++){
 			Evaluator2 e1 =
-					new E7v3();
+					new E7();
 
 			Evaluator2 e2 = 
-					new E7v4();
+					new E7v5();
 			
 			final Search4[] search = new Search4[2];
 			search[0] = 
 					//new SearchS4V33t(e1, hashSize, false);
-					new Search33v3(e1, hashSize, false);
+					new Search33v4(e1, hashSize, false);
 			search[1] =
 					//new SearchS4V33t(e2, hashSize, false);
 					new Search33v4(e2, hashSize, false);

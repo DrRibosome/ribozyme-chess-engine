@@ -9,7 +9,7 @@ import eval.Evaluator2;
 import eval.PositionMasks;
 import eval.Weight;
 
-public final class E7v4 implements Evaluator2{
+public final class E7v5 implements Evaluator2{
 	private final static class WeightAgg{
 		int start;
 		int end;
@@ -45,6 +45,46 @@ public final class E7v4 implements Evaluator2{
 		}
 	}
 	
+	/**
+	 * gives bonus multiplier to the value of sliding pieces
+	 * mobilitiy scores based on how cluttered the board is
+	 * <p>
+	 * sliding pieces with high movement on a clutterd board
+	 * are more valuable
+	 * <p>
+	 * indexed [num-pawn-attacked-squares]
+	 */
+	private final static double[] clutterIndex; 
+	
+	static{
+		//linear interpolation
+		clutterIndex = new double[64];
+		final double start = .9;
+		final double end = 1.1;
+		final double diff = end-start;
+		for(int a = 0; a < 64; a++){
+			clutterIndex[a] = start + diff*(a/64.);
+		}
+	}
+	
+	private static Weight S(int start, int end){
+		return new Weight(start, end);
+	}
+	
+	private final static Weight[][] isolatedPawns = new Weight[][]{
+			{S(-25, -25), S(-25, -25), S(-25, -25), S(-25, -25), S(-25, -25), S(-25, -25), S(-25, -25), S(-25, -25)},
+			{S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17)},
+	};
+	
+	private final static Weight[] pawnChain = new Weight[]{
+			S(10,0), S(13,0), S(15,1), S(20,5), S(20,5), S(15,1), S(13,0), S(10,0)
+	};
+	
+	private final static Weight[][] doubledPawns = new Weight[][]{
+		{S(-6,-15), S(-9,-16), S(-10,-16), S(-10,-16), S(-10,-16), S(-10,-16), S(-9,-16), S(-6,-15)},
+		{S(-3,-10), S(-5,-14), S(-6,-10), S(-6,-11), S(-6,-11), S(-6,-10), S(-5,-14), S(-3,-10)},
+	};
+	
 	private final static boolean[] allFalse = new boolean[2];
 	private final static boolean[] allTrue = new boolean[]{true, true};
 	private final static int[] zeroi = new int[2];
@@ -70,7 +110,7 @@ public final class E7v4 implements Evaluator2{
 	/** stores total king distance from allied pawns*/
 	private final int[] kingPawnDist = new int[2];
 	
-	public E7v4(EvalParameters p){
+	public E7v5(EvalParameters p){
 		this.p = p;
 		int startMaterial = (
 				  p.materialWeights[State4.PIECE_TYPE_PAWN]*8
@@ -133,7 +173,7 @@ public final class E7v4 implements Evaluator2{
 		}
 	}
 	
-	public E7v4(){
+	public E7v5(){
 		this(E7Params.buildEval());
 	}
 
@@ -148,7 +188,7 @@ public final class E7v4 implements Evaluator2{
 		final long whitePawnAttacks = Masks.getRawPawnAttacks(0, s.pawns[0]);
 		final long blackPawnAttacks = Masks.getRawPawnAttacks(1, s.pawns[1]);
 		final long pawnAttacks = whitePawnAttacks | blackPawnAttacks;
-		clutterMult = E7Weights.clutterIndex[(int)BitUtil.getSetBits(pawnAttacks)];
+		clutterMult = clutterIndex[(int)BitUtil.getSetBits(pawnAttacks)];
 		
 		final int pawnType = State4.PIECE_TYPE_PAWN;
 		final int pawnWeight = p.materialWeights[pawnType];
@@ -260,8 +300,9 @@ public final class E7v4 implements Evaluator2{
 		final long allPieces = s.pieces[0]|s.pieces[1];
 		if((nextPos & allPieces) != 0){ //pawn adancement blocked
 			agg.add(-start/6/pawnDist, -end/6/pawnDist);
-
-			//slight bonus for causing a piece to keep blocking a pawn
+			
+			//slight bonus for causing a piece to keep blocking a pawn,
+			//(w0,w1,d) = (111,134,126) without-with, depth=3
 			if((nextPos & s.queens[1-player]) != 0) agg.add(45/pawnDist);
 			else if((nextPos & s.rooks[1-player]) != 0) agg.add(35/pawnDist);
 			else if((nextPos & s.bishops[1-player]) != 0) agg.add(25/pawnDist);
@@ -312,15 +353,18 @@ public final class E7v4 implements Evaluator2{
 				analyzePassedPawn(player, pawns&-pawns, s, agg);
 			}
 			if(isolated){
-				agg.add(p.isolatedPawns[opposedFlag][col]);
-				if(nonPawnDisadvantage) agg.add(-10, -20);
+				//agg.add(p.isolatedPawns[opposedFlag][col]);
+				agg.add(isolatedPawns[opposedFlag][col]);
+				if(nonPawnDisadvantage) agg.add(-10, -10);
 			}
 			if(doubled){
-				agg.add(p.doubledPawns[opposedFlag][col]);
+				agg.add(doubledPawns[opposedFlag][col]);
+				//agg.add(doubledPawns[opposedFlag][col]);
 				if(nonPawnDisadvantage) agg.add(-10, -10);
 			}
 			if(chain){
-				agg.add(p.pawnChain[col]);
+				//agg.add(p.pawnChain[col]);
+				agg.add(pawnChain[col]);
 			}
 			
 			//backward pawn checking
