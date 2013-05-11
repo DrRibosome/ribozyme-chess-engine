@@ -99,11 +99,11 @@ public final class UCI {
 					
 					Pattern whiteTimeIncSel = Pattern.compile("winc\\s+(\\d+)");
 					temp = whiteTimeIncSel.matcher(interfaceCommand);
-					params.whiteTimeInc = temp.find()? Integer.parseInt(temp.group(1)): -1;
+					params.increment[0] = temp.find()? Integer.parseInt(temp.group(1)): -1;
 					
 					Pattern blackTimeIncSel = Pattern.compile("binc\\s+(\\d+)");
 					temp = blackTimeIncSel.matcher(interfaceCommand);
-					params.blackTimeInc = temp.find()? Integer.parseInt(temp.group(1)): -1;
+					params.increment[1] = temp.find()? Integer.parseInt(temp.group(1)): -1;
 					
 					/*Pattern depthSel = Pattern.compile("depth\\s+(\\d+)");
 					temp = depthSel.matcher(interfaceCommand);

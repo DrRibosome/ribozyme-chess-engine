@@ -5,7 +5,7 @@ import search.search33.Search33v4;
 import time.TimerThread4;
 import time.TimerThread5;
 import eval.Evaluator2;
-import eval.e7.E7v5;
+import eval.e7.E7v6temp;
 
 public final class RibozymeEngine implements UCIEngine{
 
@@ -23,7 +23,7 @@ public final class RibozymeEngine implements UCIEngine{
 				//new SuperEvalS4V10v4();
 				//new E4(GParams1v2.buildEval());
 				//new E5v2(E5Params3.buildEval());
-				new E7v5();
+				new E7v6temp();
 		
 		s = new Search33v4(e, 22, true);
 	}
@@ -39,7 +39,7 @@ public final class RibozymeEngine implements UCIEngine{
 		if(!params.infinite && params.moveTime == -1){ //allocate time
 			t = new Thread(){
 				public void run(){
-					final int inc = 0;
+					final int inc = params.increment[player];
 					TimerThread5.searchBlocking(s, p.s, player, params.time[player], inc, moveStore);
 					String promotion = (p.s.pawns[player] & 1L<<moveStore[0]) != 0 && (moveStore[1]/8==7 || moveStore[1]/8==0)? "q": "";
 					String move = posString(moveStore[0])+posString(moveStore[1]);
