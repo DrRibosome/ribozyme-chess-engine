@@ -136,7 +136,7 @@ public final class E7v6 implements Evaluator2{
 		final int maxDanger = 1280;
 		for(int x = 0, i = 0; i < kingDangerTable.length; i++){
 			x = Math.min(maxDanger, Math.min((int)(i*i*.4), x + maxSlope));
-			kingDangerTable[i] = new Weight(-x, 0);
+			kingDangerTable[i] = new Weight(-x/2, 0);
 		}
 
 		for(int a = 0; a < 64; a++) kingDangerSquares[1][a] = kingDangerSquares[0][63-a];
@@ -465,18 +465,6 @@ public final class E7v6 implements Evaluator2{
 		return pawnWallDanger;
 	}
 	
-	/**
-	 * generates a mask for pieces attacking the passed position mask
-	 * @param pos position being attacked
-	 * @param aggPieces aggregate piece mask
-	 * @return returns attack mask
-	 */
-	private static long getAttackMask(final long pos, final long aggPieces){
-		return Masks.getRawBishopMoves(aggPieces, pos) |
-				Masks.getRawRookMoves(aggPieces, pos) |
-				Masks.getRawKnightMoves(pos);
-	}
-	
 	private static int[] centerDanger = new int[]{
 		-30, -15, -10, -10, -10, -10, -15, -30,
 		-15, -10, -10, -10, -10, -10, -10, -15,
@@ -611,7 +599,7 @@ public final class E7v6 implements Evaluator2{
 			}
 		}
 		//index += supportedQueenAttacks*16;
-		index += 6;
+		index += supportedQueenAttacks*9;
 
 		//process rook attacks
 		int supportedRookAttacks = 0;
@@ -640,8 +628,8 @@ public final class E7v6 implements Evaluator2{
 				}
 			}
 		}
-		index += supportedRookAttacks*2;
-		index += supportedRookContactChecks*4;
+		index += supportedRookAttacks*1;
+		index += supportedRookContactChecks*2;
 		
 		//process bishop attacks
 		int supportedBishopAttacks = 0;
