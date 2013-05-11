@@ -2,6 +2,7 @@ package util.analysis;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import search.Search4;
@@ -13,7 +14,12 @@ import time.TimerThread5;
 import util.opening2.Book;
 import eval.Evaluator2;
 import eval.e7.E7;
+import eval.e7.E7v2;
+import eval.e7.E7v3;
+import eval.e7.E7v4;
 import eval.e7.E7v5;
+import eval.e7.E7v6;
+import eval.e7.E7v6temp;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -32,21 +38,28 @@ public class GauntletP {
 	
 	private final static class GauntletThread extends Thread{
 		private final long time;
-		private final Search4[] search;
-		public final AtomicInteger[] counts = new AtomicInteger[3];
+		public final AtomicInteger[][] counts;
 		private final int maxDrawCount;
 		private final int minCutoffScore;
 		private final SearchType type;
+		private final Evaluator2 test;
+		public final Evaluator2[] regressors;
 		
-		GauntletThread(long time, Search4[] search, int maxDrawCount, int minCutoffScore, SearchType type){
+		GauntletThread(long time, Evaluator2 test, Evaluator2[] regressors,
+				int maxDrawCount, int minCutoffScore, SearchType type){
 			this.time = time;
-			this.search = search;
 			this.maxDrawCount = maxDrawCount;
-			for(int a = 0; a < counts.length; a++){
-				counts[a] = new AtomicInteger(0);
-			}
 			this.minCutoffScore = minCutoffScore;
 			this.type = type;
+			
+			this.test = test;
+			this.regressors = regressors;
+			counts = new AtomicInteger[regressors.length][3];
+			for(int q = 0; q < regressors.length; q++){
+				for(int a = 0; a < counts[0].length; a++){
+					counts[q][a] = new AtomicInteger(0);
+				}
+			}
 		}
 		
 		public void run(){
@@ -61,10 +74,17 @@ public class GauntletP {
 				State4 state = new State4(b.getSeed(), maxDrawCount);
 				state.initialize();
 				int turn = 0;
-				final int searchOffset = w%2;
 				boolean draw = false;
-				for(int a = 0; a < 2; a++) search[a].resetSearch();
 				boolean outOfBook = false;
+				
+				final int rindex = w%regressors.length;
+				final AtomicInteger[] counts = this.counts[rindex];
+				final int searchOffset = (counts[0].get()+counts[1].get()+counts[2].get())%2;
+				
+				final Search4[] search = new Search4[]{
+						new Search33v4(test, 20, false),
+						new Search33v4(regressors[rindex], 20, false),
+				};
 				
 				boolean[] endScoreCutoff = new boolean[2];
 
@@ -114,7 +134,7 @@ public class GauntletP {
 					if(print) System.out.println();
 					
 					if(move[0] == move[1]){
-						System.out.println("no move draw");
+						//System.out.println("no move draw");
 						draw = true;
 						break;
 					}
@@ -130,21 +150,21 @@ public class GauntletP {
 					counts[2].incrementAndGet();
 				} else{
 					final int winner = 1-turn;
+					//System.out.println(evals[(winner+searchOffset)%2]+" wins");
 					//fos.write(winner == 0? whiteWin: blackWin);
 					if(print) System.out.println("player "+winner+" wins");
 					wins[(winner+searchOffset)%2]++;
 					counts[(winner+searchOffset)%2].incrementAndGet();
 				}
 				
-				System.out.println("--- (w0,w1,d) = ("+wins[0]+","+wins[1]+","+draws+")");
+				//System.out.println("--- (w0,w1,d) = ("+wins[0]+","+wins[1]+","+draws+")");
 			}
 		}
 	}
 	
 	public static void main(String[] args) throws IOException{
 		
-		final int hashSize = 20;
-		final long time = 500;
+		final long time = 1500;
 		final int maxDrawCount = 50;
 		
 		final int minCutoffScore = 800; //score before cutting off a game
@@ -154,43 +174,62 @@ public class GauntletP {
 		final int threads = 4;
 		final GauntletThread[] t = new GauntletThread[threads];
 		
-		//search33v3 - search33v4
-		//(w0,w1,d) = (294,316,290)
+		//(w0,w1,d) = (0,1,6)
 		
 		System.out.print("initializing... ");
 		for(int a = 0; a < threads; a++){
-			Evaluator2 e1 =
-					new E7();
-
-			Evaluator2 e2 = 
-					new E7v5();
 			
-			final Search4[] search = new Search4[2];
-			search[0] = 
-					//new SearchS4V33t(e1, hashSize, false);
-					new Search33v4(e1, hashSize, false);
-			search[1] =
-					//new SearchS4V33t(e2, hashSize, false);
-					new Search33v4(e2, hashSize, false);
+			final Evaluator2 test = 
+					new E7v6temp();
 			
-			t[a] = new GauntletThread(time, search, maxDrawCount, minCutoffScore, searchType);
+			final Evaluator2[] regressors = new Evaluator2[]{
+					new E7(),
+					new E7v2(),
+					new E7v3(),
+					new E7v4(),
+					new E7v5(),
+					new E7v6(),
+			};
+			
+			t[a] = new GauntletThread(time, test, regressors, maxDrawCount, minCutoffScore, searchType);
 			t[a].setDaemon(true);
 		}
 		System.out.println("complete");
 		
+		final DecimalFormat df = new DecimalFormat("#.######");
 		Thread controller = new Thread(){
 			public void run(){
-				final int[] counts = new int[3]; //wins0, wins1, draws
+				final int[][] counts = new int[t[0].counts.length][3]; //wins0, wins1, draws
 				for(;;){
 					
-					for(int a = 0; a < 3; a++) counts[a] = 0;
+					for(int w = 0; w < t[0].counts.length; w++)
+						for(int a = 0; a < 3; a++)
+							counts[w][a] = 0;
 					
 					for(int a = 0; a < threads; a++){
-						for(int q = 0; q < 3; q++){
-							counts[q] += t[a].counts[q].get();
+						for(int w = 0; w < t[a].counts.length; w++){
+							for(int q = 0; q < 3; q++){
+								counts[w][q] += t[a].counts[w][q].get();
+							}
+							
+							
 						}
 					}
-					System.out.println("agg (w0,w1,d) = ("+counts[0]+","+counts[1]+","+counts[2]+")");
+
+					System.out.println("-------------------------------");
+					for(int a = 0; a < counts.length; a++){
+						System.out.println(t[0].test.getClass().getSimpleName()+" - "+
+								t[0].regressors[a].getClass().getSimpleName()+":");
+						
+						//bound on probability of observing these results,
+						//calculated using hoeffding's inequality
+						final int n = counts[a][0]+counts[a][1]+counts[a][2];
+						final double t = Math.abs(counts[a][0]-counts[a][1])*1./n;
+						final double prob = n != 0? Math.exp(-Math.pow(t, 2)*n/2.): 1;
+						
+						System.out.println("agg"+a+" (w0,w1,d) = ("+counts[a][0]+","+counts[a][1]+","+counts[a][2]+"), prob <= "+df.format(prob));
+						
+					}
 					
 					try{
 						Thread.sleep(5*1000);

@@ -1,7 +1,7 @@
 package debug;
 
 import search.Search4;
-import search.search33.Search33v4;
+import search.search33.Search33v4temp;
 import state4.BitUtil;
 import state4.Masks;
 import state4.State4;
@@ -9,7 +9,7 @@ import state4.StateUtil;
 import uci.Position;
 import util.FenParser;
 import eval.Evaluator2;
-import eval.e7.E7v3;
+import eval.e7.E7v5;
 
 
 public class Debug {
@@ -42,7 +42,7 @@ public class Debug {
 		//State4 s = loadConfig(c2);
 		
 		//Position p = FenParser.parse("8/4kp2/p2b1r2/2p1Q3/P1P2p1P/1P6/5PP1/1R4K1 b - - - -");
-		Position p = FenParser.parse("r5k1/5p2/2B2Pp1/7p/3p3P/P7/2PP1P2/4K3 w - - 0 36");
+		Position p = FenParser.parse("2k4r/pp3ppp/4pn2/1q6/8/1P4P1/P1P5/3R1R1K b - - - -");
 		//Position p = FenParser.parse("2k5/pp1r2b1/2p5/7P/2P2r1q/5pN1/PPb2P1P/2Q1RRK1 w - - 0 27"); //c1c2 leads to loss by checkmate
 		//Position p = FenParser.parse("r1bq1rk1/p1pp1ppp/2p5/3nP3/8/2B5/PPPQ1PPP/R3KB1R w - - - -"); //c4d3 blunder
 		//Position p = FenParser.parse("1r2r2k/p1b2pp1/Q1p5/2P5/P2Pp2p/4BqP1/R4P1P/5RK1 w - - 0 24"); //missed mate threat on low depths
@@ -50,12 +50,28 @@ public class Debug {
 		//Position p = FenParser.parse("1q5r/8/2nbNk1p/3p1B2/1n1P2P1/4Q2P/5PK1/4R3 w - - 0 35"); //very hard best move, probably Nf4
 		//Position p = FenParser.parse("7r/q7/2nbNk1p/3p1B2/1n1P2P1/4Q2P/5PK1/4R3 b - - 0 34"); //a7b8 huge blunder, almost certainly causes game loss (white responds Nf4)
 		
+		
+		
 		System.out.println(StateUtil.fen(p.sideToMove, p.s));
-		State4 s = p.s;
+		final State4 s = p.s;
+		
+		//final String moves = "e6g6 a2a1 c1c2 a1a4 c2b1 d5c3 b2c3 a4b3 b1c1 b3c3 c1d1 c3a1";
+		final String moves = " ";
+		for(String temp: moves.split("\\s+")){
+			final int index1 = temp.charAt(0)-'a'+(temp.charAt(1)-'a')*8;
+			final int index2 = temp.charAt(2)-'a'+(temp.charAt(3)-'a')*8;
+			s.executeMove(p.sideToMove, 1L<<index1, 1L<<index2);
+			p.sideToMove = 1-p.sideToMove;
+		}
 		int player = p.sideToMove;
+		/*s.executeMove(0, 1L<<(4+8*5), 1L<<(6+8*5));
+		s.executeMove(1, 1L<<(0+8*1), 1L<<(0+8*0));
+		s.executeMove(0, 1L<<(2+8*0), 1L<<(2+8*1));
+		s.executeMove(1, 1L<<(0+8*0), 1L<<(0+8*3));*/
+		
 		
 		System.out.println(s);
-		Evaluator2 e = new E7v3();
+		Evaluator2 e = new E7v5();
 		//Evaluator2<State4> e = new IncrementalPieceScore();
 		
 		//e.initialize(s);
@@ -64,16 +80,50 @@ public class Debug {
 		System.out.println("\n");
 		
 		final int maxDepth = 40;
-		Search4 search = new Search33v4(e, 20, true);
-		int[] move = new int[2];
+		Search4 search = new Search33v4temp(e, 20, true);
+		final int[] move = new int[2];
 		search.search(player, s, move, maxDepth);
 		System.out.println("\n"+getMoveString(move, 0)+" -> "+getMoveString(move, 1));
 		System.out.println("nodes searched = "+search.getStats().nodesSearched);
 		System.out.println("hash hit rate = "+search.getStats().hashHits*1./search.getStats().nodesSearched);
 		System.out.println("branching factor = "+search.getStats().empBranchingFactor);
+
+		/*final long start = System.currentTimeMillis();
+		final int shortDepth = 7;
+		for(int a = 0; a < 99999; a++){
+			System.out.println(s);
+			search.search(player, s, move, shortDepth);
+			System.out.println("\n"+getMoveString(move, 0)+" -> "+getMoveString(move, 1));
+			System.out.println("nodes searched = "+search.getStats().nodesSearched);
+			System.out.println("hash hit rate = "+search.getStats().hashHits*1./search.getStats().nodesSearched);
+			System.out.println("branching factor = "+search.getStats().empBranchingFactor);
+			s.executeMove(player, 1L<<move[0], 1L<<move[1]);
+			System.out.println("predicted score = "+search.getStats().predictedScore);
+			System.out.println("move = "+(a+1));
+			if(Math.abs(search.getStats().predictedScore) > 80000){
+				int winner = search.getStats().predictedScore > 0? player: 1-player;
+				System.out.println("\n\nwinner = "+winner);
+				break;
+			}
+			player = 1-player;
+		}
+		final long diff = System.currentTimeMillis()-start;
+		System.out.println("time = "+diff+" ms");*/
 		
 		
 		System.out.println(s);
+		
+		
+		
+		//search.resetSearch();
+		/*Position p2 = FenParser.parse("r5k1/ppp1p1r1/4R1pQ/3n2N1/3P4/2P2P2/qP1R1P2/2K5 w - - - -");
+		e.initialize(p2.s);
+		search.search(player, p2.s, move, 40);*/
+		
+		
+		
+		
+		
 		
 		//TimerThread3.search(new SearchS4V30(maxDepth, s, e, 20, false), s, State4.WHITE, 1000*60*3, 0, move);
 		
