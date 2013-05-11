@@ -9,6 +9,7 @@ import eval.Evaluator2;
 import eval.PositionMasks;
 import eval.Weight;
 
+@Deprecated
 public final class E7v6temp implements Evaluator2{
 	private final static class WeightAgg{
 		int start;

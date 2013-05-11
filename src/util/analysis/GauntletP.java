@@ -19,7 +19,6 @@ import eval.e7.E7v3;
 import eval.e7.E7v4;
 import eval.e7.E7v5;
 import eval.e7.E7v6;
-import eval.e7.E7v6temp;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -180,7 +179,7 @@ public class GauntletP {
 		for(int a = 0; a < threads; a++){
 			
 			final Evaluator2 test = 
-					new E7v6temp();
+					new E7v6();
 			
 			final Evaluator2[] regressors = new Evaluator2[]{
 					new E7(),
@@ -188,7 +187,7 @@ public class GauntletP {
 					new E7v3(),
 					new E7v4(),
 					new E7v5(),
-					new E7v6(),
+					//new E7v6(),
 			};
 			
 			t[a] = new GauntletThread(time, test, regressors, maxDrawCount, minCutoffScore, searchType);
