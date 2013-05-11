@@ -1,13 +1,23 @@
 package search.search33;
 
+import java.util.Random;
+
+import state4.Masks;
+
 
 /** rough but working implementation of cuckoo hashing*/
 public final class CuckooHash2 implements Hash{
 	private final TTEntry[] l;
 	private final int size;
 	private final int maxAttempts;
-	private final static long a = (long)(Math.random()*Long.MAX_VALUE);
-	private final static long b = (long)(Math.random()*Long.MAX_VALUE);
+	private final static long a;
+	private final static long b;
+	
+	static{
+		final Random r = new Random(58372L);
+		a = (long)(r.nextDouble()*Long.MAX_VALUE);
+		b = (long)(r.nextDouble()*Long.MAX_VALUE);
+	}
 	
 	public CuckooHash2(int size){
 		this(size, 16);

@@ -14,7 +14,7 @@ import state4.State4;
 import eval.Evaluator2;
 
 /** same as v2 but with search backtracking on failure (low or high)*/
-public final class Search33v4 implements Search4{
+public final class Search33v4temp implements Search4{
 	public final static class SearchStat32k extends SearchStat{
 		/** scores returned from quiet search without bottoming out*/
 		public long forcedQuietCutoffs;
@@ -118,11 +118,11 @@ public final class Search33v4 implements Search4{
 	
 	private final AtomicBoolean cutoffSearch = new AtomicBoolean(false);
 	
-	public Search33v4(Evaluator2 e, int hashSize){
+	public Search33v4temp(Evaluator2 e, int hashSize){
 		this(e, hashSize, false);
 	}
 	
-	public Search33v4(Evaluator2 e, int hashSize, boolean printPV){
+	public Search33v4temp(Evaluator2 e, int hashSize, boolean printPV){
 		this.e = e;
 		
 		//m = new ZMap3(hashSize);
@@ -166,6 +166,15 @@ public final class Search33v4 implements Search4{
 		e.initialize(s);
 		cutoffSearch.set(false);
 		
+
+		s.resetHistory();
+		searchHelper(player, s, moveStore, maxPly, false, true);
+		stats.searchTime = System.currentTimeMillis()-stats.searchTime;
+	}
+	
+	public void searchHelper(final int player, final State4 s, final int[] moveStore,
+			final int maxPly, final boolean skipLookahead, final boolean print){
+		
 		final boolean debugPrint = false;
 		
 		long bestMove = 0;
@@ -184,7 +193,6 @@ public final class Search33v4 implements Search4{
 		final int backDist = 5; //amount to back up the search
 		//assert minRestartDepth-backDist >= 3;
 		for(int i = 1; (maxPly == -1 || i <= maxPly) && !cutoffSearch.get() && i <= stackSize; i++){
-			s.resetHistory();
 			
 			if(i <= 3){
 				alpha = min;
@@ -231,6 +239,28 @@ public final class Search33v4 implements Search4{
 				}
 			}
 			
+			if(!skipLookahead && i > 7){
+				final TTEntry start = m.get(s.zkey());
+				if(start != null && start.move != 0 && Math.abs(start.score) < 70000){
+					int a = 0;
+					for(; a < i; a++){
+						final TTEntry temp = m.get(s.zkey());
+						if(temp != null && temp.move != 0){
+							s.executeMove((player+a)%2, temp.move);
+						} else{
+							break;
+						}
+					}
+					searchHelper((player+a)%2, s, null, (i-a)+i/4, true, false);
+					//if(!cutoffSearch.get()) start.score = stats.predictedScore;
+					final TTEntry fnode = m.get(s.zkey());
+					if(fnode != null && !cutoffSearch.get() &&
+							Math.abs(fnode.score) < 70000) start.score = fnode.score;
+					for(; a > 0; a--) s.undoMove();
+				}
+			}
+			
+			
 			if(!cutoffSearch.get()){
 				nodesSearched = stats.nodesSearched;
 				stats.maxPlySearched = i;
@@ -242,7 +272,7 @@ public final class Search33v4 implements Search4{
 				if(l != null){
 					l.plySearched(bestMove, i, score);
 				}
-				if(printPV){
+				if(print && printPV){
 					final String pvString = getPVString(player, s, "", 0, i, uciPV);
 					if(!uciPV) System.out.println("pv "+i+": ["+score+"] "+pvString);
 					else System.out.println("info depth "+i+" score cp "+(int)score+" time "+
@@ -257,36 +287,6 @@ public final class Search33v4 implements Search4{
 		}
 		
 		stats.empBranchingFactor = Math.pow(nodesSearched, 1./stats.maxPlySearched);
-		
-		if(f != null){
-			//record turn, piece counts, and scores at each level of search
-			String pieceCounts = "";
-			for(int q = 0; q < 2; q++){
-				pieceCounts += "<piece-counts-"+q+"=";
-				for(int a = 0; a < s.pieceCounts[0].length; a++){
-					pieceCounts += s.pieceCounts[q][a];
-					if(a != s.pieceCounts[0].length-1)
-						pieceCounts+=",";
-				}
-				pieceCounts += ">";
-			}
-			String scorestr = "<scores=";
-			for(int a = 0; a < maxPly && a < stats.scores.length; a++){
-				scorestr += stats.scores[a];
-				if(a != maxPly-1)
-					scorestr += ",";
-			}
-			scorestr += ">";
-			String record = "<turn="+player+">"+pieceCounts+scorestr;
-			//ps.println(record);
-			try{
-				f.write(record+"\n");
-				f.flush();
-			} catch(IOException a){
-				a.printStackTrace();
-			}
-			//ps.append(record+"\n");
-		}
 
 		stats.endScore = score;
 		
@@ -297,7 +297,6 @@ public final class Search33v4 implements Search4{
 			moveStore[1] = pos2;
 		}
 		
-		stats.searchTime = System.currentTimeMillis()-stats.searchTime;
 	}
 	
 	private String getPVString(int player, State4 s, String pv, int depth, int maxDepth, boolean uci){
