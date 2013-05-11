@@ -621,7 +621,7 @@ public final class E7v6 implements Evaluator2{
 			}
 		}
 		index += supportedRookAttacks*1;
-		index += supportedRookContactChecks*3;
+		index += supportedRookContactChecks*2;
 		
 		//process bishop attacks
 		int supportedBishopAttacks = 0;
