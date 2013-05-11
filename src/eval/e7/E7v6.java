@@ -25,6 +25,10 @@ public final class E7v6 implements Evaluator2{
 			this.start += start;
 			this.end += end;
 		}
+		void add(final int start, final int end, final double mult){
+			this.start += start*mult;
+			this.end += end*mult;
+		}
 		void add(final int v){
 			this.start += v;
 			this.end += v;
@@ -63,19 +67,19 @@ public final class E7v6 implements Evaluator2{
 	}
 	
 	private final static Weight[][] isolatedPawns = new Weight[][]{{
-		S(-15,-10), S(-18,-15), S(-20,-19), S(-22,-10), S(-22,-10), S(-20,-19), S(-18,-15), S(-15,-10)},
-		{S(-6,-8), S(-8,-8), S(-12,-10), S(-14,-12), S(-14,-12), S(-12,-10), S(-8,-8), S(-6,-8)},
+		S(-15,-10), S(-18,-15), S(-20,-19), S(-22,-20), S(-22,-20), S(-20,-19), S(-18,-15), S(-15,-10)},
+		//{S(-6,-8), S(-8,-8), S(-12,-10), S(-14,-12), S(-14,-12), S(-12,-10), S(-8,-8), S(-6,-8)},
 		//{S(-17, -20), S(-18, -18), S(-20, -23), S(-25, -25), S(-25, -25), S(-20, -23), S(-18, -18), S(-17, -20)},
-		//{S(-10, -14), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-10, -14)},
+		{S(-10, -14), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-10, -14)},
 	};
 
 	private final static Weight[] pawnChain = new Weight[]{
-		S(8,0), S(10,0), S(13,1), S(15,5), S(15,5), S(13,1), S(10,0), S(8,0)
+		S(13,0), S(15,0), S(18,1), S(22,5), S(22,5), S(18,1), S(15,0), S(13,0)
 	};
 
 	private final static Weight[][] doubledPawns = new Weight[][]{
-		{S(-6,-15), S(-9,-16), S(-10,-16), S(-10,-16), S(-10,-16), S(-10,-16), S(-9,-16), S(-6,-15)},
-		{S(-3,-10), S(-5,-14), S(-6,-10), S(-6,-11), S(-6,-11), S(-6,-10), S(-5,-14), S(-3,-10)},
+		{S(-9,-18), S(-12,-19), S(-13,-19), S(-13,-19), S(-13,-19), S(-13,-19), S(-12,-19), S(-12,-18)},
+		{S(-6,-13), S(-8,-16), S(-9,-17), S(-9,-17), S(-9,-17), S(-9,-17), S(-8,-16), S(-6,-13)},
 	};
 
 	private final static Weight[][] backwardPawns = new Weight[][]{
@@ -344,10 +348,9 @@ public final class E7v6 implements Evaluator2{
 		
 		//checks to see whether we have a non-pawn material disadvantage,
 		//its very hard to keep a passed pawn when behind
-		final int nonPawnMaterialDiff = nonPawnMaterial[player]-nonPawnMaterial[1-player];
-		if(nonPawnMaterialDiff+20 < 0){ //+20 to ensure actually down a minor piece (not just 2 bishops vs 2 knights)
-			agg.add(-start*2/3, -end*2/3);
-		}
+		//final int nonPawnMaterialDiff = nonPawnMaterial[player]-nonPawnMaterial[1-player];
+		final double npDisMult = max(min(nonPawnMaterial[1-player]-nonPawnMaterial[player], 300), 0)/300.;
+		agg.add(-start*2/3, -end*2/3, npDisMult);
 		
 		//passed pawn supported by rook bonus
 		if((s.rooks[player] & PositionMasks.opposedPawnMask[1-player][pawnIndex]) != 0){
@@ -360,6 +363,14 @@ public final class E7v6 implements Evaluator2{
 		}
 	}
 	
+	private static double min(final double d1, final double d2){
+		return d1 < d2? d1: d2;
+	}
+	
+	private static double max(final double d1, final double d2){
+		return d1 > d2? d1: d2;
+	}
+	
 	private static void scorePawns(final int player, final State4 s, final WeightAgg agg, final int[] nonPawnMaterial){
 		final long enemyPawns = s.pawns[1-player];
 		final long alliedPawns = s.pawns[player];
@@ -367,6 +378,7 @@ public final class E7v6 implements Evaluator2{
 		final int kingIndex = BitUtil.lsbIndex(s.kings[player]);
 		
 		final boolean nonPawnDisadvantage = nonPawnMaterial[player]-nonPawnMaterial[1-player]+20 < 0;
+		final double npDisMult = max(min(nonPawnMaterial[1-player]-nonPawnMaterial[player], 300), 0)/300.;
 		
 		int kingDistAgg = 0; //king distance aggregator
 		for(long pawns = alliedPawns; pawns != 0; pawns &= pawns-1){
@@ -387,12 +399,12 @@ public final class E7v6 implements Evaluator2{
 			if(isolated){
 				//agg.add(p.isolatedPawns[opposedFlag][col]);
 				agg.add(isolatedPawns[opposedFlag][col]);
-				if(nonPawnDisadvantage) agg.add(-5, -15);
+				if(nonPawnDisadvantage) agg.add(-10, -20, npDisMult);
 			}
 			if(doubled){
 				agg.add(doubledPawns[opposedFlag][col]);
 				//agg.add(doubledPawns[opposedFlag][col]);
-				if(nonPawnDisadvantage) agg.add(-5, -15);
+				if(nonPawnDisadvantage) agg.add(-10, -10, npDisMult);
 			}
 			if(chain){
 				//agg.add(p.pawnChain[col]);
@@ -415,7 +427,7 @@ public final class E7v6 implements Evaluator2{
 					agg.add(backwardPawns[opposedFlag][col]);
 					
 					//(w0,w1,d) = (116,95,73), with-without, depth=3
-					if(nonPawnDisadvantage) agg.add(-5, -15);
+					if(nonPawnDisadvantage) agg.add(-10, -10, npDisMult);
 				}
 			}
 			
