@@ -62,15 +62,15 @@ public final class E7v6 implements Evaluator2{
 		return new Weight(start, end);
 	}
 	
-	private final static Weight[][] isolatedPawns = new Weight[][]{
-		{S(-25, -25), S(-25, -25), S(-25, -25), S(-25, -25), S(-25, -25), S(-25, -25), S(-25, -25), S(-25, -25)},
-		{S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17)},
+	private final static Weight[][] isolatedPawns = new Weight[][]{{
+		S(-15,-10), S(-18,-15), S(-20,-19), S(-22,-10), S(-22,-10), S(-20,-19), S(-18,-15), S(-15,-10)},
+		{S(-6,-8), S(-8,-8), S(-12,-10), S(-14,-12), S(-14,-12), S(-12,-10), S(-8,-8), S(-6,-8)},
 		//{S(-17, -20), S(-18, -18), S(-20, -23), S(-25, -25), S(-25, -25), S(-20, -23), S(-18, -18), S(-17, -20)},
 		//{S(-10, -14), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-10, -14)},
 	};
 
 	private final static Weight[] pawnChain = new Weight[]{
-		S(10,0), S(13,0), S(15,1), S(20,5), S(20,5), S(15,1), S(13,0), S(10,0)
+		S(8,0), S(10,0), S(13,1), S(15,5), S(15,5), S(13,1), S(10,0), S(8,0)
 	};
 
 	private final static Weight[][] doubledPawns = new Weight[][]{
@@ -138,7 +138,7 @@ public final class E7v6 implements Evaluator2{
 		final int maxDanger = 1280;
 		for(int x = 0, i = 0; i < kingDangerTable.length; i++){
 			x = Math.min(maxDanger, Math.min((int)(i*i*.4), x + maxSlope));
-			kingDangerTable[i] = new Weight(-x/2, 0);
+			kingDangerTable[i] = new Weight(-x, 0);
 		}
 
 		for(int a = 0; a < 64; a++) kingDangerSquares[1][a] = kingDangerSquares[0][63-a];
@@ -387,12 +387,12 @@ public final class E7v6 implements Evaluator2{
 			if(isolated){
 				//agg.add(p.isolatedPawns[opposedFlag][col]);
 				agg.add(isolatedPawns[opposedFlag][col]);
-				if(nonPawnDisadvantage) agg.add(-5, -10);
+				if(nonPawnDisadvantage) agg.add(-5, -15);
 			}
 			if(doubled){
 				agg.add(doubledPawns[opposedFlag][col]);
 				//agg.add(doubledPawns[opposedFlag][col]);
-				if(nonPawnDisadvantage) agg.add(-5, -10);
+				if(nonPawnDisadvantage) agg.add(-5, -15);
 			}
 			if(chain){
 				//agg.add(p.pawnChain[col]);
@@ -415,7 +415,7 @@ public final class E7v6 implements Evaluator2{
 					agg.add(backwardPawns[opposedFlag][col]);
 					
 					//(w0,w1,d) = (116,95,73), with-without, depth=3
-					if(nonPawnDisadvantage) agg.add(-5, -10);
+					if(nonPawnDisadvantage) agg.add(-5, -15);
 				}
 			}
 			
@@ -591,7 +591,7 @@ public final class E7v6 implements Evaluator2{
 			}
 		}
 		//index += supportedQueenAttacks*16;
-		index += supportedQueenAttacks*6;
+		index += supportedQueenAttacks*4;
 
 		//process rook attacks
 		int supportedRookAttacks = 0;
@@ -682,7 +682,7 @@ public final class E7v6 implements Evaluator2{
 		
 		
 		//(w0,w1,d) = (31,20,27)
-		index /= 2;
+		//index /= 2;
 		w.add(kingDangerTable[index < 128? index: 127]);
 		//w.add(-index/4, 0); //(w0,w1,d) = (31,19,13)
 		//w.add(-index/4, 0);
