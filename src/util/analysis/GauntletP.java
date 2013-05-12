@@ -13,11 +13,6 @@ import state4.StateUtil;
 import time.TimerThread5;
 import util.opening2.Book;
 import eval.Evaluator2;
-import eval.e7.E7;
-import eval.e7.E7v2;
-import eval.e7.E7v3;
-import eval.e7.E7v4;
-import eval.e7.E7v5;
 import eval.e7.E7v6;
 
 /**
@@ -163,12 +158,12 @@ public class GauntletP {
 	
 	public static void main(String[] args) throws IOException{
 		
-		final long time = 1500;
+		final long time = 2000;
 		final int maxDrawCount = 50;
 		
 		final int minCutoffScore = 800; //score before cutting off a game
 		
-		final SearchType searchType = SearchType.Depth;
+		final SearchType searchType = SearchType.FixedTime;
 
 		final int threads = 4;
 		final GauntletThread[] t = new GauntletThread[threads];
@@ -182,12 +177,12 @@ public class GauntletP {
 					new E7v6();
 			
 			final Evaluator2[] regressors = new Evaluator2[]{
-					new E7(),
-					new E7v2(),
-					new E7v3(),
-					new E7v4(),
-					new E7v5(),
-					//new E7v6(),
+					//new E7(),
+					//new E7v2(),
+					//new E7v3(),
+					//new E7v4(),
+					//new E7v5(),
+					new E7v6(),
 			};
 			
 			t[a] = new GauntletThread(time, test, regressors, maxDrawCount, minCutoffScore, searchType);

@@ -81,6 +81,17 @@ public final class Masks {
 		}*/
 	}
 	
+	/** gets all pawn moves (including single or double movements)*/
+	public static long getRawAggPawnMoves(final int player, final long aggPieces, final long pawns){
+		final long open = ~aggPieces;
+		final long l1moves = (player == 0? pawns << 8: pawns >>> 8) & open;
+		final long candidates = (player == 0? 0xFF00L: 0xFF000000000000L) & pawns;
+		final long l2moves = player == 0?
+				(((candidates << 8) & open) << 8) & open:
+				(((candidates >>> 8) & open) >>> 8) & open;
+		return l1moves | l2moves; 
+	}
+	
 	private static long[][] genUnopposedPawnMasks(){
 		long[][] l = new long[2][64];
 		long col = 0x0101010101010101L;
