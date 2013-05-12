@@ -114,7 +114,7 @@ public final class Search33v5 implements Search4{
 	
 	private final static int tteMoveRank = -1;
 	/** rank set to the first of the non takes*/
-	private final static int killerMoveRank = 5;
+	private final static int killerMoveRank = 4;
 	
 	private final AtomicBoolean cutoffSearch = new AtomicBoolean(false);
 	
@@ -428,8 +428,9 @@ public final class Search33v5 implements Search4{
 			}
 		}
 		
-		//razoring
 		final int lazyEval = this.e.lazyEval(s, player);
+		
+		//razoring
 		/*final boolean pawnPrePromotion = (s.pawns[player] & Masks.pawnPrePromote[player]) != 0;
 		if(!pv &&
 				Math.abs(beta) < 70000 &&
@@ -492,6 +493,7 @@ public final class Search33v5 implements Search4{
 			//note, non-pv nodes are null window searched - no need to do it here explicitly
 			stack[stackIndex+1].skipNullMove = true;
 			s.nullMove();
+			final long nullzkey = s.zkey();
 			int n = -recurse(1-player, -beta, -alpha, depth-r, pv, rootNode, stackIndex+1, s);
 			s.undoNullMove();
 			stack[stackIndex+1].skipNullMove = false;
@@ -518,6 +520,10 @@ public final class Search33v5 implements Search4{
 				}
 			} else if(n < alpha){
 				stats.nullMoveFailLow++;
+				final TTEntry nullTTEntry = m.get(nullzkey);
+				if(nullTTEntry != null && nullTTEntry.move != 0){
+					ml.killer[0] = nullTTEntry.move & 0xFFFL; //doesnt matter which we store to, killer is at node start
+				}
 			}
 		} else{
 			threatMove = false;
@@ -823,12 +829,16 @@ public final class Search33v5 implements Search4{
 	 */
 	private static boolean isPseudoLegal(final int player, final long encoding, State4 s){
 		final int pos1 = MoveEncoder.getPos1(encoding);
-		final long p = 1L<<pos1;
-		final long m = 1L<<MoveEncoder.getPos2(encoding);
+		final int pos2 = MoveEncoder.getPos2(encoding);
+		final int takenType = MoveEncoder.getTakenType(encoding);
+		final long p = 1L << pos1;
+		final long m = 1L << pos2;
 		final long[] pieces = s.pieces;
 		final long agg = pieces[0] | pieces[1];
-		final long open = ~pieces[player];
-		if((pieces[player] & p) != 0 && (pieces[player] & pieces[1-player] & m) == 0){
+		final long allied = pieces[player];
+		final long open = ~allied;
+		
+		if((allied & p) != 0 && takenType == s.mailbox[pos2]){
 			final int type = s.mailbox[pos1];
 			switch(type){
 			case State4.PIECE_TYPE_BISHOP:
@@ -851,6 +861,7 @@ public final class Search33v5 implements Search4{
 				return (m & tempPawnMoves) != 0;
 			}
 		}
+		
 		return false;
 	}
 	
