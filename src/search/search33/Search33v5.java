@@ -854,7 +854,7 @@ public final class Search33v5 implements Search4{
 				final long tempRookMoves = Masks.getRawRookMoves(agg, p) & open;
 				return (m & tempRookMoves) != 0;
 			case State4.PIECE_TYPE_KING:
-				final long tempKingMoves = Masks.getRawKingMoves(p) & open;
+				final long tempKingMoves = (Masks.getRawKingMoves(p) & open) | State4.getCastleMoves(player, s);
 				return (m & tempKingMoves) != 0;
 			case State4.PIECE_TYPE_PAWN:
 				final long tempPawnMoves = Masks.getRawAggPawnMoves(player, agg, s.pawns[player]);
@@ -877,7 +877,6 @@ public final class Search33v5 implements Search4{
 				(move&0xFFF) != prev.killer[0] &&
 				(move&0xFFF) != prev.killer[1] &&
 				MoveEncoder.getTakenType(move) == State4.PIECE_TYPE_EMPTY &&
-				MoveEncoder.isCastle(move) == 0 &&
 				MoveEncoder.isEnPassanteTake(move) == 0 &&
 				!MoveEncoder.isPawnPromoted(move)){
 			if(prev.killer[0] != move){
