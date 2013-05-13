@@ -745,7 +745,7 @@ public final class Search33v5 implements Search4{
 		int bestScore;
 		ml.kingAttacked[player] = State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
 		if(ml.kingAttacked[player]){
-			bestScore = -77777;
+			bestScore = -77777; //NOTE: THIS CONDITION WILL PROBABLY NEVER BE CHECKED
 		} else{
 			bestScore = this.e.eval(s, player);
 			if(bestScore >= beta){ //standing pat
@@ -813,6 +813,7 @@ public final class Search33v5 implements Search4{
 		}
 		return bestScore;
 	}
+	
 
 	/**
 	 * checks too see if a move is legal, assumming we do not start in check,
