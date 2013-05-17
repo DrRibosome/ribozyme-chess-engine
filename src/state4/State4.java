@@ -592,7 +592,7 @@ public final class State4 {
 			//System.out.println("undoing pawn promotion");
 			/*System.out.println(this);*/
 			zkey ^= zhash.zhash[player][PIECE_TYPE_PAWN][pos1] ^
-					zhash.zhash[player][PIECE_TYPE_QUEEN][pos1];
+					zhash.zhash[player][PIECE_TYPE_QUEEN][pos1]; //pos1, because already move back above
 			pawnZkey ^= zhash.zhash[player][PIECE_TYPE_PAWN][pos1];
 		}
 		
