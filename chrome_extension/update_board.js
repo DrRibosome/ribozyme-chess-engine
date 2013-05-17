@@ -168,7 +168,7 @@ function updateBoard()
 		}
 	}
 	var name = document.getElementById("white_player_name_" + activeBoard).innerHTML;
-	if(name == "MrEnzyme" || name == "thesupergame" || name == "drribosome" || name == "Ribozyme")
+	if(name == "MrEnzyme" || name == "thesupergame" || name == "drribosome" || name == "Ribozyme" || name == "RibozymeRidesAgain")
 	//if(name == "drribosome" || name == "Ribozyme")
 	{
 		display += "0";

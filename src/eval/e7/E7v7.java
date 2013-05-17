@@ -9,6 +9,7 @@ import eval.Evaluator2;
 import eval.PositionMasks;
 import eval.Weight;
 
+/** stockfish style weights added*/
 public final class E7v7 implements Evaluator2{
 	
 	/**

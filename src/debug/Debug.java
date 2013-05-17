@@ -41,12 +41,12 @@ public class Debug {
 		//State4 s = loadConfig(c);
 		//State4 s = loadConfig(c2);
 		
-		//Position p = FenParser.parse("8/4kp2/p2b1r2/2p1Q3/P1P2p1P/1P6/5PP1/1R4K1 b - - - -");
+		Position p = FenParser.parse("5k2/p1p1RP1p/2q5/8/3p4/8/PP3RKP/8 w - - 1 -"); //g2g3????
 		//Position p = FenParser.parse("2k4r/pp3ppp/4pn2/1q6/8/1P4P1/P1P5/3R1R1K b - - - -");
 		//Position p = FenParser.parse("2k5/pp1r2b1/2p5/7P/2P2r1q/5pN1/PPb2P1P/2Q1RRK1 w - - 0 27"); //c1c2 leads to loss by checkmate
 		//Position p = FenParser.parse("r1bq1rk1/p1pp1ppp/2p5/3nP3/8/2B5/PPPQ1PPP/R3KB1R w - - - -"); //c4d3 blunder
 		//Position p = FenParser.parse("1r2r2k/p1b2pp1/Q1p5/2P5/P2Pp2p/4BqP1/R4P1P/5RK1 w - - 0 24"); //missed mate threat on low depths
-		Position p = FenParser.parse("2r2rkn/pp3p1p/1q2p1pP/3pP1N1/b1nP4/P2B1QP1/1PN2P2/1R2K2R b - - - -"); //missed mate threat on depth 10, choose c4b2
+		//Position p = FenParser.parse("2r2rkn/pp3p1p/1q2p1pP/3pP1N1/b1nP4/P2B1QP1/1PN2P2/1R2K2R b - - - -"); //missed mate threat on depth 10, choose c4b2
 		//Position p = FenParser.parse("1q5r/8/2nbNk1p/3p1B2/1n1P2P1/4Q2P/5PK1/4R3 w - - 0 35"); //very hard best move, probably Nf4
 		//Position p = FenParser.parse("7r/q7/2nbNk1p/3p1B2/1n1P2P1/4Q2P/5PK1/4R3 b - - 0 34"); //a7b8 huge blunder, almost certainly causes game loss (white responds Nf4)
 		
@@ -80,7 +80,7 @@ public class Debug {
 		System.out.println("\n");
 		
 		final int maxDepth = 40;
-		Search4 search = new Search33v5(e, 20, true);
+		Search4 search = new Search33v5(e, 22, true);
 		final int[] move = new int[2];
 		search.search(player, s, move, maxDepth);
 		System.out.println("\n"+getMoveString(move, 0)+" -> "+getMoveString(move, 1));

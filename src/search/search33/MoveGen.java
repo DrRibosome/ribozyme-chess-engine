@@ -49,9 +49,19 @@ final class MoveGen {
 	private static void isort(final MoveSet[] mset, final int length){
 		for(int i = 1; i < length; i++){
 			for(int a = i; a > 0 && mset[a-1].rank > mset[a].rank; a--){
-				final MoveSet temp = mset[a];
+				/*final MoveSet temp = mset[a];
 				mset[a] = mset[a-1];
-				mset[a-1] = temp;
+				mset[a-1] = temp;*/
+				
+				final long tempPiece = mset[a].piece;
+				final long tempMoves = mset[a].moves;
+				final int tempRank = mset[a].rank;
+				mset[a].piece = mset[a-1].piece;
+				mset[a].moves = mset[a-1].moves;
+				mset[a].rank = mset[a-1].rank;
+				mset[a-1].piece = tempPiece;
+				mset[a-1].moves = tempMoves;
+				mset[a-1].rank = tempRank;
 			}
 		}
 	}
@@ -86,59 +96,78 @@ final class MoveGen {
 		int w = list.length;
 		if(kingAttacked){
 			final long kingMoves = Masks.getRawKingMoves(king) & ~allied;
-			mset[w++].fill(king, kingMoves & enemies, 0);
-			if(!quiesce) mset[w++].fill(king, kingMoves & ~enemies, 1);
+			if((kingMoves & enemies) != 0)
+				mset[w++].fill(king, kingMoves & enemies, 0);
+			if(!quiesce && (kingMoves & ~enemies) != 0)
+				mset[w++].fill(king, kingMoves & ~enemies, 1);
 		}
 		
 		for(long temp = queens; temp != 0; temp &= temp-1){
 			final long q = temp & -temp;
 			final long moves = Masks.getRawQueenMoves(agg, q) & ~allied;
-			mset[w++].fill(q, moves & enemyQueens, 9);
+			/*mset[w++].fill(q, moves & enemyQueens, 9);
 			mset[w++].fill(q, moves & enemyRooks, 5);
 			mset[w++].fill(q, moves & enemyMinorPieces, 12);
-			mset[w++].fill(q, moves & enemyPawns, 8);
-			if(!quiesce){
-				mset[w++].fill(q, moves & ~enemies & ~enemyPawnAttacks, 14);
-				mset[w++].fill(q, moves & ~enemies & enemyPawnAttacks, 15);
+			mset[w++].fill(q, moves & enemyPawns, 8);*/
+			if((moves & enemies) != 0) mset[w++].fill(q, moves & enemies, 9);
+			if(!quiesce && (moves & ~enemies) != 0){
+				/*mset[w++].fill(q, moves & ~enemies & ~enemyPawnAttacks, 14);
+				mset[w++].fill(q, moves & ~enemies & enemyPawnAttacks, 15);*/
+				mset[w++].fill(q, moves & ~enemies, 14);
 			}
 		}
 		
 		for(long temp = bishops; temp != 0; temp &= temp-1){
 			final long b = temp & -temp;
 			final long moves = Masks.getRawBishopMoves(agg, b) & ~allied;
-			mset[w++].fill(b, moves & enemyQueens, 3);
+			/*mset[w++].fill(b, moves & enemyQueens, 3);
 			mset[w++].fill(b, moves & enemyRooks, 4);
 			mset[w++].fill(b, moves & enemyMinorPieces, 9);
-			mset[w++].fill(b, moves & enemyPawns, 8);
-			if(!quiesce){
-				mset[w++].fill(b, moves & ~enemies & ~enemyPawnAttacks, 14);
-				mset[w++].fill(b, moves & ~enemies & enemyPawnAttacks, 15);
+			mset[w++].fill(b, moves & enemyPawns, 8);*/
+			if((moves & (enemyQueens|enemyRooks)) != 0)
+				mset[w++].fill(b, moves & (enemyQueens|enemyRooks), 5);
+			if((moves & (enemyRooks|enemyMinorPieces|enemyPawns)) != 0)
+				mset[w++].fill(b, moves & (enemyRooks|enemyMinorPieces|enemyPawns), 9);
+			if(!quiesce && (moves & ~enemies) != 0){
+				/*mset[w++].fill(b, moves & ~enemies & ~enemyPawnAttacks, 14);
+				mset[w++].fill(b, moves & ~enemies & enemyPawnAttacks, 15);*/
+				mset[w++].fill(b, moves & ~enemies, 14);
 			}
 		}
 		
 		for(long temp = knights; temp != 0; temp &= temp-1){
 			final long k = temp & -temp;
 			final long moves = Masks.getRawKnightMoves(k) & ~allied;
-			mset[w++].fill(k, moves & enemyQueens, 3);
+			/*mset[w++].fill(k, moves & enemyQueens, 3);
 			mset[w++].fill(k, moves & enemyRooks, 4);
 			mset[w++].fill(k, moves & enemyMinorPieces, 9);
-			mset[w++].fill(k, moves & enemyPawns, 8);
-			if(!quiesce){
-				mset[w++].fill(k, moves & ~enemies & ~enemyPawnAttacks, 14);
-				mset[w++].fill(k, moves & ~enemies & enemyPawnAttacks, 15);
+			mset[w++].fill(k, moves & enemyPawns, 8);*/
+			if((moves & (enemyQueens|enemyRooks)) != 0)
+				mset[w++].fill(k, moves & (enemyQueens|enemyRooks), 5);
+			if((moves & (enemyRooks|enemyMinorPieces|enemyPawns)) != 0)
+				mset[w++].fill(k, moves & (enemyRooks|enemyMinorPieces|enemyPawns), 9);
+			if(!quiesce && (moves & ~enemies) != 0){
+				/*mset[w++].fill(k, moves & ~enemies & ~enemyPawnAttacks, 14);
+				mset[w++].fill(k, moves & ~enemies & enemyPawnAttacks, 15);*/
+				mset[w++].fill(k, moves & ~enemies, 14);
 			}
 		}
 		
 		for(long temp = rooks; temp != 0; temp &= temp-1){
 			final long r = temp & -temp;
 			final long moves = Masks.getRawRookMoves(agg, r) & ~allied;
-			mset[w++].fill(r, moves & enemyQueens, 3);
+			/*mset[w++].fill(r, moves & enemyQueens, 3);
 			mset[w++].fill(r, moves & enemyRooks, 9);
 			mset[w++].fill(r, moves & enemyMinorPieces, 8);
-			mset[w++].fill(r, moves & enemyPawns, 7);
-			if(!quiesce){
-				mset[w++].fill(r, moves & ~enemies & ~enemyPawnAttacks, 14);
-				mset[w++].fill(r, moves & ~enemies & enemyPawnAttacks, 15);
+			mset[w++].fill(r, moves & enemyPawns, 7);*/
+			if((moves & enemyQueens) != 0)
+				mset[w++].fill(r, moves & enemyQueens, 5);
+			if((moves & (enemyRooks|enemyMinorPieces|enemyPawns)) != 0)
+				mset[w++].fill(r, moves & (enemyRooks|enemyMinorPieces|enemyPawns), 9);
+			if(!quiesce && (moves & ~enemies) != 0){
+				/*mset[w++].fill(r, moves & ~enemies & ~enemyPawnAttacks, 14);
+				mset[w++].fill(r, moves & ~enemies & enemyPawnAttacks, 15);*/
+				mset[w++].fill(r, moves & ~enemies, 14);
 			}
 		}
 		
@@ -160,19 +189,27 @@ final class MoveGen {
 			}
 			mset[w++].fill(p, moves & promotionMask, 2);
 			final long nonPromote = moves & ~promotionMask;
-			mset[w++].fill(p, nonPromote & enemyQueens, 3);
-			mset[w++].fill(p, nonPromote & enemyRooks, 4);
-			mset[w++].fill(p, nonPromote & enemyMinorPieces, 5);
-			mset[w++].fill(p, nonPromote & enemyPawns, 9);
-			if(!quiesce){
-				mset[w++].fill(p, nonPromote & ~enemies, 14);
+			if(nonPromote != 0){
+				/*mset[w++].fill(p, nonPromote & enemyQueens, 3);
+				mset[w++].fill(p, nonPromote & enemyRooks, 4);
+				mset[w++].fill(p, nonPromote & enemyMinorPieces, 5);
+				mset[w++].fill(p, nonPromote & enemyPawns, 9);*/
+				if((nonPromote & (enemyQueens|enemyRooks|enemyMinorPieces)) != 0)
+					mset[w++].fill(p, nonPromote & (enemyQueens|enemyRooks|enemyMinorPieces), 4);
+				if((nonPromote & enemyPawns) != 0)
+					mset[w++].fill(p, nonPromote & enemyPawns, 9);
+				if(!quiesce && (nonPromote & ~enemies) != 0){
+					mset[w++].fill(p, nonPromote & ~enemies, 14);
+				}
 			}
 		}
 		
 		if(!kingAttacked){
 			final long kingMoves = (Masks.getRawKingMoves(king) & ~allied) | State4.getCastleMoves(player, s);
-			mset[w++].fill(king, kingMoves & enemies, 15);
-			if(!quiesce) mset[w++].fill(king, kingMoves & ~enemies, 14);
+			if((kingMoves & enemies) != 0)
+				mset[w++].fill(king, kingMoves & enemies, 15);
+			if(!quiesce && (kingMoves & ~enemies) != 0)
+				mset[w++].fill(king, kingMoves & ~enemies, 14);
 		}
 		
 		list.length = w;

@@ -12,7 +12,7 @@ import search.search33.Search33v5;
 import uci.Position;
 import util.FenParser;
 import eval.Evaluator2;
-import eval.e7.E7v6;
+import eval.e7.E7v7;
 
 /**
  * tests search implementations by running through random test positions
@@ -36,10 +36,10 @@ public final class SearchTester {
 		final File log = new File("search-test.log");
 		
 		//initialize search
-		final int searchDepth = 6;
+		final int searchDepth = 3;
 		final int hashSize = 20;
 		final Evaluator2 e =
-				new E7v6();
+				new E7v7();
 		final Search4 searcher =
 				new Search33v5(e, hashSize, false);
 				//new Search33v3prof(e, hashSize, false, log);
@@ -53,10 +53,10 @@ public final class SearchTester {
 			
 			//System.out.println(StateUtil.fen(p.sideToMove, p.s));
 			searcher.search(p.sideToMove, p.s, null, searchDepth);
-			SearchStat.agg(searcher.getStats(), agg);
+			if(a >= 200) SearchStat.agg(searcher.getStats(), agg);
 			
-			if(a % 100 == 0 && a != 0){
-				printAggStats(agg, a);
+			if((a+1) % 100 == 0){
+				printAggStats(agg, a+1);
 				System.out.println("-------------------------------------");
 			}
 		}

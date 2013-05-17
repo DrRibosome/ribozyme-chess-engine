@@ -6,14 +6,14 @@ import java.text.DecimalFormat;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import search.Search4;
-import search.search33.Search33v4;
+import search.search33.Search33v5;
 import state4.BitUtil;
 import state4.State4;
 import state4.StateUtil;
 import time.TimerThread5;
 import util.opening2.Book;
 import eval.Evaluator2;
-import eval.e7.E7v6;
+import eval.e7.E7v7;
 
 /**
  * Simple launcher for playing two AIs. Prints board state after each move
@@ -31,7 +31,9 @@ public class GauntletP {
 	}
 	
 	private final static class GauntletThread extends Thread{
-		private final long time;
+		private final long testTime;
+		private final long[] regressTimes;
+		
 		public final AtomicInteger[][] counts;
 		private final int maxDrawCount;
 		private final int minCutoffScore;
@@ -39,9 +41,10 @@ public class GauntletP {
 		private final Evaluator2 test;
 		public final Evaluator2[] regressors;
 		
-		GauntletThread(long time, Evaluator2 test, Evaluator2[] regressors,
+		GauntletThread(long testTime, long[] regressTimes, Evaluator2 test, Evaluator2[] regressors,
 				int maxDrawCount, int minCutoffScore, SearchType type){
-			this.time = time;
+			this.testTime = testTime;
+			this.regressTimes = regressTimes;
 			this.maxDrawCount = maxDrawCount;
 			this.minCutoffScore = minCutoffScore;
 			this.type = type;
@@ -58,7 +61,6 @@ public class GauntletP {
 		
 		public void run(){
 			final boolean print = false;
-			
 
 			final int[] wins = new int[2];
 			int draws = 0;
@@ -75,15 +77,23 @@ public class GauntletP {
 				final AtomicInteger[] counts = this.counts[rindex];
 				final int searchOffset = (counts[0].get()+counts[1].get()+counts[2].get())%2;
 				
+				//(w0,w1,d) = (1040,1451,1041)
 				final Search4[] search = new Search4[]{
-						new Search33v4(test, 20, false),
-						new Search33v4(regressors[rindex], 20, false),
+						new Search33v5(test, 20, false),
+						new Search33v5(regressors[rindex], 20, false),
+				};
+				final long[] times = new long[]{
+						testTime, regressTimes[rindex]
 				};
 				
 				boolean[] endScoreCutoff = new boolean[2];
 
 				while(state.pieceCounts[turn][State4.PIECE_TYPE_KING] != 0 &&
 						!isMate(turn, state) && !state.isForcedDraw()){
+					
+					final int index = (turn+searchOffset)%2;
+					final long searchTime = times[index];
+					final Search4 searcher = search[index];
 
 					if(print) System.out.println("===========================================================");
 					if(print) System.out.println("search0 = "+search[0].getClass().getSimpleName()+
@@ -104,6 +114,7 @@ public class GauntletP {
 						if(pieces == 0) depth++;
 						if(pieces <= 3) depth++;
 					}
+					//System.out.println("searching with "+search[(turn+searchOffset)%2].getClass().getSimpleName());
 
 					int[] bookMove = b.getRandomMove(turn, state, 100);
 					if(bookMove != null && !outOfBook){
@@ -112,8 +123,8 @@ public class GauntletP {
 					} else{
 						outOfBook = true;
 						if(type == SearchType.Depth) search[(turn+searchOffset)%2].search(turn, state, move, depth);
-						if(type == SearchType.ControlledTime) TimerThread5.searchBlocking(search[(turn+searchOffset)%2], state, turn, time, 0, move);
-						if(type == SearchType.FixedTime) search(turn, state, search[(turn+searchOffset)%2], move, time);
+						if(type == SearchType.ControlledTime) TimerThread5.searchBlocking(searcher, state, turn, searchTime, 0, move);
+						if(type == SearchType.FixedTime) search(turn, state, searcher, move, searchTime);
 						
 						
 						endScoreCutoff[(turn+searchOffset)%2] = Math.abs(search[(turn+searchOffset)%2].getStats().predictedScore) >= minCutoffScore;
@@ -158,7 +169,11 @@ public class GauntletP {
 	
 	public static void main(String[] args) throws IOException{
 		
-		final long time = 2000;
+		final long testTime = 700; //time for test eval
+		final long[] regressTimes = new long[]{ //times for regress evals
+				700
+		};
+		
 		final int maxDrawCount = 50;
 		
 		final int minCutoffScore = 800; //score before cutting off a game
@@ -174,18 +189,21 @@ public class GauntletP {
 		for(int a = 0; a < threads; a++){
 			
 			final Evaluator2 test = 
-					new E7v6();
+					new E7v7();
 			
 			final Evaluator2[] regressors = new Evaluator2[]{
 					//new E7(),
 					//new E7v2(),
 					//new E7v3(),
 					//new E7v4(),
-					//new E7v5(),
-					new E7v6(),
+					new E7v7(),
+					//new E7v7temp(),
 			};
 			
-			t[a] = new GauntletThread(time, test, regressors, maxDrawCount, minCutoffScore, searchType);
+			t[a] = new GauntletThread(testTime, regressTimes, 
+					test, regressors,
+					maxDrawCount, minCutoffScore,
+					searchType);
 			t[a].setDaemon(true);
 		}
 		System.out.println("complete");

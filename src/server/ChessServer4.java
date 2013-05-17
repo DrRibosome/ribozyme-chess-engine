@@ -14,14 +14,14 @@ import org.java_websocket.server.WebSocketServer;
 
 import search.Search4;
 import search.SearchStat;
-import search.search33.Search33v2;
+import search.search33.Search33v5;
 import state4.State4;
 import state4.StateUtil;
 import time.TimerThread5;
 import util.AlgebraicNotation2;
 import util.opening1.SuperBook;
 import eval.Evaluator2;
-import eval.e7.E7v3;
+import eval.e7.E7v6;
 
 /*
 char[] buf = "[{\"channel\":\"/service/user\",\"data\"\"basetime\":9000,\"timeinc\":0,\"rated\":true,\"color\":null,\"minrating\":800,\"maxrating\":2000,\"from\":\"drribosome\",\"sid\":\"gserv\",\"tid\":\"Challenge\"},\"id\":\"917\",\"clientId\":\"6lfamft3cpmoalbn91vyk8nnxb67hx\"}]".toCharArray();
@@ -65,13 +65,13 @@ public class ChessServer4 extends WebSocketServer{
 		System.out.print("initializing... ");
 		final Evaluator2 e =
 				//new SuperEvalS4V10v4();
-				new E7v3();
+				new E7v6();
 				//new E5(HParams3.buildEval());
 		searcher =
 				//new SearchS4V32(s, e, 21, false);
 				//new SearchS4V32cc(s, e, 21, false);
 				//new SearchS4V32k(e, 22, false);
-				new Search33v2(e, 22, true);
+				new Search33v5(e, 22, true);
 		System.out.println("complete!");
 	}
 
