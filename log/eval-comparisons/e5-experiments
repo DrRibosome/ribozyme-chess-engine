@@ -1,0 +1,39 @@
+search = search33t, hash = 20, minBookCount = 100
+book = megabook.mk
+base eval = v3v4
+zscore giving prob better included
+prob better calculated via wilcoxon rank sum test
+
+
+================================================= e5 start - experimental versions
+
+current
+(w0,w1,d) = (5,18,15)
+
+no enemy king dist penalty
+allied king dist bonus (all pawns), (0,5)
+better mobility
+passed pawn chain bonus, 35/dist
+variable depth
+(w0,w1,d) = (7,13,16)
+
+no enemy king dist penalty
+allied king dist bonus (all pawns), (0,5)
+better mobility
+variable depth
+(w0,w1,d) = (8,10,15)
+
+no enemy king dist penalty
+allied king dist bonus (all pawns), (0,5)
+rook support for passed pawns, const 10
+variable depth
+(w0,w1,d) = (10,5,?)
+
+no enemy king dist penalty
+allied king dist bonus (all pawns), 5
+variable depth
+(w0,w1,d) = (14,12,18)
+
+e5start - large passed pawn score (max 400,200) with big material advantage minus
+depth 7
+(w0,w1,d) = (39,42,35)

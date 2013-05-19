@@ -1,0 +1,17 @@
+[Event "FICS rated blitz game"]
+[Site "FICS freechess.org"]
+[FICSGamesDBGameNo "336828681"]
+[White "osones"]
+[Black "Ribozyme"]
+[WhiteElo "1743"]
+[BlackElo "2174"]
+[TimeControl "180+0"]
+[Date "2013.04.30"]
+[Time "10:34:00"]
+[WhiteClock "0:03:00.000"]
+[BlackClock "0:03:00.000"]
+[ECO "A40"]
+[PlyCount "67"]
+[Result "1-0"]
+
+1. d4 {[%emt 0.0]} c6 {[%emt 0.0]} 2. e3 {[%emt 0.518]} g6 {[%emt 4.659]} 3. f4 {[%emt 9.089]} h5 {[%emt 4.498]} 4. Nf3 {[%emt 1.163]} Nf6 {[%emt 4.365]} 5. Bd3 {[%emt 1.256]} h4 {[%emt 4.277]} 6. O-O {[%emt 4.371]} h3 {[%emt 4.846]} 7. g3 {[%emt 11.294]} Bg7 {[%emt 5.752]} 8. f5 {[%emt 10.344]} gxf5 {[%emt 4.052]} 9. Bxf5 {[%emt 0.965]} d5 {[%emt 5.951]} 10. Ng5 {[%emt 7.352]} Na6 {[%emt 3.745]} 11. c3 {[%emt 8.103]} Bxf5 {[%emt 3.678]} 12. Rxf5 {[%emt 1.196]} Qc8 {[%emt 4.035]} 13. Qf1 {[%emt 1.771]} Rh5 {[%emt 5.365]} 14. Qf3 {[%emt 32.14]} Qxf5 {[%emt 3.811]} 15. Qxf5 {[%emt 3.356]} Bh6 {[%emt 2.637]} 16. e4 {[%emt 10.082]} Bxg5 {[%emt 1.912]} 17. Bxg5 {[%emt 5.519]} Nxe4 {[%emt 3.148]} 18. Qg4 {[%emt 5.135]} Rxg5 {[%emt 4.791]} 19. Qxh3 {[%emt 1.635]} Rd8 {[%emt 4.777]} 20. Na3 {[%emt 2.32]} Nd2 {[%emt 4.611]} 21. Qh6 {[%emt 15.321]} Nc7 {[%emt 5.518]} 22. Kg2 {[%emt 4.445]} Ne4 {[%emt 4.681]} 23. Re1 {[%emt 4.079]} Rf5 {[%emt 4.086]} 24. Re2 {[%emt 2.282]} Rf6 {[%emt 3.807]} 25. Qh3 {[%emt 13.06]} Ne6 {[%emt 3.625]} 26. Nc2 {[%emt 2.584]} a6 {[%emt 5.49]} 27. Ne3 {[%emt 1.496]} Rg6 {[%emt 3.258]} 28. Kh1 {[%emt 4.44]} Rg5 {[%emt 3.131]} 29. Nf5 {[%emt 5.234]} Rc8 {[%emt 2.968]} 30. Nh4 {[%emt 2.275]} Rh5 {[%emt 2.901]} 31. Qg4 {[%emt 1.728]} Rg5 {[%emt 4.39]} 32. Qh3 {[%emt 0.636]} Rh5 {[%emt 2.486]} 33. Qg4 {[%emt 0.413]} Rg5 {[%emt 2.476]} 34. Qh3 {[%emt 0.316]} {Black forfeits on time} 1-0

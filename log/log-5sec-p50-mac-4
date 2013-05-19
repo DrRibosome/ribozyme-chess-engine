@@ -1,0 +1,2054 @@
+mobility (m=13,end,rook) weight = 3.0230595245361425
+mobility (m=14,start,rook) weight = 0.2763853991962776
+mobility (m=14,end,rook) weight = 4.219662967057507
+mobility (m=15,start,rook) weight = 3.7239838285840534
+mobility (m=15,end,rook) weight = 4.74762367459297
+mobility (m=0,start,bishop) weight = 0.0
+mobility (m=0,end,bishop) weight = 0.0
+mobility (m=1,start,bishop) weight = 0.0
+mobility (m=1,end,bishop) weight = 0.0
+mobility (m=2,start,bishop) weight = 0.3529390488770295
+mobility (m=2,end,bishop) weight = 0.0
+mobility (m=3,start,bishop) weight = 0.0
+mobility (m=3,end,bishop) weight = 0.45452967144315
+mobility (m=4,start,bishop) weight = 0.4330127018922193
+mobility (m=4,end,bishop) weight = 0.33071891388307384
+mobility (m=5,start,bishop) weight = 1.724013405464785
+mobility (m=5,end,bishop) weight = 0.6959705453537527
+mobility (m=6,start,bishop) weight = 0.8416254115301957
+mobility (m=6,end,bishop) weight = 2.9973947020704497
+mobility (m=7,start,bishop) weight = 3.0889588321417856
+mobility (m=7,end,bishop) weight = 1.4575890958092605
+mobility (m=8,start,bishop) weight = 3.4359213546813656
+mobility (m=8,end,bishop) weight = 4.409930003853693
+mobility (m=9,start,bishop) weight = 3.585210264250779
+mobility (m=9,end,bishop) weight = 3.0085959026688274
+mobility (m=10,start,bishop) weight = 3.829708431025362
+mobility (m=10,end,bishop) weight = 4.623263562919831
+mobility (m=11,start,bishop) weight = 8.58593710507024
+mobility (m=11,end,bishop) weight = 3.9261852421346455
+mobility (m=12,start,bishop) weight = 2.6358077773025648
+mobility (m=12,end,bishop) weight = 2.3124061542519727
+mobility (m=13,start,bishop) weight = 0.934485895500377
+mobility (m=13,end,bishop) weight = 8.01428303960428
+mobility (m=14,start,bishop) weight = 1.2827311899051295
+mobility (m=14,end,bishop) weight = 6.196437148340428
+mobility (m=15,start,bishop) weight = 3.119091636821391
+mobility (m=15,end,bishop) weight = 4.875534158770017
+mobility (m=0,start,knight) weight = 0.0
+mobility (m=0,end,knight) weight = 0.4330127018922193
+mobility (m=1,start,knight) weight = 0.0
+mobility (m=1,end,knight) weight = 0.4841229182759271
+mobility (m=2,start,knight) weight = 0.0
+mobility (m=2,end,knight) weight = 0.0
+mobility (m=3,start,knight) weight = 0.0
+mobility (m=3,end,knight) weight = 0.0
+mobility (m=4,start,knight) weight = 0.1428261375083855
+mobility (m=4,end,knight) weight = 0.8162307510066552
+mobility (m=5,start,knight) weight = 0.4404661356638637
+mobility (m=5,end,knight) weight = 0.0
+mobility (m=6,start,knight) weight = 0.7403898184965423
+mobility (m=6,end,knight) weight = 0.1998263134713317
+mobility (m=7,start,knight) weight = 0.19982631347118948
+mobility (m=7,end,knight) weight = 1.1726039399558574
+mobility (m=8,start,knight) weight = 1.0990447240925183
+mobility (m=8,end,knight) weight = 1.0103629710818498
+passed pawn (r=1,start) weight = 0.0
+passed pawn (r=1,end) weight = 0.0
+passed pawn (r=2,start) weight = 0.33071891388307384
+passed pawn (r=2,end) weight = 0.8569568250501305
+passed pawn (r=3,start) weight = 4.770742357211171
+passed pawn (r=3,end) weight = 3.1268744378372473
+passed pawn (r=4,start) weight = 3.141346137495071
+passed pawn (r=4,end) weight = 6.311331024875453
+passed pawn (r=5,start) weight = 3.097938382573436
+passed pawn (r=5,end) weight = 2.5627540524469485
+passed pawn (r=6,start) weight = 12.489161968149267
+passed pawn (r=6,end) weight = 2.7156152106332416
+pawn chain (c=0,start) weight = 0.19982631347136504
+pawn chain (c=0,end) weight = 0.0
+pawn chain (c=1,start) weight = 0.759202798262024
+pawn chain (c=1,end) weight = 0.0
+pawn chain (c=2,start) weight = 1.4103720450844015
+pawn chain (c=2,end) weight = 0.0
+pawn chain (c=3,start) weight = 0.0
+pawn chain (c=3,end) weight = 0.0
+doubled pawns (c=0,start,opp=0) weight = 0.0
+doubled pawns (c=0,end,opp=0) weight = 0.0
+doubled pawns (c=1,start,opp=0) weight = 0.0
+doubled pawns (c=1,end,opp=0) weight = 0.0
+doubled pawns (c=2,start,opp=0) weight = 0.0
+doubled pawns (c=2,end,opp=0) weight = 0.46351240544347894
+doubled pawns (c=3,start,opp=0) weight = 0.0
+doubled pawns (c=3,end,opp=0) weight = 0.0
+doubled pawns (c=0,start,opp=1) weight = 0.0
+doubled pawns (c=0,end,opp=1) weight = 0.0
+doubled pawns (c=1,start,opp=1) weight = 0.0
+doubled pawns (c=1,end,opp=1) weight = 0.0
+doubled pawns (c=2,start,opp=1) weight = 0.0
+doubled pawns (c=2,end,opp=1) weight = 0.0
+doubled pawns (c=3,start,opp=1) weight = 0.0
+doubled pawns (c=3,end,opp=1) weight = 0.0
+isolated pawns (c=0,start,opp=0) weight = 0.0
+isolated pawns (c=0,end,opp=0) weight = 1.274073737618388
+isolated pawns (c=1,start,opp=0) weight = 0.49607837082461076
+isolated pawns (c=1,end,opp=0) weight = 0.6370368688091941
+isolated pawns (c=2,start,opp=0) weight = 4.6321266414274795
+isolated pawns (c=2,end,opp=0) weight = 0.2763853991962833
+isolated pawns (c=3,start,opp=0) weight = 1.7015872900193971
+isolated pawns (c=3,end,opp=0) weight = 0.9333240326917549
+isolated pawns (c=0,start,opp=1) weight = 0.0
+isolated pawns (c=0,end,opp=1) weight = 0.0
+isolated pawns (c=1,start,opp=1) weight = 0.4930066485916347
+isolated pawns (c=1,end,opp=1) weight = 0.0
+isolated pawns (c=2,start,opp=1) weight = 0.4841229182759271
+isolated pawns (c=2,end,opp=1) weight = 0.49607837082461076
+isolated pawns (c=3,start,opp=1) weight = 0.4841229182759271
+isolated pawns (c=3,end,opp=1) weight = 0.1428261375083551
+pawn shelter, adj king file = 0.0
+pawn shelter, adj king file = 3.7858815757436926
+pawn shelter, adj king file = 1.3992495508505571
+pawn shelter, adj king file = 0.47140452079103085
+pawn shelter, adj king file = 0.49956578367840837
+pawn shelter, adj king file = 0.0
+pawn shelter, adj king file = 0.0
+pawn shelter, in king file = 0.0
+pawn shelter, in king file = 4.383473936274744
+pawn shelter, in king file = 4.327670578832068
+pawn shelter, in king file = 1.0604555493853707
+pawn shelter, in king file = 0.4077163706412698
+pawn shelter, in king file = 0.0
+pawn shelter, in king file = 0.0
+pawn storm, no allied pawn = 0.2763853991962833
+pawn storm, no allied pawn = 0.7968579791210533
+pawn storm, no allied pawn = 0.0
+pawn storm, no allied pawn = 0.0
+pawn storm, no allied pawn = 0.0
+pawn storm, no allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+bishop pair, start = 0.9680216796240781
+bishop pair, end = 0.28565227501672125
+tempo, start = 0.650520624833167
+tempo, end = 0.3529390488770295
+-------------------------------
+0	(w,l,d)=(4,1,3), id=2319
+1	(w,l,d)=(4,1,1), id=2346
+2	(w,l,d)=(0,0,0), id=2432
+3	(w,l,d)=(0,0,0), id=2433
+4	(w,l,d)=(2,0,0), id=2404
+5	(w,l,d)=(10,8,4), id=2147
+6	(w,l,d)=(0,0,0), id=2436
+7	(w,l,d)=(0,0,0), id=2437
+8	(w,l,d)=(0,0,0), id=2438
+9	(w,l,d)=(8,3,3), id=2273
+10	(w,l,d)=(2,0,0), id=2408
+11	(w,l,d)=(0,0,0), id=2441
+12	(w,l,d)=(0,6,0), id=2351
+13	(w,l,d)=(0,4,0), id=2379
+14	(w,l,d)=(0,0,0), id=2442
+15	(w,l,d)=(2,2,2), id=2385
+16	(w,l,d)=(0,2,0), id=2407
+17	(w,l,d)=(4,0,2), id=2357
+18	(w,l,d)=(0,0,0), id=2445
+19	(w,l,d)=(4,0,0), id=2381
+20	(w,l,d)=(0,0,0), id=2447
+21	(w,l,d)=(1,0,1), id=2415
+22	(w,l,d)=(3,3,2), id=2389
+23	(w,l,d)=(0,0,0), id=2450
+24	(w,l,d)=(2,0,0), id=2416
+25	(w,l,d)=(2,0,0), id=2417
+26	(w,l,d)=(0,0,0), id=2439
+27	(w,l,d)=(0,0,0), id=2440
+28	(w,l,d)=(0,0,0), id=2453
+29	(w,l,d)=(0,0,0), id=2452
+30	(w,l,d)=(0,0,0), id=2446
+31	(w,l,d)=(0,3,1), id=2402
+32	(w,l,d)=(0,0,0), id=2451
+33	(w,l,d)=(0,0,0), id=2443
+34	(w,l,d)=(0,0,0), id=2454
+35	(w,l,d)=(0,0,0), id=2455
+36	(w,l,d)=(2,3,1), id=2426
+37	(w,l,d)=(0,0,0), id=2456
+38	(w,l,d)=(0,0,0), id=2457
+39	(w,l,d)=(0,0,0), id=2458
+40	(w,l,d)=(0,0,0), id=2435
+41	(w,l,d)=(2,2,0), id=2428
+42	(w,l,d)=(4,3,3), id=2371
+43	(w,l,d)=(4,2,2), id=2375
+44	(w,l,d)=(0,0,0), id=2449
+45	(w,l,d)=(2,2,2), id=2412
+46	(w,l,d)=(0,0,0), id=2459
+47	(w,l,d)=(0,0,0), id=2448
+best id=2448
+material weights:
+	king = 0
+	queen = 1032
+	rook = 473
+	bishop = 272
+	knight = 285
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(0,0), 1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,4), 6:(2,6), 7:(2,9), 8:(6,11), 9:(5,12), 10:(4,15), 11:(7,15), 12:(6,17), 13:(8,18), 14:(9,18), 15:(9,19), 16:(9,15), 17:(9,18), 18:(10,16), 19:(10,13), 20:(9,17), 21:(10,15), 22:(9,16), 23:(9,18), 24:(10,14), 25:(10,18), 26:(10,17), 27:(10,18), 28:(12,14), 29:(11,17), 30:(11,18), 31:(10,17), 
+	rook = 0:(0,2), 1:(0,0), 2:(0,0), 3:(0,7), 4:(4,14), 5:(5,24), 6:(7,28), 7:(11,40), 8:(10,45), 9:(13,53), 10:(11,60), 11:(14,63), 12:(13,57), 13:(15,53), 14:(16,62), 15:(12,59), 
+	bishop = 0:(0,0), 1:(0,0), 2:(0,0), 3:(8,5), 4:(15,14), 5:(24,20), 6:(28,21), 7:(35,29), 8:(38,35), 9:(27,34), 10:(40,31), 11:(40,43), 12:(42,43), 13:(39,43), 14:(40,44), 15:(36,31), 
+	knight = 0:(0,1), 1:(0,1), 2:(0,0), 3:(0,0), 4:(6,1), 5:(13,8), 6:(15,11), 7:(19,12), 8:(20,13), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+contact check, queen = 6
+contact check, rook = 4
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(0,0), 2:(6,6), 3:(28,20), 4:(49,29), 5:(64,42), 6:(115,56), 
+isolated pawn weight, unopposed (by col):
+0:(0,3), 1:(1,1), 2:(1,0), 3:(1,1), 4:(1,1), 5:(1,0), 6:(1,1), 7:(0,3), 
+isolated pawn weight, opposed (by col):
+0:(0,0), 1:(0,0), 2:(1,0), 3:(0,0), 4:(0,0), 5:(1,0), 6:(0,0), 7:(0,0), 
+doubled pawn weight, unopposed (by col):
+0:(0,0), 1:(0,0), 2:(0,1), 3:(0,0), 4:(0,0), 5:(0,1), 6:(0,0), 7:(0,0), 
+doubled pawn weight, opposed (by col):
+0:(0,0), 1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,0), 6:(0,0), 7:(0,0), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+pawn chain weight:
+0:(2,0), 1:(4,0), 2:(4,0), 3:(5,0), 4:(5,0), 5:(4,0), 6:(4,0), 7:(2,0), 
+pawn shelter:
+  adj king file: 0:0, 1:32, 2:23, 3:7, 4:1, 5:0, 6:0, 
+  in king file: 0:0, 1:69, 2:52, 3:20, 4:5, 5:0, 6:0, 
+pawn storm:
+  no allied: 0:0, 1:2, 2:0, 3:0, 4:0, 5:0, 
+  allied: 0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 
+  blocked enemy: 0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 
+tempo = (4,0)
+bishop pair = (3,12)
+
+matchmaking...
+completed 9 / 96
+completed 18 / 96
+completed 27 / 96
+completed 36 / 96
+completed 45 / 96
+completed 54 / 96
+completed 63 / 96
+completed 72 / 96
+completed 81 / 96
+completed 90 / 96
+-------------------------
+completed iteration 93
+-------------------------------
+bishop weight = 21.43785430546174
+knight weight = 7.530464746981617
+queen weight = 89.95599811698013
+rook weight = 6.347264010316332
+mobility (m=0,start,queen) weight = 0.0
+mobility (m=0,end,queen) weight = 0.0
+mobility (m=1,start,queen) weight = 0.0
+mobility (m=1,end,queen) weight = 0.0
+mobility (m=2,start,queen) weight = 0.0
+mobility (m=2,end,queen) weight = 0.0
+mobility (m=3,start,queen) weight = 0.0
+mobility (m=3,end,queen) weight = 0.0
+mobility (m=4,start,queen) weight = 0.0
+mobility (m=4,end,queen) weight = 0.3529390488770295
+mobility (m=5,start,queen) weight = 0.0
+mobility (m=5,end,queen) weight = 0.0
+mobility (m=6,start,queen) weight = 0.7905694150420949
+mobility (m=6,end,queen) weight = 0.9991315673568185
+mobility (m=7,start,queen) weight = 0.0
+mobility (m=7,end,queen) weight = 0.14282613750831086
+mobility (m=8,start,queen) weight = 0.7806247497997998
+mobility (m=8,end,queen) weight = 0.5713045500334176
+mobility (m=9,start,queen) weight = 0.5384519993049984
+mobility (m=9,end,queen) weight = 1.4140601020544454
+mobility (m=10,start,queen) weight = 0.6109532624422966
+mobility (m=10,end,queen) weight = 0.3054766312211599
+mobility (m=11,start,queen) weight = 0.0
+mobility (m=11,end,queen) weight = 0.7473912964438374
+mobility (m=12,start,queen) weight = 0.9680216796240781
+mobility (m=12,end,queen) weight = 1.1110243021644486
+mobility (m=13,start,queen) weight = 0.0
+mobility (m=13,end,queen) weight = 0.7216878364870191
+mobility (m=14,start,queen) weight = 0.0
+mobility (m=14,end,queen) weight = 0.7993052538855047
+mobility (m=15,start,queen) weight = 0.552770798392568
+mobility (m=15,end,queen) weight = 0.7592027982620041
+mobility (m=16,start,queen) weight = 0.8162307510066449
+mobility (m=16,end,queen) weight = 1.2068956964966775
+mobility (m=17,start,queen) weight = 0.6959705453537527
+mobility (m=17,end,queen) weight = 0.9013878188659973
+mobility (m=18,start,queen) weight = 0.0
+mobility (m=18,end,queen) weight = 0.7946762967817057
+mobility (m=19,start,queen) weight = 0.0
+mobility (m=19,end,queen) weight = 1.584292472647919
+mobility (m=20,start,queen) weight = 0.40611643103372624
+mobility (m=20,end,queen) weight = 0.6993920971498032
+mobility (m=21,start,queen) weight = 0.0
+mobility (m=21,end,queen) weight = 1.0204080746882171
+mobility (m=22,start,queen) weight = 0.6919050793923253
+mobility (m=22,end,queen) weight = 0.3435921354682027
+mobility (m=23,start,queen) weight = 0.37267799624997977
+mobility (m=23,end,queen) weight = 0.520416499866515
+mobility (m=24,start,queen) weight = 0.1998263134714028
+mobility (m=24,end,queen) weight = 1.0532687216470449
+mobility (m=25,start,queen) weight = 0.0
+mobility (m=25,end,queen) weight = 0.7403898184965231
+mobility (m=26,start,queen) weight = 0.0
+mobility (m=26,end,queen) weight = 0.0
+mobility (m=27,start,queen) weight = 0.0
+mobility (m=27,end,queen) weight = 0.8577162020932765
+mobility (m=28,start,queen) weight = 0.7021791477647078
+mobility (m=28,end,queen) weight = 1.3792547806696194
+mobility (m=29,start,queen) weight = 0.6993920971497829
+mobility (m=29,end,queen) weight = 0.0
+mobility (m=30,start,queen) weight = 0.40771637064128285
+mobility (m=30,end,queen) weight = 0.8887803753208905
+mobility (m=31,start,queen) weight = 0.1998263134714028
+mobility (m=31,end,queen) weight = 0.0
+mobility (m=0,start,rook) weight = 0.0
+mobility (m=0,end,rook) weight = 0.6993920971497716
+mobility (m=1,start,rook) weight = 0.0
+mobility (m=1,end,rook) weight = 0.0
+mobility (m=2,start,rook) weight = 0.0
+mobility (m=2,end,rook) weight = 0.0
+mobility (m=3,start,rook) weight = 0.0
+mobility (m=3,end,rook) weight = 0.3054766312211599
+mobility (m=4,start,rook) weight = 0.8475352336169998
+mobility (m=4,end,rook) weight = 1.0702332949201177
+mobility (m=5,start,rook) weight = 0.0
+mobility (m=5,end,rook) weight = 0.74273097791573
+mobility (m=6,start,rook) weight = 0.0
+mobility (m=6,end,rook) weight = 2.876811023801638
+mobility (m=7,start,rook) weight = 0.9997829625584888
+mobility (m=7,end,rook) weight = 2.854090631590605
+mobility (m=8,start,rook) weight = 3.3351557518186272
+mobility (m=8,end,rook) weight = 4.73017610372195
+mobility (m=9,start,rook) weight = 0.5137011669141059
+mobility (m=9,end,rook) weight = 4.3945495755790684
+mobility (m=10,start,rook) weight = 1.1084821328685843
+mobility (m=10,end,rook) weight = 5.051127486897271
+mobility (m=11,start,rook) weight = 0.28565227501672125
+mobility (m=11,end,rook) weight = 3.2338675460747703
+mobility (m=12,start,rook) weight = 0.705878097754077
+mobility (m=12,end,rook) weight = 2.3971011138456384
+mobility (m=13,start,rook) weight = 0.4714045207910384
+mobility (m=13,end,rook) weight = 3.1583635662580893
+mobility (m=14,start,rook) weight = 0.3054766312211134
+mobility (m=14,end,rook) weight = 4.297477861748879
+mobility (m=15,start,rook) weight = 4.146566099396783
+mobility (m=15,end,rook) weight = 4.9721446300587155
+mobility (m=0,start,bishop) weight = 0.0
+mobility (m=0,end,bishop) weight = 0.0
+mobility (m=1,start,bishop) weight = 0.0
+mobility (m=1,end,bishop) weight = 0.0
+mobility (m=2,start,bishop) weight = 0.37267799624996495
+mobility (m=2,end,bishop) weight = 0.0
+mobility (m=3,start,bishop) weight = 0.0
+mobility (m=3,end,bishop) weight = 0.4714045207910346
+mobility (m=4,start,bishop) weight = 0.47140452079100825
+mobility (m=4,end,bishop) weight = 0.3529390488770385
+mobility (m=5,start,bishop) weight = 1.813816571639922
+mobility (m=5,end,bishop) weight = 0.753464221667701
+mobility (m=6,start,bishop) weight = 0.8637671850678283
+mobility (m=6,end,bishop) weight = 2.690566725720725
+mobility (m=7,start,bishop) weight = 3.253136840889948
+mobility (m=7,end,bishop) weight = 1.4553540997144498
+mobility (m=8,start,bishop) weight = 3.2047463714864284
+mobility (m=8,end,bishop) weight = 4.637885578460168
+mobility (m=9,start,bishop) weight = 3.7099715482587117
+mobility (m=9,end,bishop) weight = 2.9894925944417676
+mobility (m=10,start,bishop) weight = 4.098981496122651
+mobility (m=10,end,bishop) weight = 4.717680618340621
+mobility (m=11,start,bishop) weight = 8.712120388669268
+mobility (m=11,end,bishop) weight = 3.7246830588506032
+mobility (m=12,start,bishop) weight = 2.7153754600218156
+mobility (m=12,end,bishop) weight = 2.2958295523259684
+mobility (m=13,start,bishop) weight = 1.0101481601998796
+mobility (m=13,end,bishop) weight = 7.897674587426923
+mobility (m=14,start,bishop) weight = 1.2663856596191942
+mobility (m=14,end,bishop) weight = 6.765799410761949
+mobility (m=15,start,bishop) weight = 3.154582205124621
+mobility (m=15,end,bishop) weight = 5.539629951540085
+mobility (m=0,start,knight) weight = 0.0
+mobility (m=0,end,knight) weight = 0.3529390488770295
+mobility (m=1,start,knight) weight = 0.0
+mobility (m=1,end,knight) weight = 0.49956578367840826
+mobility (m=2,start,knight) weight = 0.0
+mobility (m=2,end,knight) weight = 0.0
+mobility (m=3,start,knight) weight = 0.0
+mobility (m=3,end,knight) weight = 0.0
+mobility (m=4,start,knight) weight = 0.1428261375083855
+mobility (m=4,end,knight) weight = 0.7566258248889529
+mobility (m=5,start,knight) weight = 0.454529671443193
+mobility (m=5,end,knight) weight = 0.0
+mobility (m=6,start,knight) weight = 0.734799670356194
+mobility (m=6,end,knight) weight = 0.1998263134713317
+mobility (m=7,start,knight) weight = 0.19982631347118948
+mobility (m=7,end,knight) weight = 1.0238051979421392
+mobility (m=8,start,knight) weight = 1.1768528535415366
+mobility (m=8,end,knight) weight = 0.999131567356815
+passed pawn (r=1,start) weight = 0.0
+passed pawn (r=1,end) weight = 0.0
+passed pawn (r=2,start) weight = 0.35293904887702837
+passed pawn (r=2,end) weight = 0.7543277912596514
+passed pawn (r=3,start) weight = 4.3051971176964905
+passed pawn (r=3,end) weight = 3.5384176273520263
+passed pawn (r=4,start) weight = 3.1355377883581905
+passed pawn (r=4,end) weight = 6.412843828772246
+passed pawn (r=5,start) weight = 3.278123510485839
+passed pawn (r=5,end) weight = 2.884043746778689
+passed pawn (r=6,start) weight = 11.344893001796924
+passed pawn (r=6,end) weight = 2.5206611511443247
+pawn chain (c=0,start) weight = 0.19982631347136504
+pawn chain (c=0,end) weight = 0.0
+pawn chain (c=1,start) weight = 0.7333214961165847
+pawn chain (c=1,end) weight = 0.0
+pawn chain (c=2,start) weight = 1.4135996211406134
+pawn chain (c=2,end) weight = 0.0
+pawn chain (c=3,start) weight = 0.0
+pawn chain (c=3,end) weight = 0.0
+doubled pawns (c=0,start,opp=0) weight = 0.0
+doubled pawns (c=0,end,opp=0) weight = 0.0
+doubled pawns (c=1,start,opp=0) weight = 0.0
+doubled pawns (c=1,end,opp=0) weight = 0.0
+doubled pawns (c=2,start,opp=0) weight = 0.0
+doubled pawns (c=2,end,opp=0) weight = 0.45452967144315476
+doubled pawns (c=3,start,opp=0) weight = 0.0
+doubled pawns (c=3,end,opp=0) weight = 0.0
+doubled pawns (c=0,start,opp=1) weight = 0.0
+doubled pawns (c=0,end,opp=1) weight = 0.0
+doubled pawns (c=1,start,opp=1) weight = 0.0
+doubled pawns (c=1,end,opp=1) weight = 0.0
+doubled pawns (c=2,start,opp=1) weight = 0.0
+doubled pawns (c=2,end,opp=1) weight = 0.0
+doubled pawns (c=3,start,opp=1) weight = 0.0
+doubled pawns (c=3,end,opp=1) weight = 0.0
+isolated pawns (c=0,start,opp=0) weight = 0.0
+isolated pawns (c=0,end,opp=0) weight = 1.1484817876948101
+isolated pawns (c=1,start,opp=0) weight = 0.5
+isolated pawns (c=1,end,opp=0) weight = 0.6505206248331665
+isolated pawns (c=2,start,opp=0) weight = 4.8644383454481845
+isolated pawns (c=2,end,opp=0) weight = 0.3054766312211496
+isolated pawns (c=3,start,opp=0) weight = 1.566661125876727
+isolated pawns (c=3,end,opp=0) weight = 0.9351823203109767
+isolated pawns (c=0,start,opp=1) weight = 0.0
+isolated pawns (c=0,end,opp=1) weight = 0.0
+isolated pawns (c=1,start,opp=1) weight = 0.4930066485916347
+isolated pawns (c=1,end,opp=1) weight = 0.0
+isolated pawns (c=2,start,opp=1) weight = 0.49956578367840826
+isolated pawns (c=2,end,opp=1) weight = 0.49607837082461076
+isolated pawns (c=3,start,opp=1) weight = 0.4841229182759271
+isolated pawns (c=3,end,opp=1) weight = 0.1428261375083551
+pawn shelter, adj king file = 0.0
+pawn shelter, adj king file = 3.9684082311285467
+pawn shelter, adj king file = 1.406828584677851
+pawn shelter, adj king file = 0.45595976308832803
+pawn shelter, adj king file = 0.5266343608235224
+pawn shelter, adj king file = 0.0
+pawn shelter, adj king file = 0.0
+pawn shelter, in king file = 0.0
+pawn shelter, in king file = 3.9893521473488107
+pawn shelter, in king file = 4.357654105772469
+pawn shelter, in king file = 1.0197698542100007
+pawn shelter, in king file = 0.36739983517808733
+pawn shelter, in king file = 0.0
+pawn shelter, in king file = 0.0
+pawn storm, no allied pawn = 0.2763853991962833
+pawn storm, no allied pawn = 0.7285711854185714
+pawn storm, no allied pawn = 0.0
+pawn storm, no allied pawn = 0.0
+pawn storm, no allied pawn = 0.0
+pawn storm, no allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+bishop pair, start = 0.956520023604082
+bishop pair, end = 0.28565227501672125
+tempo, start = 0.711695452189113
+tempo, end = 0.37267799624996495
+-------------------------------
+0	(w,l,d)=(5,1,4), id=2319
+1	(w,l,d)=(5,1,2), id=2346
+2	(w,l,d)=(0,0,0), id=2462
+3	(w,l,d)=(0,2,0), id=2433
+4	(w,l,d)=(4,0,0), id=2404
+5	(w,l,d)=(12,8,4), id=2147
+6	(w,l,d)=(0,1,1), id=2436
+7	(w,l,d)=(0,0,0), id=2465
+8	(w,l,d)=(0,2,0), id=2438
+9	(w,l,d)=(8,5,3), id=2273
+10	(w,l,d)=(2,2,0), id=2408
+11	(w,l,d)=(0,0,0), id=2463
+12	(w,l,d)=(0,7,1), id=2351
+13	(w,l,d)=(0,5,1), id=2379
+14	(w,l,d)=(0,0,0), id=2466
+15	(w,l,d)=(2,4,2), id=2385
+16	(w,l,d)=(0,0,0), id=2467
+17	(w,l,d)=(4,2,2), id=2357
+18	(w,l,d)=(2,0,0), id=2445
+19	(w,l,d)=(0,0,0), id=2460
+20	(w,l,d)=(0,0,0), id=2469
+21	(w,l,d)=(0,0,0), id=2470
+22	(w,l,d)=(4,6,2), id=2389
+23	(w,l,d)=(2,2,2), id=2450
+24	(w,l,d)=(0,0,0), id=2468
+25	(w,l,d)=(0,0,0), id=2471
+26	(w,l,d)=(0,2,0), id=2439
+27	(w,l,d)=(3,1,0), id=2440
+28	(w,l,d)=(0,0,0), id=2464
+29	(w,l,d)=(0,0,0), id=2473
+30	(w,l,d)=(2,0,0), id=2446
+31	(w,l,d)=(0,0,0), id=2475
+32	(w,l,d)=(0,0,0), id=2472
+33	(w,l,d)=(0,0,0), id=2476
+34	(w,l,d)=(4,3,1), id=2454
+35	(w,l,d)=(1,3,0), id=2455
+36	(w,l,d)=(3,5,2), id=2426
+37	(w,l,d)=(4,0,0), id=2456
+38	(w,l,d)=(0,0,0), id=2478
+39	(w,l,d)=(0,0,0), id=2479
+40	(w,l,d)=(0,0,0), id=2477
+41	(w,l,d)=(5,4,3), id=2428
+42	(w,l,d)=(0,0,0), id=2461
+43	(w,l,d)=(0,0,0), id=2481
+44	(w,l,d)=(0,2,2), id=2449
+45	(w,l,d)=(6,2,2), id=2412
+46	(w,l,d)=(2,4,0), id=2459
+47	(w,l,d)=(0,0,0), id=2482
+best id=2482
+material weights:
+	king = 0
+	queen = 1078
+	rook = 458
+	bishop = 316
+	knight = 285
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(0,0), 1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,4), 6:(2,9), 7:(2,9), 8:(6,12), 9:(5,12), 10:(4,15), 11:(7,16), 12:(7,17), 13:(8,19), 14:(9,19), 15:(9,17), 16:(8,15), 17:(9,16), 18:(10,16), 19:(10,14), 20:(9,17), 21:(10,18), 22:(9,16), 23:(9,18), 24:(10,18), 25:(10,18), 26:(10,17), 27:(10,17), 28:(11,13), 29:(12,17), 30:(11,17), 31:(10,17), 
+	rook = 0:(0,0), 1:(0,0), 2:(0,0), 3:(0,7), 4:(2,12), 5:(5,22), 6:(7,22), 7:(10,34), 8:(10,47), 9:(13,58), 10:(11,62), 11:(14,68), 12:(13,59), 13:(15,50), 14:(16,67), 15:(12,60), 
+	bishop = 0:(0,0), 1:(0,0), 2:(0,0), 3:(8,5), 4:(16,14), 5:(20,19), 6:(28,26), 7:(28,30), 8:(35,27), 9:(37,32), 10:(39,28), 11:(59,41), 12:(37,36), 13:(41,21), 14:(39,31), 15:(39,39), 
+	knight = 0:(0,0), 1:(0,0), 2:(0,0), 3:(0,0), 4:(6,2), 5:(13,8), 6:(16,11), 7:(19,13), 8:(17,13), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+contact check, queen = 6
+contact check, rook = 4
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(0,0), 2:(6,7), 3:(23,14), 4:(50,19), 5:(61,41), 6:(86,65), 
+isolated pawn weight, unopposed (by col):
+0:(0,0), 1:(0,0), 2:(4,0), 3:(0,0), 4:(0,0), 5:(4,0), 6:(0,0), 7:(0,0), 
+isolated pawn weight, opposed (by col):
+0:(0,0), 1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,0), 6:(0,0), 7:(0,0), 
+doubled pawn weight, unopposed (by col):
+0:(0,0), 1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,0), 6:(0,0), 7:(0,0), 
+doubled pawn weight, opposed (by col):
+0:(0,0), 1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,0), 6:(0,0), 7:(0,0), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+pawn chain weight:
+0:(2,0), 1:(3,0), 2:(6,0), 3:(5,0), 4:(5,0), 5:(6,0), 6:(3,0), 7:(2,0), 
+pawn shelter:
+  adj king file: 0:0, 1:27, 2:20, 3:7, 4:1, 5:0, 6:0, 
+  in king file: 0:0, 1:76, 2:47, 3:18, 4:5, 5:0, 6:0, 
+pawn storm:
+  no allied: 0:0, 1:1, 2:0, 3:0, 4:0, 5:0, 
+  allied: 0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 
+  blocked enemy: 0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 
+tempo = (4,0)
+bishop pair = (4,12)
+
+matchmaking...
+completed 18 / 96
+completed 27 / 96
+completed 36 / 96
+completed 45 / 96
+completed 63 / 96
+completed 72 / 96
+completed 81 / 96
+-------------------------
+completed iteration 94
+-------------------------------
+bishop weight = 18.02687759908059
+knight weight = 7.062100529507914
+queen weight = 98.91752448027407
+rook weight = 5.485421018481626
+mobility (m=0,start,queen) weight = 0.0
+mobility (m=0,end,queen) weight = 0.0
+mobility (m=1,start,queen) weight = 0.0
+mobility (m=1,end,queen) weight = 0.0
+mobility (m=2,start,queen) weight = 0.0
+mobility (m=2,end,queen) weight = 0.0
+mobility (m=3,start,queen) weight = 0.0
+mobility (m=3,end,queen) weight = 0.0
+mobility (m=4,start,queen) weight = 0.0
+mobility (m=4,end,queen) weight = 0.37267799624996495
+mobility (m=5,start,queen) weight = 0.0
+mobility (m=5,end,queen) weight = 0.0
+mobility (m=6,start,queen) weight = 0.7312470322826763
+mobility (m=6,end,queen) weight = 0.8953487061226799
+mobility (m=7,start,queen) weight = 0.0
+mobility (m=7,end,queen) weight = 0.0
+mobility (m=8,start,queen) weight = 0.8225869592666502
+mobility (m=8,end,queen) weight = 0.5769742676719399
+mobility (m=9,start,queen) weight = 0.5400617248673227
+mobility (m=9,end,queen) weight = 1.304372986874887
+mobility (m=10,start,queen) weight = 0.6400954789890528
+mobility (m=10,end,queen) weight = 0.3054766312211599
+mobility (m=11,start,queen) weight = 0.0
+mobility (m=11,end,queen) weight = 0.7189764136140648
+mobility (m=12,start,queen) weight = 0.8953487061226799
+mobility (m=12,end,queen) weight = 1.1575161985907585
+mobility (m=13,start,queen) weight = 0.0
+mobility (m=13,end,queen) weight = 0.7347996703562133
+mobility (m=14,start,queen) weight = 0.0
+mobility (m=14,end,queen) weight = 0.7946762967817057
+mobility (m=15,start,queen) weight = 0.5636562191028576
+mobility (m=15,end,queen) weight = 0.6919050793922945
+mobility (m=16,start,queen) weight = 0.809824655232371
+mobility (m=16,end,queen) weight = 1.2231491119238078
+mobility (m=17,start,queen) weight = 0.6260408000548595
+mobility (m=17,end,queen) weight = 0.9183223683556256
+mobility (m=18,start,queen) weight = 0.0
+mobility (m=18,end,queen) weight = 0.8697760727145152
+mobility (m=19,start,queen) weight = 0.0
+mobility (m=19,end,queen) weight = 1.5673535728170134
+mobility (m=20,start,queen) weight = 0.3767321108338505
+mobility (m=20,end,queen) weight = 0.6454972243679175
+mobility (m=21,start,queen) weight = 0.0
+mobility (m=21,end,queen) weight = 1.0598414451647271
+mobility (m=22,start,queen) weight = 0.7021791477646876
+mobility (m=22,end,queen) weight = 0.3435921354682027
+mobility (m=23,start,queen) weight = 0.33071891388307384
+mobility (m=23,end,queen) weight = 0.4890289414293249
+mobility (m=24,start,queen) weight = 0.14282613750831086
+mobility (m=24,end,queen) weight = 1.1131708339493986
+mobility (m=25,start,queen) weight = 0.0
+mobility (m=25,end,queen) weight = 0.7285711854186147
+mobility (m=26,start,queen) weight = 0.0
+mobility (m=26,end,queen) weight = 0.0
+mobility (m=27,start,queen) weight = 0.0
+mobility (m=27,end,queen) weight = 0.8405933750763038
+mobility (m=28,start,queen) weight = 0.734799670356194
+mobility (m=28,end,queen) weight = 1.3729466992162827
+mobility (m=29,start,queen) weight = 0.6919050793923047
+mobility (m=29,end,queen) weight = 0.0
+mobility (m=30,start,queen) weight = 0.3903123748998999
+mobility (m=30,end,queen) weight = 1.0049789245993457
+mobility (m=31,start,queen) weight = 0.24206145913796356
+mobility (m=31,end,queen) weight = 0.0
+mobility (m=0,start,rook) weight = 0.0
+mobility (m=0,end,rook) weight = 0.7058780977540591
+mobility (m=1,start,rook) weight = 0.0
+mobility (m=1,end,rook) weight = 0.0
+mobility (m=2,start,rook) weight = 0.0
+mobility (m=2,end,rook) weight = 0.0
+mobility (m=3,start,rook) weight = 0.0
+mobility (m=3,end,rook) weight = 0.3054766312211599
+mobility (m=4,start,rook) weight = 0.8650224788344458
+mobility (m=4,end,rook) weight = 1.1347953192830227
+mobility (m=5,start,rook) weight = 0.0
+mobility (m=5,end,rook) weight = 0.7347996703561747
+mobility (m=6,start,rook) weight = 0.0
+mobility (m=6,end,rook) weight = 2.5879495047023284
+mobility (m=7,start,rook) weight = 0.9680216796240818
+mobility (m=7,end,rook) weight = 2.3716167422714824
+mobility (m=8,start,rook) weight = 3.360242943432645
+mobility (m=8,end,rook) weight = 4.919093680637615
+mobility (m=9,start,rook) weight = 0.4404661356638637
+mobility (m=9,end,rook) weight = 4.764187510886734
+mobility (m=10,start,rook) weight = 1.165922381636102
+mobility (m=10,end,rook) weight = 4.948168853222372
+mobility (m=11,start,rook) weight = 0.24206145913796356
+mobility (m=11,end,rook) weight = 2.9973947020704497
+mobility (m=12,start,rook) weight = 0.7071067811865476
+mobility (m=12,end,rook) weight = 2.449489742783178
+mobility (m=13,start,rook) weight = 0.40771637064123056
+mobility (m=13,end,rook) weight = 2.9427405971683314
+mobility (m=14,start,rook) weight = 0.3054766312211134
+mobility (m=14,end,rook) weight = 4.475192034985762
+mobility (m=15,start,rook) weight = 3.855405206402505
+mobility (m=15,end,rook) weight = 4.939741052592384
+mobility (m=0,start,bishop) weight = 0.0
+mobility (m=0,end,bishop) weight = 0.0
+mobility (m=1,start,bishop) weight = 0.0
+mobility (m=1,end,bishop) weight = 0.0
+mobility (m=2,start,bishop) weight = 0.3903123748998999
+mobility (m=2,end,bishop) weight = 0.0
+mobility (m=3,start,bishop) weight = 0.0
+mobility (m=3,end,bishop) weight = 0.46351240544347894
+mobility (m=4,start,bishop) weight = 0.47140452079100825
+mobility (m=4,end,bishop) weight = 0.37267799624996073
+mobility (m=5,start,bishop) weight = 1.964529205687714
+mobility (m=5,end,bishop) weight = 0.6757197808427482
+mobility (m=6,start,bishop) weight = 0.8569568250501305
+mobility (m=6,end,bishop) weight = 2.713056778494208
+mobility (m=7,start,bishop) weight = 3.2784544969984166
+mobility (m=7,end,bishop) weight = 1.2472191289245964
+mobility (m=8,start,bishop) weight = 3.118047822311646
+mobility (m=8,end,bishop) weight = 4.713262537775718
+mobility (m=9,start,bishop) weight = 4.001735734514297
+mobility (m=9,end,bishop) weight = 2.9341736485763756
+mobility (m=10,start,bishop) weight = 3.8801489089409515
+mobility (m=10,end,bishop) weight = 3.7402071206760272
+mobility (m=11,start,bishop) weight = 9.181403873228389
+mobility (m=11,end,bishop) weight = 3.1080093664952813
+mobility (m=12,start,bishop) weight = 2.6922599965249803
+mobility (m=12,end,bishop) weight = 2.516525244370738
+mobility (m=13,start,bishop) weight = 0.9840304732183852
+mobility (m=13,end,bishop) weight = 7.192661190407901
+mobility (m=14,start,bishop) weight = 1.290994448735835
+mobility (m=14,end,bishop) weight = 7.349620880244998
+mobility (m=15,start,bishop) weight = 3.07544034787431
+mobility (m=15,end,bishop) weight = 5.894765804414004
+mobility (m=0,start,knight) weight = 0.0
+mobility (m=0,end,knight) weight = 0.37267799624996495
+mobility (m=1,start,knight) weight = 0.0
+mobility (m=1,end,knight) weight = 0.5
+mobility (m=2,start,knight) weight = 0.0
+mobility (m=2,end,knight) weight = 0.0
+mobility (m=3,start,knight) weight = 0.0
+mobility (m=3,end,knight) weight = 0.0
+mobility (m=4,start,knight) weight = 0.0
+mobility (m=4,end,knight) weight = 0.8204736944798006
+mobility (m=5,start,knight) weight = 0.47871355387815917
+mobility (m=5,end,knight) weight = 0.0
+mobility (m=6,start,knight) weight = 0.7285711854185757
+mobility (m=6,end,knight) weight = 0.14282613750841036
+mobility (m=7,start,knight) weight = 0.24206145913796356
+mobility (m=7,end,knight) weight = 1.0750888206200453
+mobility (m=8,start,knight) weight = 1.181453906563144
+mobility (m=8,end,knight) weight = 0.8836379191853576
+passed pawn (r=1,start) weight = 0.0
+passed pawn (r=1,end) weight = 0.0
+passed pawn (r=2,start) weight = 0.3726779962499702
+passed pawn (r=2,end) weight = 0.7347996703561843
+passed pawn (r=3,start) weight = 4.2792599795084065
+passed pawn (r=3,end) weight = 3.4308648083731477
+passed pawn (r=4,start) weight = 2.9432567704273636
+passed pawn (r=4,end) weight = 6.52236403759318
+passed pawn (r=5,start) weight = 3.1390655677904813
+passed pawn (r=5,end) weight = 2.8301912724918683
+passed pawn (r=6,start) weight = 10.229972812769347
+passed pawn (r=6,end) weight = 2.361437885884083
+pawn chain (c=0,start) weight = 0.24206145913796356
+pawn chain (c=0,end) weight = 0.0
+pawn chain (c=1,start) weight = 0.8162307510066547
+pawn chain (c=1,end) weight = 0.0
+pawn chain (c=2,start) weight = 1.325334077380744
+pawn chain (c=2,end) weight = 0.0
+pawn chain (c=3,start) weight = 0.0
+pawn chain (c=3,end) weight = 0.0
+doubled pawns (c=0,start,opp=0) weight = 0.0
+doubled pawns (c=0,end,opp=0) weight = 0.0
+doubled pawns (c=1,start,opp=0) weight = 0.0
+doubled pawns (c=1,end,opp=0) weight = 0.0
+doubled pawns (c=2,start,opp=0) weight = 0.0
+doubled pawns (c=2,end,opp=0) weight = 0.4714045207910317
+doubled pawns (c=3,start,opp=0) weight = 0.0
+doubled pawns (c=3,end,opp=0) weight = 0.0
+doubled pawns (c=0,start,opp=1) weight = 0.0
+doubled pawns (c=0,end,opp=1) weight = 0.0
+doubled pawns (c=1,start,opp=1) weight = 0.0
+doubled pawns (c=1,end,opp=1) weight = 0.0
+doubled pawns (c=2,start,opp=1) weight = 0.0
+doubled pawns (c=2,end,opp=1) weight = 0.0
+doubled pawns (c=3,start,opp=1) weight = 0.0
+doubled pawns (c=3,end,opp=1) weight = 0.0
+isolated pawns (c=0,start,opp=0) weight = 0.0
+isolated pawns (c=0,end,opp=0) weight = 1.1301963325015703
+isolated pawns (c=1,start,opp=0) weight = 0.4982608642958916
+isolated pawns (c=1,end,opp=0) weight = 0.6441510347391793
+isolated pawns (c=2,start,opp=0) weight = 4.971751801148386
+isolated pawns (c=2,end,opp=0) weight = 0.3054766312211496
+isolated pawns (c=3,start,opp=0) weight = 1.4481789330818973
+isolated pawns (c=3,end,opp=0) weight = 0.761201079435213
+isolated pawns (c=0,start,opp=1) weight = 0.0
+isolated pawns (c=0,end,opp=1) weight = 0.0
+isolated pawns (c=1,start,opp=1) weight = 0.4890289414293959
+isolated pawns (c=1,end,opp=1) weight = 0.0
+isolated pawns (c=2,start,opp=1) weight = 0.5
+isolated pawns (c=2,end,opp=1) weight = 0.4841229182759271
+isolated pawns (c=3,start,opp=1) weight = 0.4714045207910317
+isolated pawns (c=3,end,opp=1) weight = 0.1428261375083551
+pawn shelter, adj king file = 0.0
+pawn shelter, adj king file = 4.133198922545753
+pawn shelter, adj king file = 1.346291201783626
+pawn shelter, adj king file = 0.36739983517808733
+pawn shelter, adj king file = 0.4982608642958918
+pawn shelter, adj king file = 0.0
+pawn shelter, adj king file = 0.0
+pawn shelter, in king file = 0.0
+pawn shelter, in king file = 4.332481887504522
+pawn shelter, in king file = 4.592746016515895
+pawn shelter, in king file = 1.020620726159667
+pawn shelter, in king file = 0.34359213546814066
+pawn shelter, in king file = 0.0
+pawn shelter, in king file = 0.0
+pawn storm, no allied pawn = 0.2763853991962833
+pawn storm, no allied pawn = 0.7347996703561832
+pawn storm, no allied pawn = 0.0
+pawn storm, no allied pawn = 0.0
+pawn storm, no allied pawn = 0.0
+pawn storm, no allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+bishop pair, start = 0.9128709291752762
+bishop pair, end = 0.27638539919632904
+tempo, start = 0.6919050793923176
+tempo, end = 0.3903123748998999
+-------------------------------
+0	(w,l,d)=(6,1,5), id=2319
+1	(w,l,d)=(0,0,0), id=2484
+2	(w,l,d)=(0,1,1), id=2462
+3	(w,l,d)=(0,4,0), id=2433
+4	(w,l,d)=(6,0,0), id=2404
+5	(w,l,d)=(14,8,4), id=2147
+6	(w,l,d)=(0,3,1), id=2436
+7	(w,l,d)=(0,0,0), id=2487
+8	(w,l,d)=(2,2,0), id=2438
+9	(w,l,d)=(8,7,3), id=2273
+10	(w,l,d)=(4,2,0), id=2408
+11	(w,l,d)=(1,2,1), id=2463
+12	(w,l,d)=(0,0,0), id=2490
+13	(w,l,d)=(0,0,0), id=2491
+14	(w,l,d)=(3,1,0), id=2466
+15	(w,l,d)=(0,0,0), id=2486
+16	(w,l,d)=(0,0,0), id=2493
+17	(w,l,d)=(4,4,2), id=2357
+18	(w,l,d)=(3,4,1), id=2445
+19	(w,l,d)=(1,2,1), id=2460
+20	(w,l,d)=(0,0,0), id=2485
+21	(w,l,d)=(2,1,1), id=2470
+22	(w,l,d)=(0,0,0), id=2494
+23	(w,l,d)=(4,2,2), id=2450
+24	(w,l,d)=(0,0,0), id=2496
+25	(w,l,d)=(4,4,0), id=2471
+26	(w,l,d)=(0,0,0), id=2497
+27	(w,l,d)=(0,0,0), id=2498
+28	(w,l,d)=(1,0,1), id=2464
+29	(w,l,d)=(0,0,0), id=2488
+30	(w,l,d)=(0,0,0), id=2500
+31	(w,l,d)=(1,0,1), id=2475
+32	(w,l,d)=(0,2,0), id=2472
+33	(w,l,d)=(0,0,0), id=2502
+34	(w,l,d)=(0,0,0), id=2501
+35	(w,l,d)=(0,0,0), id=2495
+36	(w,l,d)=(0,0,0), id=2503
+37	(w,l,d)=(5,2,1), id=2456
+38	(w,l,d)=(3,0,1), id=2478
+39	(w,l,d)=(0,0,0), id=2505
+40	(w,l,d)=(0,0,0), id=2506
+41	(w,l,d)=(6,6,4), id=2428
+42	(w,l,d)=(0,0,0), id=2507
+43	(w,l,d)=(4,4,0), id=2481
+44	(w,l,d)=(0,0,0), id=2483
+45	(w,l,d)=(8,3,3), id=2412
+46	(w,l,d)=(0,0,0), id=2508
+47	(w,l,d)=(0,0,0), id=2504
+best id=2504
+material weights:
+	king = 0
+	queen = 1156
+	rook = 472
+	bishop = 322
+	knight = 300
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(0,0), 1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,4), 6:(2,7), 7:(2,9), 8:(6,10), 9:(5,14), 10:(6,15), 11:(7,16), 12:(8,17), 13:(8,18), 14:(9,18), 15:(10,18), 16:(8,14), 17:(10,18), 18:(10,18), 19:(10,14), 20:(9,17), 21:(10,16), 22:(10,16), 23:(9,17), 24:(10,14), 25:(10,16), 26:(10,17), 27:(10,16), 28:(11,13), 29:(12,17), 30:(11,18), 31:(10,17), 
+	rook = 0:(0,1), 1:(0,0), 2:(0,0), 3:(0,7), 4:(4,14), 5:(5,24), 6:(7,31), 7:(11,36), 8:(11,38), 9:(14,52), 10:(9,65), 11:(14,64), 12:(11,57), 13:(15,59), 14:(16,65), 15:(11,65), 
+	bishop = 0:(0,0), 1:(0,0), 2:(0,0), 3:(8,5), 4:(15,14), 5:(21,19), 6:(29,20), 7:(37,29), 8:(35,23), 9:(28,34), 10:(40,31), 11:(43,38), 12:(36,47), 13:(40,37), 14:(40,38), 15:(33,29), 
+	knight = 0:(0,1), 1:(0,1), 2:(0,0), 3:(0,0), 4:(6,1), 5:(12,8), 6:(15,11), 7:(19,15), 8:(19,11), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+contact check, queen = 6
+contact check, rook = 4
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(0,0), 2:(6,7), 3:(33,22), 4:(46,31), 5:(66,40), 6:(95,62), 
+isolated pawn weight, unopposed (by col):
+0:(0,4), 1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,0), 6:(0,0), 7:(0,4), 
+isolated pawn weight, opposed (by col):
+0:(0,0), 1:(0,0), 2:(1,0), 3:(0,0), 4:(0,0), 5:(1,0), 6:(0,0), 7:(0,0), 
+doubled pawn weight, unopposed (by col):
+0:(0,0), 1:(0,0), 2:(0,1), 3:(0,0), 4:(0,0), 5:(0,1), 6:(0,0), 7:(0,0), 
+doubled pawn weight, opposed (by col):
+0:(0,0), 1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,0), 6:(0,0), 7:(0,0), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+pawn chain weight:
+0:(2,0), 1:(5,0), 2:(5,0), 3:(5,0), 4:(5,0), 5:(5,0), 6:(5,0), 7:(2,0), 
+pawn shelter:
+  adj king file: 0:0, 1:31, 2:23, 3:7, 4:1, 5:0, 6:0, 
+  in king file: 0:0, 1:71, 2:48, 3:18, 4:5, 5:0, 6:0, 
+pawn storm:
+  no allied: 0:0, 1:2, 2:0, 3:0, 4:0, 5:0, 
+  allied: 0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 
+  blocked enemy: 0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 
+tempo = (4,0)
+bishop pair = (5,12)
+
+matchmaking...
+completed 18 / 96
+completed 27 / 96
+completed 36 / 96
+completed 54 / 96
+completed 63 / 96
+completed 72 / 96
+completed 81 / 96
+completed 90 / 96
+-------------------------
+completed iteration 95
+-------------------------------
+bishop weight = 17.402855369162843
+knight weight = 7.028927085423809
+queen weight = 106.34194551069676
+rook weight = 5.619750637013976
+mobility (m=0,start,queen) weight = 0.0
+mobility (m=0,end,queen) weight = 0.0
+mobility (m=1,start,queen) weight = 0.0
+mobility (m=1,end,queen) weight = 0.0
+mobility (m=2,start,queen) weight = 0.0
+mobility (m=2,end,queen) weight = 0.0
+mobility (m=3,start,queen) weight = 0.0
+mobility (m=3,end,queen) weight = 0.0
+mobility (m=4,start,queen) weight = 0.0
+mobility (m=4,end,queen) weight = 0.42029668753816696
+mobility (m=5,start,queen) weight = 0.0
+mobility (m=5,end,queen) weight = 0.0
+mobility (m=6,start,queen) weight = 0.7702700644723397
+mobility (m=6,end,queen) weight = 0.8887803753208945
+mobility (m=7,start,queen) weight = 0.0
+mobility (m=7,end,queen) weight = 0.0
+mobility (m=8,start,queen) weight = 0.8660254037844386
+mobility (m=8,end,queen) weight = 0.5396597436245492
+mobility (m=9,start,queen) weight = 0.5586286532413294
+mobility (m=9,end,queen) weight = 1.1530078418351468
+mobility (m=10,start,queen) weight = 0.6871842709362762
+mobility (m=10,end,queen) weight = 0.3529390488769982
+mobility (m=11,start,queen) weight = 0.0
+mobility (m=11,end,queen) weight = 0.789470638395664
+mobility (m=12,start,queen) weight = 0.8569568250501305
+mobility (m=12,end,queen) weight = 1.165922381636102
+mobility (m=13,start,queen) weight = 0.0
+mobility (m=13,end,queen) weight = 0.7772815877574134
+mobility (m=14,start,queen) weight = 0.0
+mobility (m=14,end,queen) weight = 0.8597379284150991
+mobility (m=15,start,queen) weight = 0.5636562191028576
+mobility (m=15,end,queen) weight = 0.6332785063987926
+mobility (m=16,start,queen) weight = 0.7946762967816968
+mobility (m=16,end,queen) weight = 1.3359349618234628
+mobility (m=17,start,queen) weight = 0.5773502691896216
+mobility (m=17,end,queen) weight = 0.8975274678557119
+mobility (m=18,start,queen) weight = 0.0
+mobility (m=18,end,queen) weight = 0.6843361544024146
+mobility (m=19,start,queen) weight = 0.0
+mobility (m=19,end,queen) weight = 1.5205479184235624
+mobility (m=20,start,queen) weight = 0.4202966875381858
+mobility (m=20,end,queen) weight = 0.677003200386316
+mobility (m=21,start,queen) weight = 0.0
+mobility (m=21,end,queen) weight = 1.0793194872490193
+mobility (m=22,start,queen) weight = 0.6653633092779677
+mobility (m=22,end,queen) weight = 0.388640793878725
+mobility (m=23,start,queen) weight = 0.3529390488769982
+mobility (m=23,end,queen) weight = 0.46351240544347894
+mobility (m=24,start,queen) weight = 0.0
+mobility (m=24,end,queen) weight = 1.185671106261043
+mobility (m=25,start,queen) weight = 0.0
+mobility (m=25,end,queen) weight = 0.7347996703562133
+mobility (m=26,start,queen) weight = 0.0
+mobility (m=26,end,queen) weight = 0.0
+mobility (m=27,start,queen) weight = 0.0
+mobility (m=27,end,queen) weight = 0.8322910148099127
+mobility (m=28,start,queen) weight = 0.7347996703561747
+mobility (m=28,end,queen) weight = 1.5069284433354302
+mobility (m=29,start,queen) weight = 0.6741120703068063
+mobility (m=29,end,queen) weight = 0.0
+mobility (m=30,start,queen) weight = 0.4330127018922193
+mobility (m=30,end,queen) weight = 1.2047360245667809
+mobility (m=31,start,queen) weight = 0.2763853991962519
+mobility (m=31,end,queen) weight = 0.0
+mobility (m=0,start,rook) weight = 0.0
+mobility (m=0,end,rook) weight = 0.7453559924999298
+mobility (m=1,start,rook) weight = 0.0
+mobility (m=1,end,rook) weight = 0.0
+mobility (m=2,start,rook) weight = 0.0
+mobility (m=2,end,rook) weight = 0.0
+mobility (m=3,start,rook) weight = 0.0
+mobility (m=3,end,rook) weight = 0.3529390488770183
+mobility (m=4,start,rook) weight = 0.8717698313711529
+mobility (m=4,end,rook) weight = 1.178511301977578
+mobility (m=5,start,rook) weight = 0.0
+mobility (m=5,end,rook) weight = 0.6332785063987477
+mobility (m=6,start,rook) weight = 0.0
+mobility (m=6,end,rook) weight = 2.7987317316162232
+mobility (m=7,start,rook) weight = 1.0897247358851685
+mobility (m=7,end,rook) weight = 2.341874249399399
+mobility (m=8,start,rook) weight = 3.442988043352267
+mobility (m=8,end,rook) weight = 4.399287742224721
+mobility (m=9,start,rook) weight = 0.3903123748998999
+mobility (m=9,end,rook) weight = 4.876557799536695
+mobility (m=10,start,rook) weight = 1.113170833949373
+mobility (m=10,end,rook) weight = 5.092205372484073
+mobility (m=11,start,rook) weight = 0.24206145913796356
+mobility (m=11,end,rook) weight = 3.347625609625682
+mobility (m=12,start,rook) weight = 0.7021791477646876
+mobility (m=12,end,rook) weight = 2.5185940467296772
+mobility (m=13,start,rook) weight = 0.38864079387868844
+mobility (m=13,end,rook) weight = 2.960899708422
+mobility (m=14,start,rook) weight = 0.3529390488770385
+mobility (m=14,end,rook) weight = 4.29828575325873
+mobility (m=15,start,rook) weight = 3.8196653976493806
+mobility (m=15,end,rook) weight = 4.262237284181456
+mobility (m=0,start,bishop) weight = 0.0
+mobility (m=0,end,bishop) weight = 0.0
+mobility (m=1,start,bishop) weight = 0.0
+mobility (m=1,end,bishop) weight = 0.0
+mobility (m=2,start,bishop) weight = 0.4330127018922193
+mobility (m=2,end,bishop) weight = 0.0
+mobility (m=3,start,bishop) weight = 0.0
+mobility (m=3,end,bishop) weight = 0.4841229182759271
+mobility (m=4,start,bishop) weight = 0.44439018766044525
+mobility (m=4,end,bishop) weight = 0.4202966875381519
+mobility (m=5,start,bishop) weight = 2.0180393055857246
+mobility (m=5,end,bishop) weight = 0.6919050793922534
+mobility (m=6,start,bishop) weight = 0.9316949906249056
+mobility (m=6,end,bishop) weight = 2.5546118426615476
+mobility (m=7,start,bishop) weight = 3.491060010942235
+mobility (m=7,end,bishop) weight = 1.224035901797329
+mobility (m=8,start,bishop) weight = 2.927064798280567
+mobility (m=8,end,bishop) weight = 4.178265107141411
+mobility (m=9,start,bishop) weight = 3.8567558870405505
+mobility (m=9,end,bishop) weight = 3.088958832141767
+mobility (m=10,start,bishop) weight = 4.120525772142274
+mobility (m=10,end,bishop) weight = 3.57065343770887
+mobility (m=11,start,bishop) weight = 10.001996328511396
+mobility (m=11,end,bishop) weight = 3.162209033606475
+mobility (m=12,start,bishop) weight = 2.80987531850715
+mobility (m=12,end,bishop) weight = 2.0782228986965623
+mobility (m=13,start,bishop) weight = 1.0728660991320131
+mobility (m=13,end,bishop) weight = 7.382146960742518
+mobility (m=14,start,bishop) weight = 1.313491688845705
+mobility (m=14,end,bishop) weight = 7.198783413806054
+mobility (m=15,start,bishop) weight = 2.9819334471669983
+mobility (m=15,end,bishop) weight = 5.684370323283169
+mobility (m=0,start,knight) weight = 0.0
+mobility (m=0,end,knight) weight = 0.3529390488770295
+mobility (m=1,start,knight) weight = 0.0
+mobility (m=1,end,knight) weight = 0.5
+mobility (m=2,start,knight) weight = 0.0
+mobility (m=2,end,knight) weight = 0.0
+mobility (m=3,start,knight) weight = 0.0
+mobility (m=3,end,knight) weight = 0.0
+mobility (m=4,start,knight) weight = 0.0
+mobility (m=4,end,knight) weight = 0.8809322713277491
+mobility (m=5,start,knight) weight = 0.5064685742142914
+mobility (m=5,end,knight) weight = 0.0
+mobility (m=6,start,knight) weight = 0.7626252174051158
+mobility (m=6,end,knight) weight = 0.14282613750841036
+mobility (m=7,start,knight) weight = 0.27638539919632904
+mobility (m=7,end,knight) weight = 0.9499177595981665
+mobility (m=8,start,knight) weight = 1.1499924516660596
+mobility (m=8,end,knight) weight = 0.6653633092779785
+passed pawn (r=1,start) weight = 0.0
+passed pawn (r=1,end) weight = 0.0
+passed pawn (r=2,start) weight = 0.42029668753816884
+passed pawn (r=2,end) weight = 0.8154327412825396
+passed pawn (r=3,start) weight = 4.270731706107936
+passed pawn (r=3,end) weight = 3.7638056058846687
+passed pawn (r=4,start) weight = 2.8686524130097246
+passed pawn (r=4,end) weight = 6.61014450800182
+passed pawn (r=5,start) weight = 2.9788024252858207
+passed pawn (r=5,end) weight = 3.0886778005411406
+passed pawn (r=6,start) weight = 10.005532323836345
+passed pawn (r=6,end) weight = 2.34964536331198
+pawn chain (c=0,start) weight = 0.2763853991962824
+pawn chain (c=0,end) weight = 0.0
+pawn chain (c=1,start) weight = 0.8122328620674143
+pawn chain (c=1,end) weight = 0.0
+pawn chain (c=2,start) weight = 1.3867866033868845
+pawn chain (c=2,end) weight = 0.0
+pawn chain (c=3,start) weight = 0.0
+pawn chain (c=3,end) weight = 0.0
+doubled pawns (c=0,start,opp=0) weight = 0.0
+doubled pawns (c=0,end,opp=0) weight = 0.0
+doubled pawns (c=1,start,opp=0) weight = 0.0
+doubled pawns (c=1,end,opp=0) weight = 0.0
+doubled pawns (c=2,start,opp=0) weight = 0.0
+doubled pawns (c=2,end,opp=0) weight = 0.4841229182759271
+doubled pawns (c=3,start,opp=0) weight = 0.0
+doubled pawns (c=3,end,opp=0) weight = 0.0
+doubled pawns (c=0,start,opp=1) weight = 0.0
+doubled pawns (c=0,end,opp=1) weight = 0.0
+doubled pawns (c=1,start,opp=1) weight = 0.0
+doubled pawns (c=1,end,opp=1) weight = 0.0
+doubled pawns (c=2,start,opp=1) weight = 0.0
+doubled pawns (c=2,end,opp=1) weight = 0.0
+doubled pawns (c=3,start,opp=1) weight = 0.0
+doubled pawns (c=3,end,opp=1) weight = 0.0
+isolated pawns (c=0,start,opp=0) weight = 0.0
+isolated pawns (c=0,end,opp=0) weight = 1.050793351076541
+isolated pawns (c=1,start,opp=0) weight = 0.49956578367840826
+isolated pawns (c=1,end,opp=0) weight = 0.6766825737046548
+isolated pawns (c=2,start,opp=0) weight = 5.513202273230645
+isolated pawns (c=2,end,opp=0) weight = 0.3529390488770295
+isolated pawns (c=3,start,opp=0) weight = 1.3564084008881692
+isolated pawns (c=3,end,opp=0) weight = 0.8416254115301732
+isolated pawns (c=0,start,opp=1) weight = 0.0
+isolated pawns (c=0,end,opp=1) weight = 0.0
+isolated pawns (c=1,start,opp=1) weight = 0.49607837082461076
+isolated pawns (c=1,end,opp=1) weight = 0.0
+isolated pawns (c=2,start,opp=1) weight = 0.5
+isolated pawns (c=2,end,opp=1) weight = 0.4841229182759271
+isolated pawns (c=3,start,opp=1) weight = 0.47826001180204153
+isolated pawns (c=3,end,opp=1) weight = 0.1428261375083551
+pawn shelter, adj king file = 0.0
+pawn shelter, adj king file = 3.998046397929869
+pawn shelter, adj king file = 1.2686114456365274
+pawn shelter, adj king file = 0.37267799624996073
+pawn shelter, adj king file = 0.5064685742143008
+pawn shelter, adj king file = 0.0
+pawn shelter, adj king file = 0.0
+pawn shelter, in king file = 0.0
+pawn shelter, in king file = 4.567206476611277
+pawn shelter, in king file = 4.856937692620732
+pawn shelter, in king file = 1.0960788698305295
+pawn shelter, in king file = 0.34359213546814066
+pawn shelter, in king file = 0.0
+pawn shelter, in king file = 0.0
+pawn storm, no allied pawn = 0.24206145913796356
+pawn storm, no allied pawn = 0.7359800721939872
+pawn storm, no allied pawn = 0.0
+pawn storm, no allied pawn = 0.0
+pawn storm, no allied pawn = 0.0
+pawn storm, no allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+bishop pair, start = 0.895348706122678
+bishop pair, end = 0.3054766312211134
+tempo, start = 0.7252872993970501
+tempo, end = 0.4330127018922193
+-------------------------------
+0	(w,l,d)=(7,1,6), id=2319
+1	(w,l,d)=(0,2,0), id=2484
+2	(w,l,d)=(0,0,0), id=2510
+3	(w,l,d)=(0,5,1), id=2433
+4	(w,l,d)=(6,1,1), id=2404
+5	(w,l,d)=(14,9,5), id=2147
+6	(w,l,d)=(0,0,0), id=2511
+7	(w,l,d)=(3,0,1), id=2487
+8	(w,l,d)=(3,2,1), id=2438
+9	(w,l,d)=(9,7,4), id=2273
+10	(w,l,d)=(0,0,0), id=2515
+11	(w,l,d)=(1,3,2), id=2463
+12	(w,l,d)=(0,0,0), id=2516
+13	(w,l,d)=(1,0,1), id=2491
+14	(w,l,d)=(5,1,2), id=2466
+15	(w,l,d)=(0,0,0), id=2519
+16	(w,l,d)=(0,0,0), id=2520
+17	(w,l,d)=(0,0,0), id=2518
+18	(w,l,d)=(5,4,1), id=2445
+19	(w,l,d)=(1,4,1), id=2460
+20	(w,l,d)=(2,0,0), id=2485
+21	(w,l,d)=(3,1,2), id=2470
+22	(w,l,d)=(0,0,0), id=2514
+23	(w,l,d)=(7,2,3), id=2450
+24	(w,l,d)=(0,0,0), id=2522
+25	(w,l,d)=(0,0,0), id=2521
+26	(w,l,d)=(0,0,0), id=2509
+27	(w,l,d)=(1,0,1), id=2498
+28	(w,l,d)=(0,0,0), id=2526
+29	(w,l,d)=(3,1,0), id=2488
+30	(w,l,d)=(0,2,0), id=2500
+31	(w,l,d)=(0,0,0), id=2528
+32	(w,l,d)=(0,4,0), id=2472
+33	(w,l,d)=(0,1,1), id=2502
+34	(w,l,d)=(0,0,0), id=2517
+35	(w,l,d)=(0,0,0), id=2523
+36	(w,l,d)=(0,0,0), id=2513
+37	(w,l,d)=(7,2,1), id=2456
+38	(w,l,d)=(0,0,0), id=2524
+39	(w,l,d)=(2,3,1), id=2505
+40	(w,l,d)=(0,0,0), id=2529
+41	(w,l,d)=(6,7,5), id=2428
+42	(w,l,d)=(0,0,0), id=2525
+43	(w,l,d)=(6,8,2), id=2481
+44	(w,l,d)=(5,0,1), id=2483
+45	(w,l,d)=(10,5,5), id=2412
+46	(w,l,d)=(0,0,0), id=2530
+47	(w,l,d)=(4,0,2), id=2504
+best id=2504
+material weights:
+	king = 0
+	queen = 1156
+	rook = 472
+	bishop = 322
+	knight = 300
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(0,0), 1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,4), 6:(2,7), 7:(2,9), 8:(6,10), 9:(5,14), 10:(6,15), 11:(7,16), 12:(8,17), 13:(8,18), 14:(9,18), 15:(10,18), 16:(8,14), 17:(10,18), 18:(10,18), 19:(10,14), 20:(9,17), 21:(10,16), 22:(10,16), 23:(9,17), 24:(10,14), 25:(10,16), 26:(10,17), 27:(10,16), 28:(11,13), 29:(12,17), 30:(11,18), 31:(10,17), 
+	rook = 0:(0,1), 1:(0,0), 2:(0,0), 3:(0,7), 4:(4,14), 5:(5,24), 6:(7,31), 7:(11,36), 8:(11,38), 9:(14,52), 10:(9,65), 11:(14,64), 12:(11,57), 13:(15,59), 14:(16,65), 15:(11,65), 
+	bishop = 0:(0,0), 1:(0,0), 2:(0,0), 3:(8,5), 4:(15,14), 5:(21,19), 6:(29,20), 7:(37,29), 8:(35,23), 9:(28,34), 10:(40,31), 11:(43,38), 12:(36,47), 13:(40,37), 14:(40,38), 15:(33,29), 
+	knight = 0:(0,1), 1:(0,1), 2:(0,0), 3:(0,0), 4:(6,1), 5:(12,8), 6:(15,11), 7:(19,15), 8:(19,11), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+contact check, queen = 6
+contact check, rook = 4
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(0,0), 2:(6,7), 3:(33,22), 4:(46,31), 5:(66,40), 6:(95,62), 
+isolated pawn weight, unopposed (by col):
+0:(0,4), 1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,0), 6:(0,0), 7:(0,4), 
+isolated pawn weight, opposed (by col):
+0:(0,0), 1:(0,0), 2:(1,0), 3:(0,0), 4:(0,0), 5:(1,0), 6:(0,0), 7:(0,0), 
+doubled pawn weight, unopposed (by col):
+0:(0,0), 1:(0,0), 2:(0,1), 3:(0,0), 4:(0,0), 5:(0,1), 6:(0,0), 7:(0,0), 
+doubled pawn weight, opposed (by col):
+0:(0,0), 1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,0), 6:(0,0), 7:(0,0), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+pawn chain weight:
+0:(2,0), 1:(5,0), 2:(5,0), 3:(5,0), 4:(5,0), 5:(5,0), 6:(5,0), 7:(2,0), 
+pawn shelter:
+  adj king file: 0:0, 1:31, 2:23, 3:7, 4:1, 5:0, 6:0, 
+  in king file: 0:0, 1:71, 2:48, 3:18, 4:5, 5:0, 6:0, 
+pawn storm:
+  no allied: 0:0, 1:2, 2:0, 3:0, 4:0, 5:0, 
+  allied: 0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 
+  blocked enemy: 0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 
+tempo = (4,0)
+bishop pair = (5,12)
+
+matchmaking...
+completed 9 / 96
+completed 18 / 96
+completed 27 / 96
+completed 36 / 96
+completed 45 / 96
+completed 54 / 96
+completed 63 / 96
+completed 72 / 96
+completed 81 / 96
+completed 90 / 96
+-------------------------
+completed iteration 96
+-------------------------------
+bishop weight = 16.507521433845724
+knight weight = 7.007901046913297
+queen weight = 109.93747433832102
+rook weight = 5.575203969859123
+mobility (m=0,start,queen) weight = 0.0
+mobility (m=0,end,queen) weight = 0.0
+mobility (m=1,start,queen) weight = 0.0
+mobility (m=1,end,queen) weight = 0.0
+mobility (m=2,start,queen) weight = 0.0
+mobility (m=2,end,queen) weight = 0.0
+mobility (m=3,start,queen) weight = 0.0
+mobility (m=3,end,queen) weight = 0.0
+mobility (m=4,start,queen) weight = 0.0
+mobility (m=4,end,queen) weight = 0.42029668753816696
+mobility (m=5,start,queen) weight = 0.0
+mobility (m=5,end,queen) weight = 0.0
+mobility (m=6,start,queen) weight = 0.7168604389202192
+mobility (m=6,end,queen) weight = 0.9574271077563369
+mobility (m=7,start,queen) weight = 0.0
+mobility (m=7,end,queen) weight = 0.0
+mobility (m=8,start,queen) weight = 0.8650224788344458
+mobility (m=8,end,queen) weight = 0.49607837082461076
+mobility (m=9,start,queen) weight = 0.5199993322645267
+mobility (m=9,end,queen) weight = 1.113170833949373
+mobility (m=10,start,queen) weight = 0.7634784250753633
+mobility (m=10,end,queen) weight = 0.3529390488769982
+mobility (m=11,start,queen) weight = 0.0
+mobility (m=11,end,queen) weight = 0.7770023416238294
+mobility (m=12,start,queen) weight = 0.8816709987291178
+mobility (m=12,end,queen) weight = 1.1334558757279565
+mobility (m=13,start,queen) weight = 0.0
+mobility (m=13,end,queen) weight = 0.8098246552324061
+mobility (m=14,start,queen) weight = 0.0
+mobility (m=14,end,queen) weight = 0.8887803753208585
+mobility (m=15,start,queen) weight = 0.5713045500334052
+mobility (m=15,end,queen) weight = 0.6653633092779571
+mobility (m=16,start,queen) weight = 0.7968579791210423
+mobility (m=16,end,queen) weight = 1.3383693955290734
+mobility (m=17,start,queen) weight = 0.6066758241067228
+mobility (m=17,end,queen) weight = 0.9090593428863234
+mobility (m=18,start,queen) weight = 0.0
+mobility (m=18,end,queen) weight = 0.7403898184965231
+mobility (m=19,start,queen) weight = 0.0
+mobility (m=19,end,queen) weight = 1.4611579787582372
+mobility (m=20,start,queen) weight = 0.4202966875381858
+mobility (m=20,end,queen) weight = 0.699392097149722
+mobility (m=21,start,queen) weight = 0.0
+mobility (m=21,end,queen) weight = 1.0489329895978512
+mobility (m=22,start,queen) weight = 0.7021791477646876
+mobility (m=22,end,queen) weight = 0.35293904887711897
+mobility (m=23,start,queen) weight = 0.3529390488769982
+mobility (m=23,end,queen) weight = 0.4443901876603493
+mobility (m=24,start,queen) weight = 0.0
+mobility (m=24,end,queen) weight = 1.07690399861001
+mobility (m=25,start,queen) weight = 0.0
+mobility (m=25,end,queen) weight = 0.6843361544023315
+mobility (m=26,start,queen) weight = 0.0
+mobility (m=26,end,queen) weight = 0.0
+mobility (m=27,start,queen) weight = 0.0
+mobility (m=27,end,queen) weight = 0.7312470322826423
+mobility (m=28,start,queen) weight = 0.7566258248889605
+mobility (m=28,end,queen) weight = 1.4128318194321643
+mobility (m=29,start,queen) weight = 0.6919050793923047
+mobility (m=29,end,queen) weight = 0.0
+mobility (m=30,start,queen) weight = 0.4330127018922193
+mobility (m=30,end,queen) weight = 1.2183492931011204
+mobility (m=31,start,queen) weight = 0.2763853991962519
+mobility (m=31,end,queen) weight = 0.0
+mobility (m=0,start,rook) weight = 0.0
+mobility (m=0,end,rook) weight = 0.7453559924999298
+mobility (m=1,start,rook) weight = 0.0
+mobility (m=1,end,rook) weight = 0.0
+mobility (m=2,start,rook) weight = 0.0
+mobility (m=2,end,rook) weight = 0.0
+mobility (m=3,start,rook) weight = 0.0
+mobility (m=3,end,rook) weight = 0.3529390488770183
+mobility (m=4,start,rook) weight = 0.9204467514322713
+mobility (m=4,end,rook) weight = 1.1172573064826714
+mobility (m=5,start,rook) weight = 0.0
+mobility (m=5,end,rook) weight = 0.5947542676508628
+mobility (m=6,start,rook) weight = 0.0
+mobility (m=6,end,rook) weight = 2.7230370095824155
+mobility (m=7,start,rook) weight = 1.0555327117411109
+mobility (m=7,end,rook) weight = 2.2568376043088256
+mobility (m=8,start,rook) weight = 3.7010110292849574
+mobility (m=8,end,rook) weight = 4.186981725804688
+mobility (m=9,start,rook) weight = 0.3529390488769982
+mobility (m=9,end,rook) weight = 4.7484920852133135
+mobility (m=10,start,rook) weight = 0.9921567416492215
+mobility (m=10,end,rook) weight = 5.329710683725959
+mobility (m=11,start,rook) weight = 0.1998263134714028
+mobility (m=11,end,rook) weight = 3.441979404677223
+mobility (m=12,start,rook) weight = 0.6584783595532961
+mobility (m=12,end,rook) weight = 2.8448753878197595
+mobility (m=13,start,rook) weight = 0.33071891388307384
+mobility (m=13,end,rook) weight = 2.950914994633979
+mobility (m=14,start,rook) weight = 0.3529390488770385
+mobility (m=14,end,rook) weight = 4.523808544799393
+mobility (m=15,start,rook) weight = 3.805092986891238
+mobility (m=15,end,rook) weight = 4.77242513473669
+mobility (m=0,start,bishop) weight = 0.0
+mobility (m=0,end,bishop) weight = 0.0
+mobility (m=1,start,bishop) weight = 0.0
+mobility (m=1,end,bishop) weight = 0.0
+mobility (m=2,start,bishop) weight = 0.42029668753816696
+mobility (m=2,end,bishop) weight = 0.0
+mobility (m=3,start,bishop) weight = 0.0
+mobility (m=3,end,bishop) weight = 0.4782600118020382
+mobility (m=4,start,bishop) weight = 0.4545296714431617
+mobility (m=4,end,bishop) weight = 0.4202966875381519
+mobility (m=5,start,bishop) weight = 2.0530084632071053
+mobility (m=5,end,bishop) weight = 0.7213870705491512
+mobility (m=6,start,bishop) weight = 1.0604555493853975
+mobility (m=6,end,bishop) weight = 2.55758335912811
+mobility (m=7,start,bishop) weight = 3.296673407475429
+mobility (m=7,end,bishop) weight = 1.1363241786078981
+mobility (m=8,start,bishop) weight = 3.053274085123818
+mobility (m=8,end,bishop) weight = 4.172027800988661
+mobility (m=9,start,bishop) weight = 4.034357652299402
+mobility (m=9,end,bishop) weight = 3.0547663122115063
+mobility (m=10,start,bishop) weight = 4.5927460165158704
+mobility (m=10,end,bishop) weight = 3.6878530904398485
+mobility (m=11,start,bishop) weight = 9.634915527508385
+mobility (m=11,end,bishop) weight = 3.031017316384451
+mobility (m=12,start,bishop) weight = 2.816663584810937
+mobility (m=12,end,bishop) weight = 1.903487296750017
+mobility (m=13,start,bishop) weight = 1.084734670578781
+mobility (m=13,end,bishop) weight = 8.52681635912386
+mobility (m=14,start,bishop) weight = 1.153948535343929
+mobility (m=14,end,bishop) weight = 8.039831396794893
+mobility (m=15,start,bishop) weight = 2.8722813232690143
+mobility (m=15,end,bishop) weight = 5.989429345846621
+mobility (m=0,start,knight) weight = 0.0
+mobility (m=0,end,knight) weight = 0.3054766312211496
+mobility (m=1,start,knight) weight = 0.0
+mobility (m=1,end,knight) weight = 0.49956578367840826
+mobility (m=2,start,knight) weight = 0.0
+mobility (m=2,end,knight) weight = 0.0
+mobility (m=3,start,knight) weight = 0.0
+mobility (m=3,end,knight) weight = 0.0
+mobility (m=4,start,knight) weight = 0.0
+mobility (m=4,end,knight) weight = 0.8637671850678283
+mobility (m=5,start,knight) weight = 0.5064685742142914
+mobility (m=5,end,knight) weight = 0.0
+mobility (m=6,start,knight) weight = 0.7347996703561553
+mobility (m=6,end,knight) weight = 0.0
+mobility (m=7,start,knight) weight = 0.27638539919632904
+mobility (m=7,end,knight) weight = 0.8777239347058635
+mobility (m=8,start,knight) weight = 1.185671106261043
+mobility (m=8,end,knight) weight = 0.5739573880815045
+passed pawn (r=1,start) weight = 0.0
+passed pawn (r=1,end) weight = 0.0
+passed pawn (r=2,start) weight = 0.42029668753816884
+passed pawn (r=2,end) weight = 0.7894706383956865
+passed pawn (r=3,start) weight = 3.913950742749158
+passed pawn (r=3,end) weight = 3.5251452885740187
+passed pawn (r=4,start) weight = 3.1355377883581905
+passed pawn (r=4,end) weight = 5.598200045550355
+passed pawn (r=5,start) weight = 2.998191005515617
+passed pawn (r=5,end) weight = 3.1966100750986106
+passed pawn (r=6,start) weight = 9.365805676620715
+passed pawn (r=6,end) weight = 2.5575833591281323
+pawn chain (c=0,start) weight = 0.2763853991962824
+pawn chain (c=0,end) weight = 0.0
+pawn chain (c=1,start) weight = 0.7806247497997998
+pawn chain (c=1,end) weight = 0.0
+pawn chain (c=2,start) weight = 1.3686723088047383
+pawn chain (c=2,end) weight = 0.0
+pawn chain (c=3,start) weight = 0.0
+pawn chain (c=3,end) weight = 0.0
+doubled pawns (c=0,start,opp=0) weight = 0.0
+doubled pawns (c=0,end,opp=0) weight = 0.0
+doubled pawns (c=1,start,opp=0) weight = 0.0
+doubled pawns (c=1,end,opp=0) weight = 0.0
+doubled pawns (c=2,start,opp=0) weight = 0.0
+doubled pawns (c=2,end,opp=0) weight = 0.4714045207910317
+doubled pawns (c=3,start,opp=0) weight = 0.0
+doubled pawns (c=3,end,opp=0) weight = 0.0
+doubled pawns (c=0,start,opp=1) weight = 0.0
+doubled pawns (c=0,end,opp=1) weight = 0.0
+doubled pawns (c=1,start,opp=1) weight = 0.0
+doubled pawns (c=1,end,opp=1) weight = 0.0
+doubled pawns (c=2,start,opp=1) weight = 0.0
+doubled pawns (c=2,end,opp=1) weight = 0.0
+doubled pawns (c=3,start,opp=1) weight = 0.0
+doubled pawns (c=3,end,opp=1) weight = 0.0
+isolated pawns (c=0,start,opp=0) weight = 0.0
+isolated pawns (c=0,end,opp=0) weight = 0.9164298936634487
+isolated pawns (c=1,start,opp=0) weight = 0.49956578367840826
+isolated pawns (c=1,end,opp=0) weight = 0.6653633092779713
+isolated pawns (c=2,start,opp=0) weight = 5.641949771331026
+isolated pawns (c=2,end,opp=0) weight = 0.3529390488770295
+isolated pawns (c=3,start,opp=0) weight = 1.3028747594795476
+isolated pawns (c=3,end,opp=0) weight = 0.8416254115301732
+isolated pawns (c=0,start,opp=1) weight = 0.0
+isolated pawns (c=0,end,opp=1) weight = 0.0
+isolated pawns (c=1,start,opp=1) weight = 0.4982608642958916
+isolated pawns (c=1,end,opp=1) weight = 0.0
+isolated pawns (c=2,start,opp=1) weight = 0.49956578367840826
+isolated pawns (c=2,end,opp=1) weight = 0.4841229182759271
+isolated pawns (c=3,start,opp=1) weight = 0.4841229182759271
+isolated pawns (c=3,end,opp=1) weight = 0.0
+pawn shelter, adj king file = 0.0
+pawn shelter, adj king file = 4.493774629047014
+pawn shelter, adj king file = 1.1797995945639728
+pawn shelter, adj king file = 0.3529390488770385
+pawn shelter, adj king file = 0.5199993322645281
+pawn shelter, adj king file = 0.0
+pawn shelter, adj king file = 0.0
+pawn shelter, in king file = 0.0
+pawn shelter, in king file = 4.352870620508907
+pawn shelter, in king file = 5.170991133772679
+pawn shelter, in king file = 1.0921118685067543
+pawn shelter, in king file = 0.33071891388307384
+pawn shelter, in king file = 0.0
+pawn shelter, in king file = 0.0
+pawn storm, no allied pawn = 0.1428261375083551
+pawn storm, no allied pawn = 0.6741120703068099
+pawn storm, no allied pawn = 0.0
+pawn storm, no allied pawn = 0.0
+pawn storm, no allied pawn = 0.0
+pawn storm, no allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+bishop pair, start = 0.8068715304598781
+bishop pair, end = 0.27638539919632904
+tempo, start = 0.6959705453537527
+tempo, end = 0.42029668753816696
+-------------------------------
+0	(w,l,d)=(8,1,7), id=2319
+1	(w,l,d)=(0,4,0), id=2484
+2	(w,l,d)=(0,1,1), id=2510
+3	(w,l,d)=(0,7,1), id=2433
+4	(w,l,d)=(6,2,2), id=2404
+5	(w,l,d)=(0,0,0), id=2532
+6	(w,l,d)=(0,0,0), id=2533
+7	(w,l,d)=(0,0,0), id=2531
+8	(w,l,d)=(4,2,2), id=2438
+9	(w,l,d)=(10,9,5), id=2273
+10	(w,l,d)=(0,0,0), id=2535
+11	(w,l,d)=(0,0,0), id=2536
+12	(w,l,d)=(0,2,0), id=2516
+13	(w,l,d)=(3,2,1), id=2491
+14	(w,l,d)=(0,0,0), id=2537
+15	(w,l,d)=(2,0,0), id=2519
+16	(w,l,d)=(0,0,0), id=2539
+17	(w,l,d)=(0,0,0), id=2538
+18	(w,l,d)=(6,4,2), id=2445
+19	(w,l,d)=(1,5,2), id=2460
+20	(w,l,d)=(0,0,0), id=2541
+21	(w,l,d)=(0,0,0), id=2542
+22	(w,l,d)=(0,0,0), id=2543
+23	(w,l,d)=(7,6,3), id=2450
+24	(w,l,d)=(0,0,0), id=2544
+25	(w,l,d)=(1,2,1), id=2521
+26	(w,l,d)=(3,4,1), id=2509
+27	(w,l,d)=(2,0,2), id=2498
+28	(w,l,d)=(3,1,0), id=2526
+29	(w,l,d)=(3,2,1), id=2488
+30	(w,l,d)=(0,0,0), id=2547
+31	(w,l,d)=(2,0,0), id=2528
+32	(w,l,d)=(2,6,0), id=2472
+33	(w,l,d)=(2,2,2), id=2502
+34	(w,l,d)=(2,0,0), id=2517
+35	(w,l,d)=(0,0,0), id=2551
+36	(w,l,d)=(0,0,0), id=2550
+37	(w,l,d)=(0,0,0), id=2552
+38	(w,l,d)=(0,0,0), id=2553
+39	(w,l,d)=(0,0,0), id=2540
+40	(w,l,d)=(0,0,0), id=2545
+41	(w,l,d)=(0,0,0), id=2548
+42	(w,l,d)=(0,0,0), id=2554
+43	(w,l,d)=(8,9,3), id=2481
+44	(w,l,d)=(0,0,0), id=2555
+45	(w,l,d)=(0,0,0), id=2546
+46	(w,l,d)=(0,0,0), id=2534
+47	(w,l,d)=(0,0,0), id=2549
+best id=2549
+material weights:
+	king = 0
+	queen = 870
+	rook = 456
+	bishop = 303
+	knight = 294
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(0,0), 1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,4), 6:(2,6), 7:(2,9), 8:(6,11), 9:(5,14), 10:(5,15), 11:(7,15), 12:(6,16), 13:(8,19), 14:(9,18), 15:(10,18), 16:(8,15), 17:(8,15), 18:(10,17), 19:(10,15), 20:(8,17), 21:(10,18), 22:(9,16), 23:(9,18), 24:(10,16), 25:(10,17), 26:(10,17), 27:(10,18), 28:(12,14), 29:(12,17), 30:(11,18), 31:(10,17), 
+	rook = 0:(0,1), 1:(0,0), 2:(0,0), 3:(0,7), 4:(4,13), 5:(5,24), 6:(7,30), 7:(12,34), 8:(8,41), 9:(13,52), 10:(11,61), 11:(14,64), 12:(12,66), 13:(15,60), 14:(16,71), 15:(16,69), 
+	bishop = 0:(0,0), 1:(0,0), 2:(0,0), 3:(8,5), 4:(15,14), 5:(21,20), 6:(30,20), 7:(37,31), 8:(40,32), 9:(34,31), 10:(40,41), 11:(39,38), 12:(36,42), 13:(40,13), 14:(41,47), 15:(39,42), 
+	knight = 0:(0,0), 1:(0,1), 2:(0,0), 3:(0,0), 4:(6,2), 5:(12,8), 6:(16,11), 7:(19,11), 8:(19,14), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+contact check, queen = 6
+contact check, rook = 4
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(0,0), 2:(6,6), 3:(20,13), 4:(52,26), 5:(65,39), 6:(100,64), 
+isolated pawn weight, unopposed (by col):
+0:(0,2), 1:(1,2), 2:(1,0), 3:(0,0), 4:(0,0), 5:(1,0), 6:(1,2), 7:(0,2), 
+isolated pawn weight, opposed (by col):
+0:(0,0), 1:(1,0), 2:(1,1), 3:(1,0), 4:(1,0), 5:(1,1), 6:(1,0), 7:(0,0), 
+doubled pawn weight, unopposed (by col):
+0:(0,0), 1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,0), 6:(0,0), 7:(0,0), 
+doubled pawn weight, opposed (by col):
+0:(0,0), 1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,0), 6:(0,0), 7:(0,0), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+pawn chain weight:
+0:(2,0), 1:(3,0), 2:(3,0), 3:(5,0), 4:(5,0), 5:(3,0), 6:(3,0), 7:(2,0), 
+pawn shelter:
+  adj king file: 0:0, 1:33, 2:20, 3:7, 4:2, 5:0, 6:0, 
+  in king file: 0:0, 1:74, 2:57, 3:19, 4:6, 5:0, 6:0, 
+pawn storm:
+  no allied: 0:0, 1:1, 2:0, 3:0, 4:0, 5:0, 
+  allied: 0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 
+  blocked enemy: 0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 
+tempo = (4,0)
+bishop pair = (4,12)
+
+matchmaking...
+completed 18 / 96
+completed 27 / 96
+completed 36 / 96
+completed 45 / 96
+completed 54 / 96
+completed 63 / 96
+completed 81 / 96
+-------------------------
+completed iteration 97
+-------------------------------
+bishop weight = 17.01587290019373
+knight weight = 7.0222859525940695
+queen weight = 117.47938464246454
+rook weight = 6.3834366832354466
+mobility (m=0,start,queen) weight = 0.0
+mobility (m=0,end,queen) weight = 0.0
+mobility (m=1,start,queen) weight = 0.0
+mobility (m=1,end,queen) weight = 0.0
+mobility (m=2,start,queen) weight = 0.0
+mobility (m=2,end,queen) weight = 0.0
+mobility (m=3,start,queen) weight = 0.0
+mobility (m=3,end,queen) weight = 0.0
+mobility (m=4,start,queen) weight = 0.0
+mobility (m=4,end,queen) weight = 0.4061164310337068
+mobility (m=5,start,queen) weight = 0.0
+mobility (m=5,end,queen) weight = 0.0
+mobility (m=6,start,queen) weight = 0.7634784250753619
+mobility (m=6,end,queen) weight = 0.9753916592266338
+mobility (m=7,start,queen) weight = 0.0
+mobility (m=7,end,queen) weight = 0.0
+mobility (m=8,start,queen) weight = 0.9407351587396385
+mobility (m=8,end,queen) weight = 0.49300664859162185
+mobility (m=9,start,queen) weight = 0.538451999305005
+mobility (m=9,end,queen) weight = 1.2409393843196255
+mobility (m=10,start,queen) weight = 0.8650224788344458
+mobility (m=10,end,queen) weight = 0.3054766312211599
+mobility (m=11,start,queen) weight = 0.0
+mobility (m=11,end,queen) weight = 0.7534642216677198
+mobility (m=12,start,queen) weight = 0.8657747814658432
+mobility (m=12,end,queen) weight = 1.1726039399558574
+mobility (m=13,start,queen) weight = 0.0
+mobility (m=13,end,queen) weight = 0.8536583853561431
+mobility (m=14,start,queen) weight = 0.0
+mobility (m=14,end,queen) weight = 0.9119195261766717
+mobility (m=15,start,queen) weight = 0.5098849271050282
+mobility (m=15,end,queen) weight = 0.7453559924999595
+mobility (m=16,start,queen) weight = 0.8098246552323798
+mobility (m=16,end,queen) weight = 1.3370715824766666
+mobility (m=17,start,queen) weight = 0.5769742676719399
+mobility (m=17,end,queen) weight = 0.9565200236041062
+mobility (m=18,start,queen) weight = 0.0
+mobility (m=18,end,queen) weight = 0.7680128579652817
+mobility (m=19,start,queen) weight = 0.0
+mobility (m=19,end,queen) weight = 1.4611579787582372
+mobility (m=20,start,queen) weight = 0.40611643103372624
+mobility (m=20,end,queen) weight = 0.7058780977541171
+mobility (m=21,start,queen) weight = 0.0
+mobility (m=21,end,queen) weight = 1.0801234497346521
+mobility (m=22,start,queen) weight = 0.7592027982620134
+mobility (m=22,end,queen) weight = 0.3054766312210669
+mobility (m=23,start,queen) weight = 0.3054766312211832
+mobility (m=23,end,queen) weight = 0.4202966875382196
+mobility (m=24,start,queen) weight = 0.0
+mobility (m=24,end,queen) weight = 1.1162856937182344
+mobility (m=25,start,queen) weight = 0.0
+mobility (m=25,end,queen) weight = 0.6109532624423198
+mobility (m=26,start,queen) weight = 0.0
+mobility (m=26,end,queen) weight = 0.0
+mobility (m=27,start,queen) weight = 0.0
+mobility (m=27,end,queen) weight = 0.705878097754077
+mobility (m=28,start,queen) weight = 0.8405933750763293
+mobility (m=28,end,queen) weight = 1.3842805491983399
+mobility (m=29,start,queen) weight = 0.7566258248889605
+mobility (m=29,end,queen) weight = 0.0
+mobility (m=30,start,queen) weight = 0.4202966875381519
+mobility (m=30,end,queen) weight = 1.2740737376183755
+mobility (m=31,start,queen) weight = 0.3054766312211599
+mobility (m=31,end,queen) weight = 0.0
+mobility (m=0,start,rook) weight = 0.0
+mobility (m=0,end,rook) weight = 0.7347996703561831
+mobility (m=1,start,rook) weight = 0.0
+mobility (m=1,end,rook) weight = 0.0
+mobility (m=2,start,rook) weight = 0.0
+mobility (m=2,end,rook) weight = 0.0
+mobility (m=3,start,rook) weight = 0.0
+mobility (m=3,end,rook) weight = 0.3054766312211599
+mobility (m=4,start,rook) weight = 1.0049789245993612
+mobility (m=4,end,rook) weight = 1.117257306482646
+mobility (m=5,start,rook) weight = 0.0
+mobility (m=5,end,rook) weight = 0.6400954789891
+mobility (m=6,start,rook) weight = 0.0
+mobility (m=6,end,rook) weight = 2.6219393532693096
+mobility (m=7,start,rook) weight = 1.089525572082743
+mobility (m=7,end,rook) weight = 2.338443065850048
+mobility (m=8,start,rook) weight = 3.824037642190368
+mobility (m=8,end,rook) weight = 4.373213921133975
+mobility (m=9,start,rook) weight = 0.33071891388307384
+mobility (m=9,end,rook) weight = 4.373213921133975
+mobility (m=10,start,rook) weight = 1.0197698542100286
+mobility (m=10,end,rook) weight = 5.616042250157678
+mobility (m=11,start,rook) weight = 0.24206145913796356
+mobility (m=11,end,rook) weight = 2.8321075779944316
+mobility (m=12,start,rook) weight = 0.6718548123582101
+mobility (m=12,end,rook) weight = 3.2749443379493512
+mobility (m=13,start,rook) weight = 0.33071891388307384
+mobility (m=13,end,rook) weight = 2.877640695469497
+mobility (m=14,start,rook) weight = 0.3054766312211134
+mobility (m=14,end,rook) weight = 4.937060458635454
+mobility (m=15,start,rook) weight = 3.9782394207600067
+mobility (m=15,end,rook) weight = 6.246631036451185
+mobility (m=0,start,bishop) weight = 0.0
+mobility (m=0,end,bishop) weight = 0.0
+mobility (m=1,start,bishop) weight = 0.0
+mobility (m=1,end,bishop) weight = 0.0
+mobility (m=2,start,bishop) weight = 0.4061164310337068
+mobility (m=2,end,bishop) weight = 0.0
+mobility (m=3,start,bishop) weight = 0.0
+mobility (m=3,end,bishop) weight = 0.4714045207910346
+mobility (m=4,start,bishop) weight = 0.44439018766044525
+mobility (m=4,end,bishop) weight = 0.40611643103372624
+mobility (m=5,start,bishop) weight = 2.0899893673307526
+mobility (m=5,end,bishop) weight = 0.5773502691896093
+mobility (m=6,start,bishop) weight = 1.0865337342004355
+mobility (m=6,end,bishop) weight = 2.7735732067737766
+mobility (m=7,start,bishop) weight = 3.661928757119965
+mobility (m=7,end,bishop) weight = 1.3068662156301345
+mobility (m=8,start,bishop) weight = 3.391100997054227
+mobility (m=8,end,bishop) weight = 4.17748595316475
+mobility (m=9,start,bishop) weight = 4.162497914580756
+mobility (m=9,end,bishop) weight = 3.505885428659756
+mobility (m=10,start,bishop) weight = 4.75146176338279
+mobility (m=10,end,bishop) weight = 3.847798793538382
+mobility (m=11,start,bishop) weight = 9.912026225191745
+mobility (m=11,end,bishop) weight = 3.148798271651565
+mobility (m=12,start,bishop) weight = 2.890357532670784
+mobility (m=12,end,bishop) weight = 1.9574466077577695
+mobility (m=13,start,bishop) weight = 1.0921118685067284
+mobility (m=13,end,bishop) weight = 8.80538029969304
+mobility (m=14,start,bishop) weight = 1.1021995055342748
+mobility (m=14,end,bishop) weight = 8.179836320014136
+mobility (m=15,start,bishop) weight = 3.1268744378372473
+mobility (m=15,end,bishop) weight = 5.982287222849362
+mobility (m=0,start,knight) weight = 0.0
+mobility (m=0,end,knight) weight = 0.3054766312211496
+mobility (m=1,start,knight) weight = 0.0
+mobility (m=1,end,knight) weight = 0.49956578367840826
+mobility (m=2,start,knight) weight = 0.0
+mobility (m=2,end,knight) weight = 0.0
+mobility (m=3,start,knight) weight = 0.0
+mobility (m=3,end,knight) weight = 0.0
+mobility (m=4,start,knight) weight = 0.0
+mobility (m=4,end,knight) weight = 0.9295963132217959
+mobility (m=5,start,knight) weight = 0.5064685742142914
+mobility (m=5,end,knight) weight = 0.0
+mobility (m=6,start,knight) weight = 0.799305253885469
+mobility (m=6,end,knight) weight = 0.0
+mobility (m=7,start,knight) weight = 0.3054766312210669
+mobility (m=7,end,knight) weight = 0.8620067027323925
+mobility (m=8,start,knight) weight = 1.25
+mobility (m=8,end,knight) weight = 0.5384519993049919
+passed pawn (r=1,start) weight = 0.0
+passed pawn (r=1,end) weight = 0.0
+passed pawn (r=2,start) weight = 0.40611643103370876
+passed pawn (r=2,end) weight = 0.8953487061226799
+passed pawn (r=3,start) weight = 3.942237009476842
+passed pawn (r=3,end) weight = 3.5843021946010873
+passed pawn (r=4,start) weight = 2.9854246627015253
+passed pawn (r=4,end) weight = 5.503628853361711
+passed pawn (r=5,start) weight = 2.7442332211788627
+passed pawn (r=5,end) weight = 2.9462782549439264
+passed pawn (r=6,start) weight = 10.549465988327887
+passed pawn (r=6,end) weight = 2.5261651602115243
+pawn chain (c=0,start) weight = 0.30547663122114976
+pawn chain (c=0,end) weight = 0.0
+pawn chain (c=1,start) weight = 0.8597379284151394
+pawn chain (c=1,end) weight = 0.0
+pawn chain (c=2,start) weight = 1.2409393843196184
+pawn chain (c=2,end) weight = 0.0
+pawn chain (c=3,start) weight = 0.0
+pawn chain (c=3,end) weight = 0.0
+doubled pawns (c=0,start,opp=0) weight = 0.0
+doubled pawns (c=0,end,opp=0) weight = 0.0
+doubled pawns (c=1,start,opp=0) weight = 0.0
+doubled pawns (c=1,end,opp=0) weight = 0.0
+doubled pawns (c=2,start,opp=0) weight = 0.0
+doubled pawns (c=2,end,opp=0) weight = 0.46351240544347894
+doubled pawns (c=3,start,opp=0) weight = 0.0
+doubled pawns (c=3,end,opp=0) weight = 0.0
+doubled pawns (c=0,start,opp=1) weight = 0.0
+doubled pawns (c=0,end,opp=1) weight = 0.0
+doubled pawns (c=1,start,opp=1) weight = 0.0
+doubled pawns (c=1,end,opp=1) weight = 0.0
+doubled pawns (c=2,start,opp=1) weight = 0.0
+doubled pawns (c=2,end,opp=1) weight = 0.0
+doubled pawns (c=3,start,opp=1) weight = 0.0
+doubled pawns (c=3,end,opp=1) weight = 0.0
+isolated pawns (c=0,start,opp=0) weight = 0.0
+isolated pawns (c=0,end,opp=0) weight = 0.9344858955002419
+isolated pawns (c=1,start,opp=0) weight = 0.49956578367840826
+isolated pawns (c=1,end,opp=0) weight = 0.6757197808427855
+isolated pawns (c=2,start,opp=0) weight = 5.731817568528231
+isolated pawns (c=2,end,opp=0) weight = 0.3054766312211496
+isolated pawns (c=3,start,opp=0) weight = 1.3063679505492403
+isolated pawns (c=3,end,opp=0) weight = 0.7626252174051302
+isolated pawns (c=0,start,opp=1) weight = 0.0
+isolated pawns (c=0,end,opp=1) weight = 0.0
+isolated pawns (c=1,start,opp=1) weight = 0.49956578367840826
+isolated pawns (c=1,end,opp=1) weight = 0.0
+isolated pawns (c=2,start,opp=1) weight = 0.49956578367840826
+isolated pawns (c=2,end,opp=1) weight = 0.4930066485916347
+isolated pawns (c=3,start,opp=1) weight = 0.4930066485916347
+isolated pawns (c=3,end,opp=1) weight = 0.0
+pawn shelter, adj king file = 0.0
+pawn shelter, adj king file = 4.49068286999748
+pawn shelter, adj king file = 1.2786643965047282
+pawn shelter, adj king file = 0.3054766312211483
+pawn shelter, adj king file = 0.5064685742143008
+pawn shelter, adj king file = 0.0
+pawn shelter, adj king file = 0.0
+pawn shelter, in king file = 0.0
+pawn shelter, in king file = 4.37619031426502
+pawn shelter, in king file = 5.641949771331022
+pawn shelter, in king file = 1.1242281302692974
+pawn shelter, in king file = 0.37267799624996073
+pawn shelter, in king file = 0.0
+pawn shelter, in king file = 0.0
+pawn storm, no allied pawn = 0.1428261375083551
+pawn storm, no allied pawn = 0.6718548123582124
+pawn storm, no allied pawn = 0.0
+pawn storm, no allied pawn = 0.0
+pawn storm, no allied pawn = 0.0
+pawn storm, no allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, allied pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+pawn storm, blocked enemy pawn = 0.0
+bishop pair, start = 0.7021791477646977
+bishop pair, end = 0.3054766312211134
+tempo, start = 0.6424643310462194
+tempo, end = 0.4061164310337068
+-------------------------------
+0	(w,l,d)=(0,0,0), id=2556
+1	(w,l,d)=(1,4,1), id=2484
+2	(w,l,d)=(0,0,0), id=2558
+3	(w,l,d)=(0,0,0), id=2559
+4	(w,l,d)=(7,2,3), id=2404
+5	(w,l,d)=(0,1,1), id=2532
+6	(w,l,d)=(2,0,0), id=2533
+7	(w,l,d)=(1,0,1), id=2531
+8	(w,l,d)=(6,2,2), id=2438
+9	(w,l,d)=(0,0,0), id=2563
+10	(w,l,d)=(2,0,0), id=2535
+11	(w,l,d)=(0,0,0), id=2565
+12	(w,l,d)=(0,3,1), id=2516
+13	(w,l,d)=(0,0,0), id=2561
+14	(w,l,d)=(0,0,0), id=2566
+15	(w,l,d)=(3,0,1), id=2519
+16	(w,l,d)=(0,0,0), id=2567
+17	(w,l,d)=(2,0,0), id=2538
+18	(w,l,d)=(0,0,0), id=2569
+19	(w,l,d)=(2,5,3), id=2460
+20	(w,l,d)=(0,2,0), id=2541
+21	(w,l,d)=(3,1,2), id=2542
+22	(w,l,d)=(0,0,0), id=2572
+23	(w,l,d)=(7,8,5), id=2450
+24	(w,l,d)=(0,0,0), id=2573
+25	(w,l,d)=(0,0,0), id=2568
+26	(w,l,d)=(4,6,2), id=2509
+27	(w,l,d)=(6,0,2), id=2498
+28	(w,l,d)=(4,1,1), id=2526
+29	(w,l,d)=(0,0,0), id=2576
+30	(w,l,d)=(2,0,0), id=2547
+31	(w,l,d)=(4,0,2), id=2528
+32	(w,l,d)=(0,0,0), id=2575
+33	(w,l,d)=(3,2,3), id=2502
+34	(w,l,d)=(0,0,0), id=2560
+35	(w,l,d)=(0,0,0), id=2571
+36	(w,l,d)=(0,0,0), id=2577
+37	(w,l,d)=(2,0,0), id=2552
+38	(w,l,d)=(0,0,0), id=2581
+39	(w,l,d)=(1,3,0), id=2540
+40	(w,l,d)=(0,1,1), id=2545
+41	(w,l,d)=(2,1,1), id=2548
+42	(w,l,d)=(0,0,0), id=2582
+43	(w,l,d)=(0,0,0), id=2580
+44	(w,l,d)=(0,0,0), id=2578
+45	(w,l,d)=(1,3,0), id=2546
+46	(w,l,d)=(0,0,0), id=2579
+47	(w,l,d)=(2,3,1), id=2549
+best id=2549
+material weights:
+	king = 0
+	queen = 870
+	rook = 456
+	bishop = 303
+	knight = 294
+	pawn = 100
+mobility weights:
+	king = 
+	queen = 0:(0,0), 1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,4), 6:(2,6), 7:(2,9), 8:(6,11), 9:(5,14), 10:(5,15), 11:(7,15), 12:(6,16), 13:(8,19), 14:(9,18), 15:(10,18), 16:(8,15), 17:(8,15), 18:(10,17), 19:(10,15), 20:(8,17), 21:(10,18), 22:(9,16), 23:(9,18), 24:(10,16), 25:(10,17), 26:(10,17), 27:(10,18), 28:(12,14), 29:(12,17), 30:(11,18), 31:(10,17), 
+	rook = 0:(0,1), 1:(0,0), 2:(0,0), 3:(0,7), 4:(4,13), 5:(5,24), 6:(7,30), 7:(12,34), 8:(8,41), 9:(13,52), 10:(11,61), 11:(14,64), 12:(12,66), 13:(15,60), 14:(16,71), 15:(16,69), 
+	bishop = 0:(0,0), 1:(0,0), 2:(0,0), 3:(8,5), 4:(15,14), 5:(21,20), 6:(30,20), 7:(37,31), 8:(40,32), 9:(34,31), 10:(40,41), 11:(39,38), 12:(36,42), 13:(40,13), 14:(41,47), 15:(39,42), 
+	knight = 0:(0,0), 1:(0,1), 2:(0,0), 3:(0,0), 4:(6,2), 5:(12,8), 6:(16,11), 7:(19,11), 8:(19,14), 
+	pawn = 
+danger king attacks:
+	king = 0
+	queen = 3
+	rook = 2
+	bishop = 1
+	knight = 1
+	pawn = 0
+contact check, queen = 6
+contact check, rook = 4
+king danger function:
+0:(0,0), 1:(0,0), 2:(1,0), 3:(2,0), 4:(4,0), 5:(6,0), 6:(9,0), 7:(12,0), 8:(16,0), 9:(20,0), 10:(25,0), 11:(30,0), 12:(36,0), 13:(42,0), 14:(49,0), 15:(56,0), 16:(64,0), 17:(72,0), 18:(81,0), 19:(90,0), 20:(100,0), 21:(110,0), 22:(121,0), 23:(132,0), 24:(144,0), 25:(156,0), 26:(168,0), 27:(181,0), 28:(193,0), 29:(206,0), 30:(218,0), 31:(231,0), 32:(243,0), 33:(256,0), 34:(268,0), 35:(281,0), 36:(293,0), 37:(306,0), 38:(318,0), 39:(331,0), 40:(343,0), 41:(356,0), 42:(368,0), 43:(381,0), 44:(393,0), 45:(400,0), 46:(400,0), 47:(400,0), 48:(400,0), 49:(400,0), 50:(400,0), 51:(400,0), 52:(400,0), 53:(400,0), 54:(400,0), 55:(400,0), 56:(400,0), 57:(400,0), 58:(400,0), 59:(400,0), 60:(400,0), 61:(400,0), 62:(400,0), 63:(400,0), 64:(400,0), 65:(400,0), 66:(400,0), 67:(400,0), 68:(400,0), 69:(400,0), 70:(400,0), 71:(400,0), 72:(400,0), 73:(400,0), 74:(400,0), 75:(400,0), 76:(400,0), 77:(400,0), 78:(400,0), 79:(400,0), 80:(400,0), 81:(400,0), 82:(400,0), 83:(400,0), 84:(400,0), 85:(400,0), 86:(400,0), 87:(400,0), 88:(400,0), 89:(400,0), 90:(400,0), 91:(400,0), 92:(400,0), 93:(400,0), 94:(400,0), 95:(400,0), 96:(400,0), 97:(400,0), 98:(400,0), 99:(400,0), 100:(400,0), 101:(400,0), 102:(400,0), 103:(400,0), 104:(400,0), 105:(400,0), 106:(400,0), 107:(400,0), 108:(400,0), 109:(400,0), 110:(400,0), 111:(400,0), 112:(400,0), 113:(400,0), 114:(400,0), 115:(400,0), 116:(400,0), 117:(400,0), 118:(400,0), 119:(400,0), 120:(400,0), 121:(400,0), 122:(400,0), 123:(400,0), 124:(400,0), 125:(400,0), 126:(400,0), 127:(400,0), 
+king danger squares (white perspective):
+2	0	2	3	3	2	0	2	
+2	2	4	8	8	4	2	2	
+7	10	12	12	12	12	10	7	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+15	15	15	15	15	15	15	15	
+passed pawn row weight (white perspective):
+1:(0,0), 2:(6,6), 3:(20,13), 4:(52,26), 5:(65,39), 6:(100,64), 
+isolated pawn weight, unopposed (by col):
+0:(0,2), 1:(1,2), 2:(1,0), 3:(0,0), 4:(0,0), 5:(1,0), 6:(1,2), 7:(0,2), 
+isolated pawn weight, opposed (by col):
+0:(0,0), 1:(1,0), 2:(1,1), 3:(1,0), 4:(1,0), 5:(1,1), 6:(1,0), 7:(0,0), 
+doubled pawn weight, unopposed (by col):
+0:(0,0), 1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,0), 6:(0,0), 7:(0,0), 
+doubled pawn weight, opposed (by col):
+0:(0,0), 1:(0,0), 2:(0,0), 3:(0,0), 4:(0,0), 5:(0,0), 6:(0,0), 7:(0,0), 
+backward pawn weight, unopposed (by col):
+0:(-15,-21), 1:(-22,-23), 2:(-25,-23), 3:(-25,-23), 4:(-25,-23), 5:(-25,-23), 6:(-22,-23), 7:(-15,-21), 
+backward pawn weight, opposed (by col):
+0:(-10,-14), 1:(-15,-16), 2:(-17,-16), 3:(-17,-16), 4:(-17,-16), 5:(-17,-16), 6:(-15,-16), 7:(-10,-14), 
+pawn chain weight:
+0:(2,0), 1:(3,0), 2:(3,0), 3:(5,0), 4:(5,0), 5:(3,0), 6:(3,0), 7:(2,0), 
+pawn shelter:
+  adj king file: 0:0, 1:33, 2:20, 3:7, 4:2, 5:0, 6:0, 
+  in king file: 0:0, 1:74, 2:57, 3:19, 4:6, 5:0, 6:0, 
+pawn storm:
+  no allied: 0:0, 1:1, 2:0, 3:0, 4:0, 5:0, 
+  allied: 0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 
+  blocked enemy: 0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 
+tempo = (4,0)
+bishop pair = (4,12)
+
+matchmaking...
+completed 9 / 96
+completed 27 / 96
+completed 36 / 96
+completed 45 / 96

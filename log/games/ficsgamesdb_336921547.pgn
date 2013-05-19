@@ -1,0 +1,17 @@
+[Event "FICS rated blitz game"]
+[Site "FICS freechess.org"]
+[FICSGamesDBGameNo "336921547"]
+[White "Ytzig"]
+[Black "Ribozyme"]
+[WhiteElo "2273"]
+[BlackElo "2182"]
+[TimeControl "120+12"]
+[Date "2013.05.02"]
+[Time "02:08:00"]
+[WhiteClock "0:02:00.000"]
+[BlackClock "0:02:00.000"]
+[ECO "A85"]
+[PlyCount "113"]
+[Result "1-0"]
+
+1. Nf3 {[%emt 0.0]} f5 {[%emt 0.0]} 2. d4 {[%emt 5.501]} e6 {[%emt 0.228]} 3. c4 {[%emt 18.874]} Nf6 {[%emt 0.23]} 4. Nc3 {[%emt 4.015]} Be7 {[%emt 1.101]} 5. Rb1 {[%emt 4.698]} Ne4 {[%emt 14.77]} 6. g3 {[%emt 10.794]} c5 {[%emt 14.711]} 7. Bg2 {[%emt 9.632]} O-O {[%emt 14.639]} 8. O-O {[%emt 18.968]} cxd4 {[%emt 14.498]} 9. Nxd4 {[%emt 5.25]} Nxc3 {[%emt 14.667]} 10. bxc3 {[%emt 5.071]} Na6 {[%emt 15.002]} 11. Nb5 {[%emt 5.547]} Qa5 {[%emt 16.12]} 12. Nd6 {[%emt 6.015]} Bxd6 {[%emt 14.852]} 13. Qxd6 {[%emt 5.161]} Qxa2 {[%emt 12.898]} 14. Ba3 {[%emt 5.578]} Rf7 {[%emt 7.147]} 15. Rxb7 {[%emt 44.208]} Bxb7 {[%emt 6.139]} 16. Bxb7 {[%emt 6.321]} Rb8 {[%emt 8.46]} 17. Bxa6 {[%emt 5.931]} Rb1 {[%emt 2.236]} 18. e3 {[%emt 11.985]} g5 {[%emt 17.182]} 19. Bb5 {[%emt 9.467]} Rxf1+ {[%emt 0.596]} 20. Kxf1 {[%emt 5.495]} Qb1+ {[%emt 4.1]} 21. Ke2 {[%emt 4.614]} Qc2+ {[%emt 9.486]} 22. Qd2 {[%emt 5.13]} Qb3 {[%emt 18.628]} 23. Qb2 {[%emt 5.374]} Qxb2+ {[%emt 3.43]} 24. Bxb2 {[%emt 3.717]} a6 {[%emt 20.29]} 25. Bxa6 {[%emt 10.531]} Rf8 {[%emt 0.536]} 26. Bb5 {[%emt 6.186]} Ra8 {[%emt 1.372]} 27. Bc1 {[%emt 4.52]} d6 {[%emt 2.548]} 28. e4 {[%emt 4.121]} Ra2+ {[%emt 1.434]} 29. Bd2 {[%emt 8.597]} fxe4 {[%emt 0.519]} 30. c5 {[%emt 4.154]} dxc5 {[%emt 0.805]} 31. Bc4 {[%emt 4.528]} Rb2 {[%emt 13.563]} 32. Bxe6+ {[%emt 4.453]} Kg7 {[%emt 0.332]} 33. Bd5 {[%emt 19.572]} g4 {[%emt 1.978]} 34. Bxe4 {[%emt 3.923]} Ra2 {[%emt 0.395]} 35. Bd5 {[%emt 6.071]} Ra5 {[%emt 2.589]} 36. Kd3 {[%emt 4.852]} Kf6 {[%emt 0.76]} 37. Kc4 {[%emt 4.625]} Ke7 {[%emt 27.142]} 38. Be3 {[%emt 34.903]} Kd6 {[%emt 0.237]} 39. Bf4+ {[%emt 4.277]} Ke7 {[%emt 1.628]} 40. Be4 {[%emt 4.395]} Ra2 {[%emt 27.54]} 41. Be3 {[%emt 12.967]} Ra4+ {[%emt 26.63]} 42. Kd5 {[%emt 8.049]} Kf6 {[%emt 7.474]} 43. Bxh7 {[%emt 5.478]} Ra7 {[%emt 25.259]} 44. Bd3 {[%emt 7.459]} Re7 {[%emt 26.411]} 45. Kxc5 {[%emt 16.889]} Ke5 {[%emt 7.236]} 46. c4 {[%emt 4.398]} Re8 {[%emt 25.796]} 47. Bf4+ {[%emt 15.034]} Kf6 {[%emt 24.935]} 48. Kd5 {[%emt 10.792]} Rd8+ {[%emt 4.009]} 49. Bd6 {[%emt 4.998]} Ra8 {[%emt 0.692]} 50. c5 {[%emt 4.762]} Ra5 {[%emt 25.363]} 51. Be5+ {[%emt 23.962]} Ke7 {[%emt 24.505]} 52. Bf5 {[%emt 6.966]} Ra2 {[%emt 23.768]} 53. Bd4 {[%emt 6.39]} Ra5 {[%emt 23.029]} 54. Bxg4 {[%emt 16.549]} Rb5 {[%emt 1.281]} 55. h4 {[%emt 5.544]} Kd8 {[%emt 24.066]} 56. h5 {[%emt 4.952]} Rb1 {[%emt 0.437]} 57. Bf6+ {[%emt 4.722]} {Black resigns} 1-0
