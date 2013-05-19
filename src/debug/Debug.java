@@ -41,7 +41,8 @@ public class Debug {
 		//State4 s = loadConfig(c);
 		//State4 s = loadConfig(c2);
 		
-		Position p = FenParser.parse(AdvancedTactics.apPos20);
+		//Position p = FenParser.parse(AdvancedTactics.apPos20);
+		Position p = FenParser.parse(AdvancedTactics.kbbMate1);
 		//Position p = FenParser.parse("5k2/p1p1RP1p/2q5/8/3p4/8/PP3RKP/8 w - - 1 -"); //g2g3???? - appears to be search instability error
 		//Position p = FenParser.parse("2k4r/pp3ppp/4pn2/1q6/8/1P4P1/P1P5/3R1R1K b - - - -");
 		//Position p = FenParser.parse("2k5/pp1r2b1/2p5/7P/2P2r1q/5pN1/PPb2P1P/2Q1RRK1 w - - 0 27"); //c1c2 leads to loss by checkmate

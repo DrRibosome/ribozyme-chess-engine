@@ -5,7 +5,7 @@ import search.search33.Search33v5;
 import time.TimerThread4;
 import time.TimerThread5;
 import eval.Evaluator2;
-import eval.e7.E7v6;
+import eval.e7.E7v7;
 
 public final class RibozymeEngine implements UCIEngine{
 
@@ -23,7 +23,7 @@ public final class RibozymeEngine implements UCIEngine{
 				//new SuperEvalS4V10v4();
 				//new E4(GParams1v2.buildEval());
 				//new E5v2(E5Params3.buildEval());
-				new E7v6();
+				new E7v7();
 		
 		s = new Search33v5(e, 22, true);
 	}

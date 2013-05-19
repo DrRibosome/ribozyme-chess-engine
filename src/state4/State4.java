@@ -1,5 +1,7 @@
 package state4;
 
+import eval.PositionMasks;
+
 
 
 public final class State4 {
@@ -191,8 +193,25 @@ public final class State4 {
 	
 	/** if true, game is a forced draw (via 50 move draw)*/
 	public boolean isForcedDraw(){
-		final boolean onlyKings = pieces[0] == kings[0] && pieces[1] == kings[1];
-		return drawCount >= maxDrawCount || onlyKings;
+		final long pieces1 = pieces[0];
+		final long pieces2 = pieces[1];
+		final long king1 = kings[0];
+		final long king2 = kings[1];
+		final long bishops1 = bishops[0];
+		final long bishops2 = bishops[1];
+		
+		//only king and bishop (of one square)
+		final boolean kingBishop1 = pieces1 == (king1 | bishops1) && (
+				(((PositionMasks.bishopSquareMask[0] & bishops1) == 0 && (PositionMasks.bishopSquareMask[1] & bishops1) != 0)) ||
+				(((PositionMasks.bishopSquareMask[0] & bishops1) != 0 && (PositionMasks.bishopSquareMask[1] & bishops1) == 0)));
+		final boolean kingBishop2 = pieces2 == (king2 | bishops2) && (
+				(((PositionMasks.bishopSquareMask[0] & bishops2) == 0 && (PositionMasks.bishopSquareMask[1] & bishops2) != 0)) ||
+				(((PositionMasks.bishopSquareMask[0] & bishops2) != 0 && (PositionMasks.bishopSquareMask[1] & bishops2) == 0)));
+		final boolean kingBishop = kingBishop1 | kingBishop2;
+		//final boolean kingBishop = false;
+		
+		final boolean onlyKings = pieces1 == king1 && pieces2 == king2;
+		return drawCount >= maxDrawCount || onlyKings || kingBishop;
 	}
 	
 	private final static long[] pawnColMask = new long[]{Masks.colMaskExc[7], Masks.colMaskExc[0]};

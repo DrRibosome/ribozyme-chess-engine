@@ -178,7 +178,7 @@ public class GauntletP {
 		
 		final int minCutoffScore = 800; //score before cutting off a game
 		
-		final SearchType searchType = SearchType.FixedTime;
+		final SearchType searchType = SearchType.Depth;
 
 		final int threads = 4;
 		final GauntletThread[] t = new GauntletThread[threads];
