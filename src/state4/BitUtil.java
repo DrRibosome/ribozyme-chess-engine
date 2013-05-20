@@ -1,5 +1,8 @@
 package state4;
 
+import sun.misc.Unsafe;
+import util.UnsafeUtil;
+
 public final class BitUtil {
 	private final static int[] debruijnIndex = new int[]{
 		0, 47,  1, 56, 48, 27,  2, 60,
@@ -12,12 +15,23 @@ public final class BitUtil {
 	    13, 18,  8, 12,  7,  6,  5, 63
 	};
 	private final static long debruijn64 = 0x03f79d71b4cb0a89L;
+	
+	private final static Unsafe u;
+	private final static long debruijnIndexPointer;
+	
+	static{
+		u = UnsafeUtil.getUnsafe();
+		debruijnIndexPointer = u.allocateMemory(debruijnIndex.length*4);
+		for(int a = 0; a < debruijnIndex.length; a++){
+			u.putInt(debruijnIndexPointer + a*4, debruijnIndex[a]);
+		}
+	}
 
 	/** returns the index of the least significant bit*/
-	public static int lsbIndex(long l){
-		//second method supposedly slighty faster, but noticed no improvement
-		//return index64[(int)(((l & -l) * debruijn64) >>> 58)];
-		return debruijnIndex[(int)(((l ^ (l-1)) * debruijn64) >>> 58)];
+	public static int lsbIndex(final long l){
+		//return debruijnIndex[(int)(((l ^ (l-1)) * debruijn64) >>> 58)];
+		final long index = (((l ^ (l-1)) * debruijn64) >>> 58) << 2;
+		return u.getInt(debruijnIndexPointer + index);
 	}
 	
 	/** masks the msb
@@ -38,17 +52,17 @@ public final class BitUtil {
 	}
 	
 	/** masks the lsb*/
-	public static long lsb(long l){
+	public static long lsb(final long l){
 		return l & -l;
 	}
 	
 	/** clears lsb bit*/
-	public static long lsbClear(long l){
+	public static long lsbClear(final long l){
 		return l & (l-1);
 	}
 	
 	/** return 0 if l=0, 1 otherwise*/
-	public static long isDef(long l){
+	public static long isDef(final long l){
 		//return (l&-l)>>>lsbIndex(l);
 		return (l|-l) >>> 63;
 	}

@@ -1,5 +1,8 @@
 package state4;
 
+import sun.misc.Unsafe;
+import util.UnsafeUtil;
+
 
 public final class Masks {
 	public final static long[] knightMoves;
@@ -29,13 +32,27 @@ public final class Masks {
 	/** stores masks for starting locations of rooks, indexed [player][side] with side==left? 0: 1*/
 	public final static long[][] rookStartingPos;
 	
+	private final static Unsafe u;
+	private final static long bishopMovesPointer;
+	private final static long rookMovesPointer;
 	
 	static{
+		u = UnsafeUtil.getUnsafe();
 		knightMoves = genKnightMoves();
 		kingMoves = genKingMoves();
 		rookMoves = genRookMoves();
 		bishopMoves = genBishopMoves();
 		queenMoves = genQueenMoves();
+		
+		bishopMovesPointer = u.allocateMemory(bishopMoves.length*8);
+		for(int a = 0; a < bishopMoves.length; a++){
+			u.putLong(bishopMovesPointer + a*8, bishopMoves[a]);
+		}
+		
+		rookMovesPointer = u.allocateMemory(rookMoves.length*8);
+		for(int a = 0; a < rookMoves.length; a++){
+			u.putLong(rookMovesPointer + a*8, rookMoves[a]);
+		}
 		
 		castleMask = new long[2][2];
 		castleMask[0][0] = 1L << 2; //white, castle left
@@ -249,18 +266,30 @@ public final class Masks {
 	
 	/** gets all rook moves given all pieces and location of the rook irrespective of piece side*/
 	public static long getRawRookMoves(final long aggPieces, final long rook){
-		final int pos = BitUtil.lsbIndex(rook);
+		/*final int pos = BitUtil.lsbIndex(rook);
 		final long attackMask = Masks.rookMoves[pos] & aggPieces;
 		final int hashIndex = (int)(attackMask*Magics.rookMagics[pos] >>> (64-Magics.rookBits));
-		return Magics.rookMoveLookup[pos][hashIndex];
+		return Magics.rookMoveLookup[pos][hashIndex];*/
+		
+		final int pos = BitUtil.lsbIndex(rook);
+		final int posOffset = pos << 3;
+		final long attackMask = u.getLong(rookMovesPointer+posOffset) & aggPieces;
+		final long hashIndex = attackMask*u.getLong(Magics.rookMagicsPointer+posOffset) >>> (64-Magics.rookBits);
+		return u.getLong(Magics.rookMovePointer+((Magics.rookMoveWidth*pos+hashIndex)<<3));
 	}
 
 	/** gets all bishop moves given all pieces and location of the bishop irrespective of piece side*/
 	public static long getRawBishopMoves(final long aggPieces, final long bishop){
-		final int pos = BitUtil.lsbIndex(bishop);
+		/*final int pos = BitUtil.lsbIndex(bishop);
 		final long attackMask = Masks.bishopMoves[pos] & aggPieces;
 		final int hashIndex = (int)(attackMask*Magics.bishopMagics[pos] >>> (64-Magics.bishopBits));
-		return Magics.bishopMoveLookup[pos][hashIndex];
+		return Magics.bishopMoveLookup[pos][hashIndex];*/
+		
+		final int pos = BitUtil.lsbIndex(bishop);
+		final int posOffset = pos << 3;
+		final long attackMask = u.getLong(bishopMovesPointer+posOffset) & aggPieces;
+		final long hashIndex = attackMask*u.getLong(Magics.bishopMagicsPointer+posOffset) >>> (64-Magics.bishopBits);
+		return u.getLong(Magics.bishopMovePointer+((Magics.bishopMoveWidth*pos+hashIndex)<<3));
 	}
 
 	/** gets all queen moves given all pieces and location of the queen irrespective of piece side*/

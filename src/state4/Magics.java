@@ -1,9 +1,12 @@
 package state4;
 
+import sun.misc.Unsafe;
+import util.UnsafeUtil;
+
+
 public final class Magics {
 
 	public final static int rookBits = 13;
-	//public final static int bishopBits = 13;
 	public final static int bishopBits = 10;
 	
 	public final static long[] rookMagics = new long[]{
@@ -25,26 +28,6 @@ public final class Magics {
 		806489793952657242L, 910770967304519151L, -2836178793085402937L, -754954962541845742L, 
 	};
 	
-	public final static long[] bishopMagics13 = new long[]{
-		2523233132603528085L, 8259313256165870905L, -9020163950257626030L, -3612100494069245884L, 
-		8136772248689801565L, 901382561930015612L, -1131573676857885099L, 5583380927781306936L, 
-		-2190048132879453851L, -2502913929515884081L, 2634958233811600184L, -6792669034073632219L, 
-		4120433874021970603L, 473290789989760025L, 7536043374567108016L, -2994409298235861382L, 
-		-5735799713802031133L, -6226704586085296629L, -6506585112572458148L, -5701822301133848539L, 
-		1691446810754280998L, -8543088375628745919L, 8082337792106676680L, 213132206219714504L, 
-		3729780782318263787L, 4622376521873879567L, -4983917282611244920L, 2465126343979023750L, 
-		-3606486529441648287L, 3364568396558166488L, -7166171444921095294L, 5174977108046744522L, 
-		-1790730113918979986L, 7048309629221521873L, 8071941499193743854L, 2286318108264151307L, 
-		5816533350272870376L, 5042773026605804433L, -8925876530140179653L, 3997332014831582240L, 
-		6999573680211867519L, 24840656579406994L, -8188264129736475348L, 5342974132414000069L, 
-		-5750797416098520971L, -3870004610584875081L, 4839649836573067215L, 4494798774261646344L, 
-		-8407746387742526994L, 4882222550493268887L, 7292975526718448886L, -4981899304161207577L, 
-		1496293791482180856L, 7927125562067981143L, 3076918678625264650L, 4990517485935696557L, 
-		2382130331424258321L, -6012708361191979704L, 2779118874285752923L, 4899958942284312015L, 
-		-3690180453203987966L, -7374470336247278412L, 1352582498194121977L, 6510700682817015918L, 
-	};
-	
-	//10 bit bishop magics, swap in later to check for performance gains
 	public final static long[] bishopMagics = new long[]{
 		66087181118170470L, -1709495572912335440L, -8906863796069639179L, -1737310793190149664L, 
 		1755975247494236492L, -8667806250388256867L, -7160235907804974041L, -256691538877156560L, 
@@ -67,6 +50,17 @@ public final class Magics {
 	public final static long[][] rookMoveLookup;
 	public final static long[][] bishopMoveLookup;
 	
+	/** pointer to raw memory allocation of bishop movement array*/
+	public final static long bishopMovePointer;
+	/** width of the bishop movement array*/
+	public final static int bishopMoveWidth;
+	/** pointer to raw memory allocation of bishop magics*/
+	public final static long bishopMagicsPointer;
+	
+	public final static long rookMovePointer;
+	public final static int rookMoveWidth;
+	public final static long rookMagicsPointer;
+	
 	static {
 		final int[] rookOffsets = new int[]{
 				1,-1,8,-8
@@ -77,5 +71,37 @@ public final class Magics {
 				7,9,-7,-9
 		};
 		bishopMoveLookup = HashGenerator.genMapping(Masks.bishopMoves, bishopOffsets, bishopMagics, bishopBits, HashGenerator.PIECE_TYPE_BISHOP);
+
+		//raw memory manipulations --------------------------------------
+		
+		final Unsafe u = UnsafeUtil.getUnsafe();
+		
+		//raw memory bishop magics
+		bishopMagicsPointer = u.allocateMemory(bishopMagics.length*8);
+		for(int a = 0; a < bishopMagics.length; a++){
+			u.putLong(bishopMagicsPointer + a*8, bishopMagics[a]);
+		}
+		
+		//raw memory bishop moves
+		bishopMoveWidth = bishopMoveLookup[0].length;
+		bishopMovePointer = u.allocateMemory(bishopMoveLookup.length*bishopMoveLookup[0].length*8);
+		for(int a = 0; a < bishopMoveLookup.length; a++){
+			for(int q = 0; q < bishopMoveLookup[0].length; q++){
+				u.putLong(bishopMovePointer+(a*bishopMoveWidth+q)*8, bishopMoveLookup[a][q]);
+			}
+		}
+		
+		//raw memory rook moves
+		rookMagicsPointer = u.allocateMemory(rookMagics.length*8);
+		for(int a = 0; a < rookMagics.length; a++){
+			u.putLong(rookMagicsPointer + a*8, rookMagics[a]);
+		}
+		rookMoveWidth = rookMoveLookup[0].length;
+		rookMovePointer = u.allocateMemory(rookMoveLookup.length*rookMoveLookup[0].length*8);
+		for(int a = 0; a < rookMoveLookup.length; a++){
+			for(int q = 0; q < rookMoveLookup[0].length; q++){
+				u.putLong(rookMovePointer+(a*rookMoveWidth+q)*8, rookMoveLookup[a][q]);
+			}
+		}
 	}
 }
