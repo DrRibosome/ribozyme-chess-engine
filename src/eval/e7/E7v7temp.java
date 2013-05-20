@@ -533,20 +533,20 @@ public final class E7v7temp implements Evaluator2{
 		}
 		w.add(-kingPressureScore, 0);*/
 		
-		kingDangerScore += evalKingPressureDanger3(kingIndex, player, s, attackMask);
+		kingDangerScore += evalKingPressureDanger3(kingIndex, player, s, attackMask[player]);
 		
 		return kingDangerScore;
 	}
 	
 	private static int evalKingPressureDanger3(final int kingIndex, final int player,
-			final State4 s, final long[] attackMask){
+			final State4 s, final long alliedAttackMask){
 		
 		final long king = 1L << kingIndex;
 		final long agg = s.pieces[0] | s.pieces[1];
 		int index = 0;
 		
 		final long kingRing = Masks.getRawKingMoves(king);
-		final long alliedAttacks = attackMask[player];
+		final long alliedAttacks = alliedAttackMask;
 		final long undefended = kingRing & ~alliedAttacks;
 		final long rookContactCheckMask = kingRing &
 				~(PositionMasks.pawnAttacks[0][kingIndex] | PositionMasks.pawnAttacks[1][kingIndex]);
