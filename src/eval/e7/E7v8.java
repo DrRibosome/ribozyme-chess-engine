@@ -4,7 +4,6 @@ import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
-import eval.EvalParameters;
 import eval.Evaluator2;
 import eval.PositionMasks;
 import eval.Weight;
