@@ -9,8 +9,8 @@ import eval.Evaluator2;
 import eval.PositionMasks;
 import eval.Weight;
 
-/** stockfish style weights added*/
-public final class E7v7temp implements Evaluator2{
+/** speed improvements in mobility*/
+public final class E7v8 implements Evaluator2{
 	
 	/**
 	 * gives bonus multiplier to the value of sliding pieces
@@ -152,7 +152,7 @@ public final class E7v7temp implements Evaluator2{
 		};
 	}
 	
-	public E7v7temp(){
+	public E7v8(){
 		int startMaterial = (
 				  materialWeights[State4.PIECE_TYPE_PAWN]*8
 				+ materialWeights[State4.PIECE_TYPE_KNIGHT]*2
