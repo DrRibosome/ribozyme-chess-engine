@@ -753,9 +753,15 @@ public final class E7v8 implements Evaluator2{
 		int mobScore = 0;
 		final long enemyPawnAttacks = Masks.getRawPawnAttacks(1-player, s.pawns[1-player]);
 		
+		final long allied = s.pieces[player];
+		final long enemy = s.pieces[1-player];
+		final long agg = allied | enemy;
+		
 		long bishopAttackMask = 0;
 		for(long bishops = s.bishops[player]; bishops != 0; bishops &= bishops-1){
-			final long moves = State4.getBishopMoves(player, s.pieces, bishops&-bishops) & ~enemyPawnAttacks;
+			final long b = bishops & -bishops;
+			final long rawMoves = Masks.getRawBishopMoves(agg, b);
+			final long moves = rawMoves & ~allied & ~enemyPawnAttacks;
 			final int count = (int)BitUtil.getSetBits(moves);
 			mobScore += multWeight(mobilityWeights[State4.PIECE_TYPE_BISHOP][count], clutterMult);
 			bishopAttackMask |= moves;
@@ -763,7 +769,9 @@ public final class E7v8 implements Evaluator2{
 
 		long knightAttackMask = 0;
 		for(long knights = s.knights[player]; knights != 0; knights &= knights-1){
-			final long moves = State4.getKnightMoves(player, s.pieces, knights&-knights) & ~enemyPawnAttacks;
+			final long k = knights & -knights;
+			final long rawMoves = Masks.getRawKnightMoves(k);
+			final long moves = rawMoves & ~allied & ~enemyPawnAttacks;
 			final int count = (int)BitUtil.getSetBits(moves);
 			mobScore += multWeight(mobilityWeights[State4.PIECE_TYPE_KNIGHT][count], clutterMult);
 			knightAttackMask |= moves;
@@ -777,7 +785,8 @@ public final class E7v8 implements Evaluator2{
 		final int alliedKingRow = alliedKingIndex >>> 3;
 		for(long rooks = s.rooks[player]; rooks != 0; rooks &= rooks-1){
 			final long r = rooks&-rooks;
-			final long moves = State4.getRookMoves(player, s.pieces, r) & ~enemyPawnAttacks;
+			final long rawMoves = Masks.getRawRookMoves(agg, r);
+			final long moves = rawMoves & ~allied & ~enemyPawnAttacks;
 			final int moveCount = (int)BitUtil.getSetBits(moves);
 			mobScore += multWeight(mobilityWeights[State4.PIECE_TYPE_ROOK][moveCount], clutterMult);
 			rookAttackMask |= moves;
@@ -817,13 +826,14 @@ public final class E7v8 implements Evaluator2{
 		long queenAttackMask = 0;
 		for(long queens = s.queens[player]; queens != 0; queens &= queens-1){
 			final long q = queens&-queens;
-			final long moves = State4.getQueenMoves(player, s.pieces, q) & ~enemyPawnAttacks;
+			final long rawMoves = Masks.getRawQueenMoves(agg, q);
+			final long moves = rawMoves & ~allied & ~enemyPawnAttacks;
 			final int count = (int)BitUtil.getSetBits(moves);
 			mobScore += multWeight(mobilityWeights[State4.PIECE_TYPE_QUEEN][count], clutterMult);
 			queenAttackMask |= moves;
 		}
 		
-		final long pawnAttackMask = Masks.getRawPawnAttacks(player, s.pawns[player]) & ~s.pieces[player];
+		final long pawnAttackMask = Masks.getRawPawnAttacks(player, s.pawns[player]) & ~allied;
 		attackMask[player] = bishopAttackMask | knightAttackMask | rookAttackMask | queenAttackMask | pawnAttackMask;
 		
 		return mobScore;
