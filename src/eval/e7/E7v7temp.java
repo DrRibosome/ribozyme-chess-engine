@@ -754,17 +754,12 @@ public final class E7v7temp implements Evaluator2{
 		int mobScore = 0;
 		final long enemyPawnAttacks = Masks.getRawPawnAttacks(1-player, s.pawns[1-player]);
 		
-
 		long bishopAttackMask = 0;
 		for(long bishops = s.bishops[player]; bishops != 0; bishops &= bishops-1){
 			final long moves = State4.getBishopMoves(player, s.pieces, bishops&-bishops) & ~enemyPawnAttacks;
 			final int count = (int)BitUtil.getSetBits(moves);
 			mobScore += multWeight(mobilityWeights[State4.PIECE_TYPE_BISHOP][count], clutterMult);
 			bishopAttackMask |= moves;
-			
-			
-			
-			
 		}
 
 		long knightAttackMask = 0;
@@ -774,24 +769,6 @@ public final class E7v7temp implements Evaluator2{
 			mobScore += multWeight(mobilityWeights[State4.PIECE_TYPE_KNIGHT][count], clutterMult);
 			knightAttackMask |= moves;
 		}
-		
-		//===============================
-		//note: even though commented out, slight indication not an improvement
-		//results for testing (without - with): (w0,w1,d) = (21,16,29)
-		//===============================
-		
-		//add enemy minor piece attacks
-		//----------------------------------------
-		/*for(long bishops = s.bishops[1-player]; bishops != 0; bishops &= bishops-1){
-			final long moves = State4.getBishopMoves(1-player, s.pieces, bishops&-bishops);
-			enemyAttacks |= moves;
-		}
-		for(long knights = s.knights[1-player]; knights != 0; knights &= knights-1){
-			final long moves = State4.getKnightMoves(1-player, s.pieces, knights&-knights);
-			enemyAttacks |= moves;
-		}*/
-		//----------------------------------------
-		
 
 		long rookAttackMask = 0;
 		final long allPieces = s.pieces[0]|s.pieces[1];
@@ -837,14 +814,6 @@ public final class E7v7temp implements Evaluator2{
 				}
 			}
 		}
-		
-		//add enemy rook attacks
-		//----------------------------------------
-		/*for(long rooks = s.rooks[1-player]; rooks != 0; rooks &= rooks-1){
-			final long moves = State4.getRookMoves(1-player, s.pieces, rooks&-rooks);
-			enemyAttacks |= moves;
-		}*/
-		//----------------------------------------
 
 		long queenAttackMask = 0;
 		for(long queens = s.queens[player]; queens != 0; queens &= queens-1){
