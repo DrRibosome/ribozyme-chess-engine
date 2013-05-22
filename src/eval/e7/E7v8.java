@@ -6,7 +6,6 @@ import state4.MoveEncoder;
 import state4.State4;
 import eval.Evaluator2;
 import eval.PositionMasks;
-import eval.Weight;
 
 /** speed improvements in mobility*/
 public final class E7v8 implements Evaluator2{
@@ -164,7 +163,7 @@ public final class E7v8 implements Evaluator2{
 				+ materialWeights[State4.PIECE_TYPE_QUEEN]
 				) * 2;
 		
-		margin = Weight.margin(startMaterial, endMaterial);
+		margin = margin(startMaterial, endMaterial);
 	}
 	
 	private final static int weightValueMask = 0x7FFF;
@@ -191,11 +190,21 @@ public final class E7v8 implements Evaluator2{
 		final int shifted = weight >>> 16;
 		return (shifted & weightValueMask) - (shifted & weightSignMask);
 	}
+	
+	/**  calculates the margin to use in {@link #getScale(int, int, int)}*/
+	private static int margin(final int startMaterial, final int endMaterial){
+		return endMaterial-startMaterial;
+	}
+	
+	/** gets the interpolatino factor for the weight*/
+	private static double getScale(final int totalMaterialScore, final int endMaterial, final int margin){
+		return min(1-(endMaterial-totalMaterialScore)*1./margin, 1);
+	}
 
 	@Override
 	public int eval(State4 s, int player) {
 		final int totalMaterialScore = materialScore[0]+materialScore[1];
-		final double scale = Weight.getScale(totalMaterialScore, endMaterial, margin);
+		final double scale = getScale(totalMaterialScore, endMaterial, margin);
 		
 		
 
@@ -541,12 +550,13 @@ public final class E7v8 implements Evaluator2{
 			final State4 s, final long alliedAttackMask){
 		
 		final long king = 1L << kingIndex;
-		final long agg = s.pieces[0] | s.pieces[1];
+		final long allied = s.pieces[player];
+		final long enemy = s.pieces[1-player];
+		final long agg = allied | enemy;
 		int index = 0;
 		
 		final long kingRing = Masks.getRawKingMoves(king);
-		final long alliedAttacks = alliedAttackMask;
-		final long undefended = kingRing & ~alliedAttacks;
+		final long undefended = kingRing & ~alliedAttackMask;
 		final long rookContactCheckMask = kingRing &
 				~(PositionMasks.pawnAttacks[0][kingIndex] | PositionMasks.pawnAttacks[1][kingIndex]);
 		final long bishopContactCheckMask = kingRing & ~rookContactCheckMask;
@@ -562,8 +572,8 @@ public final class E7v8 implements Evaluator2{
 		for(long tempQueens = queens; tempQueens != 0; tempQueens &= tempQueens-1){
 			final long q = tempQueens & -tempQueens;
 			final long qAgg = agg & ~q;
-			final long queenMoves = State4.getQueenMoves(1-player, s.pieces, q) & undefended;
-			for(long temp = queenMoves & ~alliedAttacks; temp != 0; temp &= temp-1){
+			final long queenMoves = Masks.getRawQueenMoves(agg, q) & ~enemy & undefended;
+			for(long temp = queenMoves & ~alliedAttackMask; temp != 0; temp &= temp-1){
 				final long pos = temp & -temp;
 				if((pos & undefended) != 0){
 					final long aggPieces = qAgg | pos;
@@ -591,8 +601,8 @@ public final class E7v8 implements Evaluator2{
 		for(long tempRooks = rooks; tempRooks != 0; tempRooks &= tempRooks-1){
 			final long r = tempRooks & -tempRooks;
 			final long rAgg = agg & ~r;
-			final long rookMoves = State4.getRookMoves(1-player, s.pieces, r) & undefended;
-			for(long temp = rookMoves & ~alliedAttacks; temp != 0; temp &= temp-1){
+			final long rookMoves = Masks.getRawRookMoves(agg, r) & ~enemy & undefended;
+			for(long temp = rookMoves & ~alliedAttackMask; temp != 0; temp &= temp-1){
 				final long pos = temp & -temp;
 				if((pos & undefended) != 0){
 					final long aggPieces = rAgg | pos;
@@ -621,8 +631,8 @@ public final class E7v8 implements Evaluator2{
 		for(long tempBishops = bishops; tempBishops != 0; tempBishops &= tempBishops-1){
 			final long b = tempBishops & -tempBishops;
 			final long bAgg = agg & ~b;
-			final long bishopMoves = State4.getBishopMoves(1-player, s.pieces, b) & undefended;
-			for(long temp = bishopMoves & ~alliedAttacks; temp != 0; temp &= temp-1){
+			final long bishopMoves = Masks.getRawBishopMoves(agg, b) & ~enemy & undefended;
+			for(long temp = bishopMoves & ~alliedAttackMask; temp != 0; temp &= temp-1){
 				final long pos = temp & -temp;
 				if((pos & undefended) != 0){
 					final long aggPieces = bAgg | pos;
@@ -650,8 +660,8 @@ public final class E7v8 implements Evaluator2{
 		for(long tempKnights = knights; tempKnights != 0; tempKnights &= tempKnights-1){
 			final long k = tempKnights & -tempKnights;
 			final long kAgg = agg & ~k;
-			final long knightMoves = State4.getKnightMoves(1-player, s.pieces, k) & undefended;
-			for(long temp = knightMoves & ~alliedAttacks; temp != 0; temp &= temp-1){
+			final long knightMoves = Masks.getRawKnightMoves(k) & ~enemy & undefended;
+			for(long temp = knightMoves & ~alliedAttackMask; temp != 0; temp &= temp-1){
 				final long pos = temp & -temp;
 				if((pos & undefended) != 0){
 					final long aggPieces = kAgg | pos;

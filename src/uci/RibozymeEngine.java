@@ -2,10 +2,9 @@ package uci;
 
 import search.Search4;
 import search.search33.Search33v5;
-import time.TimerThread4;
 import time.TimerThread5;
 import eval.Evaluator2;
-import eval.e7.E7v7;
+import eval.e7.E7v8;
 
 public final class RibozymeEngine implements UCIEngine{
 
@@ -15,15 +14,10 @@ public final class RibozymeEngine implements UCIEngine{
 	private Thread t;
 	private final int[] moveStore = new int[2];
 	private Position p;
-	private TimerThread4.Controller c;
 	
 	public RibozymeEngine(){
 		
-		Evaluator2 e = 
-				//new SuperEvalS4V10v4();
-				//new E4(GParams1v2.buildEval());
-				//new E5v2(E5Params3.buildEval());
-				new E7v7();
+		Evaluator2 e = new E7v8();
 		
 		s = new Search33v5(e, 22, true);
 	}
