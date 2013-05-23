@@ -14,7 +14,7 @@ import state4.State4;
 import eval.Evaluator2;
 
 /** same as v4 but with much more conservative futility pruning*/
-public final class Search33v5 implements Search4{
+public final class Search33v6 implements Search4{
 	public final static class SearchStat32k extends SearchStat{
 		/** scores returned from quiet search without bottoming out*/
 		public long forcedQuietCutoffs;
@@ -39,8 +39,7 @@ public final class Search33v5 implements Search4{
 		public final int[] ranks = new int[defSize];
 		public final long[] pawnMoves = new long[4];
 		public int length;
-		public final boolean[] kingAttacked = new boolean[2];
-		public final long[] upTakes = new long[7];
+		public boolean kingAttacked;
 		public boolean skipNullMove = false;
 		/** holds killer moves as first 12 bits (ie, masked 0xFFF) of move encoding*/
 		public final long[] killer = new long[2];
@@ -118,11 +117,11 @@ public final class Search33v5 implements Search4{
 	
 	private final AtomicBoolean cutoffSearch = new AtomicBoolean(false);
 	
-	public Search33v5(Evaluator2 e, int hashSize){
+	public Search33v6(Evaluator2 e, int hashSize){
 		this(e, hashSize, false);
 	}
 	
-	public Search33v5(Evaluator2 e, int hashSize, boolean printPV){
+	public Search33v6(Evaluator2 e, int hashSize, boolean printPV){
 		this.e = e;
 		
 		//m = new ZMap3(hashSize);
@@ -409,8 +408,9 @@ public final class Search33v5 implements Search4{
 		if(e != null){
 			stats.hashHits++;
 			if(e.depth >= depth){
-				if(pv ? e.cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (e.score >= beta?
-						e.cutoffType == TTEntry.CUTOFF_TYPE_LOWER: e.cutoffType == TTEntry.CUTOFF_TYPE_UPPER)){
+				final int cutoffType = e.cutoffType;
+				if(pv ? cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (e.score >= beta?
+						cutoffType == TTEntry.CUTOFF_TYPE_LOWER: cutoffType == TTEntry.CUTOFF_TYPE_UPPER)){
 					
 					if(stackIndex-1 >= 0 && e.score >= beta){
 						attemptKillerStore(e.move, ml.skipNullMove, stack[stackIndex-1]);
@@ -447,46 +447,73 @@ public final class Search33v5 implements Search4{
 		}*/
 		
 		//load killer moves
+		final long l1killer1;
+		final long l1killer2;
+		final long l2killer1;
+		final long l2killer2;
 		if(stackIndex-1 >= 0 && !ml.skipNullMove){
 			final MoveList prev = stack[stackIndex-1];
-			if(prev.killer[0] != 0 && isPseudoLegal(player, prev.killer[0], s)){
-				assert MoveEncoder.getPos1(prev.killer[0]) != MoveEncoder.getPos2(prev.killer[0]);
-				pieceMasks[w] = 1L<<MoveEncoder.getPos1(prev.killer[0]);
-				moves[w] = 1L<<MoveEncoder.getPos2(prev.killer[0]);
+			final long l1killer1Temp = prev.killer[0];
+			if(l1killer1Temp != 0 && isPseudoLegal(player, l1killer1Temp, s)){
+				assert MoveEncoder.getPos1(l1killer1Temp) != MoveEncoder.getPos2(l1killer1Temp);
+				pieceMasks[w] = 1L << MoveEncoder.getPos1(l1killer1Temp);
+				moves[w] = 1L << MoveEncoder.getPos2(l1killer1Temp);
 				ranks[w++] = killerMoveRank;
+				l1killer1 = l1killer1Temp & 0xFFFL;
+			} else{
+				l1killer1 = 0;
 			}
-			if(prev.killer[1] != 0 && isPseudoLegal(player, prev.killer[1], s)){
-				assert MoveEncoder.getPos1(prev.killer[1]) != MoveEncoder.getPos2(prev.killer[1]);
-				pieceMasks[w] = 1L<<MoveEncoder.getPos1(prev.killer[1]);
-				moves[w] = 1L<<MoveEncoder.getPos2(prev.killer[1]);
+			final long l1killer2Temp = prev.killer[1];
+			if(l1killer2Temp != 0 && isPseudoLegal(player, l1killer2Temp, s)){
+				assert MoveEncoder.getPos1(l1killer2Temp) != MoveEncoder.getPos2(l1killer2Temp);
+				pieceMasks[w] = 1L << MoveEncoder.getPos1(l1killer2Temp);
+				moves[w] = 1L << MoveEncoder.getPos2(l1killer2Temp);
 				ranks[w++] = killerMoveRank;
+				l1killer2 = l1killer2Temp & 0xFFFL;
+			} else{
+				l1killer2 = 0;
 			}
 			
 			if(stackIndex-3 >= 0){
 				final MoveList prev2 = stack[stackIndex-3];
-				if(prev2.killer[0] != 0 && isPseudoLegal(player, prev2.killer[0], s)){
-					assert MoveEncoder.getPos1(prev2.killer[0]) != MoveEncoder.getPos2(prev2.killer[0]);
-					pieceMasks[w] = 1L<<MoveEncoder.getPos1(prev2.killer[0]);
-					moves[w] = 1L<<MoveEncoder.getPos2(prev2.killer[0]);
+				final long l2killer1Temp = prev2.killer[0];
+				if(l2killer1Temp != 0 && isPseudoLegal(player, l2killer1Temp, s)){
+					assert MoveEncoder.getPos1(l2killer1Temp) != MoveEncoder.getPos2(l2killer1Temp);
+					pieceMasks[w] = 1L << MoveEncoder.getPos1(l2killer1Temp);
+					moves[w] = 1L << MoveEncoder.getPos2(l2killer1Temp);
 					ranks[w++] = killerMoveRank;
+					l2killer1 = l2killer1Temp & 0xFFFL;
+				} else{
+					l2killer1 = 0;
 				}
-				if(prev2.killer[1] != 0 && isPseudoLegal(player, prev2.killer[1], s)){
-					assert MoveEncoder.getPos1(prev2.killer[1]) != MoveEncoder.getPos2(prev2.killer[1]);
-					pieceMasks[w] = 1L<<MoveEncoder.getPos1(prev2.killer[1]);
-					moves[w] = 1L<<MoveEncoder.getPos2(prev2.killer[1]);
+				final long l2killer2Temp = prev2.killer[1];
+				if(l2killer2Temp != 0 && isPseudoLegal(player, l2killer2Temp, s)){
+					assert MoveEncoder.getPos1(l2killer2Temp) != MoveEncoder.getPos2(l2killer2Temp);
+					pieceMasks[w] = 1L << MoveEncoder.getPos1(l2killer2Temp);
+					moves[w] = 1L << MoveEncoder.getPos2(l2killer2Temp);
 					ranks[w++] = killerMoveRank;
+					l2killer2 = l2killer2Temp & 0xFFFL;
+				} else{
+					l2killer2 = 0;
 				}
+			} else{
+				l2killer1 = 0;
+				l2killer2 = 0;
 			}
+		} else{
+			l1killer1 = 0;
+			l1killer2 = 0;
+			l2killer1 = 0;
+			l2killer2 = 0;
 		}
 		
-		ml.kingAttacked[player] = isChecked(player, s);
-		ml.kingAttacked[1-player] = isChecked(1-player, s);
+		final boolean alliedKingAttacked = isChecked(player, s);
+		ml.kingAttacked = alliedKingAttacked;
 		
 		//null move pruning
 		final boolean threatMove; //true if opponent can make a move that causes null-move fail low
 		final boolean hasNonPawnMaterial = s.pieceCounts[player][0]-s.pieceCounts[player][State4.PIECE_TYPE_PAWN] > 1;
-		if(!pv && !ml.skipNullMove && depth > 0 &&  !cutoffSearch.get() &&
-				!ml.kingAttacked[player] && hasNonPawnMaterial){
+		if(!pv && !ml.skipNullMove && depth > 0 && !alliedKingAttacked && hasNonPawnMaterial){
 			
 			final double r = 3 + depth/4;
 			
@@ -524,13 +551,15 @@ public final class Search33v5 implements Search4{
 				if(nullTTEntry != null && nullTTEntry.move != 0){
 					ml.killer[0] = nullTTEntry.move & 0xFFFL; //doesnt matter which we store to, killer is at node start
 				}
+			} else{ //case alpha < n < beta
+				alpha = n;
 			}
 		} else{
 			threatMove = false;
 		}
 
 		//internal iterative deepening
-		if(!tteMove && depth >= (pv? 5: 8) && (pv || (!ml.kingAttacked[player] && lazyEval+256 >= beta))){
+		if(!tteMove && depth >= (pv? 5: 8) && (pv || (!alliedKingAttacked && lazyEval+256 >= beta))){
 			final double d = pv? depth-2: depth/2;
 			stack[stackIndex+1].skipNullMove = true;
 			recurse(player, alpha, beta, d, pv, rootNode, stackIndex+1, s);
@@ -569,8 +598,8 @@ public final class Search33v5 implements Search4{
 		final int drawCount = s.drawCount; //stored for error checking
 		final long pawnZkey = s.pawnZkey(); //stored for error checking
 		
-		boolean hasMove = ml.kingAttacked[player];
-		final boolean inCheck = ml.kingAttacked[player];
+		boolean hasMove = alliedKingAttacked;
+		final boolean inCheck = alliedKingAttacked;
 		for(int i = 0; i < length; i++){
 			for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
 				moveCount++;
@@ -591,7 +620,10 @@ public final class Search33v5 implements Search4{
 					final boolean isPassedPawnPush = MoveEncoder.getMovePieceType(encoding) == State4.PIECE_TYPE_PAWN &&
 							(Masks.passedPawnMasks[player][MoveEncoder.getPos1(encoding)] & s.pawns[1-player]) == 0;
 					final boolean isTTEMove = tteMove && encoding == tteMoveEncoding;
-					final boolean isKillerMove = (encoding&0xFFF) == ml.killer[0] || (encoding&0xFFF) == ml.killer[1];
+					
+					final long rawEn = encoding & 0xFFFL; //raw encoding
+					final boolean isKillerMove = rawEn == l1killer1 || rawEn == l1killer2 ||
+												rawEn == l2killer1 || rawEn == l2killer2;
 					
 					final boolean isDangerous = givesCheck ||
 							MoveEncoder.isCastle(encoding) != 0 ||
@@ -727,13 +759,14 @@ public final class Search33v5 implements Search4{
 		if(e != null){
 			stats.hashHits++;
 			if(e.depth >= depth){
-				if(pv ? e.cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (e.score >= beta?
-						e.cutoffType == TTEntry.CUTOFF_TYPE_LOWER: e.cutoffType == TTEntry.CUTOFF_TYPE_UPPER)){
+				final int cutoffType = e.cutoffType;
+				if(pv ? cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (e.score >= beta?
+						cutoffType == TTEntry.CUTOFF_TYPE_LOWER: cutoffType == TTEntry.CUTOFF_TYPE_UPPER)){
 					return e.score;
 				}
 			}
 			if(e.move != 0){
-				long encoding = e.move;
+				final long encoding = e.move;
 				pieceMasks[w] = 1L<<MoveEncoder.getPos1(encoding);
 				moves[w] = 1L<<MoveEncoder.getPos2(encoding);
 				ranks[w++] = tteMoveRank;
@@ -743,10 +776,17 @@ public final class Search33v5 implements Search4{
 		MoveList ml = stack[stackIndex];
 
 		int bestScore;
-		ml.kingAttacked[player] = State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
-		if(ml.kingAttacked[player]){
+		ml.kingAttacked = State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
+		if(ml.kingAttacked){
 			bestScore = -77777; //NOTE: THIS CONDITION WILL PROBABLY NEVER BE CHECKED
 		} else{
+			if(!pv){
+				final int lazy = this.e.lazyEval(s, player);
+				if(lazy-100 >= beta){
+					return lazy; 
+				}
+			}
+			
 			bestScore = this.e.eval(s, player);
 			if(bestScore >= beta){ //standing pat
 				return bestScore;
@@ -754,7 +794,6 @@ public final class Search33v5 implements Search4{
 				alpha = bestScore;
 			}
 		}
-		ml.kingAttacked[1-player] = State4.isAttacked2(BitUtil.lsbIndex(s.kings[1-player]), player, s);
 		
 		ml.length = w;
 		genMoves(player, s, ml, m, true);
@@ -828,7 +867,7 @@ public final class Search33v5 implements Search4{
 	 * @param s
 	 * @return
 	 */
-	private static boolean isPseudoLegal(final int player, final long encoding, State4 s){
+	private static boolean isPseudoLegal(final int player, final long encoding, final State4 s){
 		final int pos1 = MoveEncoder.getPos1(encoding);
 		final int pos2 = MoveEncoder.getPos2(encoding);
 		final int takenType = MoveEncoder.getTakenType(encoding);
@@ -892,7 +931,7 @@ public final class Search33v5 implements Search4{
 	
 	/** record moves as blocks*/
 	private static void recordMoves(final int player, final int pieceMovingType, final long pieceMask,
-			final long moves, final long enemyPawnAttacks, final MoveList ml, final State4 s,
+			final long moves, final long enemyPawnAttacks, final long upTakeMask, final MoveList ml, final State4 s,
 			final boolean quiesce){
 		final long piece = pieceMask&-pieceMask;
 		if(piece != 0 && moves != 0){
@@ -900,7 +939,7 @@ public final class Search33v5 implements Search4{
 			int w = ml.length;
 			if((moves & enemy) != 0){
 				
-				final long upTakes = moves & enemy & ml.upTakes[pieceMovingType];
+				final long upTakes = moves & enemy & upTakeMask;
 				if(upTakes != 0){
 					ml.pieceMasks[w] = piece;
 					ml.moves[w] = upTakes;
@@ -908,7 +947,7 @@ public final class Search33v5 implements Search4{
 					w++;
 				}
 				
-				final long takes = moves & enemy & ~ml.upTakes[pieceMovingType];
+				final long takes = moves & enemy & ~upTakeMask;
 				if(takes != 0){
 					ml.pieceMasks[w] = piece;
 					ml.moves[w] = takes;
@@ -940,55 +979,40 @@ public final class Search33v5 implements Search4{
 	}
 	
 	private static void genMoves(final int player, final State4 s, final MoveList ml, final Hash m, final boolean quiece){
-		ml.upTakes[State4.PIECE_TYPE_KING] = s.pieces[1-player];
-		ml.upTakes[State4.PIECE_TYPE_QUEEN] = s.queens[1-player]|s.kings[1-player];
-		ml.upTakes[State4.PIECE_TYPE_ROOK] = ml.upTakes[State4.PIECE_TYPE_QUEEN]|s.rooks[1-player];
-		ml.upTakes[State4.PIECE_TYPE_KNIGHT] = ml.upTakes[State4.PIECE_TYPE_ROOK]|s.knights[1-player]|s.bishops[1-player];
-		ml.upTakes[State4.PIECE_TYPE_BISHOP] = ml.upTakes[State4.PIECE_TYPE_KNIGHT];
-		ml.upTakes[State4.PIECE_TYPE_PAWN] = s.pieces[1-player];
-		
 		final long enemyPawnAttacks = Masks.getRawPawnAttacks(1-player, s.pawns[1-player]) & ~s.pieces[1-player];
+		final boolean alliedKingAttacked = ml.kingAttacked;
 		
-		if(ml.kingAttacked[player]){
+		final long agg = s.pieces[0] | s.pieces[1];
+		final long allied = s.pieces[player];
+		
+		final long kingUpTakes = s.pieces[1-player];
+		if(alliedKingAttacked){
 			long kingMoves = State4.getKingMoves(player, s.pieces, s.kings[player]);
-			recordMoves(player, State4.PIECE_TYPE_KING, s.kings[player], kingMoves, enemyPawnAttacks, ml, s, false);
+			recordMoves(player, State4.PIECE_TYPE_KING, s.kings[player], kingMoves, enemyPawnAttacks, kingUpTakes, ml, s, false);
 		}
 		
-		long queens = s.queens[player];
-		recordMoves(player, State4.PIECE_TYPE_QUEEN, queens,
-				State4.getQueenMoves(player, s.pieces, queens), enemyPawnAttacks, ml, s, quiece);
-		queens &= queens-1;
-		recordMoves(player, State4.PIECE_TYPE_QUEEN, queens,
-				State4.getQueenMoves(player, s.pieces, queens), enemyPawnAttacks, ml, s, quiece);
-		queens &= queens-1;
-		if(queens != 0){
-			while(queens != 0){
-				recordMoves(player, State4.PIECE_TYPE_QUEEN, queens,
-						State4.getQueenMoves(player, s.pieces, queens), enemyPawnAttacks, ml, s, quiece);
-				queens &= queens-1;
-			}
+		final long queenUpTakes = s.queens[1-player];
+		for(long queens = s.queens[player]; queens != 0; queens &= queens-1){
+			recordMoves(player, State4.PIECE_TYPE_QUEEN, queens,
+					Masks.getRawQueenMoves(agg, queens&-queens) & ~allied, enemyPawnAttacks, queenUpTakes, ml, s, quiece);
 		}
 
-		long rooks = s.rooks[player];
-		recordMoves(player, State4.PIECE_TYPE_ROOK, rooks,
-				State4.getRookMoves(player, s.pieces, rooks), enemyPawnAttacks, ml, s, quiece);
-		rooks &= rooks-1;
-		recordMoves(player, State4.PIECE_TYPE_ROOK, rooks,
-				State4.getRookMoves(player, s.pieces, rooks), enemyPawnAttacks, ml, s, quiece);
+		final long rookUpTakes = s.rooks[1-player] | queenUpTakes;
+		for(long rooks = s.rooks[player]; rooks != 0; rooks &= rooks-1){
+			recordMoves(player, State4.PIECE_TYPE_ROOK, rooks,
+					Masks.getRawRookMoves(agg, rooks&-rooks) & ~allied, enemyPawnAttacks, rookUpTakes, ml, s, quiece);
+		}
 		
-		long knights = s.knights[player];
-		recordMoves(player, State4.PIECE_TYPE_KNIGHT, knights,
-				State4.getKnightMoves(player, s.pieces, knights), enemyPawnAttacks, ml, s, quiece);
-		knights &= knights-1;
-		recordMoves(player, State4.PIECE_TYPE_KNIGHT, knights,
-				State4.getKnightMoves(player, s.pieces, knights), enemyPawnAttacks, ml, s, quiece);
+		final long minorPieceUpTakes = s.bishops[1-player] | s.knights[1-player] | rookUpTakes;
+		for(long knights = s.knights[player]; knights != 0; knights &= knights-1){
+			recordMoves(player, State4.PIECE_TYPE_KNIGHT, knights,
+					Masks.getRawKnightMoves(knights&-knights) & ~allied, enemyPawnAttacks, minorPieceUpTakes, ml, s, quiece);
+		}
 		
-		long bishops = s.bishops[player];
-		recordMoves(player, State4.PIECE_TYPE_BISHOP, bishops,
-				State4.getBishopMoves(player, s.pieces, bishops), enemyPawnAttacks, ml, s, quiece);
-		bishops &= bishops-1;
-		recordMoves(player, State4.PIECE_TYPE_BISHOP, bishops,
-				State4.getBishopMoves(player, s.pieces, bishops), enemyPawnAttacks, ml, s, quiece);
+		for(long bishops = s.bishops[player]; bishops != 0; bishops &= bishops-1){
+			recordMoves(player, State4.PIECE_TYPE_BISHOP, bishops,
+					Masks.getRawBishopMoves(agg, bishops&-bishops) & ~allied, enemyPawnAttacks, minorPieceUpTakes, ml, s, quiece);
+		}
 
 		
 		//handle pawn moves specially
@@ -1040,9 +1064,9 @@ public final class Search33v5 implements Search4{
 		}
 		ml.length = w;
 
-		if(!ml.kingAttacked[player]){
+		if(!alliedKingAttacked){
 			long kingMoves = State4.getKingMoves(player, s.pieces, s.kings[player])|State4.getCastleMoves(player, s);
-			recordMoves(player, State4.PIECE_TYPE_KING, s.kings[player], kingMoves, enemyPawnAttacks, ml, s, quiece);
+			recordMoves(player, State4.PIECE_TYPE_KING, s.kings[player], kingMoves, enemyPawnAttacks, kingUpTakes, ml, s, quiece);
 		}
 	}
 	
