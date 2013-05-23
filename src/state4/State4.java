@@ -199,19 +199,26 @@ public final class State4 {
 		final long king2 = kings[1];
 		final long bishops1 = bishops[0];
 		final long bishops2 = bishops[1];
+		final long knights1 = knights[0];
+		final long knights2 = knights[1];
 		
 		//only king and bishop (of one square)
-		final boolean kingBishop1 = pieces1 == (king1 | bishops1) && (
+		final boolean kingBishop1 = pieces1 == (king1 | bishops1) && pieces2 == king2 && (
 				(((PositionMasks.bishopSquareMask[0] & bishops1) == 0 && (PositionMasks.bishopSquareMask[1] & bishops1) != 0)) ||
 				(((PositionMasks.bishopSquareMask[0] & bishops1) != 0 && (PositionMasks.bishopSquareMask[1] & bishops1) == 0)));
-		final boolean kingBishop2 = pieces2 == (king2 | bishops2) && (
+		final boolean kingBishop2 = pieces2 == (king2 | bishops2) && pieces1 == king1 && (
 				(((PositionMasks.bishopSquareMask[0] & bishops2) == 0 && (PositionMasks.bishopSquareMask[1] & bishops2) != 0)) ||
 				(((PositionMasks.bishopSquareMask[0] & bishops2) != 0 && (PositionMasks.bishopSquareMask[1] & bishops2) == 0)));
 		final boolean kingBishop = kingBishop1 | kingBishop2;
 		//final boolean kingBishop = false;
 		
+		//king and only one knight
+		final boolean kingKnight1 = pieces1 == (king1 | knights1) && pieces2 == king2;
+		final boolean kingKnight2 = pieces2 == (king2 | knights2) && pieces1 == king1;
+		final boolean kingKnight = kingKnight1 | kingKnight2;
+		
 		final boolean onlyKings = pieces1 == king1 && pieces2 == king2;
-		return drawCount >= maxDrawCount || onlyKings || kingBishop;
+		return drawCount >= maxDrawCount || onlyKings || kingBishop || kingKnight;
 	}
 	
 	private final static long[] pawnColMask = new long[]{Masks.colMaskExc[7], Masks.colMaskExc[0]};

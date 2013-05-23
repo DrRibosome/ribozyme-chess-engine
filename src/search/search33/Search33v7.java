@@ -14,7 +14,7 @@ import state4.State4;
 import eval.Evaluator2;
 
 /** same as v4 but with much more conservative futility pruning*/
-public final class Search33v6 implements Search4{
+public final class Search33v7 implements Search4{
 	public final static class SearchStat32k extends SearchStat{
 		/** scores returned from quiet search without bottoming out*/
 		public long forcedQuietCutoffs;
@@ -117,11 +117,11 @@ public final class Search33v6 implements Search4{
 	
 	private final AtomicBoolean cutoffSearch = new AtomicBoolean(false);
 	
-	public Search33v6(Evaluator2 e, int hashSize){
+	public Search33v7(Evaluator2 e, int hashSize){
 		this(e, hashSize, false);
 	}
 	
-	public Search33v6(Evaluator2 e, int hashSize, boolean printPV){
+	public Search33v7(Evaluator2 e, int hashSize, boolean printPV){
 		this.e = e;
 		
 		//m = new ZMap3(hashSize);
@@ -165,8 +165,6 @@ public final class Search33v6 implements Search4{
 		e.initialize(s);
 		cutoffSearch.set(false);
 		
-		final boolean debugPrint = false;
-		
 		long bestMove = 0;
 		int score = 0;
 		
@@ -176,12 +174,9 @@ public final class Search33v6 implements Search4{
 		int alpha = min;
 		int beta = max;
 		
-		final int failOffset = 100;
 		long nodesSearched = 0;
 		boolean skipAdjust = false;
 		int minRestartDepth = 7;
-		final int backDist = 5; //amount to back up the search
-		//assert minRestartDepth-backDist >= 3;
 		for(int i = 1; (maxPly == -1 || i <= maxPly) && !cutoffSearch.get() && i <= stackSize; i++){
 			s.resetHistory();
 			
@@ -189,42 +184,35 @@ public final class Search33v6 implements Search4{
 				alpha = min;
 				beta = max;
 			} else if(i > 3 && !skipAdjust){
-				/*alpha = score-35;
-				beta = score+35;*/
 				final int index = i-1-1; //index of most recent score observation
 				int est = stats.scores[index];
 				est += stats.scores[index-1];
 				est /= 2;
 				final double dir = stats.scores[index]-stats.scores[index-1];
 				est += dir/2;
-				alpha = est-40;
-				beta = est+40;
-				//System.out.println("adjusting");
+				alpha = est-25;
+				beta = est+25;
 			}
 			skipAdjust = false;
 			
-			//System.out.println(alpha+", "+beta);
-			
-			//System.out.println("starting depth "+i);
 			score = recurse(player, alpha, beta, i, true, true, 0, s);
 			
 			if((score <= alpha || score >= beta) && !cutoffSearch.get()){
-				//final boolean failLow = score <= alpha;
-				//if(score <= alpha || score > beta) System.out.println("fail, score = "+score+", fail low = "+failLow);
-				alpha = min;
-				beta = max;
+				if(score <= alpha) alpha = score-50;
+				else if(score >= beta) beta = score+50;
+				
 				if(i < minRestartDepth){
 					score = recurse(player, alpha, beta, i, true, true, 0, s);
-				} else{
-					/*final TTEntry tte;
-					if((tte = m.get(s.zkey())) != null && tte.move != 0 && tte.move != bestMove && !cutoffSearch.get()){
-						i = 3;
+					if((score <= alpha || score >= beta) && !cutoffSearch.get()){
+						i--;
+						if(score <= alpha) alpha = score-150;
+						else if(score >= beta) beta = score+150;
 						skipAdjust = true;
 						continue;
 					}
-					score = recurse(player, alpha, beta, i, true, true, 0, s);*/
+				} else{
 					minRestartDepth += 1;
-					i -= i/3+.5;//backDist;
+					i -= i/3+.5;
 					skipAdjust = true;
 					continue;
 				}
@@ -358,10 +346,6 @@ public final class Search33v6 implements Search4{
 	/** tests to see if the passed player is in check*/
 	private static boolean isChecked(final int player, final State4 s){
 		return State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
-	}
-	
-	private static int razorMargin(final double depth){
-		return 512+16*(int)depth;
 	}
 	
 	private static int lmrReduction(final boolean pv, final double depth, final int moveCount){
