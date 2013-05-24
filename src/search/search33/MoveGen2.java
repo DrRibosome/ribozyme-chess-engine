@@ -74,40 +74,6 @@ final class MoveGen2 {
 			w = recordMoves(player, State4.PIECE_TYPE_QUEEN, queens,
 					Masks.getRawQueenMoves(agg, queens&-queens) & ~allied,
 					enemyPawnAttacks, enemy, queenUpTakes, mset, w, s, quiece);
-			
-			/*final long q = queens & -queens;
-			final long moves = Masks.getRawQueenMoves(agg, q) & ~allied;
-			for(long m = moves; m != 0; m &= m-1){
-				final long move = m&-m;
-				if(!quiece || (move & enemy) != 0){
-					final MoveSet temp = mset[w++];
-					temp.piece = q;
-					temp.moves = move;
-					
-					final boolean upTake = (move & enemy & queenUpTakes) != 0;
-					final boolean downTake = (move & enemy & ~queenUpTakes) != 0;
-					final boolean goodNonTake = (move & ~enemyPawnAttacks) != 0;
-					final boolean badNonTake = (move & enemyPawnAttacks) != 0;
-					
-					final int rank;
-					if(upTake){
-						rank = 3;
-					} else if(downTake){
-						rank = 4;
-					} else { //non-take moves
-						final boolean  checks = (Masks.getRawBishopMoves(agg & ~q, move) & enemyKing) != 0 ||
-								(Masks.getRawRookMoves(agg & ~q, move) & enemyKing) != 0;
-						final int offset = checks? -1: 0;
-						
-						if(goodNonTake){
-							rank = 5 + offset;
-						} else{
-							rank = 6 + offset;
-						}
-					}
-					temp.rank = rank;
-				}
-			}*/
 		}
 
 		final long rookUpTakes = s.rooks[1-player] | queenUpTakes;
@@ -150,9 +116,6 @@ final class MoveGen2 {
 				l2move = ((((p & 0xFF000000000000L) >>> 8) & open) >>> 8) & open;
 			}
 			
-			final int index = BitUtil.lsbIndex(p);
-			final boolean passed = (passedPawnMasks[index] & enemyPawns) == 0;
-			
 			for(long moves = attacks | l1move | l2move; moves != 0; moves &= moves-1){
 				final long m = moves & -moves;
 				final boolean take = (m & enemy) != 0;
@@ -166,7 +129,7 @@ final class MoveGen2 {
 					
 					final int rank;
 					if(!take && !promote){
-						rank = passed? 4: 5;
+						rank = 5;
 					} else if(!promote && take){
 						rank = 3;
 					} else if(promote && !take){
