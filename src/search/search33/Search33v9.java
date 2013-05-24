@@ -30,13 +30,6 @@ public final class Search33v9 implements Search4{
 		}
 	}
 	
-	private final static class MoveSet{
-		long piece;
-		long moves;
-		int promotionType;
-		int rank;
-	}
-	
 	private final MoveList[] stack;
 	
 	private final static class MoveList{
@@ -54,7 +47,6 @@ public final class Search33v9 implements Search4{
 		}
 	}
 	
-	private final static int[] pawnOffset = new int[]{9,7,8,16};
 	/** rough material gain by piece type*/
 	private final static int[] materialGain = new int[7];
 	/** stores lmr reductions by [isPv][depth][move-count]*/
@@ -574,8 +566,7 @@ public final class Search33v9 implements Search4{
 
 		//move generation
 		ml.length = w;
-		genMoves(player, s, ml, m, false);
-		final int length = ml.length;
+		final int length = MoveGen2.genMoves(player, s, alliedKingAttacked, mset, w, false);
 		if(length == 0){ //no moves, draw
 			//m.put2(zkey, 0, 0, depth, ZMap.CUTOFF_TYPE_EXACT);
 			fillEntry.fill(zkey, 0, 0, (int)depth, TTEntry.CUTOFF_TYPE_EXACT, seq);
@@ -602,136 +593,135 @@ public final class Search33v9 implements Search4{
 			final MoveSet set = mset[i];
 			final long pieceMask = set.piece;
 			final int promotionType = set.promotionType;
-			for(long movesTemp = set.moves; movesTemp != 0 ; movesTemp &= movesTemp-1){
-				moveCount++;
-				long encoding = s.executeMove(player, pieceMask, movesTemp&-movesTemp, promotionType);
-				this.e.processMove(encoding);
-				boolean isDrawable = s.isDrawable(); //player can take a draw
+			final long move = set.moves;
+			moveCount++;
+			long encoding = s.executeMove(player, pieceMask, move, promotionType);
+			this.e.processMove(encoding);
+			boolean isDrawable = s.isDrawable(); //player can take a draw
 
-				if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
-					//king in check after move
-					g = -88888+stackIndex+1;
-				} else{
-					hasMove = true;
-					
-					final boolean pvMove = pv && i==0;
-					final boolean isCapture = MoveEncoder.getTakenType(encoding) != State4.PIECE_TYPE_EMPTY;
-					final boolean givesCheck = isChecked(1-player, s);
-					final boolean isPawnPromotion = MoveEncoder.isPawnPromotion(encoding);
-					final boolean isPassedPawnPush = MoveEncoder.getMovePieceType(encoding) == State4.PIECE_TYPE_PAWN &&
-							(Masks.passedPawnMasks[player][MoveEncoder.getPos1(encoding)] & s.pawns[1-player]) == 0;
-					final boolean isTTEMove = tteMove && encoding == tteMoveEncoding;
-					
-					final long rawEn = encoding & 0xFFFL; //raw encoding
-					final boolean isKillerMove = rawEn == l1killer1 || rawEn == l1killer2 ||
-												rawEn == l2killer1 || rawEn == l2killer2;
-					
-					final boolean isDangerous = givesCheck ||
-							MoveEncoder.isCastle(encoding) != 0 ||
-							isPassedPawnPush;
-					
-					
-					final double ext = (isDangerous && pv? 1: 0) + (threatMove && pv? 0: 0) +
-									//(!pv && depth > 7? -depth/10: 0);
-									(!pv && depth > 7 && !isDangerous && !isCapture? -depth/10: 0);
-					
-					//futility pruning
-					if(!pv && !isPawnPromotion &&
-							!inCheck &&
-							!isTTEMove &&
-							!isCapture &&
-							!isKillerMove &&
-							!isDangerous){
-						
-						if(depth <= 4){
-							final int mc = quietMoveCount < 64? quietMoveCount: 63;
-							final int d = depth < 5? (int)depth: 4;
-							final int futilityScore = lazyEval+futilityMargins[d][mc];
-							if(futilityScore < beta){
-								bestScore = bestScore > futilityScore? bestScore: futilityScore;
-								alpha = bestScore > alpha? bestScore: alpha;
-								s.undoMove();
-								this.e.undoMove(encoding);
-								continue;
-							}
-						}
-					}
-					//count incremented after futility so first more has move count index 0
-					if(!isCapture && !isDangerous && !isTTEMove && !isKillerMove && !isPawnPromotion) quietMoveCount++;
-					
-					//LMR
-					final boolean fullSearch;
-					final int reduction;
-					if(depth > 2 && !pvMove && !isCapture && !inCheck && !isPawnPromotion &&
-							!isDangerous && 
-							!isKillerMove &&
-							!isTTEMove &&
-							(reduction = lmrReduction(pv, depth, moveCount)+1) > 1){
-						//int reducedDepth = pv? depth-2: depth-3;
-						final double reducedDepth = depth-reduction;
-						g = -recurse(1-player, -alpha-1, -alpha, reducedDepth, false, false, stackIndex+1, s);
-						fullSearch = g > alpha;
-					} else{
-						fullSearch = true;
-					}
-					
-					if(fullSearch){
-						//descend negascout style
-						final double nextDepth = depth-1+ext;
-						if(!pvMove){
-							g = -recurse(1-player, -(alpha+1), -alpha, nextDepth, false, false, stackIndex+1, s);
-							if(alpha < g && g < beta && pv){
-								g = -recurse(1-player, -beta, -alpha, nextDepth, pv, false, stackIndex+1, s);
-							}
-						} else{
-							g = -recurse(1-player, -beta, -alpha, nextDepth, pv, false, stackIndex+1, s);
+			if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
+				//king in check after move
+				g = -88888+stackIndex+1;
+			} else{
+				hasMove = true;
+
+				final boolean pvMove = pv && i==0;
+				final boolean isCapture = MoveEncoder.getTakenType(encoding) != State4.PIECE_TYPE_EMPTY;
+				final boolean givesCheck = isChecked(1-player, s);
+				final boolean isPawnPromotion = MoveEncoder.isPawnPromotion(encoding);
+				final boolean isPassedPawnPush = MoveEncoder.getMovePieceType(encoding) == State4.PIECE_TYPE_PAWN &&
+						(Masks.passedPawnMasks[player][MoveEncoder.getPos1(encoding)] & s.pawns[1-player]) == 0;
+				final boolean isTTEMove = tteMove && encoding == tteMoveEncoding;
+
+				final long rawEn = encoding & 0xFFFL; //raw encoding
+				final boolean isKillerMove = rawEn == l1killer1 || rawEn == l1killer2 ||
+						rawEn == l2killer1 || rawEn == l2killer2;
+
+				final boolean isDangerous = givesCheck ||
+						MoveEncoder.isCastle(encoding) != 0 ||
+						isPassedPawnPush;
+
+
+				final double ext = (isDangerous && pv? 1: 0) + (threatMove && pv? 0: 0) +
+						//(!pv && depth > 7? -depth/10: 0);
+						(!pv && depth > 7 && !isDangerous && !isCapture? -depth/10: 0);
+
+				//futility pruning
+				if(!pv && !isPawnPromotion &&
+						!inCheck &&
+						!isTTEMove &&
+						!isCapture &&
+						!isKillerMove &&
+						!isDangerous){
+
+					if(depth <= 4){
+						final int mc = quietMoveCount < 64? quietMoveCount: 63;
+						final int d = depth < 5? (int)depth: 4;
+						final int futilityScore = lazyEval+futilityMargins[d][mc];
+						if(futilityScore < beta){
+							bestScore = bestScore > futilityScore? bestScore: futilityScore;
+							alpha = bestScore > alpha? bestScore: alpha;
+							s.undoMove();
+							this.e.undoMove(encoding);
+							continue;
 						}
 					}
 				}
-				s.undoMove();
-				this.e.undoMove(encoding);
-				assert zkey == s.zkey(); //keys should be unchanged after undo
-				assert drawCount == s.drawCount;
-				assert pawnZkey == s.pawnZkey();
-				
-				if(isDrawable && 0 > g){ //can take a draw instead of making the move
-					g = 0;
-					encoding = 0;
-				} 
-				
-				if(g > bestScore){
-					bestScore = g;
-					bestMove = encoding;
-					if(g > alpha){
-						alpha = g;
-						cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
-						if(alpha >= beta){
-							if(!cutoffSearch.get()){
-								//m.put2(zkey, bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
-								fillEntry.fill(zkey, encoding, alpha, (int)depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
-								m.put(zkey, fillEntry);
-							}
-							
-							//check to see if killer move can be stored
-							//if used on null moves, need to have a separate killer array
-							if(stackIndex-1 >= 0){
-								attemptKillerStore(bestMove, ml.skipNullMove, stack[stackIndex-1]);
-							}
-							
-							return g;
+				//count incremented after futility so first more has move count index 0
+				if(!isCapture && !isDangerous && !isTTEMove && !isKillerMove && !isPawnPromotion) quietMoveCount++;
+
+				//LMR
+				final boolean fullSearch;
+				final int reduction;
+				if(depth > 2 && !pvMove && !isCapture && !inCheck && !isPawnPromotion &&
+						!isDangerous && 
+						!isKillerMove &&
+						!isTTEMove &&
+						(reduction = lmrReduction(pv, depth, moveCount)+1) > 1){
+					//int reducedDepth = pv? depth-2: depth-3;
+					final double reducedDepth = depth-reduction;
+					g = -recurse(1-player, -alpha-1, -alpha, reducedDepth, false, false, stackIndex+1, s);
+					fullSearch = g > alpha;
+				} else{
+					fullSearch = true;
+				}
+
+				if(fullSearch){
+					//descend negascout style
+					final double nextDepth = depth-1+ext;
+					if(!pvMove){
+						g = -recurse(1-player, -(alpha+1), -alpha, nextDepth, false, false, stackIndex+1, s);
+						if(alpha < g && g < beta && pv){
+							g = -recurse(1-player, -beta, -alpha, nextDepth, pv, false, stackIndex+1, s);
 						}
+					} else{
+						g = -recurse(1-player, -beta, -alpha, nextDepth, pv, false, stackIndex+1, s);
+					}
+				}
+			}
+			s.undoMove();
+			this.e.undoMove(encoding);
+			assert zkey == s.zkey(); //keys should be unchanged after undo
+			assert drawCount == s.drawCount;
+			assert pawnZkey == s.pawnZkey();
+
+			if(isDrawable && 0 > g){ //can take a draw instead of making the move
+				g = 0;
+				encoding = 0;
+			} 
+
+			if(g > bestScore){
+				bestScore = g;
+				bestMove = encoding;
+				if(g > alpha){
+					alpha = g;
+					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
+					if(alpha >= beta){
+						if(!cutoffSearch.get()){
+							//m.put2(zkey, bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
+							fillEntry.fill(zkey, encoding, alpha, (int)depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
+							m.put(zkey, fillEntry);
+						}
+
+						//check to see if killer move can be stored
+						//if used on null moves, need to have a separate killer array
+						if(stackIndex-1 >= 0){
+							attemptKillerStore(bestMove, ml.skipNullMove, stack[stackIndex-1]);
+						}
+
+						return g;
 					}
 				}
 			}
 		}
-		
+
 		if(!hasMove){
 			//no moves except king into death - draw
 			bestMove = 0;
 			bestScore = 0;
 			cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 		}
-		
+
 		if(!cutoffSearch.get()){
 			//m.put2(zkey, bestMove, bestScore, depth, cutoffFlag);
 			fillEntry.fill(zkey, bestMove, bestScore, (int)depth, pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
@@ -798,8 +788,7 @@ public final class Search33v9 implements Search4{
 		}
 		
 		ml.length = w;
-		genMoves(player, s, ml, m, true);
-		final int length = ml.length;
+		final int length = MoveGen2.genMoves(player, s, ml.kingAttacked, mset, w, true);
 		isort(mset, length);
 
 		
@@ -811,45 +800,44 @@ public final class Search33v9 implements Search4{
 			final MoveSet set = mset[i];
 			final long pieceMask = set.piece;
 			final int promotionType = set.promotionType;
-			for(long movesTemp = set.moves; movesTemp != 0 ; movesTemp &= movesTemp-1){
-				long encoding = s.executeMove(player, pieceMask, movesTemp&-movesTemp, promotionType);
-				this.e.processMove(encoding);
-				final boolean isDrawable = s.isDrawable();
-				
-				if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
-					//king in check after move
-					g = -77777;
-				} else{
-					g = -qsearch(1-player, -beta, -alpha, depth-1, stackIndex+1, pv, s);
-				}
-				s.undoMove();
-				this.e.undoMove(encoding);
-				
-				if(isDrawable && 0 > g){// && -10*depth > g){ //can draw instead of making the move
-					g = 0;
-					encoding = 0;
-				}
-				
-				assert zkey == s.zkey();
-				assert drawCount == s.drawCount;
-				
-				if(g > bestScore){
-					bestScore = g;
-					bestMove = encoding;
-					if(g > alpha){
-						alpha = g;
-						cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
-						if(g >= beta){
-							if(!cutoffSearch.get()){
-								fillEntry.fill(zkey, encoding, g, depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
-								m.put(zkey, fillEntry);
-							}
-							return g;
+			final long move = set.moves;
+			long encoding = s.executeMove(player, pieceMask, move, promotionType);
+			this.e.processMove(encoding);
+			final boolean isDrawable = s.isDrawable();
+
+			if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
+				//king in check after move
+				g = -77777;
+			} else{
+				g = -qsearch(1-player, -beta, -alpha, depth-1, stackIndex+1, pv, s);
+			}
+			s.undoMove();
+			this.e.undoMove(encoding);
+
+			if(isDrawable && 0 > g){// && -10*depth > g){ //can draw instead of making the move
+				g = 0;
+				encoding = 0;
+			}
+
+			assert zkey == s.zkey();
+			assert drawCount == s.drawCount;
+
+			if(g > bestScore){
+				bestScore = g;
+				bestMove = encoding;
+				if(g > alpha){
+					alpha = g;
+					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
+					if(g >= beta){
+						if(!cutoffSearch.get()){
+							fillEntry.fill(zkey, encoding, g, depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
+							m.put(zkey, fillEntry);
 						}
+						return g;
 					}
 				}
 			}
-		}
+	}
 
 		if(!cutoffSearch.get()){
 			fillEntry.fill(zkey, bestMove, bestScore, depth, pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
@@ -931,165 +919,6 @@ public final class Search33v9 implements Search4{
 				prev.killer[0] = prev.killer[1];
 				prev.killer[1] = move & 0xFFF;
 			}
-		}
-	}
-	
-	/** record moves as blocks*/
-	private static void recordMoves(final int player, final int pieceMovingType, final long pieceMask,
-			final long moves, final long enemyPawnAttacks, final long upTakeMask, final MoveList ml, final State4 s,
-			final boolean quiesce){
-		final long piece = pieceMask&-pieceMask;
-		if(piece != 0 && moves != 0){
-			final long enemy = s.pieces[1-player];
-			int w = ml.length;
-			final MoveSet[] mset = ml.mset;
-			
-			if((moves & enemy) != 0){
-				
-				final long upTakes = moves & enemy & upTakeMask;
-				if(upTakes != 0){
-					final MoveSet temp = mset[w++];
-					temp.piece = piece;
-					temp.moves = upTakes;
-					temp.rank = 3;
-				}
-				
-				final long takes = moves & enemy & ~upTakeMask;
-				if(takes != 0){
-					final MoveSet temp = mset[w++];
-					temp.piece = piece;
-					temp.moves = takes;
-					temp.rank = 4;
-				}
-			}
-
-			final long nonTake = moves & ~enemy;
-			final long badNonTakes = nonTake & enemyPawnAttacks;
-			final long goodNonTakes = nonTake & ~enemyPawnAttacks;
-			
-			if(nonTake != 0 && !quiesce){
-				if(goodNonTakes != 0){
-					final MoveSet temp = mset[w++];
-					temp.piece = piece;
-					temp.moves = goodNonTakes;
-					temp.rank = 5;
-				}
-				if(badNonTakes != 0){
-					final MoveSet temp = mset[w++];
-					temp.piece = piece;
-					temp.moves = badNonTakes;
-					temp.rank = 6;
-				}
-			}
-			ml.length = w;
-		}
-	}
-	
-	private static void genMoves(final int player, final State4 s, final MoveList ml, final Hash m, final boolean quiece){
-		final long enemyPawnAttacks = Masks.getRawPawnAttacks(1-player, s.pawns[1-player]) & ~s.pieces[1-player];
-		final boolean alliedKingAttacked = ml.kingAttacked;
-		
-		final long agg = s.pieces[0] | s.pieces[1];
-		final long allied = s.pieces[player];
-		
-		final long kingUpTakes = s.pieces[1-player];
-		if(alliedKingAttacked){
-			long kingMoves = State4.getKingMoves(player, s.pieces, s.kings[player]);
-			recordMoves(player, State4.PIECE_TYPE_KING, s.kings[player], kingMoves, enemyPawnAttacks, kingUpTakes, ml, s, false);
-		}
-		
-		final long queenUpTakes = s.queens[1-player];
-		for(long queens = s.queens[player]; queens != 0; queens &= queens-1){
-			recordMoves(player, State4.PIECE_TYPE_QUEEN, queens,
-					Masks.getRawQueenMoves(agg, queens&-queens) & ~allied, enemyPawnAttacks, queenUpTakes, ml, s, quiece);
-		}
-
-		final long rookUpTakes = s.rooks[1-player] | queenUpTakes;
-		for(long rooks = s.rooks[player]; rooks != 0; rooks &= rooks-1){
-			recordMoves(player, State4.PIECE_TYPE_ROOK, rooks,
-					Masks.getRawRookMoves(agg, rooks&-rooks) & ~allied, enemyPawnAttacks, rookUpTakes, ml, s, quiece);
-		}
-		
-		final long minorPieceUpTakes = s.bishops[1-player] | s.knights[1-player] | rookUpTakes;
-		for(long knights = s.knights[player]; knights != 0; knights &= knights-1){
-			recordMoves(player, State4.PIECE_TYPE_KNIGHT, knights,
-					Masks.getRawKnightMoves(knights&-knights) & ~allied, enemyPawnAttacks, minorPieceUpTakes, ml, s, quiece);
-		}
-		
-		for(long bishops = s.bishops[player]; bishops != 0; bishops &= bishops-1){
-			recordMoves(player, State4.PIECE_TYPE_BISHOP, bishops,
-					Masks.getRawBishopMoves(agg, bishops&-bishops) & ~allied, enemyPawnAttacks, minorPieceUpTakes, ml, s, quiece);
-		}
-
-		
-		//handle pawn moves specially
-		final long[] pawnMoves = ml.pawnMoves;
-		final long pawns = s.pawns[player];
-		pawnMoves[0] = State4.getRightPawnAttacks(player, s.pieces, s.enPassante, pawns);
-		pawnMoves[1] = State4.getLeftPawnAttacks(player, s.pieces, s.enPassante, pawns);
-		pawnMoves[2] = State4.getPawnMoves(player, s.pieces, pawns);
-		pawnMoves[3] = State4.getPawnMoves2(player, s.pieces, pawns);
-		
-		int w = ml.length;
-		final MoveSet[] mset = ml.mset;
-
-		//pawn movement promotions
-		for(long tempPawnMoves = pawnMoves[2]&Masks.pawnPromotionMask[player]; tempPawnMoves != 0; tempPawnMoves&=tempPawnMoves-1){
-			long moveMask = tempPawnMoves&-tempPawnMoves;
-			long pawnMask = player == 0? moveMask>>>pawnOffset[2]: moveMask<<pawnOffset[2];
-			
-			final MoveSet temp1 = mset[w++];
-			temp1.piece = pawnMask;
-			temp1.moves = moveMask;
-			temp1.rank = 2;
-			temp1.promotionType = State4.PROMOTE_QUEEN;
-			
-			final MoveSet temp2 = mset[w++];
-			temp2.piece = pawnMask;
-			temp2.moves = moveMask;
-			temp2.rank = 8;
-			temp2.promotionType = State4.PROMOTE_KNIGHT;
-		}
-		//pawn takes
-		for(int i = 0; i < 2; i++){
-			for(long tempPawnMoves = pawnMoves[i]; tempPawnMoves != 0; tempPawnMoves&=tempPawnMoves-1){
-				long moveMask = tempPawnMoves&-tempPawnMoves;
-				long pawnMask = player == 0? moveMask>>>pawnOffset[i]: moveMask<<pawnOffset[i];
-				
-				final boolean promoteTake = (moveMask & Masks.pawnPromotionMask[player]) != 0;
-				final MoveSet temp = mset[w++];
-				temp.piece = pawnMask;
-				temp.moves = moveMask;
-				temp.rank = promoteTake? 1: 3;
-				temp.promotionType = State4.PROMOTE_QUEEN;
-				if(promoteTake){
-					final MoveSet temp2 = mset[w++];
-					temp2.piece = pawnMask;
-					temp2.moves = moveMask;
-					temp2.rank = 7;
-					temp2.promotionType = State4.PROMOTE_KNIGHT;
-				}
-			}
-		}
-		if(!quiece){
-			//non-promoting pawn movement
-			for(int i = 2; i < 4; i++){
-				for(long tempPawnMoves = pawnMoves[i]&~Masks.pawnPromotionMask[player];
-						tempPawnMoves != 0; tempPawnMoves&=tempPawnMoves-1){
-					long moveMask = tempPawnMoves&-tempPawnMoves;
-					long pawnMask = player == 0? moveMask>>>pawnOffset[i]: moveMask<<pawnOffset[i];
-					final MoveSet temp = mset[w++];
-					temp.piece = pawnMask;
-					temp.moves = moveMask;
-					temp.rank = 5;
-				}
-			}
-		}
-		ml.length = w;
-
-		if(!alliedKingAttacked){
-			long kingMoves = State4.getKingMoves(player, s.pieces, s.kings[player])|State4.getCastleMoves(player, s);
-			recordMoves(player, State4.PIECE_TYPE_KING, s.kings[player], kingMoves, enemyPawnAttacks, kingUpTakes, ml, s, quiece);
 		}
 	}
 	
