@@ -710,7 +710,7 @@ public final class E7v10 implements Evaluator2{
 			materialScore[1-player] -= dir*materialWeights[State4.PIECE_TYPE_PAWN];
 			if(taken == State4.PIECE_TYPE_PAWN) pawnMoved[1-player] = true;
 		}
-		if(MoveEncoder.isPawnPromoted(encoding)){
+		if(MoveEncoder.isPawnPromotion(encoding)){
 			materialScore[player] += dir*(materialWeights[State4.PIECE_TYPE_QUEEN]-
 					materialWeights[State4.PIECE_TYPE_PAWN]);
 		}

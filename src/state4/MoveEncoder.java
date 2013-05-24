@@ -18,10 +18,12 @@ public final class MoveEncoder {
 	 * bit 4: which rook was moved/taken for player 1
 	 */
 	private final static int castleCodeOffset = 19; //new castle code uses 5 bits, reserves 6
+	private final static int splitPointOffset = 24;
+	private final static long isPawnPromotionMask = 1L << 25;
 	private final static int isEnPassanteTakeOffset = 32;
 	private final static int isCastleOffset = 33;
 	private final static int prevDrawCountOffset = 34;
-	private final static int splitPointOffset = 24;
+	private final static int pawnPromoteTypeOffset = 41;
 	
 	public static int getPos1(final long encoding){
 		return (int)(encoding & posMask);
@@ -138,13 +140,18 @@ public final class MoveEncoder {
 				(pieceTakenType << 15) | (player << 18);
 	}
 	
-	/** given the encoding, set pawn promotion flag and return new encoding*/
-	public static long setPawnPromotion(final long encoding){
-		return encoding | (1L<<25);
+	/** set pawn promotion flag and return new encoding*/
+	public static long setPawnPromotion(final long encoding, final long type){
+		return encoding | isPawnPromotionMask | (type << pawnPromoteTypeOffset);
 	}
 	
-	public static boolean isPawnPromoted(final long encoding){
-		return (encoding & (1L<<25)) != 0;
+	/** gets pawn promotion type*/
+	public static int getPawnPromotionType(final long encoding){
+		return (int)((encoding >>> pawnPromoteTypeOffset) & 0x3L);
+	}
+	
+	public static boolean isPawnPromotion(final long encoding){
+		return (encoding & isPawnPromotionMask) != 0;
 	}
 	
 	public static String getString(final long encoding){

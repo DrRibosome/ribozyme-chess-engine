@@ -14,7 +14,7 @@ import state4.State4;
 import eval.Evaluator2;
 
 /** same as v4 but with much more conservative futility pruning*/
-public final class Search33v7 implements Search4{
+public final class Search33v8 implements Search4{
 	public final static class SearchStat32k extends SearchStat{
 		/** scores returned from quiet search without bottoming out*/
 		public long forcedQuietCutoffs;
@@ -30,19 +30,28 @@ public final class Search33v7 implements Search4{
 		}
 	}
 	
+	private final static class MoveSet{
+		long piece;
+		long moves;
+		int promotionType;
+		int rank;
+	}
+	
 	private final MoveList[] stack;
 	
 	private final static class MoveList{
 		private final static int defSize = 128;
-		public final long[] pieceMasks = new long[defSize];
-		public final long[] moves = new long[defSize];
-		public final int[] ranks = new int[defSize];
+		private final MoveSet[] mset = new MoveSet[defSize];
 		public final long[] pawnMoves = new long[4];
 		public int length;
 		public boolean kingAttacked;
 		public boolean skipNullMove = false;
 		/** holds killer moves as first 12 bits (ie, masked 0xFFF) of move encoding*/
 		public final long[] killer = new long[2];
+		
+		{
+			for(int a = 0; a < defSize; a++) mset[a] = new MoveSet();
+		}
 	}
 	
 	private final static int[] pawnOffset = new int[]{9,7,8,16};
@@ -117,11 +126,11 @@ public final class Search33v7 implements Search4{
 	
 	private final AtomicBoolean cutoffSearch = new AtomicBoolean(false);
 	
-	public Search33v7(Evaluator2 e, int hashSize){
+	public Search33v8(Evaluator2 e, int hashSize){
 		this(e, hashSize, false);
 	}
 	
-	public Search33v7(Evaluator2 e, int hashSize, boolean printPV){
+	public Search33v8(Evaluator2 e, int hashSize, boolean printPV){
 		this.e = e;
 		
 		//m = new ZMap3(hashSize);
@@ -376,9 +385,7 @@ public final class Search33v7 implements Search4{
 
 
 		final MoveList ml = stack[stackIndex];
-		final long[] pieceMasks = ml.pieceMasks; //piece moving
-		final long[] moves = ml.moves; //moves available to piece (can be multiple)
-		final int[] ranks = ml.ranks; //move ranking
+		final MoveSet[] mset = ml.mset;
 		ml.killer[0] = 0;
 		ml.killer[1] = 0;
 		
@@ -405,9 +412,11 @@ public final class Search33v7 implements Search4{
 			}
 			if(e.move != 0){
 				tteMoveEncoding = e.move;
-				pieceMasks[w] = 1L<<MoveEncoder.getPos1(tteMoveEncoding);
-				moves[w] = 1L<<MoveEncoder.getPos2(tteMoveEncoding);
-				ranks[w++] = tteMoveRank;
+				
+				final MoveSet temp = mset[w++];
+				temp.piece = 1L << MoveEncoder.getPos1(tteMoveEncoding);
+				temp.moves = 1L << MoveEncoder.getPos2(tteMoveEncoding);
+				temp.rank = tteMoveRank;
 				tteMove = true;
 			}
 		}
@@ -440,9 +449,10 @@ public final class Search33v7 implements Search4{
 			final long l1killer1Temp = prev.killer[0];
 			if(l1killer1Temp != 0 && isPseudoLegal(player, l1killer1Temp, s)){
 				assert MoveEncoder.getPos1(l1killer1Temp) != MoveEncoder.getPos2(l1killer1Temp);
-				pieceMasks[w] = 1L << MoveEncoder.getPos1(l1killer1Temp);
-				moves[w] = 1L << MoveEncoder.getPos2(l1killer1Temp);
-				ranks[w++] = killerMoveRank;
+				final MoveSet temp = mset[w++];
+				temp.piece = 1L << MoveEncoder.getPos1(l1killer1Temp);
+				temp.moves = 1L << MoveEncoder.getPos2(l1killer1Temp);
+				temp.rank = killerMoveRank;
 				l1killer1 = l1killer1Temp & 0xFFFL;
 			} else{
 				l1killer1 = 0;
@@ -450,9 +460,10 @@ public final class Search33v7 implements Search4{
 			final long l1killer2Temp = prev.killer[1];
 			if(l1killer2Temp != 0 && isPseudoLegal(player, l1killer2Temp, s)){
 				assert MoveEncoder.getPos1(l1killer2Temp) != MoveEncoder.getPos2(l1killer2Temp);
-				pieceMasks[w] = 1L << MoveEncoder.getPos1(l1killer2Temp);
-				moves[w] = 1L << MoveEncoder.getPos2(l1killer2Temp);
-				ranks[w++] = killerMoveRank;
+				final MoveSet temp = mset[w++];
+				temp.piece = 1L << MoveEncoder.getPos1(l1killer2Temp);
+				temp.moves = 1L << MoveEncoder.getPos2(l1killer2Temp);
+				temp.rank = killerMoveRank;
 				l1killer2 = l1killer2Temp & 0xFFFL;
 			} else{
 				l1killer2 = 0;
@@ -463,9 +474,10 @@ public final class Search33v7 implements Search4{
 				final long l2killer1Temp = prev2.killer[0];
 				if(l2killer1Temp != 0 && isPseudoLegal(player, l2killer1Temp, s)){
 					assert MoveEncoder.getPos1(l2killer1Temp) != MoveEncoder.getPos2(l2killer1Temp);
-					pieceMasks[w] = 1L << MoveEncoder.getPos1(l2killer1Temp);
-					moves[w] = 1L << MoveEncoder.getPos2(l2killer1Temp);
-					ranks[w++] = killerMoveRank;
+					final MoveSet temp = mset[w++];
+					temp.piece = 1L << MoveEncoder.getPos1(l2killer1Temp);
+					temp.moves = 1L << MoveEncoder.getPos2(l2killer1Temp);
+					temp.rank = killerMoveRank;
 					l2killer1 = l2killer1Temp & 0xFFFL;
 				} else{
 					l2killer1 = 0;
@@ -473,9 +485,10 @@ public final class Search33v7 implements Search4{
 				final long l2killer2Temp = prev2.killer[1];
 				if(l2killer2Temp != 0 && isPseudoLegal(player, l2killer2Temp, s)){
 					assert MoveEncoder.getPos1(l2killer2Temp) != MoveEncoder.getPos2(l2killer2Temp);
-					pieceMasks[w] = 1L << MoveEncoder.getPos1(l2killer2Temp);
-					moves[w] = 1L << MoveEncoder.getPos2(l2killer2Temp);
-					ranks[w++] = killerMoveRank;
+					final MoveSet temp = mset[w++];
+					temp.piece = 1L << MoveEncoder.getPos1(l2killer2Temp);
+					temp.moves = 1L << MoveEncoder.getPos2(l2killer2Temp);
+					temp.rank = killerMoveRank;
 					l2killer2 = l2killer2Temp & 0xFFFL;
 				} else{
 					l2killer2 = 0;
@@ -552,9 +565,10 @@ public final class Search33v7 implements Search4{
 			if((temp = m.get(zkey)) != null && temp.move != 0){
 				tteMove = true;
 				tteMoveEncoding = temp.move;
-				pieceMasks[w] = 1L<<MoveEncoder.getPos1(tteMoveEncoding);
-				moves[w] = 1L<<MoveEncoder.getPos2(tteMoveEncoding);
-				ranks[w++] = tteMoveRank;
+				final MoveSet tempMset = mset[w++];
+				tempMset.piece = 1L<<MoveEncoder.getPos1(tteMoveEncoding);
+				tempMset.moves = 1L<<MoveEncoder.getPos2(tteMoveEncoding);
+				tempMset.rank = tteMoveRank;
 			}
 		}
 
@@ -568,7 +582,7 @@ public final class Search33v7 implements Search4{
 			m.put(zkey, fillEntry);
 			return 0;
 		}
-		isort(pieceMasks, moves, ranks, length);
+		isort(mset, length);
 		
 		
 		int g = alpha;
@@ -585,9 +599,12 @@ public final class Search33v7 implements Search4{
 		boolean hasMove = alliedKingAttacked;
 		final boolean inCheck = alliedKingAttacked;
 		for(int i = 0; i < length; i++){
-			for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
+			final MoveSet set = mset[i];
+			final long pieceMask = set.piece;
+			final int promotionType = set.promotionType;
+			for(long movesTemp = set.moves; movesTemp != 0 ; movesTemp &= movesTemp-1){
 				moveCount++;
-				long encoding = s.executeMove(player, pieceMasks[i], movesTemp&-movesTemp);
+				long encoding = s.executeMove(player, pieceMask, movesTemp&-movesTemp, promotionType);
 				this.e.processMove(encoding);
 				boolean isDrawable = s.isDrawable(); //player can take a draw
 
@@ -734,9 +751,7 @@ public final class Search33v7 implements Search4{
 
 		
 		int w = 0;
-		final long[] pieceMasks = stack[stackIndex].pieceMasks; //piece moving
-		final long[] moves = stack[stackIndex].moves; //moves available to piece (can be multiple)
-		final int[] ranks = stack[stackIndex].ranks; //move ranking
+		final MoveSet[] mset = stack[stackIndex].mset;
 
 		final long zkey = s.zkey();
 		final TTEntry e = m.get(zkey);
@@ -751,9 +766,10 @@ public final class Search33v7 implements Search4{
 			}
 			if(e.move != 0){
 				final long encoding = e.move;
-				pieceMasks[w] = 1L<<MoveEncoder.getPos1(encoding);
-				moves[w] = 1L<<MoveEncoder.getPos2(encoding);
-				ranks[w++] = tteMoveRank;
+				final MoveSet temp = mset[w++];
+				temp.piece = 1L<<MoveEncoder.getPos1(encoding);
+				temp.moves = 1L<<MoveEncoder.getPos2(encoding);
+				temp.rank = tteMoveRank;
 			}
 		}
 		
@@ -782,7 +798,7 @@ public final class Search33v7 implements Search4{
 		ml.length = w;
 		genMoves(player, s, ml, m, true);
 		final int length = ml.length;
-		isort(pieceMasks, moves, ranks, length);
+		isort(mset, length);
 
 		
 		int g = alpha;
@@ -790,8 +806,11 @@ public final class Search33v7 implements Search4{
 		long bestMove = 0;
 		final int drawCount = s.drawCount; //stored for error checking purposes
 		for(int i = 0; i < length; i++){
-			for(long movesTemp = moves[i]; movesTemp != 0 ; movesTemp &= movesTemp-1){
-				long encoding = s.executeMove(player, pieceMasks[i], movesTemp&-movesTemp);
+			final MoveSet set = mset[i];
+			final long pieceMask = set.piece;
+			final int promotionType = set.promotionType;
+			for(long movesTemp = set.moves; movesTemp != 0 ; movesTemp &= movesTemp-1){
+				long encoding = s.executeMove(player, pieceMask, movesTemp&-movesTemp, promotionType);
 				this.e.processMove(encoding);
 				final boolean isDrawable = s.isDrawable();
 				
@@ -921,22 +940,24 @@ public final class Search33v7 implements Search4{
 		if(piece != 0 && moves != 0){
 			final long enemy = s.pieces[1-player];
 			int w = ml.length;
+			final MoveSet[] mset = ml.mset;
+			
 			if((moves & enemy) != 0){
 				
 				final long upTakes = moves & enemy & upTakeMask;
 				if(upTakes != 0){
-					ml.pieceMasks[w] = piece;
-					ml.moves[w] = upTakes;
-					ml.ranks[w] = 3;
-					w++;
+					final MoveSet temp = mset[w++];
+					temp.piece = piece;
+					temp.moves = upTakes;
+					temp.rank = 3;
 				}
 				
 				final long takes = moves & enemy & ~upTakeMask;
 				if(takes != 0){
-					ml.pieceMasks[w] = piece;
-					ml.moves[w] = takes;
-					ml.ranks[w] = 4;
-					w++;
+					final MoveSet temp = mset[w++];
+					temp.piece = piece;
+					temp.moves = takes;
+					temp.rank = 4;
 				}
 			}
 
@@ -946,16 +967,16 @@ public final class Search33v7 implements Search4{
 			
 			if(nonTake != 0 && !quiesce){
 				if(goodNonTakes != 0){
-					ml.pieceMasks[w] = piece;
-					ml.moves[w] = goodNonTakes;
-					ml.ranks[w] = 5;
-					w++;
+					final MoveSet temp = mset[w++];
+					temp.piece = piece;
+					temp.moves = goodNonTakes;
+					temp.rank = 5;
 				}
 				if(badNonTakes != 0){
-					ml.pieceMasks[w] = piece;
-					ml.moves[w] = badNonTakes;
-					ml.ranks[w] = 6;
-					w++;
+					final MoveSet temp = mset[w++];
+					temp.piece = piece;
+					temp.moves = badNonTakes;
+					temp.rank = 6;
 				}
 			}
 			ml.length = w;
@@ -1008,28 +1029,44 @@ public final class Search33v7 implements Search4{
 		pawnMoves[3] = State4.getPawnMoves2(player, s.pieces, pawns);
 		
 		int w = ml.length;
-		final long[] pieces = ml.pieceMasks;
-		final long[] moves = ml.moves;
-		final int[] ranks = ml.ranks;
+		final MoveSet[] mset = ml.mset;
 
 		//pawn movement promotions
 		for(long tempPawnMoves = pawnMoves[2]&Masks.pawnPromotionMask[player]; tempPawnMoves != 0; tempPawnMoves&=tempPawnMoves-1){
 			long moveMask = tempPawnMoves&-tempPawnMoves;
 			long pawnMask = player == 0? moveMask>>>pawnOffset[2]: moveMask<<pawnOffset[2];
-			pieces[w] = pawnMask;
-			moves[w] = moveMask;
-			ranks[w] = 2;
-			w++;
+			
+			final MoveSet temp1 = mset[w++];
+			temp1.piece = pawnMask;
+			temp1.moves = moveMask;
+			temp1.rank = 2;
+			temp1.promotionType = State4.PROMOTE_QUEEN;
+			
+			final MoveSet temp2 = mset[w++];
+			temp2.piece = pawnMask;
+			temp2.moves = moveMask;
+			temp2.rank = 8;
+			temp2.promotionType = State4.PROMOTE_KNIGHT;
 		}
 		//pawn takes
 		for(int i = 0; i < 2; i++){
 			for(long tempPawnMoves = pawnMoves[i]; tempPawnMoves != 0; tempPawnMoves&=tempPawnMoves-1){
 				long moveMask = tempPawnMoves&-tempPawnMoves;
 				long pawnMask = player == 0? moveMask>>>pawnOffset[i]: moveMask<<pawnOffset[i];
-				pieces[w] = pawnMask;
-				moves[w] = moveMask;
-				ranks[w] = (moveMask & Masks.pawnPromotionMask[player]) == 0? 3: 1;
-				w++;
+				
+				final boolean promoteTake = (moveMask & Masks.pawnPromotionMask[player]) != 0;
+				final MoveSet temp = mset[w++];
+				temp.piece = pawnMask;
+				temp.moves = moveMask;
+				temp.rank = promoteTake? 1: 3;
+				temp.promotionType = State4.PROMOTE_QUEEN;
+				if(promoteTake){
+					final MoveSet temp2 = mset[w++];
+					temp2.piece = pawnMask;
+					temp2.moves = moveMask;
+					temp2.rank = 7;
+					temp2.promotionType = State4.PROMOTE_KNIGHT;
+				}
 			}
 		}
 		if(!quiece){
@@ -1039,10 +1076,10 @@ public final class Search33v7 implements Search4{
 						tempPawnMoves != 0; tempPawnMoves&=tempPawnMoves-1){
 					long moveMask = tempPawnMoves&-tempPawnMoves;
 					long pawnMask = player == 0? moveMask>>>pawnOffset[i]: moveMask<<pawnOffset[i];
-					pieces[w] = pawnMask;
-					moves[w] = moveMask;
-					ranks[w] = 5;
-					w++;
+					final MoveSet temp = mset[w++];
+					temp.piece = pawnMask;
+					temp.moves = moveMask;
+					temp.rank = 5;
 				}
 			}
 		}
@@ -1061,20 +1098,12 @@ public final class Search33v7 implements Search4{
 	 * @param rank rank of entries
 	 * @param length number of entries to sort
 	 */
-	private static void isort(final long[] pieceMasks, final long[] moves, final int[] rank, final int length){
+	private static void isort(final MoveSet[] mset, final int length){
 		for(int i = 1; i < length; i++){
-			//for(int a = i; moves[i] != 0 && a > 0 && (rank[a-1]>rank[a] || moves[a-1] == 0); a--){
-			for(int a = i; a > 0 && rank[a-1]>rank[a]; a--){
-				long templ1 = pieceMasks[a];
-				pieceMasks[a] = pieceMasks[a-1];
-				pieceMasks[a-1] = templ1;
-				long templ2 = moves[a];
-				moves[a] = moves[a-1];
-				moves[a-1] = templ2;
-				
-				int tempr = rank[a];
-				rank[a] = rank[a-1];
-				rank[a-1] = tempr;
+			for(int a = i; a > 0 && mset[a-1].rank > mset[a].rank; a--){
+				final MoveSet temp = mset[a];
+				mset[a] = mset[a-1];
+				mset[a-1] = temp;
 			}
 		}
 	}

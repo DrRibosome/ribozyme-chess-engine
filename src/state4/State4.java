@@ -2,20 +2,23 @@ package state4;
 
 import eval.PositionMasks;
 
-
-
 public final class State4 {
 	
 	public static final int WHITE = 0;
 	public static final int BLACK = 1;
 	
-	public static final int PIECE_TYPE_EMPTY = 0; //must stay 0, others can change
+	//NOTE: CHANGING THESE VALUES WILL ALMOST CERTAINLY CAUSE MANY ERRORS
+	public static final int PIECE_TYPE_EMPTY = 0; //definitely must stay 0
 	public static final int PIECE_TYPE_KING = 1;
 	public static final int PIECE_TYPE_QUEEN = 2;
 	public static final int PIECE_TYPE_ROOK = 3;
 	public static final int PIECE_TYPE_BISHOP = 4;
 	public static final int PIECE_TYPE_KNIGHT = 5;
 	public static final int PIECE_TYPE_PAWN = 6;
+	public static final int PROMOTE_QUEEN = 0;
+	public static final int PROMOTE_ROOK = 1;
+	public static final int PROMOTE_BISHOP = 2;
+	public static final int PROMOTE_KNIGHT = 3;
 	
 	/** piece masks, indexed [piece-type][player]*/
 	public final long[][] pieceMasks = new long[7][2];
@@ -291,6 +294,10 @@ public final class State4 {
 		return executeMove(player, pieceMask, moveMask);
 	}
 	
+	public long executeMove(final int player, final long pieceMask, final long moveMask){
+		return executeMove(player, pieceMask, moveMask, State4.PROMOTE_QUEEN);
+	}
+	
 	/**
 	 * executs passed move
 	 * @param player player moving
@@ -298,7 +305,7 @@ public final class State4 {
 	 * @param moveMask mask for final location of the piece
 	 * @return returns move encoding
 	 */
-	public long executeMove(final int player, final long pieceMask, final long moveMask){
+	public long executeMove(final int player, final long pieceMask, final long moveMask, final int pawnPromoteType){
 		final int pos1 = BitUtil.lsbIndex(pieceMask);
 		final int pos2 = BitUtil.lsbIndex(moveMask);
 		
@@ -427,23 +434,21 @@ public final class State4 {
 		enPassante = 0;
 		if(movingType == PIECE_TYPE_PAWN){
 			if((moveMask & Masks.pawnPromotionMask[player]) != 0){ //pawn promotion
+				final int ptype = pawnPromoteType+2; //piece type for promotion
 				//pawn promotion
-				mailbox[pos2] = PIECE_TYPE_QUEEN;
+				mailbox[pos2] = ptype;
 				pawns[player] &= ~moveMask;
-				queens[player] |= moveMask;
+				pieceMasks[ptype][player] |= moveMask;
 				pieceCounts[player][PIECE_TYPE_PAWN]--;
-				pieceCounts[player][PIECE_TYPE_QUEEN]++;
-				encoding = MoveEncoder.setPawnPromotion(encoding);
-				
+				pieceCounts[player][ptype]++;
+				encoding = MoveEncoder.setPawnPromotion(encoding, pawnPromoteType);
 				zkey ^= zhash.zhash[player][PIECE_TYPE_PAWN][pos2] ^
-						zhash.zhash[player][PIECE_TYPE_QUEEN][pos2];
+						zhash.zhash[player][ptype][pos2];
 				pawnZkey ^= zhash.zhash[player][PIECE_TYPE_PAWN][pos2];
-				//System.out.println("pawn promoted");
 			} else if((player == 0 && (pieceMask & 0xFF00L) != 0 && (moveMask & 0xFF000000L) != 0) ||
 					(player == 1 && (pieceMask & 0xFF000000000000L) != 0 && (moveMask & 0xFF00000000L) != 0)){
 				//pawn moved 2 squares, set en passante
 				enPassante = player == 0? moveMask >>> 8: moveMask << 8;
-				//System.out.println("possible en passante set, pos = "+BitUtil.lsbIndex(enPassante));
 				zkey ^= zhash.enPassante[BitUtil.lsbIndex(enPassante)];
 			} else if(moveMask == prevEnPassante){
 				//making an en passante take move
@@ -608,17 +613,16 @@ public final class State4 {
 		}
 		
 		//pawn promotion
-		if(MoveEncoder.isPawnPromoted(encoding)){
+		if(MoveEncoder.isPawnPromotion(encoding)){
+			final int ptype = MoveEncoder.getPawnPromotionType(encoding)+2;
 			long moveMask = 1L<<pos1;
 			mailbox[pos1] = PIECE_TYPE_PAWN;
-			queens[player] &= ~moveMask;
+			pieceMasks[ptype][player] &= ~moveMask;
 			pawns[player] |= moveMask;
 			pieceCounts[player][PIECE_TYPE_PAWN]++;
-			pieceCounts[player][PIECE_TYPE_QUEEN]--;
-			//System.out.println("undoing pawn promotion");
-			/*System.out.println(this);*/
+			pieceCounts[player][ptype]--;
 			zkey ^= zhash.zhash[player][PIECE_TYPE_PAWN][pos1] ^
-					zhash.zhash[player][PIECE_TYPE_QUEEN][pos1]; //pos1, because already move back above
+					zhash.zhash[player][ptype][pos1]; //pos1, because already move back above
 			pawnZkey ^= zhash.zhash[player][PIECE_TYPE_PAWN][pos1];
 		}
 		
