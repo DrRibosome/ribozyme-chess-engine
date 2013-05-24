@@ -99,26 +99,27 @@ final class MoveGen2 {
 		
 		final long open = ~agg;
 		final long promotionMask = Masks.pawnPromotionMask[player];
-		final long[] passedPawnMasks = Masks.passedPawnMasks[player];
-		final long enemyPawns = s.pawns[1-player];
+		//final long[] passedPawnMasks = Masks.passedPawnMasks[player];
+		//final long enemyPawns = s.pawns[1-player];
+		final long enPassant = s.enPassante;
 		for(long pawns = s.pawns[player]; pawns != 0; pawns &= pawns-1){
 			final long p = pawns & -pawns;
 			final long attacks;
 			final long l1move;
 			final long l2move;
 			if(player == 0){
-				attacks = (((p << 7) & pawnLeftShiftMask) | ((p << 9) & pawnRightShiftMask)) & enemy;
+				attacks = (((p << 7) & pawnLeftShiftMask) | ((p << 9) & pawnRightShiftMask)) & (enemy | enPassant);
 				l1move = (p << 8) & open;
 				l2move = ((((p & 0xFF00L) << 8) & open) << 8) & open;
 			} else{
-				attacks = (((p >>> 9) & pawnLeftShiftMask) | ((p >>> 7) & pawnRightShiftMask)) & enemy;
+				attacks = (((p >>> 9) & pawnLeftShiftMask) | ((p >>> 7) & pawnRightShiftMask)) & (enemy | enPassant);
 				l1move = (p >>> 8) & open;
 				l2move = ((((p & 0xFF000000000000L) >>> 8) & open) >>> 8) & open;
 			}
 			
 			for(long moves = attacks | l1move | l2move; moves != 0; moves &= moves-1){
 				final long m = moves & -moves;
-				final boolean take = (m & enemy) != 0;
+				final boolean take = (m & (enemy|enPassant)) != 0;
 				final boolean promote = (m & promotionMask) != 0;
 				
 				if(!quiece || take || promote){
