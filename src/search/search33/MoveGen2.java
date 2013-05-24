@@ -1,6 +1,5 @@
 package search.search33;
 
-import state4.BitUtil;
 import state4.Masks;
 import state4.State4;
 
@@ -9,7 +8,6 @@ final class MoveGen2 {
 	private final static long pawnLeftShiftMask = Masks.colMaskExc[7];
 	private final static long pawnRightShiftMask = Masks.colMaskExc[0];
 	
-	/** record moves as blocks*/
 	private static int recordMoves(final int player, final int pieceMovingType, final long pieceMask,
 			final long moves, final long enemyPawnAttacks, final long enemyPieces, final long upTakeMask, final MoveSet[] mset,
 			final int msetIndex, final State4 s, final boolean quiesce){
@@ -31,7 +29,7 @@ final class MoveGen2 {
 					final boolean upTake = (move & enemyPieces & upTakeMask) != 0;
 					final boolean downTake = (move & enemyPieces & ~upTakeMask) != 0;
 					final boolean goodNonTake = (move & ~enemyPawnAttacks) != 0;
-					final boolean badNonTake = (move & enemyPawnAttacks) != 0;
+					//final boolean badNonTake = (move & enemyPawnAttacks) != 0;
 					
 					final int rank;
 					if(upTake){
@@ -51,9 +49,18 @@ final class MoveGen2 {
 		return w;
 	}
 	
-	/** genereates moves, returns length after move generation*/
+	/**
+	 * genereates moves
+	 * @param player
+	 * @param s
+	 * @param alliedKingAttacked
+	 * @param mset
+	 * @param msetInitialIndex initial index to start recording moves at
+	 * @param quiesce
+	 * @return returns length of move set array after move generation
+	 */
 	public static int genMoves(final int player, final State4 s, final boolean alliedKingAttacked,
-			final MoveSet[] mset, final int msetInitialIndex, final boolean quiece){
+			final MoveSet[] mset, final int msetInitialIndex, final boolean quiesce){
 		final long enemyPawnAttacks = Masks.getRawPawnAttacks(1-player, s.pawns[1-player]) & ~s.pieces[1-player];
 		
 		final long allied = s.pieces[player];
@@ -73,27 +80,27 @@ final class MoveGen2 {
 		for(long queens = s.queens[player]; queens != 0; queens &= queens-1){
 			w = recordMoves(player, State4.PIECE_TYPE_QUEEN, queens,
 					Masks.getRawQueenMoves(agg, queens&-queens) & ~allied,
-					enemyPawnAttacks, enemy, queenUpTakes, mset, w, s, quiece);
+					enemyPawnAttacks, enemy, queenUpTakes, mset, w, s, quiesce);
 		}
 
 		final long rookUpTakes = s.rooks[1-player] | queenUpTakes;
 		for(long rooks = s.rooks[player]; rooks != 0; rooks &= rooks-1){
 			w = recordMoves(player, State4.PIECE_TYPE_ROOK, rooks,
 					Masks.getRawRookMoves(agg, rooks&-rooks) & ~allied,
-					enemyPawnAttacks, enemy, rookUpTakes, mset, w, s, quiece);
+					enemyPawnAttacks, enemy, rookUpTakes, mset, w, s, quiesce);
 		}
 		
 		final long minorPieceUpTakes = s.bishops[1-player] | s.knights[1-player] | rookUpTakes;
 		for(long knights = s.knights[player]; knights != 0; knights &= knights-1){
 			w = recordMoves(player, State4.PIECE_TYPE_KNIGHT, knights,
 					Masks.getRawKnightMoves(knights&-knights) & ~allied,
-					enemyPawnAttacks, enemy, minorPieceUpTakes, mset, w, s, quiece);
+					enemyPawnAttacks, enemy, minorPieceUpTakes, mset, w, s, quiesce);
 		}
 		
 		for(long bishops = s.bishops[player]; bishops != 0; bishops &= bishops-1){
 			w = recordMoves(player, State4.PIECE_TYPE_BISHOP, bishops,
 					Masks.getRawBishopMoves(agg, bishops&-bishops) & ~allied,
-					enemyPawnAttacks, enemy, minorPieceUpTakes, mset, w, s, quiece);
+					enemyPawnAttacks, enemy, minorPieceUpTakes, mset, w, s, quiesce);
 		}
 
 		
@@ -122,7 +129,7 @@ final class MoveGen2 {
 				final boolean take = (m & (enemy|enPassant)) != 0;
 				final boolean promote = (m & promotionMask) != 0;
 				
-				if(!quiece || take || promote){
+				if(!quiesce || take || promote){
 					final MoveSet temp = mset[w++];
 					temp.piece = p;
 					temp.moves = m;
@@ -157,7 +164,7 @@ final class MoveGen2 {
 		if(!alliedKingAttacked){
 			long kingMoves = State4.getKingMoves(player, s.pieces, s.kings[player])|State4.getCastleMoves(player, s);
 			w = recordMoves(player, State4.PIECE_TYPE_KING, s.kings[player], kingMoves,
-					enemyPawnAttacks, enemy, kingUpTakes, mset, w, s, quiece);
+					enemyPawnAttacks, enemy, kingUpTakes, mset, w, s, quiesce);
 		}
 
 		return w;
