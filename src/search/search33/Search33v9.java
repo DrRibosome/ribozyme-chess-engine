@@ -35,9 +35,6 @@ public final class Search33v9 implements Search4{
 	private final static class MoveList{
 		private final static int defSize = 128;
 		private final MoveSet[] mset = new MoveSet[defSize];
-		public final long[] pawnMoves = new long[4];
-		public int length;
-		public boolean kingAttacked;
 		public boolean skipNullMove = false;
 		/** holds killer moves as first 12 bits (ie, masked 0xFFF) of move encoding*/
 		public final long[] killer = new long[2];
@@ -497,7 +494,6 @@ public final class Search33v9 implements Search4{
 		}
 		
 		final boolean alliedKingAttacked = isChecked(player, s);
-		ml.kingAttacked = alliedKingAttacked;
 		
 		//null move pruning
 		final boolean threatMove; //true if opponent can make a move that causes null-move fail low
@@ -565,7 +561,6 @@ public final class Search33v9 implements Search4{
 		}
 
 		//move generation
-		ml.length = w;
 		final int length = MoveGen2.genMoves(player, s, alliedKingAttacked, mset, w, false);
 		if(length == 0){ //no moves, draw
 			//m.put2(zkey, 0, 0, depth, ZMap.CUTOFF_TYPE_EXACT);
@@ -765,11 +760,9 @@ public final class Search33v9 implements Search4{
 			}
 		}
 		
-		MoveList ml = stack[stackIndex];
-
 		int bestScore;
-		ml.kingAttacked = State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
-		if(ml.kingAttacked){
+		final boolean alliedKingAttacked = State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
+		if(alliedKingAttacked){
 			bestScore = -77777; //NOTE: THIS CONDITION WILL PROBABLY NEVER BE CHECKED
 		} else{
 			if(!pv){
@@ -787,8 +780,7 @@ public final class Search33v9 implements Search4{
 			}
 		}
 		
-		ml.length = w;
-		final int length = MoveGen2.genMoves(player, s, ml.kingAttacked, mset, w, true);
+		final int length = MoveGen2.genMoves(player, s, alliedKingAttacked, mset, w, true);
 		isort(mset, length);
 
 		
