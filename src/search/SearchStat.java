@@ -3,10 +3,10 @@ package search;
 public class SearchStat {
 	public long nodesSearched;
 	public long searchTime;
-	public double endScore;
 	/** empirical branching factor*/
 	public double empBranchingFactor;
 	public long hashHits;
+	/** final predicted score*/
 	public int predictedScore;
 	
 	public static void agg(SearchStat src, SearchStat agg){

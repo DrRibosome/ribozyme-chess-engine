@@ -1,19 +1,22 @@
 package uci;
 
 import search.Search4;
+import search.search33.MoveSet;
 import search.search33.Search33v9;
+import state4.BitUtil;
+import state4.Masks;
+import state4.State4;
 import time.TimerThread5;
 import eval.Evaluator2;
 import eval.e7.E7v10;
 
 public final class RibozymeEngine implements UCIEngine{
 
-	private final static String name = "ribozyme .3";
+	private final static String name = "ribozyme 0.4";
 	
 	private final Search4 s;
 	private Thread t;
-	private final int[] moveStore = new int[2];
-	private Position p;
+	private final MoveSet moveStore = new MoveSet();
 	
 	public RibozymeEngine(){
 		
@@ -27,6 +30,31 @@ public final class RibozymeEngine implements UCIEngine{
 		return name;
 	}
 	
+	private static String buildMoveString(final int player, final State4 s, final MoveSet moveStore){
+		final char promotionChar;
+		switch(moveStore.promotionType){
+		case State4.PROMOTE_QUEEN:
+			promotionChar = 'q';
+			break;
+		case State4.PROMOTE_ROOK:
+			promotionChar = 'r';
+			break;
+		case State4.PROMOTE_BISHOP:
+			promotionChar = 'b';
+			break;
+		case State4.PROMOTE_KNIGHT:
+			promotionChar = 'n';
+			break;
+		default:
+			promotionChar = 'x';
+			assert false;
+			break;
+		}
+		final boolean isPromoting = (s.pawns[player] & moveStore.piece) != 0 && (moveStore.moves & Masks.pawnPromotionMask[player]) != 0;
+		final String move = posString(BitUtil.lsbIndex(moveStore.piece))+posString(BitUtil.lsbIndex(moveStore.moves));
+		return move+(isPromoting? promotionChar: "");
+	}
+	
 	@Override
 	public void go(final GoParams params, final Position p) {
 		final int player = p.sideToMove;
@@ -35,9 +63,7 @@ public final class RibozymeEngine implements UCIEngine{
 				public void run(){
 					final int inc = params.increment[player];
 					TimerThread5.searchBlocking(s, p.s, player, params.time[player], inc, moveStore);
-					String promotion = (p.s.pawns[player] & 1L<<moveStore[0]) != 0 && (moveStore[1]/8==7 || moveStore[1]/8==0)? "q": "";
-					String move = posString(moveStore[0])+posString(moveStore[1]);
-					System.out.println("bestmove "+move+promotion);
+					System.out.println("bestmove "+buildMoveString(player, p.s, moveStore));
 				}
 			};
 			t.setDaemon(true);
@@ -47,10 +73,7 @@ public final class RibozymeEngine implements UCIEngine{
 			t = new Thread(){
 				public void run(){
 					s.search(player, p.s, moveStore);
-					
-					String promotion = (p.s.pawns[player] & 1L<<moveStore[0]) != 0 && (moveStore[1]/8==7 || moveStore[1]/8==0)? "q": "";
-					String move = posString(moveStore[0])+posString(moveStore[1]);
-					System.out.println("bestmove "+move+promotion);
+					System.out.println("bestmove "+buildMoveString(player, p.s, moveStore));
 				}
 			};
 			t.setDaemon(true);
@@ -75,9 +98,7 @@ public final class RibozymeEngine implements UCIEngine{
 			t = new Thread(){
 				public void run(){
 					s.search(player, p.s, moveStore);
-					String promotion = (p.s.pawns[player] & 1L<<moveStore[0]) != 0 && (moveStore[1]/8==7 || moveStore[1]/8==0)? "q": "";
-					String move = posString(moveStore[0])+posString(moveStore[1]);
-					System.out.println("bestmove "+move+promotion);
+					System.out.println("bestmove "+buildMoveString(player, p.s, moveStore));
 				}
 			};
 			t.setDaemon(true);

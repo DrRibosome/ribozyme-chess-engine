@@ -1,8 +1,8 @@
 package search.search33;
 
-final class MoveSet{
-	long piece;
-	long moves;
-	int promotionType;
-	int rank;
+public final class MoveSet{
+	public long piece;
+	public long moves;
+	public int promotionType;
+	public int rank;
 }

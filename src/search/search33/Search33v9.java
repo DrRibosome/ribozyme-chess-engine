@@ -1,7 +1,5 @@
 package search.search33;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import search.Search4;
@@ -96,7 +94,6 @@ public final class Search33v9 implements Search4{
 	private final Evaluator2 e;
 	private final int qply = 12;
 	private final Hash m;
-	private FileWriter f;
 	private SearchListener2 l;
 	private final static int stackSize = 256;
 	/** sequence number for hash entries*/
@@ -138,7 +135,7 @@ public final class Search33v9 implements Search4{
 		return stats;
 	}
 	
-	public void search(final int player, final State4 s, final int[] moveStore){
+	public void search(final int player, final State4 s, final MoveSet moveStore){
 		search(player, s, moveStore, -1);
 	}
 	
@@ -149,7 +146,7 @@ public final class Search33v9 implements Search4{
 		e.reset();
 	}
 	
-	public void search(final int player, final State4 s, final int[] moveStore, final int maxPly){
+	public void search(final int player, final State4 s, final MoveSet moveStore, final int maxPly){
 		stats.nodesSearched = 0;
 		stats.hashHits = 0;
 		stats.forcedQuietCutoffs = 0;
@@ -243,43 +240,12 @@ public final class Search33v9 implements Search4{
 		
 		stats.empBranchingFactor = Math.pow(nodesSearched, 1./stats.maxPlySearched);
 		
-		if(f != null){
-			//record turn, piece counts, and scores at each level of search
-			String pieceCounts = "";
-			for(int q = 0; q < 2; q++){
-				pieceCounts += "<piece-counts-"+q+"=";
-				for(int a = 0; a < s.pieceCounts[0].length; a++){
-					pieceCounts += s.pieceCounts[q][a];
-					if(a != s.pieceCounts[0].length-1)
-						pieceCounts+=",";
-				}
-				pieceCounts += ">";
-			}
-			String scorestr = "<scores=";
-			for(int a = 0; a < maxPly && a < stats.scores.length; a++){
-				scorestr += stats.scores[a];
-				if(a != maxPly-1)
-					scorestr += ",";
-			}
-			scorestr += ">";
-			String record = "<turn="+player+">"+pieceCounts+scorestr;
-			//ps.println(record);
-			try{
-				f.write(record+"\n");
-				f.flush();
-			} catch(IOException a){
-				a.printStackTrace();
-			}
-			//ps.append(record+"\n");
-		}
-
-		stats.endScore = score;
-		
 		if(moveStore != null){
-			int pos1 = MoveEncoder.getPos1(bestMove);
-			int pos2 = MoveEncoder.getPos2(bestMove);
-			moveStore[0] = pos1;
-			moveStore[1] = pos2;
+			final int pos1 = MoveEncoder.getPos1(bestMove);
+			final int pos2 = MoveEncoder.getPos2(bestMove);
+			moveStore.piece = 1L << pos1;
+			moveStore.moves = 1L << pos2;
+			moveStore.promotionType = MoveEncoder.getPawnPromotionType(bestMove);
 		}
 		
 		stats.searchTime = System.currentTimeMillis()-stats.searchTime;
@@ -916,10 +882,8 @@ public final class Search33v9 implements Search4{
 	
 	/**
 	 * insertion sort (lowest rank first)
-	 * @param pieceMasks entries to sort
-	 * @param moves moves to sort
-	 * @param rank rank of entries
-	 * @param length number of entries to sort
+	 * @param mset
+	 * @param length
 	 */
 	private static void isort(final MoveSet[] mset, final int length){
 		for(int i = 1; i < length; i++){

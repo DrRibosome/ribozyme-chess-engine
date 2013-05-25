@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import search.Search4;
 import search.SearchListener2;
+import search.search33.MoveSet;
 import state4.BitUtil;
 import state4.State4;
 
@@ -24,7 +25,7 @@ public final class TimerThread5 extends Thread{
 	private long time;
 	private long inc;
 	private int player;
-	private int[] moveStore;
+	private final MoveSet moveStore;
 	
 	private static final boolean debug = false;
 	
@@ -57,7 +58,7 @@ public final class TimerThread5 extends Thread{
 		}
 	};
 	
-	private TimerThread5(Search4 search, State4 s, int player, long time, long inc, int[] moveStore) {
+	private TimerThread5(Search4 search, State4 s, int player, long time, long inc, MoveSet moveStore) {
 		setDaemon(true);
 		this.search = search;
 		this.s = s;
@@ -145,7 +146,7 @@ public final class TimerThread5 extends Thread{
 			
 			//handle adjustments from search failures
 			while(!q.isEmpty()){
-				int failType = q.poll();
+				//int failType = q.poll();
 				//double scale = failType == failHigh? .005: .01;
 				double scale = 0;
 				target += target*scale;
@@ -169,16 +170,12 @@ public final class TimerThread5 extends Thread{
 		isFinished.set(true);
 	}
 	
-	private static long min(long l1, long l2){
-		return l1 < l2? l1: l2;
-	}
-	
 	/** tests to see if the passed player is in check*/
 	private static boolean isChecked(final int player, final State4 s){
 		return State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
 	}
 	
-	public static void searchBlocking(Search4 search, State4 s, int player, long time, long inc, int[] moveStore){
+	public static void searchBlocking(Search4 search, State4 s, int player, long time, long inc, MoveSet moveStore){
 		final TimerThread5 t = new TimerThread5(search, s, player, time, inc, moveStore);
 		t.start();
 		while(t.isAlive()){
@@ -188,7 +185,8 @@ public final class TimerThread5 extends Thread{
 		}
 	}
 	
-	public static Controller searchNonBlocking(Search4 search, State4 s, int player, long time, long inc, int[] moveStore){
+	public static Controller searchNonBlocking(final Search4 search, final State4 s, final int player,
+			final long time, final long inc, final MoveSet moveStore){
 		final TimerThread5 t = new TimerThread5(search, s, player, time, inc, moveStore);
 		final Controller temp = new Controller(){
 			@Override
