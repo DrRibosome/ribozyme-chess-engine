@@ -38,7 +38,7 @@ public final class ZMap4 implements Hash{
 		final int index = (int)(zkey >>> (64-size));
 		final int seq = e.seq;
 		final TTEntry d = depthReplace[index];
-		if(d.seq != seq || e.depth < d.depth){
+		if(d.seq != seq || e.depth <= d.depth){
 			temp.fill(d);
 			d.fill(e);
 		} else{
