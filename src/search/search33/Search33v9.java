@@ -617,9 +617,9 @@ public final class Search33v9 implements Search4{
 						isPassedPawnPush;
 
 
-				final double ext = (isDangerous && pv? 1: 0) + (threatMove && pv? 0: 0) +
+				final double ext = (isDangerous && pv? 1: 0) + (threatMove && pv? 0: 0);
 						//(!pv && depth > 7? -depth/10: 0);
-						(!pv && depth > 7 && !isDangerous && !isCapture? -depth/10: 0);
+						//(!pv && depth > 7 && !isDangerous && !isCapture? -depth/10: 0);
 
 				//futility pruning
 				if(!pv && !isPawnPromotion &&
