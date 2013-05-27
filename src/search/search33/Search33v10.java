@@ -765,7 +765,7 @@ public final class Search33v10 implements Search4{
 			
 			final boolean isPromotion = (pieceMask & alliedPawns) != 0 && (move & promotionMask) != 0;
 			
-			if(noSEEPrune || isPromotion || SEE.seeSign(player, pieceMask, move, s) >= 0){
+			if(noSEEPrune || isPromotion || pv || SEE.seeSign(player, pieceMask, move, s) >= 0){
 				long encoding = s.executeMove(player, pieceMask, move, promotionType);
 				this.e.processMove(encoding);
 				final boolean isDrawable = s.isDrawable();
