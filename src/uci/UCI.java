@@ -2,9 +2,6 @@ package uci;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,20 +23,13 @@ public final class UCI {
 			
 			while(scanner.hasNextLine()){
 				String interfaceCommand = scanner.nextLine();
-				debug(interfaceCommand+"\n");
 				
 				interfaceCommand = interfaceCommand.replace("\r", "");
 				
-				debug("parsed command: ");
 				String[] s = interfaceCommand.split("\\s+");
-				for(int i = 0; i < s.length; i++){
-					debug("'"+s[i]+"' ");
-				}
-				debug("\n");
 				
 				
 				if(s[0].equalsIgnoreCase("uci")){
-					debug("processing 'uci' command\n");
 					send("id name "+engine.getName());
 					send("id author Jack Crawford");
 					send("uciok");
@@ -130,16 +120,6 @@ public final class UCI {
 	private void send(String s){
 		System.out.println(s);
 		System.out.flush();
-		debug("sent: '"+s+"'\n");
-	}
-	
-	private void debug(String s){
-		if(out != null){
-			try{
-				out.write(s);
-				out.flush();
-			} catch(IOException e){}
-		}
 	}
 	
 	private static UCIMove parseMove(String move){
@@ -170,16 +150,6 @@ public final class UCI {
 	}
 	
 	public UCI(){
-		try{
-			out = new FileWriter("uci-log.txt", true);
-			
-			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			Calendar cal = Calendar.getInstance();
-			out.write("========= "+dateFormat.format(cal.getTime())+" =========\n");
-		} catch (IOException e){
-			e.printStackTrace();
-		}
-		//System.setProperty("line.separator", "\r\n");
 		t.start();
 	}
 	
