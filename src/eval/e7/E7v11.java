@@ -794,7 +794,7 @@ public final class E7v11 implements Evaluator2{
 			mobScore += multWeight(mobilityWeights[State4.PIECE_TYPE_BISHOP][count], clutterMult);
 			bishopAttackMask |= rawMoves;
 			
-			//penalize for blocked allied pawns on bishop color
+			//penalize bishop for blocking allied pawns on bishop color
 			final long squareMask = (PositionMasks.bishopSquareMask[0] & b) != 0?
 					PositionMasks.bishopSquareMask[0]: PositionMasks.bishopSquareMask[1];
 			final int blockingPawnsCount = (int)BitUtil.getSetBits(blockedAlliedPawns & squareMask);
