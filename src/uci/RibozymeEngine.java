@@ -8,7 +8,7 @@ import state4.Masks;
 import state4.State4;
 import time.TimerThread5;
 import eval.Evaluator2;
-import eval.e7.E7v10;
+import eval.e7.E7v11;
 
 public final class RibozymeEngine implements UCIEngine{
 
@@ -20,7 +20,7 @@ public final class RibozymeEngine implements UCIEngine{
 	
 	public RibozymeEngine(){
 		
-		Evaluator2 e = new E7v10();
+		Evaluator2 e = new E7v11();
 		
 		s = new Search33v9(e, 22, true);
 	}
