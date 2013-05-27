@@ -759,20 +759,30 @@ public final class E7v11 implements Evaluator2{
 	private static int scoreMobility(final int player, final State4 s,
 			final double clutterMult, final int[] nonPawnMaterial, final long[] attackMask){
 		int mobScore = 0;
+		
+		final long alliedPawns = s.pawns[player];
 		final long enemyPawns = s.pawns[1-player];
 		final long enemyPawnAttacks = Masks.getRawPawnAttacks(1-player, enemyPawns);
 		
 		final long allied = s.pieces[player];
 		final long enemy = s.pieces[1-player];
 		final long agg = allied | enemy;
-		final long alliedPawns = s.pawns[player];
 		final long aggPawns = alliedPawns | enemyPawns;
-		final long blockedAlliedPawns;
+		final long blockedAlliedPawns; //allied pawns whose movement is blocked by another pawn
+		final long supportingAlliedPawns; //allied pawns that are support other allied pawns
 		
 		if(player == 0){
-			blockedAlliedPawns = ((alliedPawns << 8) & aggPawns) >>> 8;
+			final long movementBlocked = ((alliedPawns << 8) & aggPawns) >>> 8;
+			final long supportPawns = (((alliedPawns << 7) & alliedPawns) >>> 7) |
+					(((alliedPawns << 9) & alliedPawns) >>> 9);
+			blockedAlliedPawns = movementBlocked;
+			supportingAlliedPawns = supportPawns;
 		} else{
-			blockedAlliedPawns = ((alliedPawns >>> 8) & aggPawns) << 8;
+			final long movementBlocked = ((alliedPawns >>> 8) & aggPawns) << 8;
+			final long supportPawns = (((alliedPawns >>> 7) & alliedPawns) << 7) |
+					(((alliedPawns >>> 9) & alliedPawns) << 9);
+			blockedAlliedPawns = movementBlocked;
+			supportingAlliedPawns = supportPawns;
 		}
 		
 		long bishopAttackMask = 0;
@@ -784,11 +794,12 @@ public final class E7v11 implements Evaluator2{
 			mobScore += multWeight(mobilityWeights[State4.PIECE_TYPE_BISHOP][count], clutterMult);
 			bishopAttackMask |= rawMoves;
 			
-			//penalize blocked allied pawns on bishop color
+			//penalize for blocked allied pawns on bishop color
 			final long squareMask = (PositionMasks.bishopSquareMask[0] & b) != 0?
 					PositionMasks.bishopSquareMask[0]: PositionMasks.bishopSquareMask[1];
 			final int blockingPawnsCount = (int)BitUtil.getSetBits(blockedAlliedPawns & squareMask);
-			mobScore += S(blockingPawnsCount*-5, blockingPawnsCount*0);
+			final int supportingPawnsCount = (int)BitUtil.getSetBits(supportingAlliedPawns & squareMask & ~blockedAlliedPawns);
+			mobScore += S(blockingPawnsCount*-5 + supportingPawnsCount*-1, 0);
 		}
 
 		long knightAttackMask = 0;
