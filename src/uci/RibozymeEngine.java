@@ -12,7 +12,8 @@ import eval.e7.E7v11;
 
 public final class RibozymeEngine implements UCIEngine{
 
-	private final static String name = "ribozyme 0.9.11";
+	// major-version.search-version.eval-version
+	private final static String name = "ribozyme 0.11.11";
 	
 	private final Search4 s;
 	private Thread t;
