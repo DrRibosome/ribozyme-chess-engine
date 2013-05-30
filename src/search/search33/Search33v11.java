@@ -8,7 +8,6 @@ import search.SearchStat;
 import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
-import state4.SEE;
 import state4.State4;
 import eval.Evaluator2;
 
@@ -45,8 +44,6 @@ public final class Search33v11 implements Search4{
 	
 	/** rough material gain by piece type*/
 	private final static int[] materialGain = new int[7];
-	/** stores lmr reductions by [isPv][depth][move-count]*/
-	private final static int[][][] reductions;
 	/** stores futility margins by [depth]*/
 	private final static int[][] futilityMargins;
 	
@@ -56,20 +53,6 @@ public final class Search33v11 implements Search4{
 		materialGain[State4.PIECE_TYPE_PAWN] = 100;
 		materialGain[State4.PIECE_TYPE_QUEEN] = 900;
 		materialGain[State4.PIECE_TYPE_ROOK] = 500;
-		
-		reductions = new int[2][64][64];
-		for (int d = 1; d < 64; d++){ //depth
-			//System.out.print("d="+d+":\t");
-			for (int mc = 1; mc < 64; mc++) //move count
-			{
-				final double pvRed = Math.log(d) * Math.log(mc) / 3.0;
-				final double nonPVRed = 0.33 + Math.log(d) * Math.log(mc) / 2.25;
-				reductions[1][d][mc] = (int)(pvRed > 1? pvRed: 0);
-				reductions[0][d][mc] = (int)(nonPVRed > 1? nonPVRed: 0);
-				//System.out.print(reductions[1][d][mc]+", ");
-			}
-			//System.out.println();
-		}
 		
 		futilityMargins = new int[5][64];
 		int[][] startEnd = {
@@ -311,10 +294,6 @@ public final class Search33v11 implements Search4{
 	/** tests to see if the passed player is in check*/
 	private static boolean isChecked(final int player, final State4 s){
 		return State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
-	}
-	
-	private static int lmrReduction(final boolean pv, final double depth, final int moveCount){
-		return reductions[pv? 1: 0][depth < 64? (int)depth: 63][moveCount < 64? moveCount: 63];
 	}
 	
 	private int recurse(final int player, int alpha, final int beta, final double depth,
