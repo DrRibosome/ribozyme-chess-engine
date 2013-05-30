@@ -2,7 +2,7 @@ package uci;
 
 import search.Search4;
 import search.search33.MoveSet;
-import search.search33.Search33v9temp;
+import search.search33.Search33v11;
 import state4.BitUtil;
 import state4.Masks;
 import state4.State4;
@@ -22,7 +22,7 @@ public final class RibozymeEngine implements UCIEngine{
 		
 		Evaluator2 e = new E7v11();
 		
-		s = new Search33v9temp(e, 22, true);
+		s = new Search33v11(e, 22, true);
 	}
 	
 	@Override

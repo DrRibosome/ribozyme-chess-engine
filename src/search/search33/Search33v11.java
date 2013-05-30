@@ -13,7 +13,7 @@ import state4.State4;
 import eval.Evaluator2;
 
 /** heavy search reductions for non-pv lines after depth 7*/
-public final class Search33v9temp implements Search4{
+public final class Search33v11 implements Search4{
 	public final static class SearchStat32k extends SearchStat{
 		/** scores returned from quiet search without bottoming out*/
 		public long forcedQuietCutoffs;
@@ -113,11 +113,11 @@ public final class Search33v9temp implements Search4{
 	
 	private final AtomicBoolean cutoffSearch = new AtomicBoolean(false);
 	
-	public Search33v9temp(Evaluator2 e, int hashSize){
+	public Search33v11(Evaluator2 e, int hashSize){
 		this(e, hashSize, false);
 	}
 	
-	public Search33v9temp(Evaluator2 e, int hashSize, boolean printPV){
+	public Search33v11(Evaluator2 e, int hashSize, boolean printPV){
 		this.e = e;
 		
 		//m = new ZMap3(hashSize);
