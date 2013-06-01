@@ -76,8 +76,6 @@ public final class E8 implements Evaluator2{
 			}, new int[64]
 	};
 
-	private final static boolean[] allFalse = new boolean[2];
-	private final static boolean[] allTrue = new boolean[]{true, true};
 	private final static int[] zeroi = new int[2];
 	
 	private final int[] materialScore = new int[2];
@@ -90,21 +88,14 @@ public final class E8 implements Evaluator2{
 	private double clutterMult;
 	/** stores score for non-pawn material*/
 	private final int[] nonPawnMaterial = new int[2];
-	private final boolean[] kingMoved = new boolean[2];
-	private final boolean[] pawnMoved = new boolean[2];
 	/** stores attack mask for all pieces for each player, indexed [player][piece-type]*/
 	private final long[] attackMask = new long[2];
 	
 	//cached values
-	private final int[] pawnWallScore = new int[2];
 	/** stores total king distance from allied pawns*/
 	private final int[] kingPawnDist = new int[2];
 	private final PawnHash pawnHash = new PawnHash(16, 16);
 	final PawnHashEntry filler = new PawnHashEntry();
-	/** stores pawn score, indexed [player]*/
-	private final int[] pawnScore = new int[2];
-	/** stores masks of passed pawns, indexed [player]*/
-	private final long[] passedPawns = new long[2];
 
 	static{
 		//clutterIndex calculated by linear interpolation
@@ -250,8 +241,6 @@ public final class E8 implements Evaluator2{
 			loader.zkey = pawnZkey;
 			pawnHash.put(pawnZkey, loader);
 		}
-		System.arraycopy(allFalse, 0, kingMoved, 0, 2);
-		System.arraycopy(allFalse, 0, pawnMoved, 0, 2);
 		return score + interpolate(endgameBonus, scale) + interpolate(tempoWeight, scale);
 	}
 
@@ -271,7 +260,7 @@ public final class E8 implements Evaluator2{
 		}
 		
 		if(s.queens[1-player] != 0){
-			score += getKingDanger(player, s);
+			score += getKingDanger(player, s, entry, attackMask);
 		}
 		
 		return score;
@@ -502,7 +491,7 @@ public final class E8 implements Evaluator2{
 	}
 	
 	/** calculates danger associated with pawn wall weaknesses or storming enemy pawns*/
-	private int pawnShelterStormDanger(final int player, final State4 s, final int kingIndex){
+	private static int pawnShelterStormDanger(final int player, final State4 s, final int kingIndex){
 		final int kc = kingIndex%8; //king column
 		final int kr = player == 0? kingIndex >>> 3: 7-(kingIndex>>>3); //king rank
 		final long mask = Masks.passedPawnMasks[player][kingIndex];
@@ -560,21 +549,21 @@ public final class E8 implements Evaluator2{
 	};
 	
 	/** gets the king danger for the passed player*/
-	private int getKingDanger(final int player, final State4 s){
+	private static int getKingDanger(final int player, final State4 s,
+			final PawnHashEntry entry, final long[] attackMask){
 		
 		int kingDangerScore = 0;
 		
 		final long king = s.kings[player];
 		final int kingIndex = BitUtil.lsbIndex(king);
 		final long cmoves = State4.getCastleMoves(player, s);
+
+		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		//NOTE: hashing here doesnt actually take being able to castle into effect
+		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		
-		/*final long kingRing = State4.getKingMoves(player, s.pieces, s.kings[player]);
-		final long agg = s.pieces[0]|s.pieces[1];
-		int dindex = p.kingDangerSquares[player][kingIndex]; //danger index
-		*/
-		
-		//pawn wall, storm
-		if(pawnMoved[0] || pawnMoved[1] || kingMoved[player]){
+		if(entry.zkey != s.pawnZkey()){
+			//pawn wall, storm calculations
 			int pawnWallBonus = pawnShelterStormDanger(player, s, kingIndex);
 			if(cmoves != 0){
 				//if we can castle, count the pawn wall/storm weight as best available after castle
@@ -590,28 +579,15 @@ public final class E8 implements Evaluator2{
 				}
 			}
 			kingDangerScore += S(pawnWallBonus, 0);
-			this.pawnWallScore[player] = pawnWallBonus;
+			
+			kingDangerScore += S(-kingDangerSquares[player][kingIndex], 0);
+			kingDangerScore += S(0, centerDanger[kingIndex]);
+			
+			if(player == 0) entry.kingDanger1 = kingDangerScore;
+			else entry.kingDanger2 = kingDangerScore;
 		} else{
-			kingDangerScore += pawnWallScore[player];
+			kingDangerScore += player == 0? entry.kingDanger1: entry.kingDanger2;
 		}
-		
-		kingDangerScore += S(-kingDangerSquares[player][kingIndex], 0);
-		kingDangerScore += S(0, centerDanger[kingIndex]);
-		
-		/*int kingPressureScore = evalKingPressureDanger(kingIndex, player, s);
-		if(cmoves != 0){
-			if((castleOffsets[0][player] & cmoves) != 0){
-				final int leftIndex = castleIndex[0][player];
-				final int leftScore = evalKingPressureDanger(leftIndex, player, s);
-				kingPressureScore = leftScore < kingPressureScore? leftScore: kingPressureScore;
-			}
-			if((castleOffsets[1][player] & cmoves) != 0){
-				final int rightIndex = castleIndex[1][player];
-				final int rightScore = evalKingPressureDanger(rightIndex, player, s);
-				kingPressureScore = rightScore < kingPressureScore? rightScore: kingPressureScore;
-			}
-		}
-		w.add(-kingPressureScore, 0);*/
 		
 		kingDangerScore += evalKingPressure3(kingIndex, player, s, attackMask[player]);
 		
@@ -777,27 +753,19 @@ public final class E8 implements Evaluator2{
 		final int taken = MoveEncoder.getTakenType(encoding);
 		if(taken != 0){
 			materialScore[1-player] -= dir*materialWeights[taken];
-			if(taken == State4.PIECE_TYPE_PAWN) pawnMoved[1-player] = true;
 		} else if(MoveEncoder.isEnPassanteTake(encoding) != 0){
 			materialScore[1-player] -= dir*materialWeights[State4.PIECE_TYPE_PAWN];
-			if(taken == State4.PIECE_TYPE_PAWN) pawnMoved[1-player] = true;
 		}
 		if(MoveEncoder.isPawnPromotion(encoding)){
 			materialScore[player] += dir*(materialWeights[State4.PIECE_TYPE_QUEEN]-
 					materialWeights[State4.PIECE_TYPE_PAWN]);
 		}
-		
-		final int moveType = MoveEncoder.getMovePieceType(encoding);
-		if(moveType == State4.PIECE_TYPE_KING) kingMoved[player] = true;
-		else if(moveType == State4.PIECE_TYPE_PAWN) pawnMoved[player] = true;
 	}
 
 	@Override
 	public void initialize(State4 s) {
 		System.arraycopy(zeroi, 0, materialScore, 0, 2);
 		System.arraycopy(zeroi, 0, kingPawnDist, 0, 2);
-		System.arraycopy(allTrue, 0, kingMoved, 0, 2);
-		System.arraycopy(allTrue, 0, pawnMoved, 0, 2);
 		
 		for(int a = 0; a < 2; a++){
 			final int b = State4.PIECE_TYPE_BISHOP;

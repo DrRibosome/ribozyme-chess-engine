@@ -6,13 +6,14 @@ public final class PawnHashEntry {
 	public int isolatedPawns1;
 	public int backwardPawns1;
 	public int doubledPawns1;
+	public int kingDanger1; //entry for hashable king safety values
 	
 	/** score for black*/
 	public int score2;
 	public int isolatedPawns2;
 	public int backwardPawns2;
 	public int doubledPawns2;
-	
+	public int kingDanger2; //entry for hashable king safety values
 	
 	/** all passed pawns in the game (ie, both players passed pawns aggregate)*/
 	public long passedPawns;
@@ -39,11 +40,13 @@ public final class PawnHashEntry {
 		target.isolatedPawns1 = src.isolatedPawns1;
 		target.backwardPawns1 = src.backwardPawns1;
 		target.doubledPawns1 = src.doubledPawns1;
+		target.kingDanger1 = src.kingDanger1;
 		
 		target.score2 = src.score2;
 		target.isolatedPawns2 = src.isolatedPawns2;
 		target.backwardPawns2 = src.backwardPawns2;
 		target.doubledPawns2 = src.doubledPawns2;
+		target.kingDanger2 = src.kingDanger2;
 		
 		target.passedPawns = src.passedPawns;
 		target.zkey = src.zkey;
