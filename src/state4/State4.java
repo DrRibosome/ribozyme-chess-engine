@@ -48,7 +48,7 @@ public final class State4 {
 	
 	/** zobrist hash key*/
 	private long zkey = 0;
-	/** zobrist hash for pawn, undifferentiated for player*/
+	/** zobrist hash for pawns and king, undifferentiated for side to move*/
 	private long pawnZkey = 0;
 	private final ZHash zhash;
 	private final HistoryMap2 hm = new HistoryMap2(10);
@@ -326,6 +326,9 @@ public final class State4 {
 		if(movingType == PIECE_TYPE_PAWN){
 			pawnZkey ^= zhash.zhash[player][PIECE_TYPE_PAWN][pos1] ^
 					zhash.zhash[player][PIECE_TYPE_PAWN][pos2];
+		} else if(movingType == PIECE_TYPE_KING){
+			pawnZkey ^= zhash.zhash[player][PIECE_TYPE_KING][pos1] ^
+					zhash.zhash[player][PIECE_TYPE_KING][pos2];
 		}
 
 		long encoding = MoveEncoder.encode(pos1, pos2, movingType, takenType, player);
@@ -531,6 +534,9 @@ public final class State4 {
 		if(type == PIECE_TYPE_PAWN){
 			pawnZkey ^= zhash.zhash[player][PIECE_TYPE_PAWN][pos2] ^
 					zhash.zhash[player][PIECE_TYPE_PAWN][pos1];
+		} else if(type == PIECE_TYPE_KING){
+			pawnZkey ^= zhash.zhash[player][PIECE_TYPE_KING][pos2] ^
+					zhash.zhash[player][PIECE_TYPE_KING][pos1];
 		}
 		
 		//final long[] b1 = getBoard(mailbox[pos2]);
