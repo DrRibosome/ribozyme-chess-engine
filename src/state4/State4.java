@@ -48,7 +48,7 @@ public final class State4 {
 	
 	/** zobrist hash key*/
 	private long zkey = 0;
-	/** zobrist hash for pawns and king, undifferentiated for player*/
+	/** zobrist hash for pawns and king, undifferentiated for side to move*/
 	private long pawnZkey = 0;
 	private final ZHash zhash;
 	private final HistoryMap2 hm = new HistoryMap2(10);
