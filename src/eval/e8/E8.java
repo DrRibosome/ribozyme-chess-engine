@@ -558,9 +558,9 @@ public final class E8 implements Evaluator2{
 		final int kingIndex = BitUtil.lsbIndex(king);
 		final long cmoves = State4.getCastleMoves(player, s);
 
-		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		//NOTE: hashing here doesnt actually take being able to castle into effect
-		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		//NOTE: hashing here doesnt actually take being able to castle into account
+		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		
 		if(entry.zkey != s.pawnZkey()){
 			//pawn wall, storm calculations
