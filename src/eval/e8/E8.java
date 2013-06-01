@@ -280,6 +280,8 @@ public final class E8 implements Evaluator2{
 	/** scores pawn structure*/
 	private int scorePawns(final int player, final State4 s, final PawnHashEntry entry){
 		int score = 0;
+		
+		//get pawn scores from hash entry, or recalculate if necessary
 		final long pawnZkey = s.pawnZkey();
 		if(pawnZkey != entry.zkey){
 			score += calculatePawnScore(player, s, entry);
