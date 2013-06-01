@@ -2,7 +2,7 @@ package eval;
 
 import state4.Masks;
 
-/** supplementary masks to aid in eval calculation*/
+/** supplementary (ie, not needed for game state functionality) masks to aid in eval calculation*/
 public final class PositionMasks {
 	/** masks to check whether pawn is isolated, indexed [pawn-col]*/
 	public final static long[] isolatedPawnMask;
