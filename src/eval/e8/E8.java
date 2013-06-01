@@ -99,7 +99,7 @@ public final class E8 implements Evaluator2{
 	private final int[] pawnWallScore = new int[2];
 	/** stores total king distance from allied pawns*/
 	private final int[] kingPawnDist = new int[2];
-	private final PawnHash pawnHash = new PawnHash(1<<16, 16);
+	private final PawnHash pawnHash = new PawnHash(16, 16);
 	final PawnHashEntry filler = new PawnHashEntry();
 	/** stores pawn score, indexed [player]*/
 	private final int[] pawnScore = new int[2];
@@ -223,18 +223,33 @@ public final class E8 implements Evaluator2{
 		nonPawnMaterial[0] = materialScore[0]-s.pieceCounts[0][pawnType]*pawnWeight;
 		nonPawnMaterial[1] = materialScore[1]-s.pieceCounts[1][pawnType]*pawnWeight;
 		
+		//load hashed pawn values, if any
+		final long pawnZkey = s.pawnZkey();
+		final PawnHashEntry phEntry = pawnHash.get(pawnZkey);
+		final PawnHashEntry loader;
+		if(phEntry == null){
+			filler.passedPawns = 0;
+			filler.zkey = 0;
+			loader = filler;
+		} else{
+			loader = phEntry;
+		}
 		
-		final int p1Weight = score(player, s);
+		final int p1Weight = score(player, s, loader);
 		final int p1 = granulate(interpolate(p1Weight, scale), granularity);
 		final int p1End = egScore(p1Weight);
 		
-		final int p2Weight = score(1-player, s);
+		final int p2Weight = score(1-player, s, loader);
 		final int p2 = granulate(interpolate(p2Weight, scale), granularity);
 		final int p2End = egScore(p2Weight);
 		
 		final int score = p1-p2;
 		final int endgameBonus = S((int)(.1*(p1End-p2End)+.5), 0);
 		
+		if(phEntry == null){ //store newly calculated pawn values
+			loader.zkey = pawnZkey;
+			pawnHash.put(pawnZkey, loader);
+		}
 		System.arraycopy(allFalse, 0, kingMoved, 0, 2);
 		System.arraycopy(allFalse, 0, pawnMoved, 0, 2);
 		return score + interpolate(endgameBonus, scale) + interpolate(tempoWeight, scale);
@@ -245,11 +260,11 @@ public final class E8 implements Evaluator2{
 		return lazyScore(player)-lazyScore(1-player);
 	}
 	
-	private int score(final int player, final State4 s){
+	private int score(final int player, final State4 s, final PawnHashEntry entry){
 		
 		int score = S(materialScore[player]);
 		score += scoreMobility(player, s, clutterMult, nonPawnMaterial, attackMask);
-		score += scorePawns(player, s, nonPawnMaterial);
+		score += scorePawns(player, s, entry);
 		
 		if(s.pieceCounts[player][State4.PIECE_TYPE_BISHOP] == 2){
 			score += bishopPairWeight;
@@ -257,6 +272,44 @@ public final class E8 implements Evaluator2{
 		
 		if(s.queens[1-player] != 0){
 			score += getKingDanger(player, s);
+		}
+		
+		return score;
+	}
+	
+	/** scores pawn structure*/
+	private int scorePawns(final int player, final State4 s, final PawnHashEntry entry){
+		int score = 0;
+		final long pawnZkey = s.pawnZkey();
+		if(pawnZkey != entry.zkey){
+			score += calculatePawnScore(player, s, entry);
+		} else{
+			score += player == 0? entry.score1: entry.score2;
+		}
+		
+		//score passed pawns
+		final long alliedPawns = s.pawns[player];
+		final long passedPawns = entry.passedPawns & alliedPawns;
+		if(passedPawns != 0){
+			for(long pp = passedPawns; pp != 0; pp &= pp-1){
+				final long p = pp & -pp;
+				score += analyzePassedPawn(player, p, s, nonPawnMaterial);
+			}
+		}
+		
+		//adjustments for non-pawn disadvantage
+		final boolean nonPawnDisadvantage = nonPawnMaterial[player]-nonPawnMaterial[1-player]+20 < 0;
+		if(nonPawnDisadvantage){
+			final double npDisMult = max(min(nonPawnMaterial[1-player]-nonPawnMaterial[player], 300), 0)/300.;
+			if(player == 0){
+				score += multWeight(S(-10, -20), npDisMult*entry.isolatedPawns1);
+				score += multWeight(S(-10, -10), npDisMult*entry.doubledPawns1);
+				score += multWeight(S(-10, -10), npDisMult*entry.backwardPawns1);
+			} else{
+				score += multWeight(S(-10, -20), npDisMult*entry.isolatedPawns2);
+				score += multWeight(S(-10, -10), npDisMult*entry.doubledPawns2);
+				score += multWeight(S(-10, -10), npDisMult*entry.backwardPawns2);
+			}
 		}
 		
 		return score;
@@ -360,85 +413,89 @@ public final class E8 implements Evaluator2{
 		return d1 > d2? d1: d2;
 	}
 	
-	private int scorePawns(final int player, final State4 s, final long pawnZkey){
-		
-		
-		final PawnHashEntry phEntry = pawnHash.get(pawnZkey);
+	/** determines pawn score, except for passed pawns*/
+	private static int calculatePawnScore(final int player, final State4 s, final PawnHashEntry phEntry){
 		int pawnScore = 0;
-		
-		if(phEntry == null){
-			
-			final long enemyPawns = s.pawns[1-player];
-			final long alliedPawns = s.pawns[player];
-			final long all = alliedPawns | enemyPawns;
-			final int kingIndex = BitUtil.lsbIndex(s.kings[player]);
-			
-			final boolean nonPawnDisadvantage = nonPawnMaterial[player]-nonPawnMaterial[1-player]+20 < 0;
-			final double npDisMult = max(min(nonPawnMaterial[1-player]-nonPawnMaterial[player], 300), 0)/300.;
-			
-			int kingDistAgg = 0; //king distance aggregator
-			for(long pawns = alliedPawns; pawns != 0; pawns &= pawns-1){
-				final int index = BitUtil.lsbIndex(pawns);
-				final int col = index%8;
-				
-				final boolean passed = (Masks.passedPawnMasks[player][index] & enemyPawns) == 0;
-				final boolean isolated = (PositionMasks.isolatedPawnMask[col] & alliedPawns) == 0;
-				final boolean opposed = (PositionMasks.opposedPawnMask[player][index] & enemyPawns) != 0;
-				final int opposedFlag = opposed? 1: 0;
-				final boolean chain = (PositionMasks.pawnChainMask[player][index] & alliedPawns) != 0;
-				final boolean doubled = (PositionMasks.opposedPawnMask[player][index] & alliedPawns) != 0;
-				
-				if(passed){
-					pawnScore += analyzePassedPawn(player, pawns&-pawns, s, nonPawnMaterial);
-				}
-				if(isolated){
-					pawnScore += isolatedPawns[opposedFlag][col];
-					if(nonPawnDisadvantage) pawnScore += multWeight(S(-10, -20), npDisMult);
-				}
-				if(doubled){
-					pawnScore += doubledPawns[opposedFlag][col];
-					if(nonPawnDisadvantage) pawnScore += multWeight(S(-10, -10), npDisMult);
-				}
-				if(chain){
-					pawnScore += pawnChain[col];
-				}
-				
-				//backward pawn checking
-				final long attackSpan = PositionMasks.isolatedPawnMask[col] & Masks.passedPawnMasks[player][index];
-				if(!passed && !isolated && !chain &&
-						(attackSpan & enemyPawns) != 0 && //enemy pawns that can attack our pawns
-						(PositionMasks.pawnAttacks[player][index] & enemyPawns) == 0){ //not attacking enemy pawns
-					long b = PositionMasks.pawnAttacks[player][index];
-					while((b & all) == 0){
-						b = player == 0? b << 8: b >>> 8;
-						assert b != 0;
-					}
-					
-					final boolean backward = ((b | (player == 0? b << 8: b >>> 8)) & enemyPawns) != 0;
-					if(backward){
-						pawnScore += backwardPawns[opposedFlag][col];
-						
-						//(w0,w1,d) = (116,95,73), with-without, depth=3
-						if(nonPawnDisadvantage) pawnScore += multWeight(S(-10, -10), npDisMult);
-					}
-				}
-				
-				//allied king distance, used to encourage king supporting pawns in endgame
-				final int kingXDist = Math.abs(kingIndex%8 - index%8);
-				final int kingYDist = Math.abs((kingIndex>>>3) - (index>>>3));
-				final int alliedKingDist = kingXDist > kingYDist? kingXDist: kingYDist;
-				assert alliedKingDist < 8;
-				kingDistAgg += alliedKingDist-1;
+		long passedPawns = 0;
+		int isolatedPawnsCount = 0;
+		int doubledPawnsCount = 0;
+		int backwardPawnsCount = 0;
+
+		final long enemyPawns = s.pawns[1-player];
+		final long alliedPawns = s.pawns[player];
+		final long all = alliedPawns | enemyPawns;
+		final int kingIndex = BitUtil.lsbIndex(s.kings[player]);
+
+		int kingDistAgg = 0; //king distance aggregator
+		for(long pawns = alliedPawns; pawns != 0; pawns &= pawns-1){
+			final long p = pawns & -pawns;
+			final int index = BitUtil.lsbIndex(pawns);
+			final int col = index%8;
+
+			final boolean passed = (Masks.passedPawnMasks[player][index] & enemyPawns) == 0;
+			final boolean isolated = (PositionMasks.isolatedPawnMask[col] & alliedPawns) == 0;
+			final boolean opposed = (PositionMasks.opposedPawnMask[player][index] & enemyPawns) != 0;
+			final int opposedFlag = opposed? 1: 0;
+			final boolean chain = (PositionMasks.pawnChainMask[player][index] & alliedPawns) != 0;
+			final boolean doubled = (PositionMasks.opposedPawnMask[player][index] & alliedPawns) != 0;
+
+			if(passed){
+				passedPawns |= p;
 			}
-			
-			//minimize avg king dist from pawns in endgame
-			final double n = s.pieceCounts[player][State4.PIECE_TYPE_PAWN];
-			if(n > 0) pawnScore += S(0, (int)(-kingDistAgg/n*5+.5));
-			
-			filler.score = pawnScore;
-			filler.passedPawns = passedPawns[player];
+			if(isolated){
+				pawnScore += isolatedPawns[opposedFlag][col];
+				isolatedPawnsCount++;
+			}
+			if(doubled){
+				pawnScore += doubledPawns[opposedFlag][col];
+				doubledPawnsCount++;
+			}
+			if(chain){
+				pawnScore += pawnChain[col];
+			}
+
+			//backward pawn checking
+			final long attackSpan = PositionMasks.isolatedPawnMask[col] & Masks.passedPawnMasks[player][index];
+			if(!passed && !isolated && !chain &&
+					(attackSpan & enemyPawns) != 0 && //enemy pawns that can attack our pawns
+					(PositionMasks.pawnAttacks[player][index] & enemyPawns) == 0){ //not attacking enemy pawns
+				long b = PositionMasks.pawnAttacks[player][index];
+				while((b & all) == 0){
+					b = player == 0? b << 8: b >>> 8;
+					assert b != 0;
+				}
+
+				final boolean backward = ((b | (player == 0? b << 8: b >>> 8)) & enemyPawns) != 0;
+				if(backward){
+					pawnScore += backwardPawns[opposedFlag][col];
+					backwardPawnsCount++;
+				}
+			}
+
+			//allied king distance, used to encourage king supporting pawns in endgame
+			final int kingXDist = Math.abs(kingIndex%8 - index%8);
+			final int kingYDist = Math.abs((kingIndex>>>3) - (index>>>3));
+			final int alliedKingDist = kingXDist > kingYDist? kingXDist: kingYDist;
+			assert alliedKingDist < 8;
+			kingDistAgg += alliedKingDist-1;
 		}
-		
+
+		//minimize avg king dist from pawns in endgame
+		final double n = s.pieceCounts[player][State4.PIECE_TYPE_PAWN];
+		if(n > 0) pawnScore += S(0, (int)(-kingDistAgg/n*5+.5));
+
+		if(player == 0){
+			phEntry.score1 = pawnScore;
+			phEntry.isolatedPawns1 = isolatedPawnsCount;
+			phEntry.doubledPawns1 = doubledPawnsCount;
+			phEntry.backwardPawns1 = backwardPawnsCount;
+		} else{
+			phEntry.score2 = pawnScore;
+			phEntry.isolatedPawns2 = isolatedPawnsCount;
+			phEntry.doubledPawns2 = doubledPawnsCount;
+			phEntry.backwardPawns2 = backwardPawnsCount;
+		}
+		phEntry.passedPawns |= passedPawns;
 		return pawnScore;
 	}
 	
