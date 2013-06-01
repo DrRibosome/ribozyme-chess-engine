@@ -2,8 +2,6 @@ package search.search33;
 
 import java.util.Random;
 
-import state4.Masks;
-
 
 /** rough but working implementation of cuckoo hashing*/
 public final class CuckooHash2 implements Hash{
