@@ -19,11 +19,11 @@ public final class RibozymeEngine implements UCIEngine{
 	private Thread t;
 	private final MoveSet moveStore = new MoveSet();
 	
-	public RibozymeEngine(){
+	public RibozymeEngine(final int hashSize){
 		
 		Evaluator2 e = new E8();
 		
-		s = new Search33v11(e, 22, true);
+		s = new Search33v11(e, hashSize, true);
 	}
 	
 	@Override

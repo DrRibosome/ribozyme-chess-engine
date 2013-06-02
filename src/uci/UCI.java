@@ -12,7 +12,7 @@ import uci.UCIMove.MoveType;
 import util.FenParser;
 
 public final class UCI {
-	private UCIEngine engine = new RibozymeEngine();
+	private UCIEngine engine;
 	private FileWriter out;
 	private Position pos;
 	
@@ -149,11 +149,25 @@ public final class UCI {
 		return m;
 	}
 	
-	public UCI(){
+	public UCI(final int size){
+		engine = new RibozymeEngine(size);
 		t.start();
 	}
 	
 	public static void main(String[] args){
-		new UCI();
+		int size = 20; //hash size, as a power of 2
+		if(args.length == 2){
+			boolean complete = false;
+			if(args[0].equals("--hash")){
+				try{
+					size = Integer.parseInt(args[1]);
+					complete = true;
+				} catch(NumberFormatException e){}
+			}
+			if(!complete){
+				System.out.println("incorrect args, needs: '--hash <size>'");
+			}
+		}
+		new UCI(size);
 	}
 }
