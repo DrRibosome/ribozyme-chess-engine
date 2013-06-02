@@ -784,7 +784,7 @@ public final class Search33v11 implements Search4{
 					}
 				}
 			}
-	}
+		}
 
 		if(!cutoffSearch){
 			fillEntry.fill(zkey, bestMove, bestScore, depth, pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
