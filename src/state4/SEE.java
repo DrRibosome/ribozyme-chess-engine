@@ -13,6 +13,174 @@ public final class SEE {
 		pieceValues[State4.PIECE_TYPE_PAWN] = 1;
 	}
 	
+	/** SEE where passed player attacks with piece of least value (untested, but should work)*/
+	public static int seeSign(final int player, final long target, final State4 s){
+		final long enemyPieces = s.pieces[1-player];
+		
+		final long alliedPawns = s.pawns[player];
+		final long enemyPawns = s.pawns[1-player];
+		
+		final long alliedKnights = s.knights[player];
+		final long alliedBishops = s.bishops[player];
+		final long enemyKnights = s.knights[1-player];
+		final long enemyBishops = s.bishops[1-player];
+		
+		final long alliedRooks = s.rooks[player];
+		final long enemyQueens = s.queens[1-player];
+		
+		final int targetIndex = BitUtil.lsbIndex(target);
+		
+		int gain = 0;
+		int onValue = pieceValues[s.mailbox[targetIndex]]; //value of piece on the target square
+		final long alliedPieces = s.pieces[player];
+		long agg = (enemyPieces | alliedPieces) | target;
+		
+		final long usuableAlliedPawns = alliedPawns;
+		long attackingAlliedPawns;
+		long attackingEnemyPawns;
+		if(player == 0){
+			attackingAlliedPawns = ((((usuableAlliedPawns << 7) & pawnLeftAttackMask) & target) >>> 7) |
+					((((usuableAlliedPawns << 9) & pawnRightAttackMask) & target) >>> 9);
+			attackingEnemyPawns = ((((enemyPawns >>> 9) & pawnLeftAttackMask) & target) << 9) |
+					((((enemyPawns >>> 7) & pawnRightAttackMask) & target) << 7);
+		} else{
+			attackingEnemyPawns = ((((enemyPawns << 7) & pawnLeftAttackMask) & target) >>> 7) |
+					((((enemyPawns << 9) & pawnRightAttackMask) & target) >>> 9);
+			attackingAlliedPawns = ((((usuableAlliedPawns >>> 9) & pawnLeftAttackMask) & target) << 9) |
+					((((usuableAlliedPawns >>> 7) & pawnRightAttackMask) & target) << 7);
+		}
+		
+		long attackingAlliedKnights = alliedKnights & Masks.getRawKnightMoves(target);
+		long attackingEnemyKnights = Masks.getRawKnightMoves(target) & enemyKnights;
+		
+		final long rawBishopMoves = Masks.getRawBishopMoves(target, target);
+		final long usuableEnemyBishops = enemyBishops & rawBishopMoves; //enemy bishops that can be used in the attack
+		long readyEnemyBishops = usuableEnemyBishops; //enemy bishops ready to be used in the attack
+		final long usuableAlliedBishops = alliedBishops & rawBishopMoves;
+		long readyAlliedBishops = usuableAlliedBishops;
+		
+		final long enemyRooks = s.rooks[1-player];
+		final long rawRookMoves = Masks.getRawRookMoves(target, target);
+		final long usuableEnemyRooks = enemyRooks & rawRookMoves;
+		long readyEnemyRooks = usuableEnemyRooks;
+		final long usuableAlliedRooks = alliedRooks & rawRookMoves;
+		long readyAlliedRooks = usuableAlliedRooks;
+		
+		final long usuableEnemyQueens = enemyQueens & (rawBishopMoves | rawRookMoves);
+		long readyEnemyQueens = usuableEnemyQueens;
+		final long usuableAlliedQueens = (rawBishopMoves | rawRookMoves) & s.queens[player];
+		long readyAlliedQueens = usuableAlliedQueens;
+		
+		//records if we ever encounter a point where the gain is zero (ie, if a side could stop the trading)
+		boolean alliedZeroGain = false;
+		boolean enemyZeroGain = false;
+		
+		for(int a = 0; a < 16; a++){
+			
+			final int gAllied = -gain;
+			//System.out.println("allied gain = "+gAllied+", on value = "+onValue);
+			if(gAllied > 0){
+				////enemy gain is positive, return negative SEE sign unless zero gain position already encountered
+				return enemyZeroGain? 0: 1;
+			}
+			alliedZeroGain |= gAllied == 0;
+			
+			//negative gain, attack with next least valuable piece
+			if(attackingAlliedPawns != 0){
+				//System.out.println("\tallied pawn take");
+				gain = gAllied + onValue;
+				onValue = 1;
+				agg &= ~(attackingAlliedPawns & -attackingAlliedPawns);
+				attackingAlliedPawns &= attackingAlliedPawns-1;
+			} else if(attackingAlliedKnights != 0){
+				//System.out.println("\tallied knight take");
+				gain = gAllied + onValue;
+				onValue = 3;
+				agg &= ~(attackingAlliedKnights & -attackingAlliedKnights);
+				attackingAlliedKnights &= attackingAlliedKnights-1;
+			} else if(usuableAlliedBishops != 0 && readyAlliedBishops != 0 &&
+					(Masks.getRawBishopMoves(agg, readyAlliedBishops & -readyAlliedBishops) & target) != 0){
+				//System.out.println("\tallied bishop take");
+				gain = gAllied + onValue;
+				onValue = 3;
+				agg &= ~(readyAlliedBishops & -readyAlliedBishops);
+				readyAlliedBishops &= readyAlliedBishops-1;
+			} else if(usuableAlliedRooks != 0 && readyAlliedRooks != 0 &&
+					(Masks.getRawRookMoves(agg, readyAlliedRooks & -readyAlliedRooks) & target) != 0){
+				//System.out.println("\tallied rook take");
+				gain = gAllied + onValue;
+				onValue = 5;
+				agg &= ~(readyAlliedRooks & -readyAlliedRooks);
+				readyAlliedRooks &= readyAlliedRooks-1;
+			} else if(usuableAlliedQueens != 0 && readyAlliedQueens != 0 &&
+					(Masks.getRawQueenMoves(agg, readyAlliedQueens & -readyAlliedQueens) & target) != 0){
+				//System.out.println("\tallied queen take");
+				gain = gAllied + onValue;
+				onValue = 9;
+				agg &= ~(readyAlliedQueens & -readyAlliedQueens);
+				readyAlliedQueens &= readyAlliedQueens-1;
+			} else{
+				//System.out.println("\tallied nothing to send in");
+				return alliedZeroGain? 0: -1;
+			}
+			
+			
+			final int gEnemy = -gain;
+			//System.out.println("enemy gain = "+gEnemy+", on value = "+onValue);
+			if(gEnemy > 0){
+				////enemy gain is positive, return negative SEE sign unless zero gain position already encountered
+				//System.out.println("returning "+(alliedZeroGain? 0: -1));
+				return alliedZeroGain? 0: -1;
+			}
+			enemyZeroGain |= gEnemy == 0;
+			
+			//negative gain, attack with next least valuable piece
+			if(attackingEnemyPawns != 0){
+				//System.out.println("\tenemy pawn take");
+				gain = gEnemy + onValue;
+				onValue = 1;
+				agg &= ~(attackingEnemyPawns & -attackingEnemyPawns);
+				attackingEnemyPawns &= attackingEnemyPawns-1;
+			} else if(attackingEnemyKnights != 0){
+				//System.out.println("\tenemy knight take");
+				gain = gEnemy + onValue;
+				onValue = 3;
+				agg &= ~(attackingEnemyKnights & -attackingEnemyKnights);
+				attackingEnemyKnights &= attackingEnemyKnights-1;
+			} else if(usuableEnemyBishops != 0 && readyEnemyBishops != 0 &&
+					(Masks.getRawBishopMoves(agg, readyEnemyBishops & -readyEnemyBishops) & target) != 0){
+				//System.out.println("\tenemy bishop take");
+				gain = gEnemy + onValue;
+				onValue = 3;
+				agg &= ~(readyEnemyBishops & -readyEnemyBishops);
+				readyEnemyBishops &= readyEnemyBishops-1;
+			} else if(usuableEnemyRooks != 0 && readyEnemyRooks != 0 &&
+					(Masks.getRawRookMoves(agg, readyEnemyRooks & -readyEnemyRooks) & target) != 0){
+				//System.out.println("\tenemy rook take");
+				gain = gEnemy + onValue;
+				onValue = 5;
+				agg &= ~(readyEnemyRooks & -readyEnemyRooks);
+				readyEnemyRooks &= readyEnemyRooks-1;
+			} else if(usuableEnemyQueens != 0 && readyEnemyQueens != 0 &&
+					(Masks.getRawQueenMoves(agg, readyEnemyQueens & -readyEnemyQueens) & target) != 0){
+				//System.out.println("\tenemy queen take");
+				gain = gEnemy + onValue;
+				onValue = 9;
+				agg &= ~(readyEnemyQueens & -readyEnemyQueens);
+				readyEnemyQueens &= readyEnemyQueens-1;
+			} else{
+				//enemy has nothing else to send in
+				//if we have encountered a point of zero gain before this, return 0
+				//else, allied ends ahead, return 1
+				//System.out.println("\tenemy nothing to send in");
+				return enemyZeroGain? 0: 1;
+			}
+		}
+
+
+		return 0;
+	}
+	
 	/**
 	 * move piece on from square to target square
 	 * <p> note, this is faster than the alternative {@link #see(int, long, long, State4)},
