@@ -1,7 +1,5 @@
 package search.search33;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import search.Search4;
 import search.SearchListener2;
 import search.SearchStat;
