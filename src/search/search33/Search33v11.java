@@ -94,7 +94,7 @@ public final class Search33v11 implements Search4{
 	/** rank set to the first of the non takes*/
 	private final static int killerMoveRank = 4;
 	
-	private final AtomicBoolean cutoffSearch = new AtomicBoolean(false);
+	private volatile boolean cutoffSearch = false;
 	
 	public Search33v11(Evaluator2 e, int hashSize){
 		this(e, hashSize, false);
@@ -142,7 +142,7 @@ public final class Search33v11 implements Search4{
 		//search initialization
 		seq++;
 		e.initialize(s);
-		cutoffSearch.set(false);
+		cutoffSearch = false;
 		
 		long bestMove = 0;
 		int score = 0;
@@ -156,7 +156,7 @@ public final class Search33v11 implements Search4{
 		long nodesSearched = 0;
 		boolean skipAdjust = false;
 		int minRestartDepth = 7;
-		for(int i = 1; (maxPly == -1 || i <= maxPly) && !cutoffSearch.get() && i <= stackSize; i++){
+		for(int i = 1; (maxPly == -1 || i <= maxPly) && !cutoffSearch && i <= stackSize; i++){
 			s.resetHistory();
 			
 			if(i <= 3){
@@ -176,13 +176,13 @@ public final class Search33v11 implements Search4{
 			
 			score = recurse(player, alpha, beta, i, true, true, 0, s);
 			
-			if((score <= alpha || score >= beta) && !cutoffSearch.get()){
+			if((score <= alpha || score >= beta) && !cutoffSearch){
 				if(score <= alpha) alpha = score-50;
 				else if(score >= beta) beta = score+50;
 				
 				if(i < minRestartDepth){
 					score = recurse(player, alpha, beta, i, true, true, 0, s);
-					if((score <= alpha || score >= beta) && !cutoffSearch.get()){
+					if((score <= alpha || score >= beta) && !cutoffSearch){
 						i--;
 						if(score <= alpha) alpha = score-150;
 						else if(score >= beta) beta = score+150;
@@ -197,12 +197,12 @@ public final class Search33v11 implements Search4{
 				}
 			}
 			
-			if(!cutoffSearch.get()){
+			if(!cutoffSearch){
 				nodesSearched = stats.nodesSearched;
 				stats.maxPlySearched = i;
 			}
 			final TTEntry tte;
-			if((tte = m.get(s.zkey())) != null && tte.move != 0 && !cutoffSearch.get()){
+			if((tte = m.get(s.zkey())) != null && tte.move != 0 && !cutoffSearch){
 				bestMove = tte.move;
 				stats.predictedScore = tte.score;
 				if(l != null){
@@ -288,7 +288,7 @@ public final class Search33v11 implements Search4{
 	}
 	
 	public void cutoffSearch(){
-		cutoffSearch.set(true);
+		cutoffSearch = true;
 	}
 	
 	/** tests to see if the passed player is in check*/
@@ -314,7 +314,7 @@ public final class Search33v11 implements Search4{
 			} else{
 				return q;
 			}
-		} else if(cutoffSearch.get()){
+		} else if(cutoffSearch){
 			return 0;
 		}
 
@@ -373,7 +373,7 @@ public final class Search33v11 implements Search4{
 				final int rbeta = beta-razorMargin;
 				final int v = qsearch(player, rbeta-1, rbeta, 0, stackIndex+1, false, s);
 				if(v <= rbeta-1){
-					if(!cutoffSearch.get()){
+					if(!cutoffSearch){
 						fillEntry.fill(zkey, 0, v, (int)depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
 						m.put(zkey, fillEntry);
 					}
@@ -647,7 +647,7 @@ public final class Search33v11 implements Search4{
 					alpha = g;
 					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 					if(alpha >= beta){
-						if(!cutoffSearch.get()){
+						if(!cutoffSearch){
 							//m.put2(zkey, bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
 							fillEntry.fill(zkey, encoding, alpha, (int)depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
 							m.put(zkey, fillEntry);
@@ -672,7 +672,7 @@ public final class Search33v11 implements Search4{
 			cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 		}
 
-		if(!cutoffSearch.get()){
+		if(!cutoffSearch){
 			//m.put2(zkey, bestMove, bestScore, depth, cutoffFlag);
 			fillEntry.fill(zkey, bestMove, bestScore, (int)depth, pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
 			m.put(zkey, fillEntry);
@@ -687,7 +687,7 @@ public final class Search33v11 implements Search4{
 		if(depth < -qply){
 			stats.forcedQuietCutoffs++;
 			return beta; //qply bottomed out, return bad value
-		} else if(cutoffSearch.get()){
+		} else if(cutoffSearch){
 			return 0;
 		}
 
@@ -776,7 +776,7 @@ public final class Search33v11 implements Search4{
 					alpha = g;
 					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 					if(g >= beta){
-						if(!cutoffSearch.get()){
+						if(!cutoffSearch){
 							fillEntry.fill(zkey, encoding, g, depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
 							m.put(zkey, fillEntry);
 						}
@@ -786,7 +786,7 @@ public final class Search33v11 implements Search4{
 			}
 	}
 
-		if(!cutoffSearch.get()){
+		if(!cutoffSearch){
 			fillEntry.fill(zkey, bestMove, bestScore, depth, pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
 			m.put(zkey, fillEntry);
 		}
