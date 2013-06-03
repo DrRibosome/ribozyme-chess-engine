@@ -299,10 +299,6 @@ public final class Search34 implements Search4{
 		if(s.isForcedDraw()){
 			return 0;
 		} else if(depth <= 0){
-			/*if(!isChecked(player, s)){
-				return qsearch(player, alpha, beta, 0, stackIndex, pv, s);
-			}
-			depth = 1;*/
 			final int q = qsearch(player, alpha, beta, 0, stackIndex, pv, s);
 			if(q > 70000 && pv){
 				return recurse(player, alpha, beta, 1, true, false, stackIndex, s);
@@ -325,10 +321,11 @@ public final class Search34 implements Search4{
 		final TTEntry e = m.get(zkey);
 		boolean tteMove = false;
 		long tteMoveEncoding = 0;
-		final boolean hasTTEntry = e != null;
 		final int scoreEncoding;
 		
 		if(e != null){
+			assert e.zkey == zkey;
+			
 			stats.hashHits++;
 			if(e.depth >= depth){
 				final int cutoffType = e.cutoffType;
@@ -718,6 +715,8 @@ public final class Search34 implements Search4{
 		final int scoreEncoding;
 		
 		if(e != null){
+			assert e.zkey == zkey;
+			
 			stats.hashHits++;
 			if(e.depth >= depth){
 				final int cutoffType = e.cutoffType;
