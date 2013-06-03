@@ -529,7 +529,6 @@ public final class Search34 implements Search4{
 		//move generation
 		final int length = MoveGen2.genMoves(player, s, alliedKingAttacked, mset, w, false);
 		if(length == 0){ //no moves, draw
-			//m.put2(zkey, 0, 0, depth, ZMap.CUTOFF_TYPE_EXACT);
 			fillEntry.score = 0;
 			fillEntry.depth = (int)depth;
 			fillEntry.cutoffType = TTEntry.CUTOFF_TYPE_EXACT;
@@ -688,7 +687,6 @@ public final class Search34 implements Search4{
 		}
 
 		if(!cutoffSearch){
-			//m.put2(zkey, bestMove, bestScore, depth, cutoffFlag);
 			fillEntry.score = bestScore;
 			fillEntry.depth = (int)depth;
 			fillEntry.cutoffType = pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER;
