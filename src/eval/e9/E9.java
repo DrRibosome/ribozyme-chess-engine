@@ -190,6 +190,7 @@ public final class E9 implements Evaluator3{
 		return S(v, v);
 	}
 	
+	/** end game score*/
 	private static int egScore(final int weight){
 		final int shifted = weight >>> 16;
 		return (shifted & weightValueMask) - (shifted & weightSignMask);
@@ -203,6 +204,11 @@ public final class E9 implements Evaluator3{
 	/** gets the interpolatino factor for the weight*/
 	private static double getScale(final int totalMaterialScore, final int endMaterial, final int margin){
 		return min(1-(endMaterial-totalMaterialScore)*1./margin, 1);
+	}
+	
+	@Override
+	public int eval(final int player, final State4 s) {
+		return refine(player, s, -90000, 90000, 0);
 	}
 
 	@Override
@@ -230,6 +236,10 @@ public final class E9 implements Evaluator3{
 		int score = ScoreEncoder.getScore(scoreEncoding);
 		int margin = ScoreEncoder.getMargin(scoreEncoding);
 		int flags = ScoreEncoder.getFlags(scoreEncoding);
+		
+		if(flags != 0 && (score+margin <= lowerBound || score+margin >= upperBound)){
+			return scoreEncoding;
+		}
 		
 		final long alliedQueens = s.queens[player];
 		final long enemyQueens = s.queens[1-player];
