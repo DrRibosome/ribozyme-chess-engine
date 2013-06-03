@@ -32,6 +32,7 @@ public final class Search34 implements Search4{
 	private final MoveList[] stack;
 	
 	private final static class MoveList{
+		final TTEntry fillEntry = new TTEntry();
 		private final static int defSize = 128;
 		private final MoveSet[] mset = new MoveSet[defSize];
 		public boolean skipNullMove = false;
@@ -88,8 +89,6 @@ public final class Search34 implements Search4{
 	private final boolean printPV;
 	/** controls whether the printed pv should be in uci style*/
 	private final static boolean uciPV = true;
-	
-	private final TTEntry fillEntry = new TTEntry();
 	
 	private final static int tteMoveRank = -1;
 	/** rank set to the first of the non takes*/
@@ -300,7 +299,7 @@ public final class Search34 implements Search4{
 			return 0;
 		} else if(depth <= 0){
 			final int q = qsearch(player, alpha, beta, 0, stackIndex, pv, s);
-			if(q > 70000 && pv){
+			if(1==2 && q > 70000 && pv){
 				return recurse(player, alpha, beta, 1, true, false, stackIndex, s);
 			} else{
 				return q;
@@ -311,6 +310,7 @@ public final class Search34 implements Search4{
 
 
 		final MoveList ml = stack[stackIndex];
+		final TTEntry fillEntry = ml.fillEntry;
 		final MoveSet[] mset = ml.mset;
 		ml.killer[0] = 0;
 		ml.killer[1] = 0;
@@ -706,7 +706,9 @@ public final class Search34 implements Search4{
 
 		
 		int w = 0;
-		final MoveSet[] mset = stack[stackIndex].mset;
+		final MoveList ml = stack[stackIndex];
+		final MoveSet[] mset = ml.mset;
+		final TTEntry fillEntry = ml.fillEntry;
 
 		final long zkey = s.zkey();
 		final TTEntry e = m.get(zkey);
@@ -748,7 +750,6 @@ public final class Search34 implements Search4{
 			scoreEncoding = this.e.eval(player, s, alpha, beta);
 		}
 		
-		fillEntry.staticEval = scoreEncoding;
 		fillEntry.seq = seq;
 		
 		int bestScore;
@@ -763,10 +764,12 @@ public final class Search34 implements Search4{
 			} else{
 				adjustedScoreEncoding = scoreEncoding;
 			}
+			//final int adjustedScoreEncoding = scoreEncoding;
 			
 			final int evalScore = ScoreEncoder.getScore(adjustedScoreEncoding);
 			final int evalMargin = ScoreEncoder.getMargin(adjustedScoreEncoding);
 			final int eval = evalScore + evalMargin;
+			fillEntry.staticEval = adjustedScoreEncoding;
 			
 			bestScore = eval;
 			if(bestScore >= beta){ //standing pat
