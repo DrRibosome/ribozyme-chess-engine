@@ -14,6 +14,7 @@ public final class E9 implements Evaluator3{
 	private final static int stage1Flag = 1 << 0;
 	private final static int stage2Flag = 1 << 1;
 	private final static int stage3Flag = 1 << 2;
+	private final static int evalCompleteMask = stage1Flag | stage2Flag | stage3Flag;
 	
 	/**
 	 * gives bonus multiplier to the value of sliding pieces
@@ -220,6 +221,15 @@ public final class E9 implements Evaluator3{
 	public int refine(final int player, final State4 s, final int lowerBound,
 			final int upperBound, final int scoreEncoding) {
 		
+		int score = ScoreEncoder.getScore(scoreEncoding);
+		int margin = ScoreEncoder.getMargin(scoreEncoding);
+		int flags = ScoreEncoder.getFlags(scoreEncoding);
+		
+		if((flags != 0 && (score+margin <= lowerBound || score+margin >= upperBound)) ||
+				(evalCompleteMask & flags) == evalCompleteMask){
+			return scoreEncoding;
+		}
+
 		final int totalMaterialScore = materialScore[0]+materialScore[1];
 		final double scale = getScale(totalMaterialScore, endMaterial, scaleMargin);
 
@@ -232,14 +242,6 @@ public final class E9 implements Evaluator3{
 		final int pawnWeight = materialWeights[pawnType];
 		nonPawnMaterial[0] = materialScore[0]-s.pieceCounts[0][pawnType]*pawnWeight;
 		nonPawnMaterial[1] = materialScore[1]-s.pieceCounts[1][pawnType]*pawnWeight;
-		
-		int score = ScoreEncoder.getScore(scoreEncoding);
-		int margin = ScoreEncoder.getMargin(scoreEncoding);
-		int flags = ScoreEncoder.getFlags(scoreEncoding);
-		
-		if(flags != 0 && (score+margin <= lowerBound || score+margin >= upperBound)){
-			return scoreEncoding;
-		}
 		
 		final long alliedQueens = s.queens[player];
 		final long enemyQueens = s.queens[1-player];
@@ -349,9 +351,9 @@ public final class E9 implements Evaluator3{
 			return ScoreEncoder.encode(score + endgameBonus, 0, flags);
 		}
 		
+		
 		//evaluation should complete in one of the stages above
 		assert false;
-		
 		return 0;
 	}
 	
