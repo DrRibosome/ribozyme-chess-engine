@@ -205,10 +205,9 @@ public final class E9 implements Evaluator3{
 	@Override
 	public int refine(final int player, final State4 s, final int lowerBound,
 			final int upperBound, final int scoreEncoding) {
+		
 		final int totalMaterialScore = materialScore[0]+materialScore[1];
 		final double scale = getScale(totalMaterialScore, endMaterial, margin);
-		
-		
 
 		final long whitePawnAttacks = Masks.getRawPawnAttacks(0, s.pawns[0]);
 		final long blackPawnAttacks = Masks.getRawPawnAttacks(1, s.pawns[1]);
