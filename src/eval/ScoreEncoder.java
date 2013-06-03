@@ -2,9 +2,9 @@ package eval;
 
 /** encoder for score, margin, and any flags*/
 public final class ScoreEncoder {
-	private final static int scoreBits = 16;
+	private final static int scoreBits = 19;
 	private final static int marginBits = 10;
-	private final static int flagBits = 6;
+	private final static int flagBits = 3;
 	
 	private final static int scoreMask;
 	private final static int marginMask;
