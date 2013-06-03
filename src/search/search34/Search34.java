@@ -764,8 +764,8 @@ public final class Search34 implements Search4{
 				adjustedScoreEncoding = scoreEncoding;
 			}
 			
-			final int evalScore = ScoreEncoder.getScore(scoreEncoding);
-			final int evalMargin = ScoreEncoder.getMargin(scoreEncoding);
+			final int evalScore = ScoreEncoder.getScore(adjustedScoreEncoding);
+			final int evalMargin = ScoreEncoder.getMargin(adjustedScoreEncoding);
 			final int eval = evalScore + evalMargin;
 			
 			bestScore = eval;
