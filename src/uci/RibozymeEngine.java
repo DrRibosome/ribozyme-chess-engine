@@ -2,7 +2,7 @@ package uci;
 
 import search.Search4;
 import search.search33.MoveSet;
-import search.search33.Search33v11;
+import search.search33.Search33v12;
 import state4.BitUtil;
 import state4.Masks;
 import state4.State4;
@@ -13,7 +13,7 @@ import eval.e8.E8;
 public final class RibozymeEngine implements UCIEngine{
 
 	// major-version.search-version.eval-version
-	private final static String name = "ribozyme 0.8v1.33v11";
+	private final static String name = "ribozyme 0.8v1.33v12";
 	
 	private final Search4 s;
 	private Thread t;
@@ -23,7 +23,7 @@ public final class RibozymeEngine implements UCIEngine{
 		
 		Evaluator2 e = new E8();
 		
-		s = new Search33v11(e, hashSize, true);
+		s = new Search33v12(e, 22, true);
 	}
 	
 	@Override

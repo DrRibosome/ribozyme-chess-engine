@@ -6,11 +6,12 @@ import search.SearchStat;
 import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
+import state4.SEE;
 import state4.State4;
 import eval.Evaluator2;
 
 /** heavy search reductions for non-pv lines after depth 7*/
-public final class Search33v11 implements Search4{
+public final class Search33v12 implements Search4{
 	public final static class SearchStat32k extends SearchStat{
 		/** scores returned from quiet search without bottoming out*/
 		public long forcedQuietCutoffs;
@@ -94,11 +95,11 @@ public final class Search33v11 implements Search4{
 	
 	private volatile boolean cutoffSearch = false;
 	
-	public Search33v11(Evaluator2 e, int hashSize){
+	public Search33v12(Evaluator2 e, int hashSize){
 		this(e, hashSize, false);
 	}
 	
-	public Search33v11(Evaluator2 e, int hashSize, boolean printPV){
+	public Search33v12(Evaluator2 e, int hashSize, boolean printPV){
 		this.e = e;
 		
 		//m = new ZMap3(hashSize);
@@ -695,6 +696,8 @@ public final class Search33v11 implements Search4{
 
 		final long zkey = s.zkey();
 		final TTEntry e = m.get(zkey);
+		final boolean hasTTMove;
+		final long ttMove;
 		if(e != null){
 			stats.hashHits++;
 			if(e.depth >= depth){
@@ -710,7 +713,15 @@ public final class Search33v11 implements Search4{
 				temp.piece = 1L<<MoveEncoder.getPos1(encoding);
 				temp.moves = 1L<<MoveEncoder.getPos2(encoding);
 				temp.rank = tteMoveRank;
+				hasTTMove = true;
+				ttMove = encoding;
+			} else{
+				hasTTMove = false;
+				ttMove = 0;
 			}
+		} else{
+			hasTTMove = false;
+			ttMove = 0;
 		}
 		
 		int bestScore;
@@ -718,12 +729,12 @@ public final class Search33v11 implements Search4{
 		if(alliedKingAttacked){
 			bestScore = -77777; //NOTE: THIS CONDITION WILL PROBABLY NEVER BE CHECKED
 		} else{
-			if(!pv){
+			/*if(!pv){
 				final int lazy = this.e.lazyEval(s, player);
 				if(lazy-100 >= beta){
 					return lazy; 
 				}
-			}
+			}*/
 			
 			bestScore = this.e.eval(s, player);
 			if(bestScore >= beta){ //standing pat
@@ -749,11 +760,23 @@ public final class Search33v11 implements Search4{
 			long encoding = s.executeMove(player, pieceMask, move, promotionType);
 			this.e.processMove(encoding);
 			final boolean isDrawable = s.isDrawable();
-
+			
 			if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
 				//king in check after move
 				g = -77777;
 			} else{
+				
+				if(!pv && !alliedKingAttacked && !MoveEncoder.isPawnPromotion(encoding) &&
+						(!hasTTMove || encoding != ttMove)){
+					s.undoMove();
+					if(SEE.seeSign(player, pieceMask, move, s) < 0){
+						this.e.undoMove(encoding);
+						continue;
+					} else{
+						s.executeMove(player, pieceMask, move, promotionType);
+					}
+				}
+				
 				g = -qsearch(1-player, -beta, -alpha, depth-1, stackIndex+1, pv, s);
 			}
 			s.undoMove();
