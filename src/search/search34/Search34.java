@@ -299,7 +299,7 @@ public final class Search34 implements Search4{
 			return 0;
 		} else if(depth <= 0){
 			final int q = qsearch(player, alpha, beta, 0, stackIndex, pv, s);
-			if(1==2 && q > 70000 && pv){
+			if(q > 70000 && pv){
 				return recurse(player, alpha, beta, 1, true, false, stackIndex, s);
 			} else{
 				return q;
