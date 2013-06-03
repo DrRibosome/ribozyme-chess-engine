@@ -3,9 +3,9 @@ package time;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import search.MoveSet;
 import search.Search4;
 import search.SearchListener2;
-import search.search33.MoveSet;
 import state4.BitUtil;
 import state4.State4;
 

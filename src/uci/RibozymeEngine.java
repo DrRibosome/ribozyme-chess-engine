@@ -1,7 +1,7 @@
 package uci;
 
+import search.MoveSet;
 import search.Search4;
-import search.search33.MoveSet;
 import search.search33.Search33v12;
 import state4.BitUtil;
 import state4.Masks;

@@ -1,4 +1,4 @@
-package search.search33;
+package search.search34;
 
 import search.MoveSet;
 import search.Search4;
@@ -12,7 +12,7 @@ import state4.State4;
 import eval.Evaluator2;
 
 /** heavy search reductions for non-pv lines after depth 7*/
-public final class Search33v12 implements Search4{
+public final class Search34 implements Search4{
 	public final static class SearchStat32k extends SearchStat{
 		/** scores returned from quiet search without bottoming out*/
 		public long forcedQuietCutoffs;
@@ -96,11 +96,11 @@ public final class Search33v12 implements Search4{
 	
 	private volatile boolean cutoffSearch = false;
 	
-	public Search33v12(Evaluator2 e, int hashSize){
+	public Search34(Evaluator2 e, int hashSize){
 		this(e, hashSize, false);
 	}
 	
-	public Search33v12(Evaluator2 e, int hashSize, boolean printPV){
+	public Search34(Evaluator2 e, int hashSize, boolean printPV){
 		this.e = e;
 		
 		//m = new ZMap3(hashSize);
