@@ -2,9 +2,9 @@ package eval;
 
 /** encoder for score, margin, and any flags*/
 public final class ScoreEncoder {
-	private final static int scoreBits = 19;
-	private final static int marginBits = 10;
-	private final static int flagBits = 3;
+	public final static int scoreBits = 19;
+	public final static int marginBits = 10;
+	public final static int flagBits = 3;
 	
 	private final static int scoreMask;
 	private final static int marginMask;
@@ -25,12 +25,12 @@ public final class ScoreEncoder {
 		}
 		{
 			int temp = 0;
-			for(int a = 0; a < scoreBits; a++) temp |= 1 << (marginMaskOffset + a);
+			for(int a = 0; a < marginBits; a++) temp |= 1 << (marginMaskOffset + a);
 			marginMask = temp;
 		}
 		{
 			int temp = 0;
-			for(int a = 0; a < scoreBits; a++) temp |= 1 << (flagMaskOffset + a);
+			for(int a = 0; a < flagBits; a++) temp |= 1 << (flagMaskOffset + a);
 			flagMask = temp;
 		}
 	}

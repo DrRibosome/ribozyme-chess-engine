@@ -2,15 +2,13 @@ package search.search34;
 
 import java.util.Random;
 
-
 /** rough but working implementation of cuckoo hashing*/
-public final class CuckooHash2 implements Hash{
+public final class CuckooHash2{
 	private final TTEntry[] l;
 	private final int size;
 	private final int maxAttempts;
 	private final static long a;
 	private final static long b;
-	private TTEntry loader = new TTEntry();
 	
 	static{
 		final Random r = new Random(58372L);
@@ -31,27 +29,17 @@ public final class CuckooHash2 implements Hash{
 		this.size = size;
 	}
 	
-	public void put(final long zkey, final TTEntry entry){
-		loader.fill(entry);
-		
-		final int seq = loader.seq;
+	public void put(final long zkey, final TTEntry t){
+		final int seq = t.seq;
 		for(int q = 0; q < maxAttempts; q++){
-			final int index1 = h1(a, loader.zkey, size);
-			
-			final TTEntry temp = loader;
-			loader = l[index1];
-			l[index1] = temp;
-			
-			if(loader.zkey == 0 || loader.seq != seq || loader.depth < l[index1].depth){
+			final int index1 = h1(a, t.zkey, size);
+			TTEntry.swap(l[index1], t);
+			if(t.zkey == 0 || t.seq != seq || t.depth < l[index1].depth){
 				return;
 			} else{
-				final int index2 = h2(b, loader.zkey, size);
-				
-				final TTEntry temp2 = loader;
-				loader = l[index2];
-				l[index2] = temp2;
-				
-				if(loader.zkey == 0 || loader.seq != seq || loader.depth < l[index2].depth){
+				final int index2 = h2(b, t.zkey, size);
+				TTEntry.swap(l[index2], t);
+				if(t.zkey == 0 || t.seq != seq || t.depth < l[index2].depth){
 					return;
 				}
 			}
