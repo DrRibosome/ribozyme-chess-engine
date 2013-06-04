@@ -8,12 +8,12 @@ import state4.Masks;
 import state4.State4;
 import time.TimerThread5;
 import eval.Evaluator2;
-import eval.e8.E8;
+import eval.e8.E8v2;
 
 public final class RibozymeEngine implements UCIEngine{
 
 	// major-version.search-version.eval-version
-	private final static String name = "ribozyme 0.8v1.33v12";
+	private final static String name = "ribozyme 0.8v2.33v12";
 	
 	private final Search4 s;
 	private Thread t;
@@ -21,7 +21,7 @@ public final class RibozymeEngine implements UCIEngine{
 	
 	public RibozymeEngine(final int hashSize){
 		
-		Evaluator2 e = new E8();
+		Evaluator2 e = new E8v2();
 		
 		s = new Search33v12(e, 22, true);
 	}
