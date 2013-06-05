@@ -91,7 +91,6 @@ public final class E9 implements Evaluator3{
 	 * <p> calculated by difference between midgame and endgame material*/
 	private final int scaleMargin;
 	private final int endMaterial;
-	private final int granularity = 8;
 	
 	/** stores score for non-pawn material*/
 	private final int[] nonPawnMaterial = new int[2];
@@ -260,7 +259,7 @@ public final class E9 implements Evaluator3{
 				loader = phEntry;
 			}
 			
-			System.out.println("material score = "+(materialScore[player] - materialScore[1-player]));
+			//System.out.println("material score = "+(materialScore[player] - materialScore[1-player]));
 			int stage1Score = S(materialScore[player] - materialScore[1-player]);
 			stage1Score += tempoWeight;
 			
@@ -294,7 +293,7 @@ public final class E9 implements Evaluator3{
 			
 			score = interpolate(stage1Score, scale);
 			
-			System.out.println("score1 = "+score);
+			//System.out.println("score1 = "+score);
 			final int tempScore = score + stage1Margin;
 			if(tempScore <= lowerBound || tempScore >= upperBound){
 				return ScoreEncoder.encode(score, stage1Margin, flags);
@@ -467,12 +466,6 @@ public final class E9 implements Evaluator3{
 		
 		//System.out.println(player+" pawn score = ("+mgScore(score)+", "+egScore(score)+")");
 		return score;
-	}
-	
-	/** for grainSize a power of 2, returns passed score inside specified granularity,
-	 * helps prevent hopping around to different PVs on low score differences*/
-	private static int granulate(final int score, final int grainSize){
-		return (score+grainSize>>1) & ~(grainSize-1);
 	}
 	
 	private static int max(final int a1, final int a2){
