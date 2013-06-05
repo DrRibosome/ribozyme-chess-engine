@@ -1,5 +1,7 @@
 package eval;
 
+
+
 /** encoder for score, margin, and any flags*/
 public final class ScoreEncoder {
 	public final static int scoreBits = 19;
@@ -7,6 +9,8 @@ public final class ScoreEncoder {
 	public final static int flagBits = 3;
 	
 	private final static int scoreMask;
+	private final static int scoreSignMask;
+	
 	private final static int marginMask;
 	private final static int flagMask;
 	private final static int scoreMaskOffset;
@@ -20,8 +24,9 @@ public final class ScoreEncoder {
 		
 		{
 			int temp = 0;
-			for(int a = 0; a < scoreBits; a++) temp |= 1 << (scoreMaskOffset + a);
+			for(int a = 0; a < scoreBits-1; a++) temp |= 1 << (scoreMaskOffset + a);
 			scoreMask = temp;
+			scoreSignMask = 1 << scoreBits-1;
 		}
 		{
 			int temp = 0;
@@ -36,7 +41,7 @@ public final class ScoreEncoder {
 	}
 	
 	public static int getScore(final int scoreEncoding){
-		return scoreEncoding & scoreMask;
+		return (scoreEncoding & scoreMask) - (scoreEncoding & scoreSignMask);
 	}
 	
 	public static int getMargin(final int scoreEncoding){
@@ -51,7 +56,9 @@ public final class ScoreEncoder {
 		assert score < 1<<scoreBits;
 		assert margin < 1<<marginBits;
 		assert flags < 1<<flagBits;
+		assert margin > 0;
+		assert flags > 0;
 		
-		return score | (margin << marginMaskOffset) | (flags << flagMaskOffset);
+		return (score & (scoreMask | scoreSignMask)) | (margin << marginMaskOffset) | (flags << flagMaskOffset);
 	}
 }
