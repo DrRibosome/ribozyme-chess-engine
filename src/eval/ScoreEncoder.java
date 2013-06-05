@@ -56,8 +56,8 @@ public final class ScoreEncoder {
 		assert score < 1<<scoreBits;
 		assert margin < 1<<marginBits;
 		assert flags < 1<<flagBits;
-		assert margin > 0;
-		assert flags > 0;
+		assert margin >= 0;
+		assert flags >= 0;
 		
 		return (score & (scoreMask | scoreSignMask)) | (margin << marginMaskOffset) | (flags << flagMaskOffset);
 	}
