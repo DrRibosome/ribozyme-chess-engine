@@ -695,6 +695,7 @@ public final class Search34v3 implements Search4{
 		final TTEntry e = m.get(zkey);
 		final boolean hasTTMove;
 		final long ttMove;
+		final int scoreEncoding;
 		if(e != null){
 			stats.hashHits++;
 			if(e.depth >= depth){
@@ -716,25 +717,20 @@ public final class Search34v3 implements Search4{
 				hasTTMove = false;
 				ttMove = 0;
 			}
+			
+			scoreEncoding = pv? this.e.refine(player, s, -90000, 90000, e.staticEval):
+				this.e.refine(player, s, alpha, beta, e.staticEval);
 		} else{
 			hasTTMove = false;
 			ttMove = 0;
+			scoreEncoding = pv? this.e.eval(player, s): this.e.eval(player, s, alpha, beta);
 		}
 		
-		final int scoreEncoding = this.e.eval(player, s);
-		assert ScoreEncoder.getMargin(scoreEncoding) == 0;
 		int bestScore;
 		final boolean alliedKingAttacked = State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
 		if(alliedKingAttacked){
 			bestScore = -77777;
 		} else{
-			/*if(!pv){
-				final int lazy = this.e.lazyEval(s, player);
-				if(lazy-100 >= beta){
-					return lazy; 
-				}
-			}*/
-			
 			bestScore = ScoreEncoder.getScore(scoreEncoding) + ScoreEncoder.getMargin(scoreEncoding);
 			if(bestScore >= beta){ //standing pat
 				return bestScore;
@@ -764,7 +760,6 @@ public final class Search34v3 implements Search4{
 				//king in check after move
 				g = -77777;
 			} else{
-				
 				if(!pv && !alliedKingAttacked && !MoveEncoder.isPawnPromotion(encoding) &&
 						(!hasTTMove || encoding != ttMove)){
 					s.undoMove();
