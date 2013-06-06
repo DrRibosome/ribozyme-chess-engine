@@ -724,11 +724,11 @@ public final class Search34v3 implements Search4{
 			}
 			
 			scoreEncoding = pv? this.e.refine(player, s, -90000, 90000, e.staticEval):
-				this.e.refine(player, s, alpha, 90000, e.staticEval);
+				this.e.refine(player, s, alpha, beta, e.staticEval);
 		} else{
 			hasTTMove = false;
 			ttMove = 0;
-			scoreEncoding = pv? this.e.eval(player, s): this.e.eval(player, s, alpha, 90000);
+			scoreEncoding = pv? this.e.eval(player, s): this.e.eval(player, s, alpha, beta);
 		}
 		
 		int bestScore;

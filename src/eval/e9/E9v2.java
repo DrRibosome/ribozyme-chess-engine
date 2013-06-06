@@ -8,7 +8,7 @@ import eval.Evaluator3;
 import eval.PositionMasks;
 import eval.ScoreEncoder;
 
-public final class E9 implements Evaluator3{
+public final class E9v2 implements Evaluator3{
 	
 	//evaluation stage flags, used to denote which eval stage is complete
 	private final static int stage1Flag = 1 << 0;
@@ -152,7 +152,7 @@ public final class E9 implements Evaluator3{
 		};
 	}
 	
-	public E9(){
+	public E9v2(){
 		int startMaterial = (
 				  materialWeights[State4.PIECE_TYPE_PAWN]*8
 				+ materialWeights[State4.PIECE_TYPE_KNIGHT]*2
@@ -277,26 +277,33 @@ public final class E9 implements Evaluator3{
 				pawnHash.put(pawnZkey, loader);
 			}
 			
-			final int stage1Margin;
+			final int stage1MarginLower; //margin for a lower cutoff
+			final int stage1MarginUpper; //margin for an upper cutoff
 			if(alliedQueens != 0 && enemyQueens != 0){
 				//both sides have queen, apply even margin
-				stage1Margin = 200;
+				stage1MarginLower = 120;
+				stage1MarginUpper = 40;
 			} else if(alliedQueens != 0){
 				//score will be higher because allied queen, no enemy queen
-				stage1Margin = 225;
+				stage1MarginLower = 150;
+				stage1MarginUpper = 10;
 			} else if(enemyQueens != 0){
 				//score will be lower because enemy queen, no allied queen
-				stage1Margin = 175;
+				stage1MarginLower = 100;
+				stage1MarginUpper = 70;
 			} else{
-				stage1Margin = 100;
+				stage1MarginLower = 80;
+				stage1MarginUpper = -50;
 			}
 			
 			score = interpolate(stage1Score, scale);
 			
 			//System.out.println("score1 = "+score);
-			final int tempScore = score + stage1Margin;
-			if(tempScore <= lowerBound || tempScore >= upperBound){
-				return ScoreEncoder.encode(score, stage1Margin, flags);
+			if(score+stage1MarginLower <= lowerBound){
+				return ScoreEncoder.encode(score, stage1MarginLower, flags);
+			}
+			if(score+stage1MarginUpper >= upperBound){
+				return ScoreEncoder.encode(score, stage1MarginUpper, flags);
 			}
 		}
 		
@@ -319,21 +326,26 @@ public final class E9 implements Evaluator3{
 			} else{
 				//stage 2 margin related to how much we expect the score to change
 				//maximally due to king safety
-				final int stage2Margin;
+				final int stage2MarginLower;
+				final int stage2MarginUpper;
 				if(alliedQueens != 0 && enemyQueens != 0){
 					//both sides have queen, apply even margin
-					stage2Margin = 100;
+					stage2MarginLower = 80;
+					stage2MarginUpper = 0;
 				} else if(alliedQueens != 0){
 					//score will be higher because allied queen, no enemy queen
-					stage2Margin = 125;
+					stage2MarginLower = 110;
+					stage2MarginUpper = 20;
 				} else{
 					//score will be lower because enemy queen, no allied queen
-					stage2Margin = 75;
+					stage2MarginLower = 50;
+					stage2MarginUpper = -20;
 				}
 				
-				final int tempScore = score + stage2Margin;
-				if(tempScore <= lowerBound || tempScore >= upperBound){
-					return ScoreEncoder.encode(score, stage2Margin, flags);
+				if(score+stage2MarginLower <= lowerBound){
+					return ScoreEncoder.encode(score, stage2MarginLower, flags);
+				} if(score+stage2MarginUpper >= upperBound){
+					return ScoreEncoder.encode(score, stage2MarginUpper, flags);
 				} else{
 					flags |= stage3Flag;
 					//margin cutoff failed, calculate king safety scores
@@ -406,7 +418,8 @@ public final class E9 implements Evaluator3{
 			int kingDangerScore = 0;
 			if(enemyQueens != 0){
 				//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				//NOTE: hashing here doesnt actually take being able to castle into account
+				//  NOTE: hashing here doesnt actually take being able to castle into account
+				//  however, doesnt seem to affect playing strength
 				//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				
 				//pawn wall, storm calculations
