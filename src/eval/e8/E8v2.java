@@ -7,7 +7,7 @@ import state4.State4;
 import eval.Evaluator2;
 import eval.PositionMasks;
 
-public final class E8 implements Evaluator2{
+public final class E8v2 implements Evaluator2{
 	
 	/**
 	 * gives bonus multiplier to the value of sliding pieces
@@ -82,7 +82,6 @@ public final class E8 implements Evaluator2{
 	
 	private final int margin;
 	private final int endMaterial;
-	private final int granularity = 8;
 	
 	/** multiplier for active pieces on a cluttered board*/
 	private double clutterMult;
@@ -146,7 +145,7 @@ public final class E8 implements Evaluator2{
 		};
 	}
 	
-	public E8(){
+	public E8v2(){
 		int startMaterial = (
 				  materialWeights[State4.PIECE_TYPE_PAWN]*8
 				+ materialWeights[State4.PIECE_TYPE_KNIGHT]*2
@@ -227,11 +226,11 @@ public final class E8 implements Evaluator2{
 		}
 		
 		final int p1Weight = score(player, s, loader);
-		final int p1 = granulate(interpolate(p1Weight, scale), granularity);
+		final int p1 = interpolate(p1Weight, scale);
 		final int p1End = egScore(p1Weight);
 		
 		final int p2Weight = score(1-player, s, loader);
-		final int p2 = granulate(interpolate(p2Weight, scale), granularity);
+		final int p2 = interpolate(p2Weight, scale);
 		final int p2End = egScore(p2Weight);
 		
 		final int score = p1-p2;
@@ -304,12 +303,6 @@ public final class E8 implements Evaluator2{
 		}
 		
 		return score;
-	}
-	
-	/** for grainSize a power of 2, returns passed score inside specified granularity,
-	 * helps prevent hopping around to different PVs on low score differences*/
-	private static int granulate(final int score, final int grainSize){
-		return (score+grainSize>>1) & ~(grainSize-1);
 	}
 	
 	private static int max(final int a1, final int a2){
