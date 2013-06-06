@@ -23,7 +23,7 @@ public final class RibozymeEngine implements UCIEngine{
 		
 		final Evaluator3 e = new E9();
 		
-		s = new Search34v3(e, 20, true);
+		s = new Search34v3(e, hashSize, true);
 	}
 	
 	@Override
