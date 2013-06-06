@@ -2,13 +2,13 @@ package uci;
 
 import search.MoveSet;
 import search.Search4;
-import search.search33.Search33v12;
+import search.search34.Search34v3;
 import state4.BitUtil;
 import state4.Masks;
 import state4.State4;
 import time.TimerThread5;
-import eval.Evaluator2;
-import eval.e8.E8v2;
+import eval.Evaluator3;
+import eval.e9.E9;
 
 public final class RibozymeEngine implements UCIEngine{
 
@@ -21,9 +21,9 @@ public final class RibozymeEngine implements UCIEngine{
 	
 	public RibozymeEngine(final int hashSize){
 		
-		Evaluator2 e = new E8v2();
+		final Evaluator3 e = new E9();
 		
-		s = new Search33v12(e, 22, true);
+		s = new Search34v3(e, 22, true);
 	}
 	
 	@Override
