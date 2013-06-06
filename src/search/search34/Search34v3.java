@@ -326,7 +326,7 @@ public final class Search34v3 implements Search4{
 		boolean tteMove = false;
 		long tteMoveEncoding = 0;
 		
-		//final int scoreEncoding;
+		final int scoreEncoding;
 		if(e != null){
 			stats.hashHits++;
 			if(e.depth >= depth){
@@ -351,11 +351,12 @@ public final class Search34v3 implements Search4{
 				tteMove = true;
 			}
 			
+			scoreEncoding = this.e.refine(player, s, alpha, beta, e.staticEval);
 		} else{
-			
+			scoreEncoding = this.e.eval(player, s, alpha, beta);
 		}
 		
-		final int scoreEncoding = this.e.eval(player, s);
+		//final int scoreEncoding = this.e.eval(player, s);
 		final int lazyEval = ScoreEncoder.getScore(scoreEncoding) + ScoreEncoder.getMargin(scoreEncoding);
 		final boolean alliedKingAttacked = isChecked(player, s);
 		
