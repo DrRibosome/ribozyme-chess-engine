@@ -24,6 +24,8 @@ public class ScoreEncoderTest {
 			
 			public boolean test(){
 				final int scoreEncoding = ScoreEncoder.encode(score, margin, flags);
+				/*System.out.println("calculated = "+ScoreEncoder.getScore(scoreEncoding)+", "+
+						ScoreEncoder.getMargin(scoreEncoding)+", "+ScoreEncoder.getFlags(scoreEncoding));*/
 				return ScoreEncoder.getScore(scoreEncoding) == score &&
 						ScoreEncoder.getMargin(scoreEncoding) == margin &&
 						ScoreEncoder.getFlags(scoreEncoding) == flags;
@@ -41,9 +43,15 @@ public class ScoreEncoderTest {
 		l.add(new TestCase(4000, 80, 1));
 		l.add(new TestCase(-5000, 300, 5));
 		l.add(new TestCase(5832, 0, 0));
+		l.add(new TestCase(500, -100, 5));
+		l.add(new TestCase(-500, 0, 0));
+		l.add(new TestCase(-382, -50, 2));
+		l.add(new TestCase(4000, -80, 1));
+		l.add(new TestCase(-5000, -30, 5));
+		l.add(new TestCase(5832, 0, 0));
 		
 		for(TestCase testCase: l){
-			//System.out.println(testCase.score+", "+testCase.margin+", "+testCase.flags);
+			//System.out.println("expected results = "+testCase.score+", "+testCase.margin+", "+testCase.flags);
 			Assert.assertTrue(testCase.test());
 		}
 	}

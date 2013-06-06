@@ -2,16 +2,19 @@ package eval;
 
 
 
+
 /** encoder for score, margin, and any flags*/
 public final class ScoreEncoder {
-	public final static int scoreBits = 19;
-	public final static int marginBits = 10;
+	public final static int scoreBits = 18;
+	public final static int marginBits = 11;
 	public final static int flagBits = 3;
 	
 	private final static int scoreMask;
 	private final static int scoreSignMask;
 	
 	private final static int marginMask;
+	private final static int marginSignMask;
+	
 	private final static int flagMask;
 	private final static int scoreMaskOffset;
 	private final static int marginMaskOffset;
@@ -30,8 +33,9 @@ public final class ScoreEncoder {
 		}
 		{
 			int temp = 0;
-			for(int a = 0; a < marginBits; a++) temp |= 1 << (marginMaskOffset + a);
+			for(int a = 0; a < marginBits-1; a++) temp |= 1 << a;
 			marginMask = temp;
+			marginSignMask = 1 << marginBits-1;
 		}
 		{
 			int temp = 0;
@@ -45,7 +49,10 @@ public final class ScoreEncoder {
 	}
 	
 	public static int getMargin(final int scoreEncoding){
-		return (scoreEncoding & marginMask) >>> marginMaskOffset;
+		final int margin = scoreEncoding >>> marginMaskOffset;
+		//System.out.println(margin & marginMask);
+		//System.out.println(marginSignMask & margin);
+		return (margin & marginMask) - (marginSignMask & margin);
 	}
 	
 	public static int getFlags(final int scoreEncoding){
@@ -56,9 +63,20 @@ public final class ScoreEncoder {
 		assert score < 1<<scoreBits;
 		assert margin < 1<<marginBits;
 		assert flags < 1<<flagBits;
-		assert margin >= 0;
 		assert flags >= 0;
 		
-		return (score & (scoreMask | scoreSignMask)) | (margin << marginMaskOffset) | (flags << flagMaskOffset);
+		final int marginNegative = (margin >>> 31) << (marginBits-1);
+		final int marginValue =  (margin >>> 31)*(marginNegative-Math.abs(margin)) + (1-(margin >>> 31))*margin;
+		//System.out.println("margin value = "+marginValue);
+		//System.out.println("margin sign = "+marginNegative);
+		
+		return (score & (scoreMask | scoreSignMask)) |
+				((marginValue|marginNegative) << marginMaskOffset) |
+				(flags << flagMaskOffset);
+	}
+	
+	public static void main(String[] args){
+		int a = -5;
+		System.out.println(a >>> 31);
 	}
 }
