@@ -50,8 +50,6 @@ public final class ScoreEncoder {
 	
 	public static int getMargin(final int scoreEncoding){
 		final int margin = scoreEncoding >>> marginMaskOffset;
-		//System.out.println(margin & marginMask);
-		//System.out.println(marginSignMask & margin);
 		return (margin & marginMask) - (marginSignMask & margin);
 	}
 	
@@ -75,10 +73,5 @@ public final class ScoreEncoder {
 		return (scoreValue | scoreNegative) |
 				((marginValue|marginNegative) << marginMaskOffset) |
 				(flags << flagMaskOffset);
-	}
-	
-	public static void main(String[] args){
-		int a = -5;
-		System.out.println(a >>> 31);
 	}
 }
