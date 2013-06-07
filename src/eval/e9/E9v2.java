@@ -282,21 +282,21 @@ public final class E9v2 implements Evaluator3{
 			if(alliedQueens != 0 && enemyQueens != 0){
 				//both sides have queen, apply even margin
 				stage1MarginLower = 120;
-				stage1MarginUpper = 40;
+				stage1MarginUpper = -120;
 			} else if(alliedQueens != 0){
 				//score will be higher because allied queen, no enemy queen
-				stage1MarginLower = 150;
-				stage1MarginUpper = 10;
+				stage1MarginLower = 140;
+				stage1MarginUpper = -100;
 			} else if(enemyQueens != 0){
 				//score will be lower because enemy queen, no allied queen
 				stage1MarginLower = 100;
-				stage1MarginUpper = 70;
+				stage1MarginUpper = -140;
 			} else{
-				stage1MarginLower = 80;
-				stage1MarginUpper = -50;
+				stage1MarginLower = 90;
+				stage1MarginUpper = -90;
 			}
 			
-			score = interpolate(stage1Score, scale);
+			score = interpolate(stage1Score, scale) + interpolate(S((int)(egScore(stage1Score)*.1), 0), scale);
 			
 			//System.out.println("score1 = "+score);
 			if(score+stage1MarginLower <= lowerBound){
@@ -317,8 +317,7 @@ public final class E9v2 implements Evaluator3{
 			
 			final int stage2Score = scoreMobility(player, s, clutterMult, nonPawnMaterial, attackMask) -
 					scoreMobility(1-player, s, clutterMult, nonPawnMaterial, attackMask);
-			score += interpolate(stage2Score, scale);
-			//System.out.println("score2 = "+score);
+			score += interpolate(stage2Score, scale) + interpolate(S((int)(egScore(stage2Score)*.1), 0), scale);
 			if(queens == 0){
 				flags |= stage3Flag;
 				//System.out.println("no stage 3");
@@ -331,15 +330,15 @@ public final class E9v2 implements Evaluator3{
 				if(alliedQueens != 0 && enemyQueens != 0){
 					//both sides have queen, apply even margin
 					stage2MarginLower = 80;
-					stage2MarginUpper = 0;
+					stage2MarginUpper = -50;
 				} else if(alliedQueens != 0){
 					//score will be higher because allied queen, no enemy queen
 					stage2MarginLower = 110;
-					stage2MarginUpper = 20;
+					stage2MarginUpper = -20;
 				} else{
 					//score will be lower because enemy queen, no allied queen
 					stage2MarginLower = 50;
-					stage2MarginUpper = -20;
+					stage2MarginUpper = -70;
 				}
 				
 				if(score+stage2MarginLower <= lowerBound){
@@ -350,8 +349,8 @@ public final class E9v2 implements Evaluator3{
 					flags |= stage3Flag;
 					//margin cutoff failed, calculate king safety scores
 					final int stage3Score = evalKingSafety(player, s, alliedQueens, enemyQueens);
-					
-					score += interpolate(stage3Score, scale);
+
+					score += interpolate(stage3Score, scale) + interpolate(S((int)(egScore(stage3Score)*.1), 0), scale);
 					/*final int endgameBonus = S((int)(.1*score+.5), 0);
 					return ScoreEncoder.encode(score + endgameBonus, 0, flags);*/
 					
@@ -376,10 +375,8 @@ public final class E9v2 implements Evaluator3{
 			scoreMobility(1-player, s, clutterMult, nonPawnMaterial, attackMask);
 
 			final int stage3Score = evalKingSafety(player, s, alliedQueens, enemyQueens);
-			
-			score += interpolate(stage3Score, scale);
-			/*final int endgameBonus = S((int)(.1*score+.5), 0);
-			return ScoreEncoder.encode(score + endgameBonus, 0, flags);*/
+
+			score += interpolate(stage3Score, scale) + interpolate(S((int)(egScore(stage3Score)*.1), 0), scale);
 			return ScoreEncoder.encode(score, 0, flags);
 		}
 		
