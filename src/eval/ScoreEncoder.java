@@ -65,12 +65,17 @@ public final class ScoreEncoder {
 		assert flags < 1<<flagBits;
 		assert flags >= 0;
 		
+		final int scoreShift = score >>> 31;
+		final int scoreNegative = scoreShift << (scoreBits-1);
+		final int scoreValue = scoreShift*(scoreNegative-Math.abs(score)) + (1-scoreShift)*score;
+		
 		final int marginNegative = (margin >>> 31) << (marginBits-1);
 		final int marginValue =  (margin >>> 31)*(marginNegative-Math.abs(margin)) + (1-(margin >>> 31))*margin;
 		//System.out.println("margin value = "+marginValue);
 		//System.out.println("margin sign = "+marginNegative);
 		
-		return (score & (scoreMask | scoreSignMask)) |
+		return //(score & (scoreMask | scoreSignMask)) |
+				(scoreValue | scoreNegative) |
 				((marginValue|marginNegative) << marginMaskOffset) |
 				(flags << flagMaskOffset);
 	}
