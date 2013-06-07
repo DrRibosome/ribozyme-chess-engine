@@ -71,11 +71,8 @@ public final class ScoreEncoder {
 		
 		final int marginNegative = (margin >>> 31) << (marginBits-1);
 		final int marginValue =  (margin >>> 31)*(marginNegative-Math.abs(margin)) + (1-(margin >>> 31))*margin;
-		//System.out.println("margin value = "+marginValue);
-		//System.out.println("margin sign = "+marginNegative);
 		
-		return //(score & (scoreMask | scoreSignMask)) |
-				(scoreValue | scoreNegative) |
+		return (scoreValue | scoreNegative) |
 				((marginValue|marginNegative) << marginMaskOffset) |
 				(flags << flagMaskOffset);
 	}
