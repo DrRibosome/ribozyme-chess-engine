@@ -1,4 +1,4 @@
-package search.search33;
+package search.search34;
 
 
 public interface Hash {

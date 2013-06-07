@@ -1,13 +1,20 @@
-package eval.e8;
+package eval.e9;
 
 import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
-import eval.Evaluator2;
+import eval.Evaluator3;
 import eval.PositionMasks;
+import eval.ScoreEncoder;
 
-public final class E8v2 implements Evaluator2{
+public final class E9v2 implements Evaluator3{
+	
+	//evaluation stage flags, used to denote which eval stage is complete
+	private final static int stage1Flag = 1 << 0;
+	private final static int stage2Flag = 1 << 1;
+	private final static int stage3Flag = 1 << 2;
+	private final static int evalCompleteMask = stage1Flag | stage2Flag | stage3Flag;
 	
 	/**
 	 * gives bonus multiplier to the value of sliding pieces
@@ -80,11 +87,11 @@ public final class E8v2 implements Evaluator2{
 	
 	private final int[] materialScore = new int[2];
 	
-	private final int margin;
+	/** margin for scaling scores from midgame to endgame
+	 * <p> calculated by difference between midgame and endgame material*/
+	private final int scaleMargin;
 	private final int endMaterial;
 	
-	/** multiplier for active pieces on a cluttered board*/
-	private double clutterMult;
 	/** stores score for non-pawn material*/
 	private final int[] nonPawnMaterial = new int[2];
 	/** stores attack mask for all pieces for each player, indexed [player][piece-type]*/
@@ -145,7 +152,7 @@ public final class E8v2 implements Evaluator2{
 		};
 	}
 	
-	public E8v2(){
+	public E9v2(){
 		int startMaterial = (
 				  materialWeights[State4.PIECE_TYPE_PAWN]*8
 				+ materialWeights[State4.PIECE_TYPE_KNIGHT]*2
@@ -158,7 +165,7 @@ public final class E8v2 implements Evaluator2{
 				+ materialWeights[State4.PIECE_TYPE_QUEEN]
 				) * 2;
 		
-		margin = margin(startMaterial, endMaterial);
+		scaleMargin = scaleMargin(startMaterial, endMaterial);
 	}
 	
 	private final static int weightValueMask = 0x7FFF;
@@ -181,13 +188,19 @@ public final class E8v2 implements Evaluator2{
 		return S(v, v);
 	}
 	
+	/** mid game score*/
+	private static int mgScore(final int weight){
+		return  (weight & weightValueMask) - (weight & weightSignMask);
+	}
+	
+	/** end game score*/
 	private static int egScore(final int weight){
 		final int shifted = weight >>> 16;
 		return (shifted & weightValueMask) - (shifted & weightSignMask);
 	}
 	
-	/**  calculates the margin to use in {@link #getScale(int, int, int)}*/
-	private static int margin(final int startMaterial, final int endMaterial){
+	/**  calculates the scale margin to use in {@link #getScale(int, int, int)}*/
+	private static int scaleMargin(final int startMaterial, final int endMaterial){
 		return endMaterial-startMaterial;
 	}
 	
@@ -195,84 +208,243 @@ public final class E8v2 implements Evaluator2{
 	private static double getScale(final int totalMaterialScore, final int endMaterial, final int margin){
 		return min(1-(endMaterial-totalMaterialScore)*1./margin, 1);
 	}
+	
+	@Override
+	public int eval(final int player, final State4 s) {
+		return refine(player, s, -90000, 90000, 0);
+	}
 
 	@Override
-	public int eval(State4 s, int player) {
-		final int totalMaterialScore = materialScore[0]+materialScore[1];
-		final double scale = getScale(totalMaterialScore, endMaterial, margin);
-		
-		
+	public int eval(final int player, final State4 s, final int lowerBound, final int upperBound) {
+		return refine(player, s, lowerBound, upperBound, 0);
+	}
 
-		final long whitePawnAttacks = Masks.getRawPawnAttacks(0, s.pawns[0]);
-		final long blackPawnAttacks = Masks.getRawPawnAttacks(1, s.pawns[1]);
-		final long pawnAttacks = whitePawnAttacks | blackPawnAttacks;
-		clutterMult = clutterIndex[(int)BitUtil.getSetBits(pawnAttacks)];
+	@Override
+	public int refine(final int player, final State4 s, final int lowerBound,
+			final int upperBound, final int scoreEncoding) {
+		
+		int score = ScoreEncoder.getScore(scoreEncoding);
+		int margin = ScoreEncoder.getMargin(scoreEncoding);
+		int flags = ScoreEncoder.getFlags(scoreEncoding);
+		
+		if((flags != 0 && (score+margin <= lowerBound || score+margin >= upperBound)) ||
+				(evalCompleteMask & flags) == evalCompleteMask){
+			return scoreEncoding;
+		}
+
+		final int totalMaterialScore = materialScore[0]+materialScore[1];
+		final double scale = getScale(totalMaterialScore, endMaterial, scaleMargin);
 		
 		final int pawnType = State4.PIECE_TYPE_PAWN;
 		final int pawnWeight = materialWeights[pawnType];
 		nonPawnMaterial[0] = materialScore[0]-s.pieceCounts[0][pawnType]*pawnWeight;
 		nonPawnMaterial[1] = materialScore[1]-s.pieceCounts[1][pawnType]*pawnWeight;
 		
-		//load hashed pawn values, if any
-		final long pawnZkey = s.pawnZkey();
-		final PawnHashEntry phEntry = pawnHash.get(pawnZkey);
-		final PawnHashEntry loader;
-		if(phEntry == null){
-			filler.passedPawns = 0;
-			filler.zkey = 0;
-			loader = filler;
-		} else{
-			loader = phEntry;
+		final long alliedQueens = s.queens[player];
+		final long enemyQueens = s.queens[1-player];
+		final long queens = alliedQueens | enemyQueens;
+		
+		if(flags == 0){
+			flags |= stage1Flag;
+			
+			//load hashed pawn values, if any
+			final long pawnZkey = s.pawnZkey();
+			final PawnHashEntry phEntry = pawnHash.get(pawnZkey);
+			final PawnHashEntry loader;
+			if(phEntry == null){
+				filler.passedPawns = 0;
+				filler.zkey = 0;
+				loader = filler;
+			} else{
+				loader = phEntry;
+			}
+			
+			//System.out.println("material score = "+(materialScore[player] - materialScore[1-player]));
+			int stage1Score = S(materialScore[player] - materialScore[1-player]);
+			stage1Score += tempoWeight;
+			
+			if(s.pieceCounts[player][State4.PIECE_TYPE_BISHOP] == 2){
+				stage1Score += bishopPairWeight;
+			}
+			if(s.pieceCounts[1-player][State4.PIECE_TYPE_BISHOP] == 2){
+				stage1Score += -bishopPairWeight;
+			}
+			
+			stage1Score += scorePawns(player, s, loader, enemyQueens) - scorePawns(1-player, s, loader, alliedQueens);
+			
+			if(phEntry == null){ //store newly calculated pawn values
+				loader.zkey = pawnZkey;
+				pawnHash.put(pawnZkey, loader);
+			}
+			
+			final int stage1MarginLower; //margin for a lower cutoff
+			final int stage1MarginUpper; //margin for an upper cutoff
+			if(alliedQueens != 0 && enemyQueens != 0){
+				//both sides have queen, apply even margin
+				stage1MarginLower = 120;
+				stage1MarginUpper = -120;
+			} else if(alliedQueens != 0){
+				//score will be higher because allied queen, no enemy queen
+				stage1MarginLower = 140;
+				stage1MarginUpper = -100;
+			} else if(enemyQueens != 0){
+				//score will be lower because enemy queen, no allied queen
+				stage1MarginLower = 100;
+				stage1MarginUpper = -140;
+			} else{
+				stage1MarginLower = 90;
+				stage1MarginUpper = -90;
+			}
+			
+			score = interpolate(stage1Score, scale) + interpolate(S((int)(egScore(stage1Score)*.1), 0), scale);
+			
+			//System.out.println("score1 = "+score);
+			if(score+stage1MarginLower <= lowerBound){
+				return ScoreEncoder.encode(score, stage1MarginLower, flags);
+			}
+			if(score+stage1MarginUpper >= upperBound){
+				return ScoreEncoder.encode(score, stage1MarginUpper, flags);
+			}
 		}
 		
-		final int p1Weight = score(player, s, loader);
-		final int p1 = interpolate(p1Weight, scale);
-		final int p1End = egScore(p1Weight);
-		
-		final int p2Weight = score(1-player, s, loader);
-		final int p2 = interpolate(p2Weight, scale);
-		final int p2End = egScore(p2Weight);
-		
-		final int score = p1-p2;
-		final int endgameBonus = S((int)(.1*(p1End-p2End)+.5), 0);
-		
-		if(phEntry == null){ //store newly calculated pawn values
-			loader.zkey = pawnZkey;
-			pawnHash.put(pawnZkey, loader);
-		}
-		return score + interpolate(endgameBonus, scale) + interpolate(tempoWeight, scale);
-	}
+		if((flags & stage2Flag) == 0){
+			flags |= stage2Flag;
 
-	@Override
-	public int lazyEval(State4 state, int player) {
-		return lazyScore(player)-lazyScore(1-player);
+			final long whitePawnAttacks = Masks.getRawPawnAttacks(0, s.pawns[0]);
+			final long blackPawnAttacks = Masks.getRawPawnAttacks(1, s.pawns[1]);
+			final long pawnAttacks = whitePawnAttacks | blackPawnAttacks;
+			final double clutterMult = clutterIndex[(int)BitUtil.getSetBits(pawnAttacks)];
+			
+			final int stage2Score = scoreMobility(player, s, clutterMult, nonPawnMaterial, attackMask) -
+					scoreMobility(1-player, s, clutterMult, nonPawnMaterial, attackMask);
+			score += interpolate(stage2Score, scale) + interpolate(S((int)(egScore(stage2Score)*.1), 0), scale);
+			if(queens == 0){
+				flags |= stage3Flag;
+				//System.out.println("no stage 3");
+				return ScoreEncoder.encode(score, 0, flags);
+			} else{
+				//stage 2 margin related to how much we expect the score to change
+				//maximally due to king safety
+				final int stage2MarginLower;
+				final int stage2MarginUpper;
+				if(alliedQueens != 0 && enemyQueens != 0){
+					//both sides have queen, apply even margin
+					stage2MarginLower = 80;
+					stage2MarginUpper = -50;
+				} else if(alliedQueens != 0){
+					//score will be higher because allied queen, no enemy queen
+					stage2MarginLower = 110;
+					stage2MarginUpper = -20;
+				} else{
+					//score will be lower because enemy queen, no allied queen
+					stage2MarginLower = 50;
+					stage2MarginUpper = -70;
+				}
+				
+				if(score+stage2MarginLower <= lowerBound){
+					return ScoreEncoder.encode(score, stage2MarginLower, flags);
+				} if(score+stage2MarginUpper >= upperBound){
+					return ScoreEncoder.encode(score, stage2MarginUpper, flags);
+				} else{
+					flags |= stage3Flag;
+					//margin cutoff failed, calculate king safety scores
+					final int stage3Score = evalKingSafety(player, s, alliedQueens, enemyQueens);
+
+					score += interpolate(stage3Score, scale) + interpolate(S((int)(egScore(stage3Score)*.1), 0), scale);
+					/*final int endgameBonus = S((int)(.1*score+.5), 0);
+					return ScoreEncoder.encode(score + endgameBonus, 0, flags);*/
+					
+					//System.out.println("score = "+score);
+					return ScoreEncoder.encode(score, 0, flags);
+				}
+			}
+		}
+		
+		if((flags & stage3Flag) == 0){
+			assert queens != 0; //should be caugt by stage 2 eval if queens == 0
+			
+			flags |= stage3Flag;
+
+			final long whitePawnAttacks = Masks.getRawPawnAttacks(0, s.pawns[0]);
+			final long blackPawnAttacks = Masks.getRawPawnAttacks(1, s.pawns[1]);
+			final long pawnAttacks = whitePawnAttacks | blackPawnAttacks;
+			final double clutterMult = clutterIndex[(int)BitUtil.getSetBits(pawnAttacks)];
+			
+			//recalculate attack masks
+			scoreMobility(player, s, clutterMult, nonPawnMaterial, attackMask);
+			scoreMobility(1-player, s, clutterMult, nonPawnMaterial, attackMask);
+
+			final int stage3Score = evalKingSafety(player, s, alliedQueens, enemyQueens);
+
+			score += interpolate(stage3Score, scale) + interpolate(S((int)(egScore(stage3Score)*.1), 0), scale);
+			return ScoreEncoder.encode(score, 0, flags);
+		}
+		
+		
+		//evaluation should complete in one of the stages above
+		assert false;
+		return 0;
 	}
 	
-	private int score(final int player, final State4 s, final PawnHashEntry entry){
-		
-		int score = S(materialScore[player]);
-		score += scoreMobility(player, s, clutterMult, nonPawnMaterial, attackMask);
-		score += scorePawns(player, s, entry);
-		
-		if(s.pieceCounts[player][State4.PIECE_TYPE_BISHOP] == 2){
-			score += bishopPairWeight;
+	private int evalKingSafety(final int player, final State4 s, final long alliedQueens, final long enemyQueens){
+		int score = 0;
+		if(enemyQueens != 0){
+			final long king = s.kings[player];
+			final int kingIndex = BitUtil.lsbIndex(king);
+			score += evalKingPressure3(kingIndex, player, s, attackMask[player]);
 		}
-		
-		if(s.queens[1-player] != 0){
-			score += getKingDanger(player, s, entry, attackMask);
+		if(alliedQueens != 0){
+			final long king = s.kings[1-player];
+			final int kingIndex = BitUtil.lsbIndex(king);
+			score -= evalKingPressure3(kingIndex, 1-player, s, attackMask[1-player]);
 		}
-		
 		return score;
 	}
 	
 	/** scores pawn structure*/
-	private int scorePawns(final int player, final State4 s, final PawnHashEntry entry){
+	private int scorePawns(final int player, final State4 s, final PawnHashEntry entry, final long enemyQueens){
 		int score = 0;
 		
 		//get pawn scores from hash entry, or recalculate if necessary
 		final long pawnZkey = s.pawnZkey();
 		if(pawnZkey != entry.zkey){
 			score += calculatePawnScore(player, s, entry);
+
+			final long king = s.kings[player];
+			final int kingIndex = BitUtil.lsbIndex(king);
+			int kingDangerScore = 0;
+			if(enemyQueens != 0){
+				//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				//  NOTE: hashing here doesnt actually take being able to castle into account
+				//  however, doesnt seem to affect playing strength
+				//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				
+				//pawn wall, storm calculations
+				final long cmoves = State4.getCastleMoves(player, s);
+				int pawnWallBonus = pawnShelterStormDanger(player, s, kingIndex);
+				if(cmoves != 0){
+					//if we can castle, count the pawn wall/storm weight as best available after castle
+					if((castleOffsets[0][player] & cmoves) != 0){
+						final int leftIndex = castleIndex[0][player];
+						final int leftScore = pawnShelterStormDanger(player, s, leftIndex);
+						pawnWallBonus = leftScore > pawnWallBonus? leftScore: pawnWallBonus;
+					}
+					if((castleOffsets[1][player] & cmoves) != 0){
+						final int rightIndex = castleIndex[1][player];
+						final int rightScore = pawnShelterStormDanger(player, s, rightIndex);
+						pawnWallBonus = rightScore > pawnWallBonus? rightScore: pawnWallBonus;
+					}
+				}
+				kingDangerScore += S(pawnWallBonus, 0);
+			}
+			
+			kingDangerScore += S(-kingDangerSquares[player][kingIndex], 0);
+			kingDangerScore += S(0, centerDanger[kingIndex]);
+			
+			if(player == 0) entry.score1 += kingDangerScore;
+			else entry.score2 += kingDangerScore;
+			score += kingDangerScore;
+			
 		} else{
 			score += player == 0? entry.score1: entry.score2;
 		}
@@ -302,6 +474,7 @@ public final class E8v2 implements Evaluator2{
 			}
 		}
 		
+		//System.out.println(player+" pawn score = ("+mgScore(score)+", "+egScore(score)+")");
 		return score;
 	}
 	
@@ -541,52 +714,6 @@ public final class E8v2 implements Evaluator2{
 		{6, 62}, //castle right index
 	};
 	
-	/** gets the king danger for the passed player*/
-	private static int getKingDanger(final int player, final State4 s,
-			final PawnHashEntry entry, final long[] attackMask){
-		
-		int kingDangerScore = 0;
-		
-		final long king = s.kings[player];
-		final int kingIndex = BitUtil.lsbIndex(king);
-		final long cmoves = State4.getCastleMoves(player, s);
-
-		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		//NOTE: hashing here doesnt actually take being able to castle into account
-		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		
-		if(entry.zkey != s.pawnZkey()){
-			//pawn wall, storm calculations
-			int pawnWallBonus = pawnShelterStormDanger(player, s, kingIndex);
-			if(cmoves != 0){
-				//if we can castle, count the pawn wall/storm weight as best available after castle
-				if((castleOffsets[0][player] & cmoves) != 0){
-					final int leftIndex = castleIndex[0][player];
-					final int leftScore = pawnShelterStormDanger(player, s, leftIndex);
-					pawnWallBonus = leftScore > pawnWallBonus? leftScore: pawnWallBonus;
-				}
-				if((castleOffsets[1][player] & cmoves) != 0){
-					final int rightIndex = castleIndex[1][player];
-					final int rightScore = pawnShelterStormDanger(player, s, rightIndex);
-					pawnWallBonus = rightScore > pawnWallBonus? rightScore: pawnWallBonus;
-				}
-			}
-			kingDangerScore += S(pawnWallBonus, 0);
-			
-			kingDangerScore += S(-kingDangerSquares[player][kingIndex], 0);
-			kingDangerScore += S(0, centerDanger[kingIndex]);
-			
-			if(player == 0) entry.kingDanger1 = kingDangerScore;
-			else entry.kingDanger2 = kingDangerScore;
-		} else{
-			kingDangerScore += player == 0? entry.kingDanger1: entry.kingDanger2;
-		}
-		
-		kingDangerScore += evalKingPressure3(kingIndex, player, s, attackMask[player]);
-		
-		return kingDangerScore;
-	}
-	
 	private static int evalKingPressure3(final int kingIndex, final int player,
 			final State4 s, final long alliedAttackMask){
 		
@@ -726,12 +853,8 @@ public final class E8v2 implements Evaluator2{
 		return kingDangerTable[index < 128? index: 127];
 	}
 	
-	private int lazyScore(int player){
-		return materialScore[player];
-	}
-
 	@Override
-	public void processMove(final long encoding) {
+	public void makeMove(final long encoding) {
 		update(encoding, 1);
 	}
 
@@ -903,6 +1026,8 @@ public final class E8v2 implements Evaluator2{
 		final long pawnAttackMask = Masks.getRawPawnAttacks(player, alliedPawns);
 		attackMask[player] = bishopAttackMask | knightAttackMask | rookAttackMask | queenAttackMask | pawnAttackMask;
 		
+
+		//System.out.println(player+" pawn score = ("+mgScore(mobScore)+", "+egScore(mobScore)+")");
 		return mobScore;
 	}
 	

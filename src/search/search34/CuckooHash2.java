@@ -1,17 +1,14 @@
-package eval.e8;
+package search.search34;
 
 import java.util.Random;
 
-
-/** cucko cucko hashing implementation for storing pawn scores*/
-public final class PawnHash{
-	private final PawnHashEntry[] l;
+/** rough but working implementation of cuckoo hashing*/
+public final class CuckooHash2{
+	private final TTEntry[] l;
 	private final int size;
 	private final int maxAttempts;
 	private final static long a;
 	private final static long b;
-	private PawnHashEntry loader = new PawnHashEntry();
-	private int seq = 0;
 	
 	static{
 		final Random r = new Random(58372L);
@@ -19,50 +16,37 @@ public final class PawnHash{
 		b = (long)(r.nextDouble()*Long.MAX_VALUE);
 	}
 	
-	public PawnHash(int size){
+	public CuckooHash2(int size){
 		this(size, 16);
 	}
 	
-	public PawnHash(int size, int maxAttempts){
+	public CuckooHash2(int size, int maxAttempts){
 		this.maxAttempts = maxAttempts;
-		l = new PawnHashEntry[1<<size];
+		l = new TTEntry[1<<size];
 		for(int q = 0; q < 1<<size; q++){
-			l[q] = new PawnHashEntry();
+			l[q] = new TTEntry();
 		}
 		this.size = size;
 	}
 	
-	public void put(final long zkey, final PawnHashEntry t){
-		PawnHashEntry.fill(t, loader);
-		loader.seq = seq++;
+	public void put(final long zkey, final TTEntry t){
+		final int seq = t.seq;
 		for(int q = 0; q < maxAttempts; q++){
 			final int index1 = h1(a, t.zkey, size);
-			
-			if(q == 0 || loader.seq > l[index1].seq){
-				final PawnHashEntry temp = loader;
-				loader = l[index1];
-				l[index1] = temp;
-			}
-			
-			if(loader.zkey == 0){
+			TTEntry.swap(l[index1], t);
+			if(t.zkey == 0 || t.seq != seq || t.depth < l[index1].depth){
 				return;
 			} else{
 				final int index2 = h2(b, t.zkey, size);
-				
-				if(loader.seq > l[index2].seq){
-					final PawnHashEntry temp2 = loader;
-					loader = l[index2];
-					l[index2] = temp2;
-				}
-				
-				if(loader.zkey == 0){
+				TTEntry.swap(l[index2], t);
+				if(t.zkey == 0 || t.seq != seq || t.depth < l[index2].depth){
 					return;
 				}
 			}
 		}
 	}
 	
-	public PawnHashEntry get(final long zkey){
+	public TTEntry get(final long zkey){
 		final int index1 = h1(a, zkey, size);
 		if(l[index1].zkey == zkey){
 			return l[index1];

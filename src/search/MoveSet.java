@@ -1,4 +1,4 @@
-package search.search33;
+package search;
 
 public final class MoveSet{
 	public long piece;

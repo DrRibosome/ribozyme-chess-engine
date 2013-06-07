@@ -244,13 +244,33 @@ public final class Masks {
 	
 	/** gets a sting representation of the board specified by passed long
 	 * with 0 index in bottom left, 63 index in upper right*/
-	public static String getString(long l){
+	public static String getString(final long l){
 		final long q = 1;
 		String s = "";
 		String temp = "";
 		for(int i = 63; i >= 0; i--){
 			long mask = q << i;
 			if((l & mask) == mask){
+				temp = "X "+temp;
+			} else{
+				temp = "- "+temp;
+			}
+			
+			if(i % 8 == 0){
+				s += temp+"\n";
+				temp = "";
+			}
+		}
+		return s;
+	}
+	
+	public static String getString(final int l){
+		final long q = 1;
+		String s = "";
+		String temp = "";
+		for(int i = 63; i >= 0; i--){
+			long mask = q << i;
+			if((l & mask) == mask && i < 32){
 				temp = "X "+temp;
 			} else{
 				temp = "- "+temp;

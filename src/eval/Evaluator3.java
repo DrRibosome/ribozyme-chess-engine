@@ -3,6 +3,9 @@ package eval;
 import state4.State4;
 
 public interface Evaluator3 {
+	
+	public int eval(int player, State4 s);
+	
 	/**
 	 * computes a score for the passed board state
 	 * <p> score is returned via encoding defined by {@link ScoreEncoder}

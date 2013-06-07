@@ -1,19 +1,19 @@
 package uci;
 
+import search.MoveSet;
 import search.Search4;
-import search.search33.MoveSet;
-import search.search33.Search33v12;
+import search.search34.Search34v3;
 import state4.BitUtil;
 import state4.Masks;
 import state4.State4;
 import time.TimerThread5;
-import eval.Evaluator2;
-import eval.e8.E8v2;
+import eval.Evaluator3;
+import eval.e9.E9v2;
 
 public final class RibozymeEngine implements UCIEngine{
 
 	// major-version.search-version.eval-version
-	private final static String name = "ribozyme 0.8v2.33v12";
+	private final static String name = "ribozyme 0.9v2.34v3";
 	
 	private final Search4 s;
 	private Thread t;
@@ -21,9 +21,9 @@ public final class RibozymeEngine implements UCIEngine{
 	
 	public RibozymeEngine(final int hashSize){
 		
-		Evaluator2 e = new E8v2();
+		final Evaluator3 e = new E9v2();
 		
-		s = new Search33v12(e, hashSize, true);
+		s = new Search34v3(e, hashSize, true);
 	}
 	
 	@Override

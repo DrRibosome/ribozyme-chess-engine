@@ -1,4 +1,4 @@
-package search.search33;
+package search.search34;
 
 
 public final class ZMap4 implements Hash{
@@ -41,6 +41,7 @@ public final class ZMap4 implements Hash{
 		if(d.seq != seq || e.depth <= d.depth){
 			temp.fill(d);
 			d.fill(e);
+			if(temp.zkey == zkey) return;
 		} else{
 			alwaysReplace.put(zkey, e);
 		}

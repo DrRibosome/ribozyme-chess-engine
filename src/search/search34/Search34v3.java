@@ -1,5 +1,6 @@
-package search.search33;
+package search.search34;
 
+import search.MoveSet;
 import search.Search4;
 import search.SearchListener2;
 import search.SearchStat;
@@ -8,10 +9,11 @@ import state4.Masks;
 import state4.MoveEncoder;
 import state4.SEE;
 import state4.State4;
-import eval.Evaluator2;
+import eval.Evaluator3;
+import eval.ScoreEncoder;
 
 /** heavy search reductions for non-pv lines after depth 7*/
-public final class Search33v12 implements Search4{
+public final class Search34v3 implements Search4{
 	public final static class SearchStat32k extends SearchStat{
 		/** scores returned from quiet search without bottoming out*/
 		public long forcedQuietCutoffs;
@@ -74,7 +76,7 @@ public final class Search33v12 implements Search4{
 	}
 	
 	private final SearchStat32k stats = new SearchStat32k();
-	private final Evaluator2 e;
+	private final Evaluator3 e;
 	private final int qply = 12;
 	private final Hash m;
 	private SearchListener2 l;
@@ -95,11 +97,11 @@ public final class Search33v12 implements Search4{
 	
 	private volatile boolean cutoffSearch = false;
 	
-	public Search33v12(Evaluator2 e, int hashSize){
+	public Search34v3(Evaluator3 e, int hashSize){
 		this(e, hashSize, false);
 	}
 	
-	public Search33v12(Evaluator2 e, int hashSize, boolean printPV){
+	public Search34v3(Evaluator3 e, int hashSize, boolean printPV){
 		this.e = e;
 		
 		//m = new ZMap3(hashSize);
@@ -208,7 +210,7 @@ public final class Search33v12 implements Search4{
 					l.plySearched(bestMove, i, score);
 				}
 				if(printPV){
-					final String pvString = getPVString(player, s, "", 0, i, uciPV);
+					final String pvString = getPVString(player, s, "", 0, i);
 					if(!uciPV) System.out.println("pv "+i+": ["+score+"] "+pvString);
 					else System.out.println("info depth "+i+" score cp "+(int)score+" time "+
 							((System.currentTimeMillis()-stats.searchTime)/1000.)+
@@ -234,7 +236,7 @@ public final class Search33v12 implements Search4{
 		stats.searchTime = System.currentTimeMillis()-stats.searchTime;
 	}
 	
-	private String getPVString(int player, State4 s, String pv, int depth, int maxDepth, boolean uci){
+	private String getPVString(int player, State4 s, String pv, int depth, int maxDepth){
 		final TTEntry e = m.get(s.zkey());
 		if(depth < maxDepth && e != null && e.move != 0){
 			int pos1 = MoveEncoder.getPos1(e.move);
@@ -244,15 +246,9 @@ public final class Search33v12 implements Search4{
 			long mmask = 1L<<pos2;
 			s.executeMove(player, pmask, mmask);
 
-			if(!uci){
-				this.e.initialize(s);
-				final double eval = this.e.eval(s, player);
-				pv += moveString(pos1)+"->"+moveString(pos2)+" ("+eval+"), ";
-			} else{
-				pv += moveString(pos1)+moveString(pos2)+" ";
-			}
+			pv += moveString(pos1)+moveString(pos2)+" ";
 			
-			String r = getPVString(1-player, s, pv, depth+1, maxDepth, uci);
+			String r = getPVString(1-player, s, pv, depth+1, maxDepth);
 			s.undoMove();
 			return r;
 		}
@@ -330,6 +326,7 @@ public final class Search33v12 implements Search4{
 		boolean tteMove = false;
 		long tteMoveEncoding = 0;
 		
+		final int scoreEncoding;
 		if(e != null){
 			stats.hashHits++;
 			if(e.depth >= depth){
@@ -353,9 +350,14 @@ public final class Search33v12 implements Search4{
 				temp.rank = tteMoveRank;
 				tteMove = true;
 			}
+			
+			scoreEncoding = this.e.refine(player, s, alpha, beta, e.staticEval);
+		} else{
+			scoreEncoding = this.e.eval(player, s, alpha, beta);
 		}
 		
-		final int lazyEval = this.e.lazyEval(s, player);
+		//final int scoreEncoding = this.e.eval(player, s);
+		final int lazyEval = ScoreEncoder.getScore(scoreEncoding) + ScoreEncoder.getMargin(scoreEncoding);
 		final boolean alliedKingAttacked = isChecked(player, s);
 		
 		//razoring
@@ -373,7 +375,7 @@ public final class Search33v12 implements Search4{
 				final int v = qsearch(player, rbeta-1, rbeta, 0, stackIndex+1, false, s);
 				if(v <= rbeta-1){
 					if(!cutoffSearch){
-						fillEntry.fill(zkey, 0, v, (int)depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
+						fillEntry.fill(zkey, 0, v, scoreEncoding, (int)depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
 						m.put(zkey, fillEntry);
 					}
 					return v;
@@ -517,7 +519,7 @@ public final class Search33v12 implements Search4{
 		final int length = MoveGen2.genMoves(player, s, alliedKingAttacked, mset, w, false);
 		if(length == 0){ //no moves, draw
 			//m.put2(zkey, 0, 0, depth, ZMap.CUTOFF_TYPE_EXACT);
-			fillEntry.fill(zkey, 0, 0, (int)depth, TTEntry.CUTOFF_TYPE_EXACT, seq);
+			fillEntry.fill(zkey, 0, 0, scoreEncoding, (int)depth, TTEntry.CUTOFF_TYPE_EXACT, seq);
 			m.put(zkey, fillEntry);
 			return 0;
 		}
@@ -544,7 +546,7 @@ public final class Search33v12 implements Search4{
 			final long move = set.moves;
 			moveCount++;
 			long encoding = s.executeMove(player, pieceMask, move, promotionType);
-			this.e.processMove(encoding);
+			this.e.makeMove(encoding);
 			boolean isDrawable = s.isDrawable(); //player can take a draw
 
 			if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
@@ -648,7 +650,7 @@ public final class Search33v12 implements Search4{
 					if(alpha >= beta){
 						if(!cutoffSearch){
 							//m.put2(zkey, bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
-							fillEntry.fill(zkey, encoding, alpha, (int)depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
+							fillEntry.fill(zkey, encoding, alpha, scoreEncoding, (int)depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
 							m.put(zkey, fillEntry);
 						}
 
@@ -673,7 +675,7 @@ public final class Search33v12 implements Search4{
 
 		if(!cutoffSearch){
 			//m.put2(zkey, bestMove, bestScore, depth, cutoffFlag);
-			fillEntry.fill(zkey, bestMove, bestScore, (int)depth, pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
+			fillEntry.fill(zkey, bestMove, bestScore, scoreEncoding, (int)depth, pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
 			m.put(zkey, fillEntry);
 		}
 		return bestScore;
@@ -698,6 +700,7 @@ public final class Search33v12 implements Search4{
 		final TTEntry e = m.get(zkey);
 		final boolean hasTTMove;
 		final long ttMove;
+		final int scoreEncoding;
 		if(e != null){
 			stats.hashHits++;
 			if(e.depth >= depth){
@@ -719,24 +722,21 @@ public final class Search33v12 implements Search4{
 				hasTTMove = false;
 				ttMove = 0;
 			}
+			
+			scoreEncoding = pv? this.e.refine(player, s, -90000, 90000, e.staticEval):
+				this.e.refine(player, s, alpha, beta, e.staticEval);
 		} else{
 			hasTTMove = false;
 			ttMove = 0;
+			scoreEncoding = pv? this.e.eval(player, s): this.e.eval(player, s, alpha, beta);
 		}
 		
 		int bestScore;
 		final boolean alliedKingAttacked = State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
 		if(alliedKingAttacked){
-			bestScore = -77777; //NOTE: THIS CONDITION WILL PROBABLY NEVER BE CHECKED
+			bestScore = -77777;
 		} else{
-			/*if(!pv){
-				final int lazy = this.e.lazyEval(s, player);
-				if(lazy-100 >= beta){
-					return lazy; 
-				}
-			}*/
-			
-			bestScore = this.e.eval(s, player);
+			bestScore = ScoreEncoder.getScore(scoreEncoding) + ScoreEncoder.getMargin(scoreEncoding);
 			if(bestScore >= beta){ //standing pat
 				return bestScore;
 			} else if(bestScore > alpha && pv){
@@ -758,14 +758,13 @@ public final class Search33v12 implements Search4{
 			final int promotionType = set.promotionType;
 			final long move = set.moves;
 			long encoding = s.executeMove(player, pieceMask, move, promotionType);
-			this.e.processMove(encoding);
+			this.e.makeMove(encoding);
 			final boolean isDrawable = s.isDrawable();
 			
 			if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
 				//king in check after move
 				g = -77777;
 			} else{
-				
 				if(!pv && !alliedKingAttacked && !MoveEncoder.isPawnPromotion(encoding) &&
 						(!hasTTMove || encoding != ttMove)){
 					s.undoMove();
@@ -798,7 +797,7 @@ public final class Search33v12 implements Search4{
 					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 					if(g >= beta){
 						if(!cutoffSearch){
-							fillEntry.fill(zkey, encoding, g, depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
+							fillEntry.fill(zkey, encoding, g, scoreEncoding, depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
 							m.put(zkey, fillEntry);
 						}
 						return g;
@@ -808,7 +807,7 @@ public final class Search33v12 implements Search4{
 		}
 
 		if(!cutoffSearch){
-			fillEntry.fill(zkey, bestMove, bestScore, depth, pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
+			fillEntry.fill(zkey, bestMove, bestScore, scoreEncoding, depth, pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
 			m.put(zkey, fillEntry);
 		}
 		return bestScore;

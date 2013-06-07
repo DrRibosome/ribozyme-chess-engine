@@ -1,13 +1,20 @@
 package eval;
 
+
+
+
 /** encoder for score, margin, and any flags*/
 public final class ScoreEncoder {
-	private final static int scoreBits = 16;
-	private final static int marginBits = 10;
-	private final static int flagBits = 6;
+	public final static int scoreBits = 18;
+	public final static int marginBits = 11;
+	public final static int flagBits = 3;
 	
 	private final static int scoreMask;
+	private final static int scoreSignMask;
+	
 	private final static int marginMask;
+	private final static int marginSignMask;
+	
 	private final static int flagMask;
 	private final static int scoreMaskOffset;
 	private final static int marginMaskOffset;
@@ -20,27 +27,30 @@ public final class ScoreEncoder {
 		
 		{
 			int temp = 0;
-			for(int a = 0; a < scoreBits; a++) temp |= 1 << (scoreMaskOffset + a);
+			for(int a = 0; a < scoreBits-1; a++) temp |= 1 << (scoreMaskOffset + a);
 			scoreMask = temp;
+			scoreSignMask = 1 << scoreBits-1;
 		}
 		{
 			int temp = 0;
-			for(int a = 0; a < scoreBits; a++) temp |= 1 << (marginMaskOffset + a);
+			for(int a = 0; a < marginBits-1; a++) temp |= 1 << a;
 			marginMask = temp;
+			marginSignMask = 1 << marginBits-1;
 		}
 		{
 			int temp = 0;
-			for(int a = 0; a < scoreBits; a++) temp |= 1 << (flagMaskOffset + a);
+			for(int a = 0; a < flagBits; a++) temp |= 1 << (flagMaskOffset + a);
 			flagMask = temp;
 		}
 	}
 	
 	public static int getScore(final int scoreEncoding){
-		return scoreEncoding & scoreMask;
+		return (scoreEncoding & scoreMask) - (scoreEncoding & scoreSignMask);
 	}
 	
 	public static int getMargin(final int scoreEncoding){
-		return (scoreEncoding & marginMask) >>> marginMaskOffset;
+		final int margin = scoreEncoding >>> marginMaskOffset;
+		return (margin & marginMask) - (marginSignMask & margin);
 	}
 	
 	public static int getFlags(final int scoreEncoding){
@@ -51,7 +61,17 @@ public final class ScoreEncoder {
 		assert score < 1<<scoreBits;
 		assert margin < 1<<marginBits;
 		assert flags < 1<<flagBits;
+		assert flags >= 0;
 		
-		return score | (margin << marginMaskOffset) | (flags << flagMaskOffset);
+		final int scoreShift = score >>> 31;
+		final int scoreNegative = scoreShift << (scoreBits-1);
+		final int scoreValue = scoreShift*(scoreNegative-Math.abs(score)) + (1-scoreShift)*score;
+		
+		final int marginNegative = (margin >>> 31) << (marginBits-1);
+		final int marginValue =  (margin >>> 31)*(marginNegative-Math.abs(margin)) + (1-(margin >>> 31))*margin;
+		
+		return (scoreValue | scoreNegative) |
+				((marginValue|marginNegative) << marginMaskOffset) |
+				(flags << flagMaskOffset);
 	}
 }
