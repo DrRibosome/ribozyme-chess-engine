@@ -121,7 +121,7 @@ public final class E9v3 implements Evaluator3{
 
 		for(int a = 0; a < 64; a++) kingDangerSquares[1][a] = kingDangerSquares[0][63-a];
 		
-		materialWeights[State4.PIECE_TYPE_QUEEN] = 850;
+		materialWeights[State4.PIECE_TYPE_QUEEN] = 900;
 		materialWeights[State4.PIECE_TYPE_ROOK] = 470;
 		materialWeights[State4.PIECE_TYPE_BISHOP] = 306;
 		materialWeights[State4.PIECE_TYPE_KNIGHT] = 301;
