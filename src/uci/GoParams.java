@@ -43,17 +43,18 @@ public class GoParams {
 			moveTime = Integer.parseInt(temp.group(1));
 		} else{
 			type = SearchType.plan;
+			
 			temp = whiteTimeSel.matcher(goCommand);
-			time[0] = Integer.parseInt(temp.group(1));
+			if(temp.find()) time[0] = Integer.parseInt(temp.group(1));
 			
 			temp = blackTimeSel.matcher(goCommand);
-			time[1] = Integer.parseInt(temp.group(1));
+			if(temp.find()) time[1] = Integer.parseInt(temp.group(1));
 			
 			temp = whiteTimeIncSel.matcher(goCommand);
-			increment[0] = Integer.parseInt(temp.group(1));
+			if(temp.find()) increment[0] = Integer.parseInt(temp.group(1));
 			
 			temp = blackTimeIncSel.matcher(goCommand);
-			increment[1] = Integer.parseInt(temp.group(1));
+			if(temp.find()) increment[1] = Integer.parseInt(temp.group(1));
 		}
 	}
 	
