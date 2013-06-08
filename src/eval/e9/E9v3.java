@@ -8,7 +8,7 @@ import eval.Evaluator3;
 import eval.PositionMasks;
 import eval.ScoreEncoder;
 
-public final class E9v2 implements Evaluator3{
+public final class E9v3 implements Evaluator3{
 	
 	//evaluation stage flags, used to denote which eval stage is complete
 	private final static int stage1Flag = 1 << 0;
@@ -38,8 +38,6 @@ public final class E9v2 implements Evaluator3{
 	
 	private final static int[][] isolatedPawns = new int[][]{{
 		S(-15,-10), S(-18,-15), S(-20,-19), S(-22,-20), S(-22,-20), S(-20,-19), S(-18,-15), S(-15,-10)},
-		//{S(-6,-8), S(-8,-8), S(-12,-10), S(-14,-12), S(-14,-12), S(-12,-10), S(-8,-8), S(-6,-8)},
-		//{S(-17, -20), S(-18, -18), S(-20, -23), S(-25, -25), S(-25, -25), S(-20, -23), S(-18, -18), S(-17, -20)},
 		{S(-10, -14), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-10, -14)},
 	};
 
@@ -152,7 +150,7 @@ public final class E9v2 implements Evaluator3{
 		};
 	}
 	
-	public E9v2(){
+	public E9v3(){
 		int startMaterial = (
 				  materialWeights[State4.PIECE_TYPE_PAWN]*8
 				+ materialWeights[State4.PIECE_TYPE_KNIGHT]*2
