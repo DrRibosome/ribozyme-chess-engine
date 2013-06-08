@@ -73,36 +73,7 @@ public final class UCI {
 				} else if(s[0].equalsIgnoreCase("stop")){
 					engine.stop();
 				} else if(s[0].equalsIgnoreCase("go")){
-					GoParams params = new GoParams();
-					params.ponder = interfaceCommand.contains("ponder");
-					params.infinite = interfaceCommand.contains("infinite");
-					
-					Matcher temp;
-					
-					Pattern whiteTimeSel = Pattern.compile("wtime\\s+(\\d+)");
-					temp = whiteTimeSel.matcher(interfaceCommand);
-					params.time[0] = temp.find()? Integer.parseInt(temp.group(1)): -1;
-					
-					Pattern blackTimeSel = Pattern.compile("btime\\s+(\\d+)");
-					temp = blackTimeSel.matcher(interfaceCommand);
-					params.time[1] = temp.find()? Integer.parseInt(temp.group(1)): -1;
-					
-					Pattern whiteTimeIncSel = Pattern.compile("winc\\s+(\\d+)");
-					temp = whiteTimeIncSel.matcher(interfaceCommand);
-					params.increment[0] = temp.find()? Integer.parseInt(temp.group(1)): -1;
-					
-					Pattern blackTimeIncSel = Pattern.compile("binc\\s+(\\d+)");
-					temp = blackTimeIncSel.matcher(interfaceCommand);
-					params.increment[1] = temp.find()? Integer.parseInt(temp.group(1)): -1;
-					
-					/*Pattern depthSel = Pattern.compile("depth\\s+(\\d+)");
-					temp = depthSel.matcher(interfaceCommand);
-					p.depth = temp.find()? Integer.parseInt(temp.group(1)): -1;
-					*/
-					Pattern moveTimeSel = Pattern.compile("movetime\\s+(\\d+)");
-					temp = moveTimeSel.matcher(interfaceCommand);
-					params.moveTime = temp.find()? Integer.parseInt(temp.group(1)): -1;
-					
+					GoParams params = new GoParams(interfaceCommand);
 					engine.go(params, pos);
 				} else if(s[0].equalsIgnoreCase("quit")){
 					break;

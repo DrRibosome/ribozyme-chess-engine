@@ -59,7 +59,7 @@ public final class RibozymeEngine implements UCIEngine{
 	@Override
 	public void go(final GoParams params, final Position p) {
 		final int player = p.sideToMove;
-		if(!params.infinite && params.moveTime == -1){ //allocate time
+		if(params.type == GoParams.SearchType.plan){ //allocate time
 			t = new Thread(){
 				public void run(){
 					final int inc = params.increment[player];
@@ -69,8 +69,7 @@ public final class RibozymeEngine implements UCIEngine{
 			};
 			t.setDaemon(true);
 			t.start();
-		} else if(!params.infinite && params.moveTime != -1){ //fixed time per move
-			assert false;
+		} else if(params.type == GoParams.SearchType.fixedTime){ //fixed time per move
 			t = new Thread(){
 				public void run(){
 					s.search(player, p.s, moveStore);
@@ -82,7 +81,7 @@ public final class RibozymeEngine implements UCIEngine{
 			final Thread timer = new Thread(){
 				public void run(){
 					final long start = System.currentTimeMillis();
-					final long targetTime = params.time[player];
+					final long targetTime = params.moveTime;
 					long time;
 					while((time = System.currentTimeMillis()-start) < targetTime){
 						try{
@@ -94,11 +93,21 @@ public final class RibozymeEngine implements UCIEngine{
 			};
 			timer.setDaemon(true);
 			timer.start();
-		} else if(params.infinite){
+		} else if(params.type == GoParams.SearchType.infinite){
 			assert false;
 			t = new Thread(){
 				public void run(){
 					s.search(player, p.s, moveStore);
+					System.out.println("bestmove "+buildMoveString(player, p.s, moveStore));
+				}
+			};
+			t.setDaemon(true);
+			t.start();
+		} else if(params.type == GoParams.SearchType.fixedDepth){
+			assert false;
+			t = new Thread(){
+				public void run(){
+					s.search(player, p.s, moveStore, params.depth);
 					System.out.println("bestmove "+buildMoveString(player, p.s, moveStore));
 				}
 			};
