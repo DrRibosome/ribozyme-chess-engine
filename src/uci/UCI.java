@@ -1,7 +1,5 @@
 package uci;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,7 +11,6 @@ import util.FenParser;
 
 public final class UCI {
 	private UCIEngine engine;
-	private FileWriter out;
 	private Position pos;
 	
 	private final Thread t = new Thread(){
@@ -80,11 +77,6 @@ public final class UCI {
 				}
 			}
 			scanner.close();
-			try{
-				out.close();
-			} catch(IOException e){
-				e.printStackTrace();
-			}
 		}
 	};
 	
