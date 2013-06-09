@@ -13,7 +13,7 @@ import eval.Evaluator3;
 import eval.ScoreEncoder;
 
 /** heavy search reductions for non-pv lines after depth 7*/
-public final class Search34v3 implements Search4{
+public final class Search34v4 implements Search4{
 	public final static class SearchStat32k extends SearchStat{
 		/** scores returned from quiet search without bottoming out*/
 		public long forcedQuietCutoffs;
@@ -97,11 +97,11 @@ public final class Search34v3 implements Search4{
 	
 	private volatile boolean cutoffSearch = false;
 	
-	public Search34v3(Evaluator3 e, int hashSize){
+	public Search34v4(Evaluator3 e, int hashSize){
 		this(e, hashSize, false);
 	}
 	
-	public Search34v3(Evaluator3 e, int hashSize, boolean printPV){
+	public Search34v4(Evaluator3 e, int hashSize, boolean printPV){
 		this.e = e;
 		
 		//m = new ZMap3(hashSize);
@@ -584,7 +584,7 @@ public final class Search34v3 implements Search4{
 						!isKillerMove &&
 						!isDangerous){
 
-					if(depth <= 4){
+					if(depth < 3){
 						final int mc = quietMoveCount < 64? quietMoveCount: 63;
 						final int d = depth < 5? (int)depth: 4;
 						final int futilityScore = lazyEval+futilityMargins[d][mc];
