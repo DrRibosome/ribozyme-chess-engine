@@ -35,6 +35,7 @@ public final class Search34v4 implements Search4{
 		private final static int defSize = 128;
 		private final MoveSet[] mset = new MoveSet[defSize];
 		public boolean skipNullMove = false;
+		public boolean futilityPrune;
 		/** holds killer moves as first 12 bits (ie, masked 0xFFF) of move encoding*/
 		public final long[] killer = new long[2];
 		
@@ -351,24 +352,23 @@ public final class Search34v4 implements Search4{
 		final boolean pawnPrePromotion = (s.pawns[player] & Masks.pawnPrePromote[player]) != 0;
 
 		//futility pruning
-		/*int futilityReduction = 0;
-		if(!pv && depth < 3 && !pawnPrePromotion && !alliedKingAttacked &&
-				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000){
+		int futilityReduction = 0;
+		/*if(!pv && depth < 3 && !pawnPrePromotion && !alliedKingAttacked &&
+				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000 &&
+				ml.futilityPrune){
 			final int futilityMargin;
 			if(depth <= 1){
-				futilityMargin = 250;
+				futilityMargin = 320;
 			} else if(depth <= 2){
-				futilityMargin = 350;
+				futilityMargin = 400;
 			} else{
 				futilityMargin = 500;
 			}
 			final int futilityScore = eval + futilityMargin;
 			
-			if(futilityScore < alpha){
-				fillEntry.fill(zkey, 0, futilityScore, scoreEncoding, (int)depth, TTEntry.CUTOFF_TYPE_UPPER, seq);
-				m.put(zkey, fillEntry);
-			} else if(futilityScore < beta){
-				futilityReduction = 1;
+			if(futilityScore < beta){
+				//return futilityScore;
+				return qsearch(player, alpha, beta, 0, stackIndex, pv, s);
 			}
 		}*/
 		
@@ -376,7 +376,7 @@ public final class Search34v4 implements Search4{
 		int razorReduction = 0;
 		if(!pv &&
 				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000 &&
-				depth < 8 &&
+				depth <= 12 &&
 				!alliedKingAttacked &&
 				//!tteMove &&
 				!pawnPrePromotion){
@@ -386,7 +386,7 @@ public final class Search34v4 implements Search4{
 				final int rbeta = beta-razorMargin;
 				final int v = qsearch(player, rbeta-1, rbeta, 0, stackIndex+1, false, s);
 				if(v <= rbeta-1){
-					if(depth < 4){
+					if(depth < 3){
 						return v;
 					} else{
 						razorReduction = -(int)depth/4;
@@ -567,8 +567,8 @@ public final class Search34v4 implements Search4{
 				final boolean isCapture = MoveEncoder.getTakenType(encoding) != State4.PIECE_TYPE_EMPTY;
 				final boolean givesCheck = isChecked(1-player, s);
 				final boolean isPawnPromotion = MoveEncoder.isPawnPromotion(encoding);
-				final boolean isPassedPawnPush = MoveEncoder.getMovePieceType(encoding) == State4.PIECE_TYPE_PAWN &&
-						(Masks.passedPawnMasks[player][MoveEncoder.getPos1(encoding)] & s.pawns[1-player]) == 0;
+				final boolean isPassedPawnPush = isPawnPromotion || (MoveEncoder.getMovePieceType(encoding) == State4.PIECE_TYPE_PAWN &&
+						(Masks.passedPawnMasks[player][MoveEncoder.getPos1(encoding)] & s.pawns[1-player]) == 0);
 				final boolean isTTEMove = tteMove && encoding == tteMoveEncoding;
 
 				final long rawEn = encoding & 0xFFFL; //raw encoding
@@ -585,6 +585,7 @@ public final class Search34v4 implements Search4{
 						//(!pv && depth > 7 && !isDangerous && !isCapture? -depth/10: 0);
 
 				final double nextDepth = depth-1+ext;
+				stack[stackIndex+1].futilityPrune = !isDangerous && !isCapture && !isTTEMove && !isKillerMove;
 				
 				//LMR
 				final boolean fullSearch;
