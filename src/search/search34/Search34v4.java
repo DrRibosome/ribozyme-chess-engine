@@ -358,7 +358,7 @@ public final class Search34v4 implements Search4{
 				//!tteMove &&
 				!pawnPrePromotion){
 			
-			final int razorMargin = 220 * (int)depth*50;
+			final int razorMargin = 270 * (int)depth*50;
 			if(eval + razorMargin < beta){
 				final int rbeta = beta-razorMargin;
 				final int v = qsearch(player, rbeta-1, rbeta, 0, stackIndex+1, false, s);
