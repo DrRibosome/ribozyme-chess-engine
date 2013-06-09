@@ -35,34 +35,12 @@ public final class Search34v4 implements Search4{
 		private final static int defSize = 128;
 		private final MoveSet[] mset = new MoveSet[defSize];
 		public boolean skipNullMove = false;
-		public boolean futilityPrune;
 		/** holds killer moves as first 12 bits (ie, masked 0xFFF) of move encoding*/
 		public final long[] killer = new long[2];
 		
 		{
 			for(int a = 0; a < defSize; a++) mset[a] = new MoveSet();
 		}
-	}
-	
-	/** rough material gain by piece type*/
-	private final static int[] materialGain = new int[7];
-	/** stores futility margins by [depth]*/
-	private final static int[] futilityMargins;
-	
-	static{
-		materialGain[State4.PIECE_TYPE_BISHOP] = 300;
-		materialGain[State4.PIECE_TYPE_KNIGHT] = 300;
-		materialGain[State4.PIECE_TYPE_PAWN] = 100;
-		materialGain[State4.PIECE_TYPE_QUEEN] = 900;
-		materialGain[State4.PIECE_TYPE_ROOK] = 500;
-		
-		futilityMargins = new int[]{
-				250,
-				300,
-				425,
-				500,
-				600,
-		};
 	}
 	
 	private final SearchStat32k stats = new SearchStat32k();
@@ -352,7 +330,6 @@ public final class Search34v4 implements Search4{
 		final boolean pawnPrePromotion = (s.pawns[player] & Masks.pawnPrePromote[player]) != 0;
 
 		//futility pruning
-		int futilityReduction = 0;
 		/*if(!pv && depth < 3 && !pawnPrePromotion && !alliedKingAttacked &&
 				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000 &&
 				ml.futilityPrune){
@@ -585,7 +562,6 @@ public final class Search34v4 implements Search4{
 						//(!pv && depth > 7 && !isDangerous && !isCapture? -depth/10: 0);
 
 				final double nextDepth = depth-1+ext;
-				stack[stackIndex+1].futilityPrune = !isDangerous && !isCapture && !isTTEMove && !isKillerMove;
 				
 				//LMR
 				final boolean fullSearch;
