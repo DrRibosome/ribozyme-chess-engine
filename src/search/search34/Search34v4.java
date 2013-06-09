@@ -37,6 +37,7 @@ public final class Search34v4 implements Search4{
 		public boolean skipNullMove = false;
 		/** holds killer moves as first 12 bits (ie, masked 0xFFF) of move encoding*/
 		public final long[] killer = new long[2];
+		/** move played one ply back, 0 if no move played (eg, for root node, null move, etc)*/
 		public long prevMove;
 		
 		{
