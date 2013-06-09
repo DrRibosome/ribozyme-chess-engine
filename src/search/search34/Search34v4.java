@@ -387,10 +387,6 @@ public final class Search34v4 implements Search4{
 				final int v = qsearch(player, rbeta-1, rbeta, 0, stackIndex+1, false, s);
 				if(v <= rbeta-1){
 					if(depth < 4){
-						if(!cutoffSearch){
-							fillEntry.fill(zkey, 0, v, scoreEncoding, (int)depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
-							m.put(zkey, fillEntry);
-						}
 						return v;
 					} else{
 						razorReduction = -(int)depth/2;
