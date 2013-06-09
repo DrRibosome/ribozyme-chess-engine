@@ -46,7 +46,7 @@ public final class Search34v4 implements Search4{
 	/** rough material gain by piece type*/
 	private final static int[] materialGain = new int[7];
 	/** stores futility margins by [depth]*/
-	private final static int[][] futilityMargins;
+	private final static int[] futilityMargins;
 	
 	static{
 		materialGain[State4.PIECE_TYPE_BISHOP] = 300;
@@ -55,24 +55,13 @@ public final class Search34v4 implements Search4{
 		materialGain[State4.PIECE_TYPE_QUEEN] = 900;
 		materialGain[State4.PIECE_TYPE_ROOK] = 500;
 		
-		futilityMargins = new int[5][64];
-		int[][] startEnd = {
-				/*{150, 150},
-				{250, 250},
-				{350, 280},
-				{450, 350},
-				{600, 450},*/
-				{250, 250},
-				{300, 250},
-				{425, 300},
-				{500, 375},
-				{600, 450},
+		futilityMargins = new int[]{
+				250,
+				300,
+				425,
+				500,
+				600,
 		};
-		for(int d = 0; d < futilityMargins.length; d++){
-			for(int mc = 0; mc < futilityMargins[0].length; mc++){
-				futilityMargins[d][mc] = (int)(startEnd[d][0] + (mc+1)*1./futilityMargins[0].length*(startEnd[d][1]-startEnd[d][0]));
-			}
-		}
 	}
 	
 	private final SearchStat32k stats = new SearchStat32k();
@@ -357,28 +346,55 @@ public final class Search34v4 implements Search4{
 		}
 		
 		//final int scoreEncoding = this.e.eval(player, s);
-		final int lazyEval = ScoreEncoder.getScore(scoreEncoding) + ScoreEncoder.getMargin(scoreEncoding);
+		final int eval = ScoreEncoder.getScore(scoreEncoding) + ScoreEncoder.getMargin(scoreEncoding);
 		final boolean alliedKingAttacked = isChecked(player, s);
+		final boolean pawnPrePromotion = (s.pawns[player] & Masks.pawnPrePromote[player]) != 0;
+
+		//futility pruning
+		/*int futilityReduction = 0;
+		if(!pv && depth < 3 && !pawnPrePromotion && !alliedKingAttacked &&
+				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000){
+			final int futilityMargin;
+			if(depth <= 1){
+				futilityMargin = 250;
+			} else if(depth <= 2){
+				futilityMargin = 350;
+			} else{
+				futilityMargin = 500;
+			}
+			final int futilityScore = eval + futilityMargin;
+			
+			if(futilityScore < alpha){
+				fillEntry.fill(zkey, 0, futilityScore, scoreEncoding, (int)depth, TTEntry.CUTOFF_TYPE_UPPER, seq);
+				m.put(zkey, fillEntry);
+			} else if(futilityScore < beta){
+				futilityReduction = 1;
+			}
+		}*/
 		
 		//razoring
-		final boolean pawnPrePromotion = (s.pawns[player] & Masks.pawnPrePromote[player]) != 0;
+		int razorReduction = 0;
 		if(!pv &&
 				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000 &&
-				depth < 4 &&
+				depth < 8 &&
 				!alliedKingAttacked &&
-				!tteMove &&
+				//!tteMove &&
 				!pawnPrePromotion){
 			
-			final int razorMargin = 270 * (int)depth*50;
-			if(lazyEval + razorMargin < beta){
+			final int razorMargin = 220 * (int)depth*50;
+			if(eval + razorMargin < beta){
 				final int rbeta = beta-razorMargin;
 				final int v = qsearch(player, rbeta-1, rbeta, 0, stackIndex+1, false, s);
 				if(v <= rbeta-1){
-					if(!cutoffSearch){
-						fillEntry.fill(zkey, 0, v, scoreEncoding, (int)depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
-						m.put(zkey, fillEntry);
+					if(depth < 4){
+						if(!cutoffSearch){
+							fillEntry.fill(zkey, 0, v, scoreEncoding, (int)depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
+							m.put(zkey, fillEntry);
+						}
+						return v;
+					} else{
+						razorReduction = -(int)depth/2;
 					}
-					return v;
 				}
 			}
 		}
@@ -499,7 +515,7 @@ public final class Search34v4 implements Search4{
 		}
 
 		//internal iterative deepening
-		if(!tteMove && depth >= (pv? 5: 8) && (pv || (!alliedKingAttacked && lazyEval+256 >= beta))){
+		if(!tteMove && depth >= (pv? 5: 8) && (pv || (!alliedKingAttacked && eval+256 >= beta))){
 			final double d = pv? depth-2: depth/2;
 			stack[stackIndex+1].skipNullMove = true;
 			recurse(player, alpha, beta, d, pv, rootNode, stackIndex+1, s);
@@ -531,8 +547,6 @@ public final class Search34v4 implements Search4{
 		final int initialBestScore = -99999;
 		int bestScore = initialBestScore;
 		int cutoffFlag = TTEntry.CUTOFF_TYPE_UPPER;
-		int moveCount = 0;
-		int quietMoveCount = 0; //move count for non-take, non-check moves
 		
 		final int drawCount = s.drawCount; //stored for error checking
 		final long pawnZkey = s.pawnZkey(); //stored for error checking
@@ -544,7 +558,6 @@ public final class Search34v4 implements Search4{
 			final long pieceMask = set.piece;
 			final int promotionType = set.promotionType;
 			final long move = set.moves;
-			moveCount++;
 			long encoding = s.executeMove(player, pieceMask, move, promotionType);
 			this.e.makeMove(encoding);
 			boolean isDrawable = s.isDrawable(); //player can take a draw
@@ -572,33 +585,9 @@ public final class Search34v4 implements Search4{
 						isPassedPawnPush;
 
 
-				final double ext = (isDangerous && pv? 1: 0) + (threatMove && pv? 0: 0);
+				final double ext = (isDangerous && pv? 1: 0) + (threatMove && pv? 0: 0) + razorReduction;
 						//(!pv && depth > 7? -depth/10: 0);
 						//(!pv && depth > 7 && !isDangerous && !isCapture? -depth/10: 0);
-
-				//futility pruning
-				if(!pv && !isPawnPromotion &&
-						!inCheck &&
-						!isTTEMove &&
-						!isCapture &&
-						!isKillerMove &&
-						!isDangerous){
-
-					if(depth < 3){
-						final int mc = quietMoveCount < 64? quietMoveCount: 63;
-						final int d = depth < 5? (int)depth: 4;
-						final int futilityScore = lazyEval+futilityMargins[d][mc];
-						if(futilityScore < beta){
-							bestScore = bestScore > futilityScore? bestScore: futilityScore;
-							alpha = bestScore > alpha? bestScore: alpha;
-							s.undoMove();
-							this.e.undoMove(encoding);
-							continue;
-						}
-					}
-				}
-				//count incremented after futility so first more has move count index 0
-				if(!isCapture && !isDangerous && !isTTEMove && !isKillerMove && !isPawnPromotion) quietMoveCount++;
 
 				//LMR
 				final boolean fullSearch;
