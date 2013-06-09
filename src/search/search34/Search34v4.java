@@ -328,26 +328,28 @@ public final class Search34v4 implements Search4{
 		final int eval = ScoreEncoder.getScore(scoreEncoding) + ScoreEncoder.getMargin(scoreEncoding);
 		final boolean alliedKingAttacked = isChecked(player, s);
 		final boolean pawnPrePromotion = (s.pawns[player] & Masks.pawnPrePromote[player]) != 0;
+		final boolean hasNonPawnMaterial = s.pieceCounts[player][0]-s.pieceCounts[player][State4.PIECE_TYPE_PAWN] > 1;
 
-		//futility pruning
-		/*if(!pv && depth < 3 && !pawnPrePromotion && !alliedKingAttacked &&
-				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000 &&
-				ml.futilityPrune){
+		//static null move pruning
+		if(!pv && depth < 4 && !pawnPrePromotion && !alliedKingAttacked &&
+				hasNonPawnMaterial &&
+				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000){
 			final int futilityMargin;
 			if(depth <= 1){
 				futilityMargin = 320;
 			} else if(depth <= 2){
-				futilityMargin = 400;
+				futilityMargin = 420;
+			} else if(depth <= 3){
+				futilityMargin = 520;
 			} else{
-				futilityMargin = 500;
+				futilityMargin = 620;
 			}
-			final int futilityScore = eval + futilityMargin;
+			final int futilityScore = eval - futilityMargin;
 			
-			if(futilityScore < beta){
-				//return futilityScore;
-				return qsearch(player, alpha, beta, 0, stackIndex, pv, s);
+			if(futilityScore >= beta){
+				return futilityScore;
 			}
-		}*/
+		}
 		
 		//razoring
 		int razorReduction = 0;
@@ -355,7 +357,7 @@ public final class Search34v4 implements Search4{
 				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000 &&
 				depth <= 12 &&
 				!alliedKingAttacked &&
-				//!tteMove &&
+				!tteMove &&
 				!pawnPrePromotion){
 			
 			final int razorMargin = 270 * (int)depth*50;
@@ -363,8 +365,8 @@ public final class Search34v4 implements Search4{
 				final int rbeta = beta-razorMargin;
 				final int v = qsearch(player, rbeta-1, rbeta, 0, stackIndex+1, false, s);
 				if(v <= rbeta-1){
-					if(depth < 3){
-						return v;
+					if(depth < 4){
+						return v+rbeta; // return v+rbeta => score (one level up) < alpha 
 					} else{
 						razorReduction = -(int)depth/4;
 					}
@@ -374,7 +376,6 @@ public final class Search34v4 implements Search4{
 		
 		//null move pruning
 		final boolean threatMove; //true if opponent can make a move that causes null-move fail low
-		final boolean hasNonPawnMaterial = s.pieceCounts[player][0]-s.pieceCounts[player][State4.PIECE_TYPE_PAWN] > 1;
 		if(!pv && !ml.skipNullMove && depth > 3 && !alliedKingAttacked &&
 				hasNonPawnMaterial && Math.abs(beta) < 70000 && Math.abs(alpha) < 70000){
 			
