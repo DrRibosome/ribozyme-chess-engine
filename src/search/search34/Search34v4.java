@@ -339,9 +339,15 @@ public final class Search34v4 implements Search4{
 		final boolean alliedKingAttacked = isChecked(player, s);
 		final boolean pawnPrePromotion = (s.pawns[player] & Masks.pawnPrePromote[player]) != 0;
 		final boolean hasNonPawnMaterial = s.pieceCounts[player][0]-s.pieceCounts[player][State4.PIECE_TYPE_PAWN] > 1;
-		final boolean prevMoveIsNonTake = stackIndex >= 0 && MoveEncoder.getTakenType(stack[stackIndex-1].prevMove) == State4.PIECE_TYPE_EMPTY;
+		final boolean prevMoveIsNonTake = MoveEncoder.getTakenType(ml.prevMove) == State4.PIECE_TYPE_EMPTY;
 		
 		//static null move pruning
+		//
+		//prune here if we are doing really well
+		//
+		//check that previous move wasnt a take to counter horizon effect of
+		//taking a high value piece then assessing that we are ahead before
+		//they have a chance to take back
 		if(!pv && depth < 4 &&
 				prevMoveIsNonTake &&
 				!pawnPrePromotion && !alliedKingAttacked &&
@@ -376,7 +382,7 @@ public final class Search34v4 implements Search4{
 			final int razorMargin = 270 * (int)depth*50;
 			if(eval + razorMargin < beta){
 				final int rbeta = beta-razorMargin;
-				ml.prevMove = stack[stackIndex-1].prevMove;
+				stack[stackIndex+1].prevMove = ml.prevMove;
 				final int v = qsearch(player, rbeta-1, rbeta, 0, stackIndex+1, false, s);
 				if(v <= rbeta-1){
 					if(depth < 4){
@@ -396,7 +402,7 @@ public final class Search34v4 implements Search4{
 			final double r = 3 + depth/4;
 			
 			//note, non-pv nodes are null window searched - no need to do it here explicitly
-			ml.prevMove = 0;
+			stack[stackIndex+1].prevMove = 0;
 			stack[stackIndex+1].skipNullMove = true;
 			s.nullMove();
 			final long nullzkey = s.zkey();
@@ -417,7 +423,7 @@ public final class Search34v4 implements Search4{
 				
 				stats.nullMoveVerifications++;
 				//verification search
-				ml.prevMove = 0;
+				stack[stackIndex+1].prevMove = 0;
 				stack[stackIndex+1].skipNullMove = true;
 				double v = recurse(player, alpha, beta, depth-r, pv, rootNode, stackIndex+1, s);
 				stack[stackIndex+1].skipNullMove = false;
@@ -441,7 +447,7 @@ public final class Search34v4 implements Search4{
 		//internal iterative deepening
 		if(!tteMove && depth >= (pv? 5: 8) && (pv || (!alliedKingAttacked && eval+256 >= beta))){
 			final double d = pv? depth-2: depth/2;
-			ml.prevMove = stackIndex == 0? 0: stack[stackIndex-1].prevMove;
+			stack[stackIndex+1].prevMove = ml.prevMove;
 			stack[stackIndex+1].skipNullMove = true;
 			recurse(player, alpha, beta, d, pv, rootNode, stackIndex+1, s);
 			stack[stackIndex+1].skipNullMove = false;
@@ -551,7 +557,7 @@ public final class Search34v4 implements Search4{
 			long encoding = s.executeMove(player, pieceMask, move, promotionType);
 			this.e.makeMove(encoding);
 			boolean isDrawable = s.isDrawable(); //player can take a draw
-			ml.prevMove = encoding;
+			stack[stackIndex+1].prevMove = encoding;
 
 			if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
 				//king in check after move
