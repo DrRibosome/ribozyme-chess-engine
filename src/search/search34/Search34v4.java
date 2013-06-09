@@ -399,6 +399,72 @@ public final class Search34v4 implements Search4{
 			}
 		}
 		
+		//null move pruning
+		final boolean threatMove; //true if opponent can make a move that causes null-move fail low
+		final boolean hasNonPawnMaterial = s.pieceCounts[player][0]-s.pieceCounts[player][State4.PIECE_TYPE_PAWN] > 1;
+		if(!pv && !ml.skipNullMove && depth > 3 && !alliedKingAttacked &&
+				hasNonPawnMaterial && Math.abs(beta) < 70000 && Math.abs(alpha) < 70000){
+			
+			final double r = 3 + depth/4;
+			
+			//note, non-pv nodes are null window searched - no need to do it here explicitly
+			stack[stackIndex+1].skipNullMove = true;
+			s.nullMove();
+			final long nullzkey = s.zkey();
+			int n = -recurse(1-player, -beta, -alpha, depth-r, pv, rootNode, stackIndex+1, s);
+			s.undoNullMove();
+			stack[stackIndex+1].skipNullMove = false;
+			
+			threatMove = n < alpha;
+			
+			if(n >= beta){
+				if(n >= 70000){
+					n = beta;
+				}
+				if(depth < 12){ //stockfish prunes at depth<12
+					stats.nullMoveCutoffs++;
+					return n;
+				}
+				
+				stats.nullMoveVerifications++;
+				//verification search
+				stack[stackIndex+1].skipNullMove = true;
+				double v = recurse(player, alpha, beta, depth-r, pv, rootNode, stackIndex+1, s);
+				stack[stackIndex+1].skipNullMove = false;
+				if(v >= beta){
+					stats.nullMoveCutoffs++;
+					return n;
+				}
+			} else if(n < alpha){
+				stats.nullMoveFailLow++;
+				final TTEntry nullTTEntry = m.get(nullzkey);
+				if(nullTTEntry != null && nullTTEntry.move != 0){
+					ml.killer[0] = nullTTEntry.move & 0xFFFL; //doesnt matter which we store to, killer is at node start
+				}
+			} else{ //case alpha < n < beta
+				alpha = n;
+			}
+		} else{
+			threatMove = false;
+		}
+
+		//internal iterative deepening
+		if(!tteMove && depth >= (pv? 5: 8) && (pv || (!alliedKingAttacked && eval+256 >= beta))){
+			final double d = pv? depth-2: depth/2;
+			stack[stackIndex+1].skipNullMove = true;
+			recurse(player, alpha, beta, d, pv, rootNode, stackIndex+1, s);
+			stack[stackIndex+1].skipNullMove = false;
+			final TTEntry temp;
+			if((temp = m.get(zkey)) != null && temp.move != 0){
+				tteMove = true;
+				tteMoveEncoding = temp.move;
+				final MoveSet tempMset = mset[w++];
+				tempMset.piece = 1L<<MoveEncoder.getPos1(tteMoveEncoding);
+				tempMset.moves = 1L<<MoveEncoder.getPos2(tteMoveEncoding);
+				tempMset.rank = tteMoveRank;
+			}
+		}
+		
 		//load killer moves
 		final long l1killer1;
 		final long l1killer2;
@@ -463,73 +529,6 @@ public final class Search34v4 implements Search4{
 			l2killer1 = 0;
 			l2killer2 = 0;
 		}
-		
-		
-		//null move pruning
-		final boolean threatMove; //true if opponent can make a move that causes null-move fail low
-		final boolean hasNonPawnMaterial = s.pieceCounts[player][0]-s.pieceCounts[player][State4.PIECE_TYPE_PAWN] > 1;
-		if(!pv && !ml.skipNullMove && depth > 3 && !alliedKingAttacked &&
-				hasNonPawnMaterial && Math.abs(beta) < 70000){
-			
-			final double r = 3 + depth/4;
-			
-			//note, non-pv nodes are null window searched - no need to do it here explicitly
-			stack[stackIndex+1].skipNullMove = true;
-			s.nullMove();
-			final long nullzkey = s.zkey();
-			int n = -recurse(1-player, -beta, -alpha, depth-r, pv, rootNode, stackIndex+1, s);
-			s.undoNullMove();
-			stack[stackIndex+1].skipNullMove = false;
-			
-			threatMove = n < alpha;
-			
-			if(n >= beta){
-				if(n >= 70000){
-					n = beta;
-				}
-				if(depth < 12){ //stockfish prunes at depth<12
-					stats.nullMoveCutoffs++;
-					return n;
-				}
-				
-				stats.nullMoveVerifications++;
-				//verification search
-				stack[stackIndex+1].skipNullMove = true;
-				double v = recurse(player, alpha, beta, depth-r, pv, rootNode, stackIndex+1, s);
-				stack[stackIndex+1].skipNullMove = false;
-				if(v >= beta){
-					stats.nullMoveCutoffs++;
-					return n;
-				}
-			} else if(n < alpha){
-				stats.nullMoveFailLow++;
-				final TTEntry nullTTEntry = m.get(nullzkey);
-				if(nullTTEntry != null && nullTTEntry.move != 0){
-					ml.killer[0] = nullTTEntry.move & 0xFFFL; //doesnt matter which we store to, killer is at node start
-				}
-			} else{ //case alpha < n < beta
-				alpha = n;
-			}
-		} else{
-			threatMove = false;
-		}
-
-		//internal iterative deepening
-		if(!tteMove && depth >= (pv? 5: 8) && (pv || (!alliedKingAttacked && eval+256 >= beta))){
-			final double d = pv? depth-2: depth/2;
-			stack[stackIndex+1].skipNullMove = true;
-			recurse(player, alpha, beta, d, pv, rootNode, stackIndex+1, s);
-			stack[stackIndex+1].skipNullMove = false;
-			final TTEntry temp;
-			if((temp = m.get(zkey)) != null && temp.move != 0){
-				tteMove = true;
-				tteMoveEncoding = temp.move;
-				final MoveSet tempMset = mset[w++];
-				tempMset.piece = 1L<<MoveEncoder.getPos1(tteMoveEncoding);
-				tempMset.moves = 1L<<MoveEncoder.getPos2(tteMoveEncoding);
-				tempMset.rank = tteMoveRank;
-			}
-		}
 
 		//move generation
 		final int length = MoveGen2.genMoves(player, s, alliedKingAttacked, mset, w, false);
@@ -589,6 +588,8 @@ public final class Search34v4 implements Search4{
 						//(!pv && depth > 7? -depth/10: 0);
 						//(!pv && depth > 7 && !isDangerous && !isCapture? -depth/10: 0);
 
+				final double nextDepth = depth-1+ext;
+				
 				//LMR
 				final boolean fullSearch;
 				//final int reduction;
@@ -596,10 +597,7 @@ public final class Search34v4 implements Search4{
 						!isDangerous && 
 						!isKillerMove &&
 						!isTTEMove){
-						//(reduction = lmrReduction(pv, depth, moveCount)+1) > 1){
-					//final double seeReduction = !pv && SEE.seeSign(player, pieceMask, move, s) < 0? -.5: 0;
-					final double reducedDepth = (pv? depth-2: depth-2);// + seeReduction;
-					//final double reducedDepth = depth-2;
+					final double reducedDepth = nextDepth-1;
 					g = -recurse(1-player, -alpha-1, -alpha, reducedDepth, false, false, stackIndex+1, s);
 					fullSearch = g > alpha;
 				} else{
@@ -608,7 +606,6 @@ public final class Search34v4 implements Search4{
 
 				if(fullSearch){
 					//descend negascout style
-					final double nextDepth = depth-1+ext;
 					if(!pvMove){
 						g = -recurse(1-player, -(alpha+1), -alpha, nextDepth, false, false, stackIndex+1, s);
 						if(alpha < g && g < beta && pv){
