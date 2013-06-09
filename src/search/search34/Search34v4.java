@@ -389,7 +389,7 @@ public final class Search34v4 implements Search4{
 					if(depth < 4){
 						return v;
 					} else{
-						razorReduction = -(int)depth/2;
+						razorReduction = -(int)depth/4;
 					}
 				}
 			}
