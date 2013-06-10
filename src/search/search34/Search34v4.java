@@ -373,7 +373,7 @@ public final class Search34v4 implements Search4{
 		
 		//razoring
 		int razorReduction = 0;
-		if(!pv &&
+		if(!pv && prevMoveIsNonTake &&
 				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000 &&
 				depth <= 12 &&
 				!alliedKingAttacked &&
