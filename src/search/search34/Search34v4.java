@@ -362,7 +362,7 @@ public final class Search34v4 implements Search4{
 			} else if(depth <= 3){
 				futilityMargin = 250;
 			} else{
-				futilityMargin = 380;
+				futilityMargin = 380; //prob never reaches here (currently only full ply extensions)
 			}
 			final int futilityScore = eval - futilityMargin;
 			
