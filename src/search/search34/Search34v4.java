@@ -356,13 +356,13 @@ public final class Search34v4 implements Search4{
 				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000){
 			final int futilityMargin;
 			if(depth <= 1){
-				futilityMargin = 320;
+				futilityMargin = 90;
 			} else if(depth <= 2){
-				futilityMargin = 420;
+				futilityMargin = 170;
 			} else if(depth <= 3){
-				futilityMargin = 520;
+				futilityMargin = 250;
 			} else{
-				futilityMargin = 620;
+				futilityMargin = 380;
 			}
 			final int futilityScore = eval - futilityMargin;
 			
