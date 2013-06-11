@@ -375,7 +375,7 @@ public final class Search34v4 implements Search4{
 		int razorReduction = 0;
 		if(!pv && prevMoveIsNonTake &&
 				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000 &&
-				depth <= 12 &&
+				depth < 4 &&
 				!alliedKingAttacked &&
 				!tteMove &&
 				!pawnPrePromotion){
@@ -386,11 +386,7 @@ public final class Search34v4 implements Search4{
 				stack[stackIndex+1].prevMove = ml.prevMove;
 				final int v = qsearch(player, rbeta-1, rbeta, 0, stackIndex+1, false, s);
 				if(v <= rbeta-1){
-					if(depth < 4){
-						return v+rbeta; // return v+rbeta => score (one level up) < alpha 
-					} else{
-						razorReduction = -(int)depth/4;
-					}
+					return v+rbeta; // return v+rbeta => score (one level up) < alpha 
 				}
 			}
 		}
