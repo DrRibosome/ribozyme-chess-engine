@@ -5,6 +5,10 @@ import state4.Masks;
 import state4.State4;
 
 final class MoveGen2 {
+	
+	private final static class FeatureSet{
+		int passedPawn;
+	}
 
 	private final static long pawnLeftShiftMask = Masks.colMaskExc[7];
 	private final static long pawnRightShiftMask = Masks.colMaskExc[0];
