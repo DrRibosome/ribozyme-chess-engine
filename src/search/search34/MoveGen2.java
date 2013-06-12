@@ -9,10 +9,11 @@ final class MoveGen2 {
 
 	public final static int tteMoveRank = -5;
 	public final static int upTakeRank = -4;
+	public final static int downTakeRank = -3;
 	/** rank set to the first of the non takes*/
-	public final static int killerMoveRank = -3;
+	public final static int killerMoveRank = -2;
 	
-	private final static int maxWeight = 1 << 20;
+	private final static int maxWeight = 1 << 6;
 	
 	private final FeatureSet[] f;
 	
@@ -55,9 +56,15 @@ final class MoveGen2 {
 					//final boolean goodNonTake = (move & ~enemyPawnAttacks) != 0;
 					//final boolean badNonTake = (move & enemyPawnAttacks) != 0;
 					
+					assert !quiesce || (upTake || downTake);
+					
 					final int rank;
 					if(upTake){
 						rank = upTakeRank;
+					} else if (downTake){
+						rank = downTakeRank;
+					} else if(f == null){
+						rank = downTakeRank;
 					} else {
 						rank = maxWeight - getMoveWeight(player, pieceMovingType, move, f, s);
 					}
@@ -67,6 +74,20 @@ final class MoveGen2 {
 		}
 		
 		return w;
+	}
+	
+	public void reset(){
+		for(int a = 0; a < f.length; a++){
+			
+			f[a].passedPawnWeight = 0;
+			f[a].pawnPromotionWeight = 0;
+			for(int q = 0; q < 7; q++){
+				f[a].pieceTypeWeight[q] = 0;
+				for(int w = 0; w < 64; w++){
+					f[a].posWeight[q][w] = 0;
+				}
+			}
+		}
 	}
 	
 	public void betaCutoff(final int player, final int pieceType,
@@ -88,7 +109,7 @@ final class MoveGen2 {
 		}
 		
 		f.posWeight[pieceType][index] += 1;
-		f.pieceTypeWeight[pieceType] += 1;
+		f.pieceTypeWeight[pieceType] += 2;
 		
 		if(f.posWeight[pieceType][index] >= maxWeight || f.pieceTypeWeight[pieceType] >= maxWeight ||
 				f.passedPawnWeight >= maxWeight || f.pawnPromotionWeight >= maxWeight){
@@ -141,7 +162,7 @@ final class MoveGen2 {
 	public int genMoves(final int player, final State4 s, final boolean alliedKingAttacked,
 			final MoveSet[] mset, final int msetInitialIndex, final boolean quiesce, final int stackIndex){
 		
-		final FeatureSet f = this.f[stackIndex];
+		final FeatureSet f = quiesce? null: this.f[stackIndex];
 		
 		final long enemyPawnAttacks = Masks.getRawPawnAttacks(1-player, s.pawns[1-player]) & ~s.pieces[1-player];
 		
@@ -218,7 +239,7 @@ final class MoveGen2 {
 					
 					
 					final int rank;
-					if(take && promote){
+					if(quiesce || (take && promote)){
 						rank = upTakeRank;
 					} else{
 						rank = maxWeight - getMoveWeight(player, State4.PIECE_TYPE_PAWN, m, f, s);

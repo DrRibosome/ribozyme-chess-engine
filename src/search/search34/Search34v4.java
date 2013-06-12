@@ -98,6 +98,7 @@ public final class Search34v4 implements Search4{
 		m.clear();
 		seq = 0;
 		e.reset();
+		moveGen.reset();
 	}
 	
 	public void search(final int player, final State4 s, final MoveSet moveStore, final int maxPly){
