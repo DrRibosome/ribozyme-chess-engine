@@ -53,6 +53,7 @@ public final class Search34v4 implements Search4{
 	private final static int stackSize = 256;
 	/** sequence number for hash entries*/
 	private int seq;
+	private final MoveGen2 moveGen;
 	
 	/** controls printing pv to console for debugging*/
 	private final boolean printPV;
@@ -60,10 +61,6 @@ public final class Search34v4 implements Search4{
 	private final static boolean uciPV = true;
 	
 	private final TTEntry fillEntry = new TTEntry();
-	
-	private final static int tteMoveRank = -1;
-	/** rank set to the first of the non takes*/
-	private final static int killerMoveRank = 4;
 	
 	private volatile boolean cutoffSearch = false;
 	
@@ -84,6 +81,8 @@ public final class Search34v4 implements Search4{
 		stats.scores = new int[stackSize];
 		
 		this.printPV = printPV;
+		
+		moveGen = new MoveGen2(stackSize);
 	}
 	
 	public SearchStat32k getStats(){
@@ -317,7 +316,7 @@ public final class Search34v4 implements Search4{
 				final MoveSet temp = mset[w++];
 				temp.piece = 1L << MoveEncoder.getPos1(tteMoveEncoding);
 				temp.moves = 1L << MoveEncoder.getPos2(tteMoveEncoding);
-				temp.rank = tteMoveRank;
+				temp.rank = MoveGen2.tteMoveRank;
 				tteMove = true;
 			}
 			
@@ -455,7 +454,7 @@ public final class Search34v4 implements Search4{
 				final MoveSet tempMset = mset[w++];
 				tempMset.piece = 1L<<MoveEncoder.getPos1(tteMoveEncoding);
 				tempMset.moves = 1L<<MoveEncoder.getPos2(tteMoveEncoding);
-				tempMset.rank = tteMoveRank;
+				tempMset.rank = MoveGen2.tteMoveRank;
 			}
 		}
 		
@@ -472,7 +471,7 @@ public final class Search34v4 implements Search4{
 				final MoveSet temp = mset[w++];
 				temp.piece = 1L << MoveEncoder.getPos1(l1killer1Temp);
 				temp.moves = 1L << MoveEncoder.getPos2(l1killer1Temp);
-				temp.rank = killerMoveRank;
+				temp.rank = MoveGen2.killerMoveRank;
 				l1killer1 = l1killer1Temp & 0xFFFL;
 			} else{
 				l1killer1 = 0;
@@ -483,7 +482,7 @@ public final class Search34v4 implements Search4{
 				final MoveSet temp = mset[w++];
 				temp.piece = 1L << MoveEncoder.getPos1(l1killer2Temp);
 				temp.moves = 1L << MoveEncoder.getPos2(l1killer2Temp);
-				temp.rank = killerMoveRank;
+				temp.rank = MoveGen2.killerMoveRank;
 				l1killer2 = l1killer2Temp & 0xFFFL;
 			} else{
 				l1killer2 = 0;
@@ -497,7 +496,7 @@ public final class Search34v4 implements Search4{
 					final MoveSet temp = mset[w++];
 					temp.piece = 1L << MoveEncoder.getPos1(l2killer1Temp);
 					temp.moves = 1L << MoveEncoder.getPos2(l2killer1Temp);
-					temp.rank = killerMoveRank;
+					temp.rank = MoveGen2.killerMoveRank;
 					l2killer1 = l2killer1Temp & 0xFFFL;
 				} else{
 					l2killer1 = 0;
@@ -508,7 +507,7 @@ public final class Search34v4 implements Search4{
 					final MoveSet temp = mset[w++];
 					temp.piece = 1L << MoveEncoder.getPos1(l2killer2Temp);
 					temp.moves = 1L << MoveEncoder.getPos2(l2killer2Temp);
-					temp.rank = killerMoveRank;
+					temp.rank = MoveGen2.killerMoveRank;
 					l2killer2 = l2killer2Temp & 0xFFFL;
 				} else{
 					l2killer2 = 0;
@@ -525,7 +524,7 @@ public final class Search34v4 implements Search4{
 		}
 
 		//move generation
-		final int length = MoveGen2.genMoves(player, s, alliedKingAttacked, mset, w, false);
+		final int length = moveGen.genMoves(player, s, alliedKingAttacked, mset, w, false, stackIndex);
 		if(length == 0){ //no moves, draw
 			//m.put2(zkey, 0, 0, depth, ZMap.CUTOFF_TYPE_EXACT);
 			fillEntry.fill(zkey, 0, 0, scoreEncoding, (int)depth, TTEntry.CUTOFF_TYPE_EXACT, seq);
@@ -696,7 +695,7 @@ public final class Search34v4 implements Search4{
 				final MoveSet temp = mset[w++];
 				temp.piece = 1L<<MoveEncoder.getPos1(encoding);
 				temp.moves = 1L<<MoveEncoder.getPos2(encoding);
-				temp.rank = tteMoveRank;
+				temp.rank = MoveGen2.tteMoveRank;
 				hasTTMove = true;
 				ttMove = encoding;
 			} else{
@@ -725,7 +724,7 @@ public final class Search34v4 implements Search4{
 			}
 		}
 		
-		final int length = MoveGen2.genMoves(player, s, alliedKingAttacked, mset, w, true);
+		final int length = moveGen.genMoves(player, s, alliedKingAttacked, mset, w, true, stackIndex);
 		isort(mset, length);
 
 		
@@ -781,6 +780,8 @@ public final class Search34v4 implements Search4{
 							fillEntry.fill(zkey, encoding, g, scoreEncoding, depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
 							m.put(zkey, fillEntry);
 						}
+						moveGen.betaCutoff(player, MoveEncoder.getMovePieceType(encoding),
+								MoveEncoder.getPos2(encoding), stackIndex, s);
 						return g;
 					}
 				}
