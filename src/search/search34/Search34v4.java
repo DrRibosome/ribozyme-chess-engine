@@ -349,18 +349,19 @@ public final class Search34v4 implements Search4{
 		//they have a chance to take back
 		if(!pv && depth < 4 &&
 				prevMoveIsNonTake &&
-				!pawnPrePromotion && !alliedKingAttacked &&
+				!pawnPrePromotion &&
+				!alliedKingAttacked &&
 				hasNonPawnMaterial &&
 				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000){
 			final int futilityMargin;
 			if(depth <= 1){
-				futilityMargin = 320;
+				futilityMargin = 190;
 			} else if(depth <= 2){
-				futilityMargin = 420;
+				futilityMargin = 320;
 			} else if(depth <= 3){
-				futilityMargin = 520;
+				futilityMargin = 425;
 			} else{
-				futilityMargin = 620; //prob never reaches here (currently only full ply extensions)
+				futilityMargin = 500; //prob never reaches here (currently only full ply extensions)
 			}
 			final int futilityScore = eval - futilityMargin;
 			
