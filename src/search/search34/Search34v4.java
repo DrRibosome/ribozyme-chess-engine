@@ -38,7 +38,7 @@ public final class Search34v4 implements Search4{
 		/** holds killer moves as first 12 bits (ie, masked 0xFFF) of move encoding*/
 		public final long[] killer = new long[2];
 		/** move played one ply back, 0 if no move played (eg, for root node, null move, etc)*/
-		public long prevMove;
+		public boolean futilityPrune;
 		
 		{
 			for(int a = 0; a < defSize; a++) mset[a] = new MoveSet();
@@ -338,7 +338,6 @@ public final class Search34v4 implements Search4{
 		final boolean alliedKingAttacked = isChecked(player, s);
 		final boolean pawnPrePromotion = (s.pawns[player] & Masks.pawnPrePromote[player]) != 0;
 		final boolean hasNonPawnMaterial = s.pieceCounts[player][0]-s.pieceCounts[player][State4.PIECE_TYPE_PAWN] > 1;
-		final boolean prevMoveIsNonTake = MoveEncoder.getTakenType(ml.prevMove) == State4.PIECE_TYPE_EMPTY;
 		
 		//static null move pruning
 		//
@@ -348,11 +347,11 @@ public final class Search34v4 implements Search4{
 		//taking a high value piece then assessing that we are ahead before
 		//they have a chance to take back
 		if(!pv && depth < 4 &&
-				prevMoveIsNonTake &&
 				!pawnPrePromotion &&
 				!alliedKingAttacked &&
 				hasNonPawnMaterial &&
-				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000){
+				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000 &&
+				ml.futilityPrune){
 			final int futilityMargin;
 			if(depth <= 1){
 				futilityMargin = 190;
@@ -372,7 +371,7 @@ public final class Search34v4 implements Search4{
 		
 		//razoring
 		int razorReduction = 0;
-		if(!pv && prevMoveIsNonTake &&
+		if(!pv &&
 				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000 &&
 				depth < 4 &&
 				!alliedKingAttacked &&
@@ -382,7 +381,7 @@ public final class Search34v4 implements Search4{
 			final int razorMargin = 270 * (int)depth*50;
 			if(eval + razorMargin < beta){
 				final int rbeta = beta-razorMargin;
-				stack[stackIndex+1].prevMove = ml.prevMove;
+				stack[stackIndex+1].futilityPrune = ml.futilityPrune;
 				final int v = qsearch(player, rbeta-1, rbeta, 0, stackIndex+1, false, s);
 				if(v <= rbeta-1){
 					return v+rbeta; // return v+rbeta => score (one level up) < alpha 
@@ -398,7 +397,7 @@ public final class Search34v4 implements Search4{
 			final double r = 3 + depth/4;
 			
 			//note, non-pv nodes are null window searched - no need to do it here explicitly
-			stack[stackIndex+1].prevMove = 0;
+			stack[stackIndex+1].futilityPrune = true;
 			stack[stackIndex+1].skipNullMove = true;
 			s.nullMove();
 			final long nullzkey = s.zkey();
@@ -419,7 +418,7 @@ public final class Search34v4 implements Search4{
 				
 				stats.nullMoveVerifications++;
 				//verification search
-				stack[stackIndex+1].prevMove = 0;
+				stack[stackIndex+1].futilityPrune = true;
 				stack[stackIndex+1].skipNullMove = true;
 				double v = recurse(player, alpha, beta, depth-r, pv, rootNode, stackIndex+1, s);
 				stack[stackIndex+1].skipNullMove = false;
@@ -443,7 +442,7 @@ public final class Search34v4 implements Search4{
 		//internal iterative deepening
 		if(!tteMove && depth >= (pv? 5: 8) && (pv || (!alliedKingAttacked && eval+256 >= beta))){
 			final double d = pv? depth-2: depth/2;
-			stack[stackIndex+1].prevMove = ml.prevMove;
+			stack[stackIndex+1].futilityPrune = ml.futilityPrune;
 			stack[stackIndex+1].skipNullMove = true;
 			recurse(player, alpha, beta, d, pv, rootNode, stackIndex+1, s);
 			stack[stackIndex+1].skipNullMove = false;
@@ -553,7 +552,6 @@ public final class Search34v4 implements Search4{
 			long encoding = s.executeMove(player, pieceMask, move, promotionType);
 			this.e.makeMove(encoding);
 			boolean isDrawable = s.isDrawable(); //player can take a draw
-			stack[stackIndex+1].prevMove = encoding;
 
 			if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
 				//king in check after move
@@ -577,6 +575,8 @@ public final class Search34v4 implements Search4{
 						MoveEncoder.isCastle(encoding) != 0 ||
 						isPassedPawnPush;
 
+				stack[stackIndex+1].futilityPrune = !isDangerous && !isCapture && !isPawnPromotion &&
+													!isKillerMove && !isTTEMove;
 
 				final double ext = (isDangerous && pv? 1: 0) + (threatMove && pv? 0: 0) + razorReduction;
 						//(!pv && depth > 7? -depth/10: 0);
