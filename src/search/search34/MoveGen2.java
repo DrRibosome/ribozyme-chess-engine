@@ -7,7 +7,9 @@ import state4.State4;
 
 final class MoveGen2 {
 
-	public final static int tteMoveRank = -5;
+	public final static int tteMoveRank = -7;
+	public final static int promoteTakeRank = -6;
+	public final static int promoteRank = -5;
 	public final static int upTakeRank = -4;
 	public final static int downTakeRank = -3;
 	/** rank set to the first of the non takes*/
@@ -94,7 +96,7 @@ final class MoveGen2 {
 			final int movePos, final int stackIndex, final State4 s, final int depth){
 		final FeatureSet f = this.f[player];
 
-		final int offset = depth;
+		final int offset = 1;
 		
 		final int index = movePos;
 		final long move = 1L << movePos;
@@ -242,7 +244,11 @@ final class MoveGen2 {
 					
 					
 					final int rank;
-					if(quiesce || (take && promote)){
+					if(take && promote){
+						rank = promoteTakeRank;
+					} else if(promote){
+						rank = promoteRank;
+					} else if(take){
 						rank = upTakeRank;
 					} else{
 						rank = maxWeight - getMoveWeight(player, State4.PIECE_TYPE_PAWN, p, m, f, s);
