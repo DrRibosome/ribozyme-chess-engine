@@ -53,7 +53,7 @@ public final class Search34v4 implements Search4{
 	private final static int stackSize = 256;
 	/** sequence number for hash entries*/
 	private int seq;
-	private final MoveGen2 moveGen;
+	private final MoveGen2 moveGen = new MoveGen2();
 	
 	/** controls printing pv to console for debugging*/
 	private final boolean printPV;
@@ -81,8 +81,6 @@ public final class Search34v4 implements Search4{
 		stats.scores = new int[stackSize];
 		
 		this.printPV = printPV;
-		
-		moveGen = new MoveGen2(stackSize);
 	}
 	
 	public SearchStat32k getStats(){
@@ -625,6 +623,12 @@ public final class Search34v4 implements Search4{
 			if(g > bestScore){
 				bestScore = g;
 				bestMove = encoding;
+				
+				final int d = (int)depth;
+				moveGen.betaCutoff(player, MoveEncoder.getMovePieceType(encoding),
+						MoveEncoder.getPos1(encoding),
+						MoveEncoder.getPos2(encoding), stackIndex, s, d);
+				
 				if(g > alpha){
 					alpha = g;
 					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
@@ -640,6 +644,10 @@ public final class Search34v4 implements Search4{
 						if(stackIndex-1 >= 0){
 							attemptKillerStore(bestMove, ml.skipNullMove, stack[stackIndex-1]);
 						}
+						
+						moveGen.betaCutoff(player, MoveEncoder.getMovePieceType(encoding),
+								MoveEncoder.getPos1(encoding),
+								MoveEncoder.getPos2(encoding), stackIndex, s, d);
 
 						return g;
 					}
@@ -781,8 +789,6 @@ public final class Search34v4 implements Search4{
 							fillEntry.fill(zkey, encoding, g, scoreEncoding, depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
 							m.put(zkey, fillEntry);
 						}
-						moveGen.betaCutoff(player, MoveEncoder.getMovePieceType(encoding),
-								MoveEncoder.getPos2(encoding), stackIndex, s);
 						return g;
 					}
 				}
