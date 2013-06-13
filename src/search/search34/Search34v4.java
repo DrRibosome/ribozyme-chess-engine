@@ -354,13 +354,13 @@ public final class Search34v4 implements Search4{
 				ml.futilityPrune){
 			final int futilityMargin;
 			if(depth <= 1){
-				futilityMargin = 190;
-			} else if(depth <= 2){
 				futilityMargin = 320;
+			} else if(depth <= 2){
+				futilityMargin = 390;
 			} else if(depth <= 3){
-				futilityMargin = 425;
+				futilityMargin = 485;
 			} else{
-				futilityMargin = 500; //prob never reaches here (currently only full ply extensions)
+				futilityMargin = 600; //prob never reaches here (currently only full ply extensions)
 			}
 			final int futilityScore = eval - futilityMargin;
 			
