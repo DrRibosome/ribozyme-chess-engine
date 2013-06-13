@@ -575,8 +575,7 @@ public final class Search34v4 implements Search4{
 						MoveEncoder.isCastle(encoding) != 0 ||
 						isPassedPawnPush;
 
-				stack[stackIndex+1].futilityPrune = !isDangerous && !isCapture && !isPawnPromotion &&
-													!isKillerMove && !isTTEMove;
+				stack[stackIndex+1].futilityPrune = !isDangerous && !isCapture && !isPawnPromotion;
 
 				final double ext = (isDangerous && pv? 1: 0) + (threatMove && pv? 0: 0) + razorReduction;
 						//(!pv && depth > 7? -depth/10: 0);
