@@ -1,0 +1,14 @@
+<project name="chess2" default="dist" basedir=".">
+
+	<property name="src" location="src"/>
+	<property name="bin" location="bin"/>
+
+	<target name="compile" >
+		<mkdir dir="${bin}"/>
+		<javac srcdir="${src}" destdir="${bin}"/>
+	</target>
+
+	<target name="clean">
+		<delete dir="${bin}"/>
+	</target>
+</project>
