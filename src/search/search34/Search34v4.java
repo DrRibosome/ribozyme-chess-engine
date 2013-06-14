@@ -64,6 +64,19 @@ public final class Search34v4 implements Search4{
 	
 	private volatile boolean cutoffSearch = false;
 	
+	/*private final static int[][] lmrReduction = new int[32][64];
+
+	static{
+		for(int d = 0; d < lmrReduction.length; d++){
+			for(int mc = 0; mc < lmrReduction[d].length; mc++){
+				final double pvRed = Math.log(d) * Math.log(mc) / 3.0;
+				//double nonPVRed = 0.33 + log(double(hd)) * log(double(mc)) / 2.25;
+				lmrReduction[d][mc] = (int)(pvRed >= 1.0 ? Math.floor(pvRed) : 0);
+				//Reductions[0][hd][mc] = (int8_t) (nonPVRed >= 1.0 ? floor(nonPVRed * int(ONE_PLY)) : 0);
+			}
+		}
+	}*/
+
 	public Search34v4(Evaluator3 e, int hashSize){
 		this(e, hashSize, false);
 	}
@@ -267,10 +280,6 @@ public final class Search34v4 implements Search4{
 		if(s.isForcedDraw()){
 			return 0;
 		} else if(depth <= 0){
-			/*if(!isChecked(player, s)){
-				return qsearch(player, alpha, beta, 0, stackIndex, pv, s);
-			}
-			depth = 1;*/
 			final int q = qsearch(player, alpha, beta, 0, stackIndex, pv, s);
 			if(q > 70000 && pv){
 				return recurse(player, alpha, beta, 1, true, false, stackIndex, s);
@@ -354,13 +363,13 @@ public final class Search34v4 implements Search4{
 				ml.futilityPrune){
 			final int futilityMargin;
 			if(depth <= 1){
-				futilityMargin = 320;
+				futilityMargin = 250;
 			} else if(depth <= 2){
-				futilityMargin = 390;
+				futilityMargin = 300;
 			} else if(depth <= 3){
-				futilityMargin = 485;
+				futilityMargin = 425;
 			} else{
-				futilityMargin = 600; //prob never reaches here (currently only full ply extensions)
+				futilityMargin = 500; //prob never reaches here (currently only full ply extensions)
 			}
 			final int futilityScore = eval - futilityMargin;
 			
@@ -585,7 +594,7 @@ public final class Search34v4 implements Search4{
 				//LMR
 				final boolean fullSearch;
 				//final int reduction;
-				if(depth > 2 && !pvMove && !isCapture && !inCheck && !isPawnPromotion &&
+				if(depth > 1 && !pvMove && !isCapture && !inCheck && !isPawnPromotion &&
 						!isDangerous && 
 						!isKillerMove &&
 						!isTTEMove){
