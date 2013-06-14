@@ -417,7 +417,7 @@ public final class Search34v4 implements Search4{
 				
 				stats.nullMoveVerifications++;
 				//verification search
-				stack[stackIndex+1].futilityPrune = true;
+				stack[stackIndex+1].futilityPrune = false;
 				stack[stackIndex+1].skipNullMove = true;
 				double v = recurse(player, alpha, beta, depth-r, pv, rootNode, stackIndex+1, s);
 				stack[stackIndex+1].skipNullMove = false;
