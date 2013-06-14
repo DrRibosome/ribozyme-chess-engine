@@ -117,13 +117,22 @@ final class MoveGen2 {
 		
 		if(f.posWeight[pieceType][startPos][index] >= maxWeight ||
 				f.passedPawnWeight >= maxWeight || f.pawnPromotionWeight >= maxWeight){
-			f.passedPawnWeight >>>= 1;
-			f.pawnPromotionWeight >>>= 1;
-			for(int q = 1; q < 7; q++){
-				for(int a = 0; a < 64; a++){
-					for(int z = 0; z < 64; z++){
-						f.posWeight[q][a][z] >>>= 1;
-					}
+			dampen(f);
+		}
+	}
+	
+	public void dampen(){
+		dampen(f[0]);
+		dampen(f[1]);
+	}
+	
+	public void dampen(final FeatureSet f){
+		f.passedPawnWeight >>>= 1;
+		f.pawnPromotionWeight >>>= 1;
+		for(int q = 1; q < 7; q++){
+			for(int a = 0; a < 64; a++){
+				for(int z = 0; z < 64; z++){
+					f.posWeight[q][a][z] >>>= 1;
 				}
 			}
 		}

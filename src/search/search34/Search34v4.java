@@ -64,18 +64,26 @@ public final class Search34v4 implements Search4{
 	
 	private volatile boolean cutoffSearch = false;
 	
-	/*private final static int[][] lmrReduction = new int[32][64];
+	private final static int[][] lmrReduction = new int[32][64];
 
 	static{
 		for(int d = 0; d < lmrReduction.length; d++){
 			for(int mc = 0; mc < lmrReduction[d].length; mc++){
-				final double pvRed = Math.log(d) * Math.log(mc) / 3.0;
-				//double nonPVRed = 0.33 + log(double(hd)) * log(double(mc)) / 2.25;
-				lmrReduction[d][mc] = (int)(pvRed >= 1.0 ? Math.floor(pvRed) : 0);
-				//Reductions[0][hd][mc] = (int8_t) (nonPVRed >= 1.0 ? floor(nonPVRed * int(ONE_PLY)) : 0);
+				if(d != 0 && mc != 0){
+					final double pvRed = Math.log(d) * Math.log(mc) / 3.0;
+					//double nonPVRed = 0.33 + log(double(hd)) * log(double(mc)) / 2.25;
+					lmrReduction[d][mc] = (int)(pvRed >= 1.0 ? Math.floor(pvRed) : 0);
+					//Reductions[0][hd][mc] = (int8_t) (nonPVRed >= 1.0 ? floor(nonPVRed * int(ONE_PLY)) : 0);
+				} else{
+					lmrReduction[d][mc] = 0;
+				}
 			}
 		}
-	}*/
+	}
+	
+	private static int lmrReduction(final int depth, final int moveCount){
+		return lmrReduction[depth > 31? 31: depth][moveCount > 63? 63: moveCount];
+	}
 
 	public Search34v4(Evaluator3 e, int hashSize){
 		this(e, hashSize, false);
@@ -124,6 +132,7 @@ public final class Search34v4 implements Search4{
 		//search initialization
 		seq++;
 		e.initialize(s);
+		moveGen.dampen();
 		cutoffSearch = false;
 		
 		long bestMove = 0;
@@ -361,12 +370,13 @@ public final class Search34v4 implements Search4{
 				hasNonPawnMaterial &&
 				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000 &&
 				ml.futilityPrune){
+			final int d = (int)depth;
 			final int futilityMargin;
-			if(depth <= 1){
+			if(d <= 1){
 				futilityMargin = 250;
-			} else if(depth <= 2){
+			} else if(d <= 2){
 				futilityMargin = 300;
-			} else if(depth <= 3){
+			} else if(d <= 3){
 				futilityMargin = 425;
 			} else{
 				futilityMargin = 500; //prob never reaches here (currently only full ply extensions)
@@ -546,6 +556,7 @@ public final class Search34v4 implements Search4{
 		final int initialBestScore = -99999;
 		int bestScore = initialBestScore;
 		int cutoffFlag = TTEntry.CUTOFF_TYPE_UPPER;
+		int moveCount = 0;
 		
 		final int drawCount = s.drawCount; //stored for error checking
 		final long pawnZkey = s.pawnZkey(); //stored for error checking
@@ -598,9 +609,13 @@ public final class Search34v4 implements Search4{
 						!isDangerous && 
 						!isKillerMove &&
 						!isTTEMove){
-					final double reducedDepth = nextDepth-1;
+					
+					moveCount++;
+					final int lmrReduction = lmrReduction((int)depth, moveCount) + (pv? 0: 1);
+					final double reducedDepth = nextDepth-lmrReduction;
+					
 					g = -recurse(1-player, -alpha-1, -alpha, reducedDepth, false, false, stackIndex+1, s);
-					fullSearch = g > alpha;
+					fullSearch = g > alpha && lmrReduction != 0;
 				} else{
 					fullSearch = true;
 				}
@@ -608,7 +623,7 @@ public final class Search34v4 implements Search4{
 				if(fullSearch){
 					//descend negascout style
 					if(!pvMove){
-						g = -recurse(1-player, -(alpha+1), -alpha, nextDepth, false, false, stackIndex+1, s);
+						g = -recurse(1-player, -alpha-1, -alpha, nextDepth, false, false, stackIndex+1, s);
 						if(alpha < g && g < beta && pv){
 							g = -recurse(1-player, -beta, -alpha, nextDepth, pv, false, stackIndex+1, s);
 						}
