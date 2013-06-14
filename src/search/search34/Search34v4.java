@@ -381,7 +381,6 @@ public final class Search34v4 implements Search4{
 			final int razorMargin = 270 * (int)depth*50;
 			if(eval + razorMargin < beta){
 				final int rbeta = beta-razorMargin;
-				stack[stackIndex+1].futilityPrune = ml.futilityPrune;
 				final int v = qsearch(player, rbeta-1, rbeta, 0, stackIndex+1, false, s);
 				if(v <= rbeta-1){
 					return v+rbeta; // return v+rbeta => score (one level up) < alpha 
