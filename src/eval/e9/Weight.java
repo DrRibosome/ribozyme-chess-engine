@@ -28,9 +28,8 @@ final class Weight {
 	
 	/** interpolate a passed weight value, scale in [0,1]*/
 	static int interpolate(final int weight, final double scale){
-		final int start = (weight & weightValueMask) - (weight & weightSignMask);
-		final int shifted = weight >>> 16;
-		final int end = (shifted & weightValueMask) - (shifted & weightSignMask);
+		final int start = mgScore(weight);
+		final int end = egScore(weight);
 		return (int)(start + (end-start)*scale);
 	}
 	
