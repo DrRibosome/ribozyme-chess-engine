@@ -655,9 +655,6 @@ public final class Search34v4 implements Search4{
 				bestMove = encoding;
 				
 				final int d = (int)depth;
-				moveGen.betaCutoff(player, MoveEncoder.getMovePieceType(encoding),
-						MoveEncoder.getPos1(encoding),
-						MoveEncoder.getPos2(encoding), stackIndex, s, d);
 				
 				if(g > alpha){
 					alpha = g;
@@ -680,6 +677,10 @@ public final class Search34v4 implements Search4{
 								MoveEncoder.getPos2(encoding), stackIndex, s, d);
 
 						return g;
+					} else{
+						moveGen.alphaCutoff(player, MoveEncoder.getMovePieceType(encoding),
+								MoveEncoder.getPos1(encoding),
+								MoveEncoder.getPos2(encoding), stackIndex, s, d);
 					}
 				}
 			}

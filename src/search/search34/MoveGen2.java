@@ -92,11 +92,40 @@ final class MoveGen2 {
 		}
 	}
 	
+	public void alphaCutoff(final int player, final int pieceType, final int startPos,
+			final int movePos, final int stackIndex, final State4 s, final int depth){
+		final FeatureSet f = this.f[player];
+
+		final int offset = depth;
+		
+		final int index = movePos;
+		final long move = 1L << movePos;
+		if(pieceType == State4.PIECE_TYPE_PAWN){
+			final long ppMask = Masks.passedPawnMasks[player][index];
+			if((ppMask & s.pawns[1-player]) == 0){
+				f.passedPawnWeight += offset;
+				
+				final long pomotionMask = Masks.pawnPromotionMask[player];
+				if((move & pomotionMask) != 0){
+					f.pawnPromotionWeight += offset;
+				}
+			}
+		}
+		
+		f.posWeight[pieceType][startPos][index] += offset;
+		//f.pieceTypeWeight[pieceType] += offset;
+		
+		if(f.posWeight[pieceType][startPos][index] >= maxWeight ||
+				f.passedPawnWeight >= maxWeight || f.pawnPromotionWeight >= maxWeight){
+			dampen(f);
+		}
+	}
+	
 	public void betaCutoff(final int player, final int pieceType, final int startPos,
 			final int movePos, final int stackIndex, final State4 s, final int depth){
 		final FeatureSet f = this.f[player];
 
-		final int offset = 1;
+		final int offset = depth*depth;
 		
 		final int index = movePos;
 		final long move = 1L << movePos;
