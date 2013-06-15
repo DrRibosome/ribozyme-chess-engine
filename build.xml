@@ -8,6 +8,14 @@
 		<javac srcdir="${src}" destdir="${bin}"/>
 	</target>
 
+	<target name="jar" depends="compile">
+		<jar destfile="ribozyme.jar" basedir="${bin}">
+			<manifest>
+				<attribute name="Main-Class" value="uci.UCI"/>
+			</manifest>
+		</jar>
+	</target>
+
 	<target name="clean">
 		<delete dir="${bin}"/>
 	</target>
