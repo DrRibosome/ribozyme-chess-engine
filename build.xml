@@ -2,6 +2,7 @@
 
 	<property name="src" location="src"/>
 	<property name="bin" location="bin"/>
+	<property name="ribozyme.jar" location="ribozyme.jar"/>
 
 	<target name="compile" >
 		<mkdir dir="${bin}"/>
@@ -9,7 +10,7 @@
 	</target>
 
 	<target name="jar" depends="compile">
-		<jar destfile="ribozyme.jar" basedir="${bin}">
+		<jar destfile="${ribozyme.jar}" basedir="${bin}">
 			<manifest>
 				<attribute name="Main-Class" value="uci.UCI"/>
 			</manifest>
@@ -18,5 +19,6 @@
 
 	<target name="clean">
 		<delete dir="${bin}"/>
+		<delete file="${ribozyme.jar}"/>
 	</target>
 </project>
