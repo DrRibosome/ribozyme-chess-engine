@@ -166,35 +166,14 @@ public final class E9v3 implements Evaluator3{
 		scaleMargin = scaleMargin(startMaterial, endMaterial);
 	}
 	
-	private final static int weightValueMask = 0x7FFF;
-	private final static int weightSignMask = 1<<15;
-	/** interpolate a passed weight value, scale in [0,1]*/
-	private static int interpolate(final int weight, final double scale){
-		final int start = (weight & weightValueMask) - (weight & weightSignMask);
-		final int shifted = weight >>> 16;
-		final int end = (shifted & weightValueMask) - (shifted & weightSignMask);
-		return (int)(start + (end-start)*scale);
-	}
-	
 	/** build a weight scaling from passed start,end values*/
 	private static int S(int start, int end){
-		return (start&0xFFFF) + (end<<16);
+		return Weight.encode(start, end);
 	}
 	
 	/** build a constant, non-scaling weight*/
 	private static int S(final int v){
-		return S(v, v);
-	}
-	
-	/** mid game score*/
-	private static int mgScore(final int weight){
-		return  (weight & weightValueMask) - (weight & weightSignMask);
-	}
-	
-	/** end game score*/
-	private static int egScore(final int weight){
-		final int shifted = weight >>> 16;
-		return (shifted & weightValueMask) - (shifted & weightSignMask);
+		return Weight.encode(v);
 	}
 	
 	/**  calculates the scale margin to use in {@link #getScale(int, int, int)}*/
@@ -294,9 +273,8 @@ public final class E9v3 implements Evaluator3{
 				stage1MarginUpper = -90;
 			}
 			
-			score = interpolate(stage1Score, scale) + interpolate(S((int)(egScore(stage1Score)*.1), 0), scale);
+			score = Weight.interpolate(stage1Score, scale) + Weight.interpolate(S((int)(Weight.egScore(stage1Score)*.1), 0), scale);
 			
-			//System.out.println("score1 = "+score);
 			if(score+stage1MarginLower <= lowerBound){
 				return ScoreEncoder.encode(score, stage1MarginLower, flags);
 			}
@@ -315,10 +293,9 @@ public final class E9v3 implements Evaluator3{
 			
 			final int stage2Score = scoreMobility(player, s, clutterMult, nonPawnMaterial, attackMask) -
 					scoreMobility(1-player, s, clutterMult, nonPawnMaterial, attackMask);
-			score += interpolate(stage2Score, scale) + interpolate(S((int)(egScore(stage2Score)*.1), 0), scale);
+			score += Weight.interpolate(stage2Score, scale) + Weight.interpolate(S((int)(Weight.egScore(stage2Score)*.1), 0), scale);
 			if(queens == 0){
 				flags |= stage3Flag;
-				//System.out.println("no stage 3");
 				return ScoreEncoder.encode(score, 0, flags);
 			} else{
 				//stage 2 margin related to how much we expect the score to change
@@ -348,11 +325,8 @@ public final class E9v3 implements Evaluator3{
 					//margin cutoff failed, calculate king safety scores
 					final int stage3Score = evalKingSafety(player, s, alliedQueens, enemyQueens);
 
-					score += interpolate(stage3Score, scale) + interpolate(S((int)(egScore(stage3Score)*.1), 0), scale);
-					/*final int endgameBonus = S((int)(.1*score+.5), 0);
-					return ScoreEncoder.encode(score + endgameBonus, 0, flags);*/
+					score += Weight.interpolate(stage3Score, scale) + Weight.interpolate(S((int)(Weight.egScore(stage3Score)*.1), 0), scale);
 					
-					//System.out.println("score = "+score);
 					return ScoreEncoder.encode(score, 0, flags);
 				}
 			}
@@ -374,7 +348,7 @@ public final class E9v3 implements Evaluator3{
 
 			final int stage3Score = evalKingSafety(player, s, alliedQueens, enemyQueens);
 
-			score += interpolate(stage3Score, scale) + interpolate(S((int)(egScore(stage3Score)*.1), 0), scale);
+			score += Weight.interpolate(stage3Score, scale) + Weight.interpolate(S((int)(Weight.egScore(stage3Score)*.1), 0), scale);
 			return ScoreEncoder.encode(score, 0, flags);
 		}
 		
@@ -462,13 +436,13 @@ public final class E9v3 implements Evaluator3{
 		if(nonPawnDisadvantage){
 			final double npDisMult = max(min(nonPawnMaterial[1-player]-nonPawnMaterial[player], 300), 0)/300.;
 			if(player == 0){
-				score += multWeight(S(-10, -20), npDisMult*entry.isolatedPawns1);
-				score += multWeight(S(-10, -10), npDisMult*entry.doubledPawns1);
-				score += multWeight(S(-10, -10), npDisMult*entry.backwardPawns1);
+				score += Weight.multWeight(S(-10, -20), npDisMult*entry.isolatedPawns1);
+				score += Weight.multWeight(S(-10, -10), npDisMult*entry.doubledPawns1);
+				score += Weight.multWeight(S(-10, -10), npDisMult*entry.backwardPawns1);
 			} else{
-				score += multWeight(S(-10, -20), npDisMult*entry.isolatedPawns2);
-				score += multWeight(S(-10, -10), npDisMult*entry.doubledPawns2);
-				score += multWeight(S(-10, -10), npDisMult*entry.backwardPawns2);
+				score += Weight.multWeight(S(-10, -20), npDisMult*entry.isolatedPawns2);
+				score += Weight.multWeight(S(-10, -10), npDisMult*entry.doubledPawns2);
+				score += Weight.multWeight(S(-10, -10), npDisMult*entry.backwardPawns2);
 			}
 		}
 		
@@ -545,7 +519,7 @@ public final class E9v3 implements Evaluator3{
 		//its very hard to keep a passed pawn when behind
 		//final int nonPawnMaterialDiff = nonPawnMaterial[player]-nonPawnMaterial[1-player];
 		final double npDisMult = max(min(nonPawnMaterial[1-player]-nonPawnMaterial[player], 300), 0)/300.;
-		passedPawnSore += multWeight(S(-start*2/3, -end*2/3), npDisMult);
+		passedPawnSore += Weight.multWeight(S(-start*2/3, -end*2/3), npDisMult);
 		
 		//passed pawn supported by rook bonus
 		if((s.rooks[player] & PositionMasks.opposedPawnMask[1-player][pawnIndex]) != 0){
@@ -902,12 +876,6 @@ public final class E9v3 implements Evaluator3{
 	@Override
 	public void reset(){}
 	
-	private static int multWeight(final int weight, final double mult){
-		final int start = (weight & weightValueMask) - (weight & weightSignMask);
-		final int shifted = weight >>> 16;
-		final int end = (shifted & weightValueMask) - (shifted & weightSignMask);
-		return S((int)(start*mult), (int)(end*mult));
-	}
 
 	/** calculates mobility and danger to enemy king from mobility*/
 	private static int scoreMobility(final int player, final State4 s,
@@ -945,7 +913,7 @@ public final class E9v3 implements Evaluator3{
 			final long rawMoves = Masks.getRawBishopMoves(agg, b);
 			final long moves = rawMoves & ~allied & ~enemyPawnAttacks;
 			final int count = (int)BitUtil.getSetBits(moves);
-			mobScore += multWeight(mobilityWeights[State4.PIECE_TYPE_BISHOP][count], clutterMult);
+			mobScore += Weight.multWeight(mobilityWeights[State4.PIECE_TYPE_BISHOP][count], clutterMult);
 			bishopAttackMask |= rawMoves;
 			
 			//penalize bishop for blocking allied pawns on bishop color
@@ -962,7 +930,7 @@ public final class E9v3 implements Evaluator3{
 			final long rawMoves = Masks.getRawKnightMoves(k);
 			final long moves = rawMoves & ~allied & ~enemyPawnAttacks;
 			final int count = (int)BitUtil.getSetBits(moves);
-			mobScore += multWeight(mobilityWeights[State4.PIECE_TYPE_KNIGHT][count], clutterMult);
+			mobScore += Weight.multWeight(mobilityWeights[State4.PIECE_TYPE_KNIGHT][count], clutterMult);
 			knightAttackMask |= rawMoves;
 		}
 
@@ -976,7 +944,7 @@ public final class E9v3 implements Evaluator3{
 			final long rawMoves = Masks.getRawRookMoves(agg, r);
 			final long moves = rawMoves & ~allied & ~enemyPawnAttacks;
 			final int moveCount = (int)BitUtil.getSetBits(moves);
-			mobScore += multWeight(mobilityWeights[State4.PIECE_TYPE_ROOK][moveCount], clutterMult);
+			mobScore += Weight.multWeight(mobilityWeights[State4.PIECE_TYPE_ROOK][moveCount], clutterMult);
 			rookAttackMask |= rawMoves;
 			
 			final int rindex = BitUtil.lsbIndex(r);
@@ -1017,7 +985,7 @@ public final class E9v3 implements Evaluator3{
 			final long rawMoves = Masks.getRawQueenMoves(agg, q);
 			final long moves = rawMoves & ~allied & ~enemyPawnAttacks;
 			final int count = (int)BitUtil.getSetBits(moves);
-			mobScore += multWeight(mobilityWeights[State4.PIECE_TYPE_QUEEN][count], clutterMult);
+			mobScore += Weight.multWeight(mobilityWeights[State4.PIECE_TYPE_QUEEN][count], clutterMult);
 			queenAttackMask |= rawMoves;
 		}
 		
