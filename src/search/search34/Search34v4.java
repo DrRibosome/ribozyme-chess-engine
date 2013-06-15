@@ -168,8 +168,13 @@ public final class Search34v4 implements Search4{
 			score = recurse(player, alpha, beta, i, true, true, 0, s);
 			
 			if((score <= alpha || score >= beta) && !cutoffSearch){
-				if(score <= alpha) alpha = score-50;
-				else if(score >= beta) beta = score+50;
+				if(score <= alpha){
+					alpha = score-50;
+					beta = score+15;
+				} else if(score >= beta){
+					beta = score+50;
+					alpha = score-15;
+				}
 				
 				if(i < minRestartDepth){
 					score = recurse(player, alpha, beta, i, true, true, 0, s);
@@ -181,8 +186,10 @@ public final class Search34v4 implements Search4{
 						continue;
 					}
 				} else{
-					minRestartDepth += 1;
-					i -= i/3+.5;
+					//minRestartDepth += 1;
+					minRestartDepth = i+1;
+					
+					i -= i/4+.5;
 					skipAdjust = true;
 					continue;
 				}
