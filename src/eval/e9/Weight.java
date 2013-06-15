@@ -1,6 +1,6 @@
 package eval.e9;
 
-/** handles evaluator weight encoding*/
+/** handles evaluator weight encoding and interpoation*/
 final class Weight {
 	private final static int weightValueMask = 0x7FFF;
 	private final static int weightSignMask = 1<<15;
