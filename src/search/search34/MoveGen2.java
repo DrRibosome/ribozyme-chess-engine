@@ -92,7 +92,7 @@ final class MoveGen2 {
 		}
 	}
 	
-	public void alphaCutoff(final int player, final int pieceType, final int startPos,
+	public void alphaRaised(final int player, final int pieceType, final int startPos,
 			final int movePos, final int stackIndex, final State4 s, final int depth){
 		final FeatureSet f = this.f[player];
 
