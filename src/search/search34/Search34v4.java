@@ -160,7 +160,7 @@ public final class Search34v4 implements Search4{
 			}
 			skipAdjust = false;
 			
-			score = recurse(player, alpha, beta, i*ONE_PLY, true, true, 0, s);
+			score = recurse(player, alpha, beta, i*ONE_PLY, true, 0, s);
 			
 			if((score <= alpha || score >= beta) && !cutoffSearch){
 				if(score <= alpha){
@@ -172,7 +172,7 @@ public final class Search34v4 implements Search4{
 				}
 				
 				if(i < minRestartDepth){
-					score = recurse(player, alpha, beta, i*ONE_PLY, true, true, 0, s);
+					score = recurse(player, alpha, beta, i*ONE_PLY, true, 0, s);
 					if((score <= alpha || score >= beta) && !cutoffSearch){
 						i--;
 						if(score <= alpha) alpha = score-150;
@@ -283,7 +283,7 @@ public final class Search34v4 implements Search4{
 	}
 	
 	private int recurse(final int player, int alpha, final int beta, final int depth,
-			final boolean pv, final boolean rootNode, final int stackIndex, final State4 s){
+			final boolean pv, final int stackIndex, final State4 s){
 		stats.nodesSearched++;
 		assert alpha < beta;
 		
@@ -292,7 +292,7 @@ public final class Search34v4 implements Search4{
 		} else if(depth <= 0){
 			final int q = qsearch(player, alpha, beta, 0, stackIndex, pv, s);
 			if(q > 70000 && pv){
-				return recurse(player, alpha, beta, ONE_PLY, true, false, stackIndex, s);
+				return recurse(player, alpha, beta, ONE_PLY, true, stackIndex, s);
 			} else{
 				return q;
 			}
@@ -420,7 +420,7 @@ public final class Search34v4 implements Search4{
 			stack[stackIndex+1].skipNullMove = true;
 			s.nullMove();
 			final long nullzkey = s.zkey();
-			int n = -recurse(1-player, -beta, -alpha, depth-r, pv, rootNode, stackIndex+1, s);
+			int n = -recurse(1-player, -beta, -alpha, depth-r, pv, stackIndex+1, s);
 			s.undoNullMove();
 			stack[stackIndex+1].skipNullMove = false;
 			
@@ -439,7 +439,7 @@ public final class Search34v4 implements Search4{
 				//verification search
 				stack[stackIndex+1].futilityPrune = false;
 				stack[stackIndex+1].skipNullMove = true;
-				double v = recurse(player, alpha, beta, depth-r, pv, rootNode, stackIndex+1, s);
+				double v = recurse(player, alpha, beta, depth-r, pv, stackIndex+1, s);
 				stack[stackIndex+1].skipNullMove = false;
 				if(v >= beta){
 					stats.nullMoveCutoffs++;
@@ -463,7 +463,7 @@ public final class Search34v4 implements Search4{
 			final int d = pv? depth-2*ONE_PLY: depth/2;
 			stack[stackIndex+1].futilityPrune = ml.futilityPrune;
 			stack[stackIndex+1].skipNullMove = true;
-			recurse(player, alpha, beta, d, pv, rootNode, stackIndex+1, s);
+			recurse(player, alpha, beta, d, pv, stackIndex+1, s);
 			stack[stackIndex+1].skipNullMove = false;
 			final TTEntry temp;
 			if((temp = m.get(zkey)) != null && temp.move != 0){
@@ -606,7 +606,7 @@ public final class Search34v4 implements Search4{
 				//LMR
 				final boolean fullSearch;
 				//final int reduction;
-				if(depth > 1 && !pvMove && !isCapture && !inCheck && !isPawnPromotion &&
+				if(depth > ONE_PLY && !pvMove && !isCapture && !inCheck && !isPawnPromotion &&
 						!isDangerous && 
 						!isKillerMove &&
 						!isTTEMove){
@@ -615,7 +615,7 @@ public final class Search34v4 implements Search4{
 					final int lmrReduction = lmrReduction(depth/ONE_PLY, moveCount)*ONE_PLY + (pv? 0: ONE_PLY);
 					final int reducedDepth = nextDepth - lmrReduction;
 					
-					g = -recurse(1-player, -alpha-1, -alpha, reducedDepth, false, false, stackIndex+1, s);
+					g = -recurse(1-player, -alpha-1, -alpha, reducedDepth, false, stackIndex+1, s);
 					fullSearch = g > alpha && lmrReduction != 0;
 				} else{
 					fullSearch = true;
@@ -624,12 +624,12 @@ public final class Search34v4 implements Search4{
 				if(fullSearch){
 					//descend negascout style
 					if(!pvMove){
-						g = -recurse(1-player, -alpha-1, -alpha, nextDepth, false, false, stackIndex+1, s);
+						g = -recurse(1-player, -alpha-1, -alpha, nextDepth, false, stackIndex+1, s);
 						if(alpha < g && g < beta && pv){
-							g = -recurse(1-player, -beta, -alpha, nextDepth, pv, false, stackIndex+1, s);
+							g = -recurse(1-player, -beta, -alpha, nextDepth, pv, stackIndex+1, s);
 						}
 					} else{
-						g = -recurse(1-player, -beta, -alpha, nextDepth, pv, false, stackIndex+1, s);
+						g = -recurse(1-player, -beta, -alpha, nextDepth, pv, stackIndex+1, s);
 					}
 				}
 			}
