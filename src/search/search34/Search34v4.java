@@ -29,8 +29,6 @@ public final class Search34v4 implements Search4{
 		}
 	}
 	
-	private final MoveList[] stack;
-	
 	private final static class MoveList{
 		private final static int defSize = 128;
 		private final MoveSet[] mset = new MoveSet[defSize];
@@ -45,6 +43,9 @@ public final class Search34v4 implements Search4{
 		}
 	}
 	
+	private final static int ONE_PLY = 8;
+
+	private final MoveList[] stack;
 	private final SearchStat32k stats = new SearchStat32k();
 	private final Evaluator3 e;
 	private final int qply = 12;
@@ -54,16 +55,10 @@ public final class Search34v4 implements Search4{
 	/** sequence number for hash entries*/
 	private int seq;
 	private final MoveGen2 moveGen = new MoveGen2();
-	
 	/** controls printing pv to console for debugging*/
 	private final boolean printPV;
-	/** controls whether the printed pv should be in uci style*/
-	private final static boolean uciPV = true;
-	
 	private final TTEntry fillEntry = new TTEntry();
-	
 	private volatile boolean cutoffSearch = false;
-	
 	private final static int[][] lmrReduction = new int[32][64];
 
 	static{
@@ -165,7 +160,7 @@ public final class Search34v4 implements Search4{
 			}
 			skipAdjust = false;
 			
-			score = recurse(player, alpha, beta, i, true, true, 0, s);
+			score = recurse(player, alpha, beta, i*ONE_PLY, true, true, 0, s);
 			
 			if((score <= alpha || score >= beta) && !cutoffSearch){
 				if(score <= alpha){
@@ -177,7 +172,7 @@ public final class Search34v4 implements Search4{
 				}
 				
 				if(i < minRestartDepth){
-					score = recurse(player, alpha, beta, i, true, true, 0, s);
+					score = recurse(player, alpha, beta, i*ONE_PLY, true, true, 0, s);
 					if((score <= alpha || score >= beta) && !cutoffSearch){
 						i--;
 						if(score <= alpha) alpha = score-150;
@@ -208,8 +203,7 @@ public final class Search34v4 implements Search4{
 				}
 				if(printPV){
 					final String pvString = getPVString(player, s, "", 0, i);
-					if(!uciPV) System.out.println("pv "+i+": ["+score+"] "+pvString);
-					else System.out.println("info depth "+i+" score cp "+(int)score+" time "+
+					System.out.println("info depth "+i+" score cp "+(int)score+" time "+
 							((System.currentTimeMillis()-stats.searchTime)/1000.)+
 							" nodes "+stats.nodesSearched+" nps "+(int)(stats.nodesSearched*1000./
 							(System.currentTimeMillis()-stats.searchTime))+" pv "+pvString);
@@ -288,7 +282,7 @@ public final class Search34v4 implements Search4{
 		return State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
 	}
 	
-	private int recurse(final int player, int alpha, final int beta, final double depth,
+	private int recurse(final int player, int alpha, final int beta, final int depth,
 			final boolean pv, final boolean rootNode, final int stackIndex, final State4 s){
 		stats.nodesSearched++;
 		assert alpha < beta;
@@ -298,7 +292,7 @@ public final class Search34v4 implements Search4{
 		} else if(depth <= 0){
 			final int q = qsearch(player, alpha, beta, 0, stackIndex, pv, s);
 			if(q > 70000 && pv){
-				return recurse(player, alpha, beta, 1, true, false, stackIndex, s);
+				return recurse(player, alpha, beta, ONE_PLY, true, false, stackIndex, s);
 			} else{
 				return q;
 			}
@@ -371,7 +365,7 @@ public final class Search34v4 implements Search4{
 		//check that previous move wasnt a take to counter horizon effect of
 		//taking a high value piece then assessing that we are ahead before
 		//they have a chance to take back
-		if(!pv && depth < 4 &&
+		if(!pv && depth < 4*ONE_PLY &&
 				!pawnPrePromotion &&
 				!alliedKingAttacked &&
 				hasNonPawnMaterial &&
@@ -379,11 +373,11 @@ public final class Search34v4 implements Search4{
 				ml.futilityPrune){
 			final int d = (int)depth;
 			final int futilityMargin;
-			if(d <= 1){
+			if(d <= 1*ONE_PLY){
 				futilityMargin = 250;
-			} else if(d <= 2){
+			} else if(d <= 2*ONE_PLY){
 				futilityMargin = 300;
-			} else if(d <= 3){
+			} else if(d <= 3*ONE_PLY){
 				futilityMargin = 425;
 			} else{
 				futilityMargin = 500; //prob never reaches here (currently only full ply extensions)
@@ -399,7 +393,7 @@ public final class Search34v4 implements Search4{
 		int razorReduction = 0;
 		if(!pv &&
 				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000 &&
-				depth < 4 &&
+				depth < 4*ONE_PLY &&
 				!alliedKingAttacked &&
 				!tteMove &&
 				!pawnPrePromotion){
@@ -416,10 +410,10 @@ public final class Search34v4 implements Search4{
 		
 		//null move pruning
 		final boolean threatMove; //true if opponent can make a move that causes null-move fail low
-		if(!pv && !ml.skipNullMove && depth > 3 && !alliedKingAttacked &&
+		if(!pv && !ml.skipNullMove && depth > 3*ONE_PLY && !alliedKingAttacked &&
 				hasNonPawnMaterial && Math.abs(beta) < 70000 && Math.abs(alpha) < 70000){
 			
-			final double r = 3 + depth/4;
+			final int r = 3*ONE_PLY + depth/4;
 			
 			//note, non-pv nodes are null window searched - no need to do it here explicitly
 			stack[stackIndex+1].futilityPrune = true;
@@ -436,7 +430,7 @@ public final class Search34v4 implements Search4{
 				if(n >= 70000){
 					n = beta;
 				}
-				if(depth < 12){ //stockfish prunes at depth<12
+				if(depth < 12*ONE_PLY){ //stockfish prunes at depth<12
 					stats.nullMoveCutoffs++;
 					return n;
 				}
@@ -465,8 +459,8 @@ public final class Search34v4 implements Search4{
 		}
 
 		//internal iterative deepening
-		if(!tteMove && depth >= (pv? 5: 8) && (pv || (!alliedKingAttacked && eval+256 >= beta))){
-			final double d = pv? depth-2: depth/2;
+		if(!tteMove && depth >= (pv? 5: 8)*ONE_PLY && (pv || (!alliedKingAttacked && eval+256 >= beta))){
+			final int d = pv? depth-2*ONE_PLY: depth/2;
 			stack[stackIndex+1].futilityPrune = ml.futilityPrune;
 			stack[stackIndex+1].skipNullMove = true;
 			recurse(player, alpha, beta, d, pv, rootNode, stackIndex+1, s);
@@ -603,11 +597,11 @@ public final class Search34v4 implements Search4{
 
 				stack[stackIndex+1].futilityPrune = !isDangerous && !isCapture && !isPawnPromotion;
 
-				final double ext = (isDangerous && pv? 1: 0) + (threatMove && pv? 0: 0) + razorReduction;
+				final int ext = (isDangerous && pv? ONE_PLY: 0) + (threatMove && pv? 0: 0) + razorReduction;
 						//(!pv && depth > 7? -depth/10: 0);
 						//(!pv && depth > 7 && !isDangerous && !isCapture? -depth/10: 0);
 
-				final double nextDepth = depth-1+ext;
+				final int nextDepth = depth - ONE_PLY + ext;
 				
 				//LMR
 				final boolean fullSearch;
@@ -618,8 +612,8 @@ public final class Search34v4 implements Search4{
 						!isTTEMove){
 					
 					moveCount++;
-					final int lmrReduction = lmrReduction((int)depth, moveCount) + (pv? 0: 1);
-					final double reducedDepth = nextDepth-lmrReduction;
+					final int lmrReduction = lmrReduction(depth/ONE_PLY, moveCount)*ONE_PLY + (pv? 0: ONE_PLY);
+					final int reducedDepth = nextDepth - lmrReduction;
 					
 					g = -recurse(1-player, -alpha-1, -alpha, reducedDepth, false, false, stackIndex+1, s);
 					fullSearch = g > alpha && lmrReduction != 0;
@@ -654,15 +648,13 @@ public final class Search34v4 implements Search4{
 				bestScore = g;
 				bestMove = encoding;
 				
-				final int d = (int)depth;
-				
 				if(g > alpha){
 					alpha = g;
 					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 					if(alpha >= beta){
 						if(!cutoffSearch){
 							//m.put2(zkey, bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
-							fillEntry.fill(zkey, encoding, alpha, scoreEncoding, (int)depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
+							fillEntry.fill(zkey, encoding, alpha, scoreEncoding, depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
 							m.put(zkey, fillEntry);
 						}
 
@@ -674,13 +666,13 @@ public final class Search34v4 implements Search4{
 						
 						moveGen.betaCutoff(player, MoveEncoder.getMovePieceType(encoding),
 								MoveEncoder.getPos1(encoding),
-								MoveEncoder.getPos2(encoding), stackIndex, s, d);
+								MoveEncoder.getPos2(encoding), stackIndex, s, depth/ONE_PLY);
 
 						return g;
 					} else{
 						moveGen.alphaCutoff(player, MoveEncoder.getMovePieceType(encoding),
 								MoveEncoder.getPos1(encoding),
-								MoveEncoder.getPos2(encoding), stackIndex, s, d);
+								MoveEncoder.getPos2(encoding), stackIndex, s, depth/ONE_PLY);
 					}
 				}
 			}
