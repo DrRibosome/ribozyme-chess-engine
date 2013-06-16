@@ -67,7 +67,7 @@ public final class Search34v4 implements Search4{
 				if(d != 0 && mc != 0){
 					final double pvRed = Math.log(d) * Math.log(mc) / 3.0;
 					//double nonPVRed = 0.33 + log(double(hd)) * log(double(mc)) / 2.25;
-					lmrReduction[d][mc] = (int)(pvRed >= 1.0 ? Math.floor(pvRed) : 0);
+					lmrReduction[d][mc] = (int)(pvRed >= 1.0 ? Math.floor(pvRed*ONE_PLY) : 0);
 					//Reductions[0][hd][mc] = (int8_t) (nonPVRed >= 1.0 ? floor(nonPVRed * int(ONE_PLY)) : 0);
 				} else{
 					lmrReduction[d][mc] = 0;
@@ -612,7 +612,7 @@ public final class Search34v4 implements Search4{
 						!isTTEMove){
 					
 					moveCount++;
-					final int lmrReduction = lmrReduction(depth/ONE_PLY, moveCount)*ONE_PLY + (pv? 0: ONE_PLY);
+					final int lmrReduction = lmrReduction(depth/ONE_PLY, moveCount) + (pv? 0: ONE_PLY);
 					final int reducedDepth = nextDepth - lmrReduction;
 					
 					g = -recurse(1-player, -alpha-1, -alpha, reducedDepth, false, stackIndex+1, s);
