@@ -641,7 +641,7 @@ public final class Search34v4 implements Search4{
 
 			if(isDrawable && 0 > g){ //can take a draw instead of making the move
 				g = 0;
-				encoding = 0;
+				//encoding = 0;
 			} 
 
 			if(g > bestScore){
