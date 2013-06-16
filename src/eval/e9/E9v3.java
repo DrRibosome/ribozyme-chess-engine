@@ -496,8 +496,8 @@ public final class E9v3 implements Evaluator3{
 		}*/
 
 		final int rr = row*(row-1);
-		final int start = 18*rr*2/3;
-		final int end = 10*(rr+row+1)*2/3;
+		final int start = 14*rr/2;
+		final int end = 10*(rr+row+1)/2;
 		passedPawnSore += S(start, end);
 		
 		
@@ -511,8 +511,8 @@ public final class E9v3 implements Evaluator3{
 			//(w0,w1,d) = (111,134,126) without-with, depth=3
 			if((nextPos & s.queens[1-player]) != 0) passedPawnSore += S(45/pawnDist);
 			else if((nextPos & s.rooks[1-player]) != 0) passedPawnSore += S(35/pawnDist);
-			else if((nextPos & s.bishops[1-player]) != 0) passedPawnSore += S(25/pawnDist);
-			else if((nextPos & s.knights[1-player]) != 0) passedPawnSore += S(25/pawnDist);
+			//else if((nextPos & s.bishops[1-player]) != 0) passedPawnSore += S(25/pawnDist);
+			//else if((nextPos & s.knights[1-player]) != 0) passedPawnSore += S(25/pawnDist);
 		}
 		
 		//checks to see whether we have a non-pawn material disadvantage,
