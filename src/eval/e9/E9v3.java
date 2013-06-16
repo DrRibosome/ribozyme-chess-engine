@@ -496,7 +496,7 @@ public final class E9v3 implements Evaluator3{
 		}*/
 
 		final int rr = row*(row-1);
-		final int start = 14*rr/2;
+		final int start = 16*rr/2;
 		final int end = 10*(rr+row+1)/2;
 		passedPawnSore += S(start, end);
 		
