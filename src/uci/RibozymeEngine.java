@@ -19,9 +19,9 @@ public final class RibozymeEngine implements UCIEngine{
 	private Thread t;
 	private final MoveSet moveStore = new MoveSet();
 	
-	public RibozymeEngine(final int hashSize){
+	public RibozymeEngine(final int hashSize, final int pawnHashSize){
 		
-		final Evaluator3 e = new E9v3();
+		final Evaluator3 e = new E9v3(pawnHashSize);
 		
 		s = new Search34v4(e, hashSize, true);
 	}

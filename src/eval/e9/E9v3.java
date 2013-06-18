@@ -98,7 +98,7 @@ public final class E9v3 implements Evaluator3{
 	//cached values
 	/** stores total king distance from allied pawns*/
 	private final int[] kingPawnDist = new int[2];
-	private final PawnHash pawnHash = new PawnHash(16, 16);
+	private final PawnHash pawnHash;
 	final PawnHashEntry filler = new PawnHashEntry();
 
 	static{
@@ -151,6 +151,10 @@ public final class E9v3 implements Evaluator3{
 	}
 	
 	public E9v3(){
+		this(16);
+	}
+	
+	public E9v3(int pawnHashSize){
 		int startMaterial = (
 				  materialWeights[State4.PIECE_TYPE_PAWN]*8
 				+ materialWeights[State4.PIECE_TYPE_KNIGHT]*2
@@ -164,6 +168,8 @@ public final class E9v3 implements Evaluator3{
 				) * 2;
 		
 		scaleMargin = scaleMargin(startMaterial, endMaterial);
+		
+		pawnHash = new PawnHash(pawnHashSize, 16);
 	}
 	
 	/** build a weight scaling from passed start,end values*/

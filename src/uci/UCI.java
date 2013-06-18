@@ -112,25 +112,26 @@ public final class UCI {
 		return m;
 	}
 	
-	public UCI(final int size){
-		engine = new RibozymeEngine(size);
+	public UCI(final int hashSize, final int pawnHashSize){
+		engine = new RibozymeEngine(hashSize, pawnHashSize);
 		t.start();
 	}
 	
 	public static void main(String[] args){
-		int size = 20; //hash size, as a power of 2
-		if(args.length == 2){
-			boolean complete = false;
-			if(args[0].equals("--hash")){
-				try{
-					size = Integer.parseInt(args[1]);
-					complete = true;
-				} catch(NumberFormatException e){}
-			}
-			if(!complete){
-				System.out.println("incorrect args, needs: '--hash <size>'");
+		int hashSize = 20; //hash size, as a power of 2
+		int pawnHashSize = 16;
+		for(int a = 0; a < args.length; a++){
+			try{
+				if(args[a].equals("--hash")){
+					hashSize = Integer.parseInt(args[++a]);
+				} else if(args[a].equals("--pawnHash")){
+					pawnHashSize = Integer.parseInt(args[++a]);
+				} 
+			} catch(Exception e){
+				System.out.println("error, incorrect args");
+				System.exit(1);
 			}
 		}
-		new UCI(size);
+		new UCI(hashSize, pawnHashSize);
 	}
 }
