@@ -14,6 +14,25 @@ import eval.ScoreEncoder;
 
 /** heavy search reductions for non-pv lines after depth 7*/
 public final class Search34v4 implements Search4{
+	private static enum NodeType{
+		pv(){
+			NodeType next(){
+				return cut;
+			}
+		},
+		cut(){
+			NodeType next(){
+				return all;
+			}
+		},
+		all(){
+			NodeType next(){
+				return cut;
+			}
+		};
+		abstract NodeType next();
+	};
+	
 	public final static class SearchStat32k extends SearchStat{
 		/** scores returned from quiet search without bottoming out*/
 		public long forcedQuietCutoffs;
@@ -160,7 +179,7 @@ public final class Search34v4 implements Search4{
 			}
 			skipAdjust = false;
 			
-			score = recurse(player, alpha, beta, i*ONE_PLY, true, 0, s);
+			score = recurse(player, alpha, beta, i*ONE_PLY, NodeType.pv, 0, s);
 			
 			if((score <= alpha || score >= beta) && !cutoffSearch){
 				if(score <= alpha){
@@ -172,7 +191,7 @@ public final class Search34v4 implements Search4{
 				}
 				
 				if(i < minRestartDepth){
-					score = recurse(player, alpha, beta, i*ONE_PLY, true, 0, s);
+					score = recurse(player, alpha, beta, i*ONE_PLY, NodeType.pv, 0, s);
 					if((score <= alpha || score >= beta) && !cutoffSearch){
 						i--;
 						if(score <= alpha) alpha = score-150;
@@ -283,16 +302,16 @@ public final class Search34v4 implements Search4{
 	}
 	
 	private int recurse(final int player, int alpha, final int beta, final int depth,
-			final boolean pv, final int stackIndex, final State4 s){
+			final NodeType nt, final int stackIndex, final State4 s){
 		stats.nodesSearched++;
 		assert alpha < beta;
 		
 		if(s.isForcedDraw()){
 			return 0;
 		} else if(depth <= 0){
-			final int q = qsearch(player, alpha, beta, 0, stackIndex, pv, s);
-			if(q > 70000 && pv){
-				return recurse(player, alpha, beta, ONE_PLY, true, stackIndex, s);
+			final int q = qsearch(player, alpha, beta, 0, stackIndex, nt, s);
+			if(q > 70000 && nt == NodeType.pv){
+				return recurse(player, alpha, beta, ONE_PLY, nt, stackIndex, s);
 			} else{
 				return q;
 			}
@@ -318,7 +337,7 @@ public final class Search34v4 implements Search4{
 			stats.hashHits++;
 			if(e.depth >= depth){
 				final int cutoffType = e.cutoffType;
-				if(pv ? cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (e.score >= beta?
+				if(nt == NodeType.pv? cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (e.score >= beta?
 						cutoffType == TTEntry.CUTOFF_TYPE_LOWER: cutoffType == TTEntry.CUTOFF_TYPE_UPPER)){
 					
 					if(stackIndex-1 >= 0 && e.score >= beta){
@@ -365,7 +384,7 @@ public final class Search34v4 implements Search4{
 		//check that previous move wasnt a take to counter horizon effect of
 		//taking a high value piece then assessing that we are ahead before
 		//they have a chance to take back
-		if(!pv && depth < 4*ONE_PLY &&
+		if(nt != NodeType.pv && depth < 4*ONE_PLY &&
 				!pawnPrePromotion &&
 				!alliedKingAttacked &&
 				hasNonPawnMaterial &&
@@ -391,7 +410,7 @@ public final class Search34v4 implements Search4{
 		
 		//razoring
 		int razorReduction = 0;
-		if(!pv &&
+		if(nt != NodeType.pv &&
 				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000 &&
 				depth < 4*ONE_PLY &&
 				!alliedKingAttacked &&
@@ -401,7 +420,7 @@ public final class Search34v4 implements Search4{
 			final int razorMargin = 270 * (int)depth*50;
 			if(eval + razorMargin < beta){
 				final int rbeta = beta-razorMargin;
-				final int v = qsearch(player, rbeta-1, rbeta, 0, stackIndex+1, false, s);
+				final int v = qsearch(player, rbeta-1, rbeta, 0, stackIndex+1, nt, s);
 				if(v <= rbeta-1){
 					return v+rbeta; // return v+rbeta => score (one level up) < alpha 
 				}
@@ -410,7 +429,7 @@ public final class Search34v4 implements Search4{
 		
 		//null move pruning
 		final boolean threatMove; //true if opponent can make a move that causes null-move fail low
-		if(!pv && !ml.skipNullMove && depth > 3*ONE_PLY && !alliedKingAttacked &&
+		if(nt != NodeType.pv && !ml.skipNullMove && depth > 3*ONE_PLY && !alliedKingAttacked &&
 				hasNonPawnMaterial && Math.abs(beta) < 70000 && Math.abs(alpha) < 70000){
 			
 			final int r = 3*ONE_PLY + depth/4;
@@ -420,7 +439,7 @@ public final class Search34v4 implements Search4{
 			stack[stackIndex+1].skipNullMove = true;
 			s.nullMove();
 			final long nullzkey = s.zkey();
-			int n = -recurse(1-player, -beta, -alpha, depth-r, pv, stackIndex+1, s);
+			int n = -recurse(1-player, -beta, -alpha, depth-r, nt, stackIndex+1, s);
 			s.undoNullMove();
 			stack[stackIndex+1].skipNullMove = false;
 			
@@ -439,7 +458,7 @@ public final class Search34v4 implements Search4{
 				//verification search
 				stack[stackIndex+1].futilityPrune = false;
 				stack[stackIndex+1].skipNullMove = true;
-				double v = recurse(player, alpha, beta, depth-r, pv, stackIndex+1, s);
+				double v = recurse(player, alpha, beta, depth-r, nt, stackIndex+1, s);
 				stack[stackIndex+1].skipNullMove = false;
 				if(v >= beta){
 					stats.nullMoveCutoffs++;
@@ -459,11 +478,12 @@ public final class Search34v4 implements Search4{
 		}
 
 		//internal iterative deepening
-		if(!tteMove && depth >= (pv? 5: 8)*ONE_PLY && (pv || (!alliedKingAttacked && eval+256 >= beta))){
-			final int d = pv? depth-2*ONE_PLY: depth/2;
+		if(!tteMove && depth >= (nt == NodeType.pv? 5: 8)*ONE_PLY &&
+				(nt == NodeType.pv || (!alliedKingAttacked && eval+256 >= beta))){
+			final int d = nt == NodeType.pv? depth-2*ONE_PLY: depth/2;
 			stack[stackIndex+1].futilityPrune = ml.futilityPrune;
 			stack[stackIndex+1].skipNullMove = true;
-			recurse(player, alpha, beta, d, pv, stackIndex+1, s);
+			recurse(player, alpha, beta, d, nt, stackIndex+1, s);
 			stack[stackIndex+1].skipNullMove = false;
 			final TTEntry temp;
 			if((temp = m.get(zkey)) != null && temp.move != 0){
@@ -579,7 +599,7 @@ public final class Search34v4 implements Search4{
 			} else{
 				hasMove = true;
 
-				final boolean pvMove = pv && i==0;
+				final boolean pvMove = nt == NodeType.pv && i==0;
 				final boolean isCapture = MoveEncoder.getTakenType(encoding) != State4.PIECE_TYPE_EMPTY;
 				final boolean givesCheck = isChecked(1-player, s);
 				final boolean isPawnPromotion = MoveEncoder.isPawnPromotion(encoding);
@@ -597,7 +617,8 @@ public final class Search34v4 implements Search4{
 
 				stack[stackIndex+1].futilityPrune = !isDangerous && !isCapture && !isPawnPromotion;
 
-				final int ext = (isDangerous && pv? ONE_PLY: 0) + (threatMove && pv? 0: 0) + razorReduction;
+				final int ext = (isDangerous && nt == NodeType.pv? ONE_PLY: 0) +
+						(threatMove && nt == NodeType.pv? 0: 0) + razorReduction;
 						//(!pv && depth > 7? -depth/10: 0);
 						//(!pv && depth > 7 && !isDangerous && !isCapture? -depth/10: 0);
 
@@ -612,10 +633,10 @@ public final class Search34v4 implements Search4{
 						!isTTEMove){
 					
 					moveCount++;
-					final int lmrReduction = lmrReduction(depth/ONE_PLY, moveCount) + (pv? 0: ONE_PLY);
+					final int lmrReduction = lmrReduction(depth/ONE_PLY, moveCount) + (nt == NodeType.pv? 0: ONE_PLY);
 					final int reducedDepth = nextDepth - lmrReduction;
 					
-					g = -recurse(1-player, -alpha-1, -alpha, reducedDepth, false, stackIndex+1, s);
+					g = -recurse(1-player, -alpha-1, -alpha, reducedDepth, nt.next(), stackIndex+1, s);
 					fullSearch = g > alpha && lmrReduction != 0;
 				} else{
 					fullSearch = true;
@@ -624,12 +645,12 @@ public final class Search34v4 implements Search4{
 				if(fullSearch){
 					//descend negascout style
 					if(!pvMove){
-						g = -recurse(1-player, -alpha-1, -alpha, nextDepth, false, stackIndex+1, s);
-						if(alpha < g && g < beta && pv){
-							g = -recurse(1-player, -beta, -alpha, nextDepth, pv, stackIndex+1, s);
+						g = -recurse(1-player, -alpha-1, -alpha, nextDepth, nt.next(), stackIndex+1, s);
+						if(alpha < g && g < beta && nt == NodeType.pv){
+							g = -recurse(1-player, -beta, -alpha, nextDepth, NodeType.pv, stackIndex+1, s);
 						}
 					} else{
-						g = -recurse(1-player, -beta, -alpha, nextDepth, pv, stackIndex+1, s);
+						g = -recurse(1-player, -beta, -alpha, nextDepth, NodeType.pv, stackIndex+1, s);
 					}
 				}
 			}
@@ -687,14 +708,14 @@ public final class Search34v4 implements Search4{
 
 		if(!cutoffSearch){
 			//m.put2(zkey, bestMove, bestScore, depth, cutoffFlag);
-			fillEntry.fill(zkey, bestMove, bestScore, scoreEncoding, (int)depth, pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
+			fillEntry.fill(zkey, bestMove, bestScore, scoreEncoding, (int)depth, nt == NodeType.pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
 			m.put(zkey, fillEntry);
 		}
 		return bestScore;
 	}
 	
 	private int qsearch(final int player, int alpha, int beta, final int depth,
-			final int stackIndex, final boolean pv, final State4 s){
+			final int stackIndex, final NodeType nt, final State4 s){
 		stats.nodesSearched++;
 		
 		if(depth < -qply){
@@ -717,7 +738,7 @@ public final class Search34v4 implements Search4{
 			stats.hashHits++;
 			if(e.depth >= depth){
 				final int cutoffType = e.cutoffType;
-				if(pv ? cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (e.score >= beta?
+				if(nt == NodeType.pv? cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (e.score >= beta?
 						cutoffType == TTEntry.CUTOFF_TYPE_LOWER: cutoffType == TTEntry.CUTOFF_TYPE_UPPER)){
 					return e.score;
 				}
@@ -735,12 +756,12 @@ public final class Search34v4 implements Search4{
 				ttMove = 0;
 			}
 			
-			scoreEncoding = pv? this.e.refine(player, s, -90000, 90000, e.staticEval):
+			scoreEncoding = nt == NodeType.pv? this.e.refine(player, s, -90000, 90000, e.staticEval):
 				this.e.refine(player, s, alpha, beta, e.staticEval);
 		} else{
 			hasTTMove = false;
 			ttMove = 0;
-			scoreEncoding = pv? this.e.eval(player, s): this.e.eval(player, s, alpha, beta);
+			scoreEncoding = nt == NodeType.pv? this.e.eval(player, s): this.e.eval(player, s, alpha, beta);
 		}
 		
 		int bestScore;
@@ -751,7 +772,7 @@ public final class Search34v4 implements Search4{
 			bestScore = ScoreEncoder.getScore(scoreEncoding) + ScoreEncoder.getMargin(scoreEncoding);
 			if(bestScore >= beta){ //standing pat
 				return bestScore;
-			} else if(bestScore > alpha && pv){
+			} else if(bestScore > alpha && nt == NodeType.pv){
 				alpha = bestScore;
 			}
 		}
@@ -777,7 +798,7 @@ public final class Search34v4 implements Search4{
 				//king in check after move
 				g = -77777;
 			} else{
-				if(!pv && !alliedKingAttacked && !MoveEncoder.isPawnPromotion(encoding) &&
+				if(nt != NodeType.pv && !alliedKingAttacked && !MoveEncoder.isPawnPromotion(encoding) &&
 						(!hasTTMove || encoding != ttMove)){
 					s.undoMove();
 					if(SEE.seeSign(player, pieceMask, move, s) < 0){
@@ -788,7 +809,7 @@ public final class Search34v4 implements Search4{
 					}
 				}
 				
-				g = -qsearch(1-player, -beta, -alpha, depth-1, stackIndex+1, pv, s);
+				g = -qsearch(1-player, -beta, -alpha, depth-1, stackIndex+1, nt, s);
 			}
 			s.undoMove();
 			this.e.undoMove(encoding);
@@ -819,7 +840,7 @@ public final class Search34v4 implements Search4{
 		}
 
 		if(!cutoffSearch){
-			fillEntry.fill(zkey, bestMove, bestScore, scoreEncoding, depth, pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
+			fillEntry.fill(zkey, bestMove, bestScore, scoreEncoding, depth, nt == NodeType.pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
 			m.put(zkey, fillEntry);
 		}
 		return bestScore;
