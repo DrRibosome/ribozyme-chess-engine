@@ -302,7 +302,7 @@ public final class Search34v4 implements Search4{
 	}
 	
 	private int recurse(final int player, int alpha, final int beta, final int depth,
-			final NodeType nt, final int stackIndex, final State4 s){
+			NodeType nt, final int stackIndex, final State4 s){
 		stats.nodesSearched++;
 		assert alpha < beta;
 		
@@ -585,6 +585,10 @@ public final class Search34v4 implements Search4{
 		boolean hasMove = alliedKingAttacked;
 		final boolean inCheck = alliedKingAttacked;
 		for(int i = 0; i < length; i++){
+			if(i >=5 && nt == NodeType.cut){
+				nt = NodeType.all;
+			}
+			
 			final MoveSet set = mset[i];
 			final long pieceMask = set.piece;
 			final int promotionType = set.promotionType;
@@ -628,6 +632,7 @@ public final class Search34v4 implements Search4{
 				final boolean fullSearch;
 				//final int reduction;
 				if(depth > ONE_PLY && !pvMove && !isCapture && !inCheck && !isPawnPromotion &&
+						nt != NodeType.cut &&
 						!isDangerous && 
 						!isKillerMove &&
 						!isTTEMove){
