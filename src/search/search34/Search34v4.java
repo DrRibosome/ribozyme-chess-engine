@@ -14,6 +14,7 @@ import eval.ScoreEncoder;
 
 /** heavy search reductions for non-pv lines after depth 7*/
 public final class Search34v4 implements Search4{
+	/** pvs framework node types*/
 	private static enum NodeType{
 		pv(){
 			NodeType next(){
