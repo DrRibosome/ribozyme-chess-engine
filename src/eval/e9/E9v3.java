@@ -264,19 +264,19 @@ public final class E9v3 implements Evaluator3{
 			final int stage1MarginUpper; //margin for an upper cutoff
 			if(alliedQueens != 0 && enemyQueens != 0){
 				//both sides have queen, apply even margin
-				stage1MarginLower = 120;
-				stage1MarginUpper = -120;
+				stage1MarginLower = 95;
+				stage1MarginUpper = -92;
 			} else if(alliedQueens != 0){
 				//score will be higher because allied queen, no enemy queen
-				stage1MarginLower = 140;
-				stage1MarginUpper = -100;
+				stage1MarginLower = 138;
+				stage1MarginUpper = -114;
 			} else if(enemyQueens != 0){
 				//score will be lower because enemy queen, no allied queen
-				stage1MarginLower = 100;
-				stage1MarginUpper = -140;
+				stage1MarginLower = 112;
+				stage1MarginUpper = -148;
 			} else{
-				stage1MarginLower = 90;
-				stage1MarginUpper = -90;
+				stage1MarginLower = 165;
+				stage1MarginUpper = -163;
 			}
 			
 			score = Weight.interpolate(stage1Score, scale) + Weight.interpolate(S((int)(Weight.egScore(stage1Score)*.1), 0), scale);
@@ -310,20 +310,20 @@ public final class E9v3 implements Evaluator3{
 				final int stage2MarginUpper;
 				if(alliedQueens != 0 && enemyQueens != 0){
 					//both sides have queen, apply even margin
-					stage2MarginLower = 80;
-					stage2MarginUpper = -50;
+					stage2MarginLower = 2;
+					stage2MarginUpper = -2;
 				} else if(alliedQueens != 0){
 					//score will be higher because allied queen, no enemy queen
-					stage2MarginLower = 110;
-					stage2MarginUpper = -20;
+					stage2MarginLower = 2;
+					stage2MarginUpper = -2;
 				}  else if(enemyQueens != 0){
 					//score will be lower because enemy queen, no allied queen
-					stage2MarginLower = 20;
-					stage2MarginUpper = -110;
+					stage2MarginLower = 2;
+					stage2MarginUpper = -4;
 				} else{
 					//both sides no queen, aplly even margin
-					stage2MarginLower = 50;
-					stage2MarginUpper = -50;
+					stage2MarginLower = 0;
+					stage2MarginUpper = -0;
 				}
 				
 				if(score+stage2MarginLower <= lowerBound){
