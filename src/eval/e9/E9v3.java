@@ -316,10 +316,14 @@ public final class E9v3 implements Evaluator3{
 					//score will be higher because allied queen, no enemy queen
 					stage2MarginLower = 110;
 					stage2MarginUpper = -20;
-				} else{
+				}  else if(enemyQueens != 0){
 					//score will be lower because enemy queen, no allied queen
+					stage2MarginLower = 20;
+					stage2MarginUpper = -110;
+				} else{
+					//both sides no queen, aplly even margin
 					stage2MarginLower = 50;
-					stage2MarginUpper = -70;
+					stage2MarginUpper = -50;
 				}
 				
 				if(score+stage2MarginLower <= lowerBound){
