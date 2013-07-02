@@ -264,19 +264,19 @@ public final class E9v3 implements Evaluator3{
 			final int stage1MarginUpper; //margin for an upper cutoff
 			if(alliedQueens != 0 && enemyQueens != 0){
 				//both sides have queen, apply even margin
-				stage1MarginLower = 95;
-				stage1MarginUpper = -92;
+				stage1MarginLower = 82; //margin scores taken from profiled mean score diff, 1.7 std
+				stage1MarginUpper = -76;
 			} else if(alliedQueens != 0){
 				//score will be higher because allied queen, no enemy queen
-				stage1MarginLower = 138;
-				stage1MarginUpper = -114;
+				stage1MarginLower = 120;
+				stage1MarginUpper = -96;
 			} else if(enemyQueens != 0){
 				//score will be lower because enemy queen, no allied queen
-				stage1MarginLower = 112;
-				stage1MarginUpper = -148;
+				stage1MarginLower = 92;
+				stage1MarginUpper = -128;
 			} else{
-				stage1MarginLower = 165;
-				stage1MarginUpper = -163;
+				stage1MarginLower = 142;
+				stage1MarginUpper = -141;
 			}
 			
 			score = Weight.interpolate(stage1Score, scale) + Weight.interpolate(S((int)(Weight.egScore(stage1Score)*.1), 0), scale);
@@ -310,12 +310,12 @@ public final class E9v3 implements Evaluator3{
 				final int stage2MarginUpper;
 				if(alliedQueens != 0 && enemyQueens != 0){
 					//both sides have queen, apply even margin
-					stage2MarginLower = 2;
-					stage2MarginUpper = -2;
+					stage2MarginLower = 3;
+					stage2MarginUpper = -3;
 				} else if(alliedQueens != 0){
 					//score will be higher because allied queen, no enemy queen
-					stage2MarginLower = 2;
-					stage2MarginUpper = -2;
+					stage2MarginLower = 3;
+					stage2MarginUpper = -3;
 				}  else if(enemyQueens != 0){
 					//score will be lower because enemy queen, no allied queen
 					stage2MarginLower = 2;
