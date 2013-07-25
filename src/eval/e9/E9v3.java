@@ -620,8 +620,8 @@ public final class E9v3 implements Evaluator3{
 		}
 
 		//minimize avg king dist from pawns in endgame
-		final double n = s.pieceCounts[player][State4.PIECE_TYPE_PAWN];
-		if(n > 0) pawnScore += S(0, (int)(-kingDistAgg/n*5+.5));
+		//final double n = s.pieceCounts[player][State4.PIECE_TYPE_PAWN];
+		//if(n > 0) pawnScore += S(0, (int)(-kingDistAgg/n*5+.5));
 
 		if(player == 0){
 			phEntry.score1 = pawnScore;
