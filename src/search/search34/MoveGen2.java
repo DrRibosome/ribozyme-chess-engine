@@ -154,7 +154,13 @@ final class MoveGen2 {
 		dampen(f[1]);
 	}
 	
-	public void dampen(final FeatureSet f){
+	/**
+	 * Lowers all weights
+	 * <p> Called when a weight gets too high. Helps the history heuristic
+	 * stay in line with the game tree being searched
+	 * @param f
+	 */
+	private void dampen(final FeatureSet f){
 		f.passedPawnWeight >>>= 1;
 		f.pawnPromotionWeight >>>= 1;
 		for(int q = 1; q < 7; q++){
