@@ -121,7 +121,7 @@ final class MoveGen2 {
 	}
 	
 	public void betaCutoff(final int player, final int pieceType, final int startPos,
-			final int movePos, final int stackIndex, final State4 s, final int depth){
+			final int movePos, final State4 s, final int depth){
 		final FeatureSet f = this.f[player];
 
 		final int offset = depth*depth;
