@@ -699,7 +699,7 @@ public final class Search34v4 implements Search4{
 					} else{
 						moveGen.alphaRaised(player, MoveEncoder.getMovePieceType(encoding),
 								MoveEncoder.getPos1(encoding),
-								MoveEncoder.getPos2(encoding), stackIndex, s, depth/ONE_PLY);
+								MoveEncoder.getPos2(encoding), s, depth/ONE_PLY);
 					}
 				}
 			}

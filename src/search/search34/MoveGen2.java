@@ -79,7 +79,6 @@ final class MoveGen2 {
 	
 	public void reset(){
 		for(int a = 0; a < f.length; a++){
-			
 			f[a].passedPawnWeight = 0;
 			f[a].pawnPromotionWeight = 0;
 			for(int q = 0; q < 7; q++){
@@ -93,7 +92,7 @@ final class MoveGen2 {
 	}
 	
 	public void alphaRaised(final int player, final int pieceType, final int startPos,
-			final int movePos, final int stackIndex, final State4 s, final int depth){
+			final int movePos, final State4 s, final int depth){
 		final FeatureSet f = this.f[player];
 
 		final int offset = depth;
