@@ -98,7 +98,7 @@ final class MoveGen2 {
 		final int offset = depth;
 		
 		final int index = movePos;
-		final long move = 1L << movePos;
+		/*final long move = 1L << movePos;
 		if(pieceType == State4.PIECE_TYPE_PAWN){
 			final long ppMask = Masks.passedPawnMasks[player][index];
 			if((ppMask & s.pawns[1-player]) == 0){
@@ -108,7 +108,7 @@ final class MoveGen2 {
 					//f.pawnPromotionWeight += offset;
 				}
 			}
-		}
+		}*/
 		
 		f.posWeight[pieceType][startPos][index] += offset;
 		//f.pieceTypeWeight[pieceType] += offset;
@@ -126,7 +126,7 @@ final class MoveGen2 {
 		final int offset = (depth*depth) >>> 1;
 		
 		final int index = movePos;
-		final long move = 1L << movePos;
+		/*final long move = 1L << movePos;
 		if(pieceType == State4.PIECE_TYPE_PAWN){
 			final long ppMask = Masks.passedPawnMasks[player][index];
 			if((ppMask & s.pawns[1-player]) == 0){
@@ -136,7 +136,7 @@ final class MoveGen2 {
 					//f.pawnPromotionWeight += offset;
 				}
 			}
-		}
+		}*/
 		
 		f.posWeight[pieceType][startPos][index] += offset;
 		//f.pieceTypeWeight[pieceType] += offset;
