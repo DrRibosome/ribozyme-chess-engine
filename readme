@@ -1,0 +1,14 @@
+ribozyme engine
+Jack Crawford
+
+UCI engine (polyglot ribozyme.ini file included)
+
+requires java
+
+run with:
+java -XX:+AggressiveOpts -jar ribozyme.jar --hash $HASH --pawnHash $PAWNHASH
+
+$HASH and $PAWNHASH are in powers of 2
+
+example:
+java -XX:+AggressiveOpts -jar ribozyme.jar --hash 22 --pawnHash 18
