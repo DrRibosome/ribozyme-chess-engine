@@ -339,35 +339,4 @@ public final class Masks {
 		final long attacks2 = player == 0? (pawns << 9) & colMask2: (pawns >>> 9) & colMask2;
 		return attacks1 | attacks2;
 	}
-	
-	public static void main(String[] args){
-		System.out.println(getString(passedPawnMasks[0][56-8]));
-		
-		//System.out.println("here");
-		/*long l = 982312;
-		System.out.println(getString(l));
-		System.out.println(BitUtil.lsbIndex(l));*/
-		
-		/*Random r = new Random();
-		for(int i = 0; i < 99999; i++){
-			long templ = r.nextLong();
-			//templ = templ & -templ;
-			try{
-				BitUtil.lsbIndex(templ);
-			} catch(Exception e){
-				System.out.println(templ+"\n"+getString(templ));
-				e.printStackTrace();
-				System.exit(0);
-			}
-		}
-		
-		final int tests = 999999;
-		long time = System.currentTimeMillis();
-		for(int i = 0; i < tests; i++){
-			BitUtil.lsbIndex(r.nextLong());
-		}
-		time = System.currentTimeMillis()-time;
-		System.out.println("time (msec) = "+time);
-		System.out.println("msec/test = "+(time*1./tests));*/
-	}
 }
