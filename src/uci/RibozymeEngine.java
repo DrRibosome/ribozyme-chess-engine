@@ -37,31 +37,6 @@ public final class RibozymeEngine implements UCIEngine{
 		return name;
 	}
 	
-	private static String buildMoveString(final int player, final State4 s, final MoveSet moveStore){
-		final char promotionChar;
-		switch(moveStore.promotionType){
-		case State4.PROMOTE_QUEEN:
-			promotionChar = 'q';
-			break;
-		case State4.PROMOTE_ROOK:
-			promotionChar = 'r';
-			break;
-		case State4.PROMOTE_BISHOP:
-			promotionChar = 'b';
-			break;
-		case State4.PROMOTE_KNIGHT:
-			promotionChar = 'n';
-			break;
-		default:
-			promotionChar = 'x';
-			assert false;
-			break;
-		}
-		final boolean isPromoting = (s.pawns[player] & moveStore.piece) != 0 && (moveStore.moves & Masks.pawnPromotionMask[player]) != 0;
-		final String move = posString(BitUtil.lsbIndex(moveStore.piece))+posString(BitUtil.lsbIndex(moveStore.moves));
-		return move+(isPromoting? promotionChar: "");
-	}
-	
 	@Override
 	public void go(final GoParams params, final Position p) {
 		final int player = p.sideToMove;
@@ -77,22 +52,10 @@ public final class RibozymeEngine implements UCIEngine{
 			searchThread.startSearch(player, p.s, moveStore, params.depth);
 		}
 	}
-	
-	private static String posString(int pos){
-		return ""+(char)('a'+pos%8)+(char)('1'+pos/8);
-	}
 
 	@Override
 	public void stop() {
-		s.cutoffSearch();
-		final Thread t = this.timerThread;
-		if(t != null){
-			while(t.isAlive()){
-				try{
-					t.join();
-				} catch(InterruptedException e){}
-			}
-		}
+		timerThread.stopSearch();
 	}
 
 	@Override

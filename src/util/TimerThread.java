@@ -6,6 +6,7 @@ import java.util.concurrent.Semaphore;
 import search.MoveSet;
 import search.SearchListener2;
 import state4.BitUtil;
+import state4.Masks;
 import state4.State4;
 
 public final class TimerThread extends Thread{

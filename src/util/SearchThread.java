@@ -5,6 +5,8 @@ import java.util.concurrent.Semaphore;
 import search.MoveSet;
 import search.Search4;
 import search.SearchListener2;
+import state4.BitUtil;
+import state4.Masks;
 import state4.State4;
 
 /** always on daemon thread for searching*/
@@ -55,9 +57,9 @@ public final class SearchThread extends Thread{
 			p.maxDepth = maxDepth;
 			
 			searching = true;
+			
+			notify();
 		}
-		
-		interrupt();
 	}
 	
 	public void stopSearch(){
@@ -77,12 +79,13 @@ public final class SearchThread extends Thread{
 					} else{
 						s.search(p.player, p.s, p.moveStore, p.maxDepth);
 					}
+					System.out.println("bestmove "+buildMoveString(p.player, p.s, p.moveStore));
 					sem.release();
 					searching = false;
 				}
 			}
 			
-			if(!searching){
+			while(!searching){
 				synchronized(this){
 					try{
 						wait();
@@ -90,5 +93,34 @@ public final class SearchThread extends Thread{
 				}
 			}
 		}
+	}
+	
+	private static String buildMoveString(final int player, final State4 s, final MoveSet moveStore){
+		final char promotionChar;
+		switch(moveStore.promotionType){
+		case State4.PROMOTE_QUEEN:
+			promotionChar = 'q';
+			break;
+		case State4.PROMOTE_ROOK:
+			promotionChar = 'r';
+			break;
+		case State4.PROMOTE_BISHOP:
+			promotionChar = 'b';
+			break;
+		case State4.PROMOTE_KNIGHT:
+			promotionChar = 'n';
+			break;
+		default:
+			promotionChar = 'x';
+			assert false;
+			break;
+		}
+		final boolean isPromoting = (s.pawns[player] & moveStore.piece) != 0 && (moveStore.moves & Masks.pawnPromotionMask[player]) != 0;
+		final String move = posString(BitUtil.lsbIndex(moveStore.piece))+posString(BitUtil.lsbIndex(moveStore.moves));
+		return move+(isPromoting? promotionChar: "");
+	}
+
+	private static String posString(int pos){
+		return ""+(char)('a'+pos%8)+(char)('1'+pos/8);
 	}
 }
