@@ -11,8 +11,8 @@ import time.TimerThread5;
 
 public class EngineThread extends Thread{
 	private final static class Params{
-		GoParams goParams;
-		Position pos;
+		volatile GoParams goParams;
+		volatile Position pos;
 	}
 	
 	private final Params p = new Params();
