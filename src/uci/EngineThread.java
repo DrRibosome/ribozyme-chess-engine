@@ -27,7 +27,7 @@ public class EngineThread extends Thread{
 		setDaemon(true);
 	}
 	
-	public void setParameters(GoParams goParams, Position pos){
+	public void startSearch(GoParams goParams, Position pos){
 		synchronized(p){
 			p.goParams = goParams;
 			p.pos = pos;

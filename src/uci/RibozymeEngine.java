@@ -17,12 +17,16 @@ public final class RibozymeEngine implements UCIEngine{
 	private final Search4 s;
 	private Thread t;
 	private final MoveSet moveStore = new MoveSet();
+	private final EngineThread engine;
 	
 	public RibozymeEngine(final int hashSize, final int pawnHashSize){
 		
 		final Evaluator3 e = new E9v3(pawnHashSize);
 		
 		s = new Search34v4(e, hashSize, true);
+		
+		engine = new EngineThread(s);
+		engine.start();
 	}
 	
 	@Override
@@ -59,15 +63,7 @@ public final class RibozymeEngine implements UCIEngine{
 	public void go(final GoParams params, final Position p) {
 		final int player = p.sideToMove;
 		if(params.type == GoParams.SearchType.plan){ //allocate time
-			t = new Thread(){
-				public void run(){
-					final int inc = params.increment[player];
-					TimerThread5.searchBlocking(s, p.s, player, params.time[player], inc, moveStore);
-					System.out.println("bestmove "+buildMoveString(player, p.s, moveStore));
-				}
-			};
-			t.setDaemon(true);
-			t.start();
+			engine.startSearch(params, p);
 		} else if(params.type == GoParams.SearchType.fixedTime){ //fixed time per move
 			t = new Thread(){
 				public void run(){
@@ -92,26 +88,10 @@ public final class RibozymeEngine implements UCIEngine{
 			};
 			timer.setDaemon(true);
 			timer.start();
-		} else if(params.type == GoParams.SearchType.infinite){
+		} else if(params.type == GoParams.SearchType.infinite ||
+				params.type == GoParams.SearchType.fixedDepth){
 			assert false;
-			t = new Thread(){
-				public void run(){
-					s.search(player, p.s, moveStore);
-					System.out.println("bestmove "+buildMoveString(player, p.s, moveStore));
-				}
-			};
-			t.setDaemon(true);
-			t.start();
-		} else if(params.type == GoParams.SearchType.fixedDepth){
-			assert false;
-			t = new Thread(){
-				public void run(){
-					s.search(player, p.s, moveStore, params.depth);
-					System.out.println("bestmove "+buildMoveString(player, p.s, moveStore));
-				}
-			};
-			t.setDaemon(true);
-			t.start();
+			engine.startSearch(params, p);
 		}
 	}
 	
