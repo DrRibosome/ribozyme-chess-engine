@@ -79,7 +79,6 @@ final class MoveGen2 {
 	
 	public void reset(){
 		for(int a = 0; a < f.length; a++){
-			
 			f[a].passedPawnWeight = 0;
 			f[a].pawnPromotionWeight = 0;
 			for(int q = 0; q < 7; q++){
@@ -93,24 +92,23 @@ final class MoveGen2 {
 	}
 	
 	public void alphaRaised(final int player, final int pieceType, final int startPos,
-			final int movePos, final int stackIndex, final State4 s, final int depth){
+			final int movePos, final State4 s, final int depth){
 		final FeatureSet f = this.f[player];
 
 		final int offset = depth;
 		
 		final int index = movePos;
-		final long move = 1L << movePos;
+		/*final long move = 1L << movePos;
 		if(pieceType == State4.PIECE_TYPE_PAWN){
 			final long ppMask = Masks.passedPawnMasks[player][index];
 			if((ppMask & s.pawns[1-player]) == 0){
-				f.passedPawnWeight += offset;
-				
+				//f.passedPawnWeight += offset;
 				final long pomotionMask = Masks.pawnPromotionMask[player];
 				if((move & pomotionMask) != 0){
-					f.pawnPromotionWeight += offset;
+					//f.pawnPromotionWeight += offset;
 				}
 			}
-		}
+		}*/
 		
 		f.posWeight[pieceType][startPos][index] += offset;
 		//f.pieceTypeWeight[pieceType] += offset;
@@ -122,24 +120,23 @@ final class MoveGen2 {
 	}
 	
 	public void betaCutoff(final int player, final int pieceType, final int startPos,
-			final int movePos, final int stackIndex, final State4 s, final int depth){
+			final int movePos, final State4 s, final int depth){
 		final FeatureSet f = this.f[player];
 
-		final int offset = depth*depth;
+		final int offset = (depth*depth) >>> 1;
 		
 		final int index = movePos;
-		final long move = 1L << movePos;
+		/*final long move = 1L << movePos;
 		if(pieceType == State4.PIECE_TYPE_PAWN){
 			final long ppMask = Masks.passedPawnMasks[player][index];
 			if((ppMask & s.pawns[1-player]) == 0){
-				f.passedPawnWeight += offset;
-				
+				//f.passedPawnWeight += offset;
 				final long pomotionMask = Masks.pawnPromotionMask[player];
 				if((move & pomotionMask) != 0){
-					f.pawnPromotionWeight += offset;
+					//f.pawnPromotionWeight += offset;
 				}
 			}
-		}
+		}*/
 		
 		f.posWeight[pieceType][startPos][index] += offset;
 		//f.pieceTypeWeight[pieceType] += offset;
@@ -155,7 +152,13 @@ final class MoveGen2 {
 		dampen(f[1]);
 	}
 	
-	public void dampen(final FeatureSet f){
+	/**
+	 * Lowers all weights
+	 * <p> Called when a weight gets too high. Helps the history heuristic
+	 * stay in line with the game tree being searched
+	 * @param f
+	 */
+	private void dampen(final FeatureSet f){
 		f.passedPawnWeight >>>= 1;
 		f.pawnPromotionWeight >>>= 1;
 		for(int q = 1; q < 7; q++){

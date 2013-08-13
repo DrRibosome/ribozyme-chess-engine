@@ -563,9 +563,7 @@ public final class E9v3 implements Evaluator3{
 		final long enemyPawns = s.pawns[1-player];
 		final long alliedPawns = s.pawns[player];
 		final long all = alliedPawns | enemyPawns;
-		final int kingIndex = BitUtil.lsbIndex(s.kings[player]);
 
-		int kingDistAgg = 0; //king distance aggregator
 		for(long pawns = alliedPawns; pawns != 0; pawns &= pawns-1){
 			final long p = pawns & -pawns;
 			final int index = BitUtil.lsbIndex(pawns);
@@ -610,18 +608,7 @@ public final class E9v3 implements Evaluator3{
 					backwardPawnsCount++;
 				}
 			}
-
-			//allied king distance, used to encourage king supporting pawns in endgame
-			final int kingXDist = Math.abs(kingIndex%8 - index%8);
-			final int kingYDist = Math.abs((kingIndex>>>3) - (index>>>3));
-			final int alliedKingDist = kingXDist > kingYDist? kingXDist: kingYDist;
-			assert alliedKingDist < 8;
-			kingDistAgg += alliedKingDist-1;
 		}
-
-		//minimize avg king dist from pawns in endgame
-		final double n = s.pieceCounts[player][State4.PIECE_TYPE_PAWN];
-		if(n > 0) pawnScore += S(0, (int)(-kingDistAgg/n*5+.5));
 
 		if(player == 0){
 			phEntry.score1 = pawnScore;

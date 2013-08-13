@@ -1,43 +1,36 @@
-package time;
+package util;
 
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.Semaphore;
 
 import search.MoveSet;
-import search.Search4;
 import search.SearchListener2;
 import state4.BitUtil;
+import state4.Masks;
 import state4.State4;
 
-public final class TimerThread5 extends Thread{
-	public static interface Controller{
-		public void stopSearch();
-		public boolean isFinished();
+public final class TimerThread extends Thread{
+	enum SearchType{
+		planningSearch,
+		fixedTimeSearch
 	}
 	
-	private final static int failLow = -1;
-	private final static int failHigh = 1;
-	private final AtomicBoolean stopSearch = new AtomicBoolean(false);
-	private final AtomicBoolean isFinished = new AtomicBoolean(false);
-	
-	private final Search4 search;
-	private final State4 s;
-	private long time;
-	private long inc;
-	private int player;
-	private final MoveSet moveStore;
-	
-	private static final boolean debug = false;
-	
-	/** stores extra time from aspiration window failures*/
-	private final LinkedBlockingQueue<Integer> q = new LinkedBlockingQueue<Integer>();
 	private final static class PlySearchResult{
 		int ply;
 		long move;
 		int score;
 	}
-	private final LinkedBlockingQueue<PlySearchResult> plyq = new LinkedBlockingQueue<PlySearchResult>();
 	
+	private final class TimeParams{
+		volatile SearchType type;
+		
+		volatile State4 s;
+		volatile int player;
+		volatile long time;
+		volatile long inc;
+		volatile MoveSet moveStore;
+	}
+
 	private final SearchListener2 l = new SearchListener2() {
 		@Override
 		public void plySearched(long move, int ply, int score) {
@@ -46,54 +39,121 @@ public final class TimerThread5 extends Thread{
 			temp.ply = ply;
 			temp.score = score;
 			plyq.add(temp);
-			TimerThread5.this.interrupt();
+			
+			TimerThread.this.interrupt();
 		}
 		@Override
 		public void failLow(int ply) {
-			//q.add(failLow);
+			/*q.add(failLow);
+			TimerThread.this.interrupt();*/
 		}
 		@Override
 		public void failHigh(int ply) {
-			//q.add(failHigh);
+			/*q.add(failHigh);
+			TimerThread.this.interrupt();*/
 		}
 	};
 	
-	private TimerThread5(Search4 search, State4 s, int player, long time, long inc, MoveSet moveStore) {
-		setDaemon(true);
-		this.search = search;
-		this.s = s;
-		this.player = player;
-		this.time = time;
-		this.inc = inc;
-		this.moveStore = moveStore;
+	/** stores extra time from aspiration window failures*/
+	private final LinkedBlockingQueue<Integer> q = new LinkedBlockingQueue<Integer>();
+	private final LinkedBlockingQueue<PlySearchResult> plyq = new LinkedBlockingQueue<PlySearchResult>();
+	private final TimeParams p = new TimeParams();
+	private final SearchThread searcher;
+	private final Semaphore sem = new Semaphore(1);
+	private volatile boolean searching = false;
+	
+	public TimerThread(SearchThread s){
+		this.searcher = s;
 	}
 	
 	@Override
 	public void run(){
+		for(;;){
+			if(searching){
+				sem.acquireUninterruptibly();
+				synchronized(p){
+					searcher.setSearchListener(l);
+					searcher.startSearch(p.player, p.s, p.moveStore);
+					
+					if(p.type == SearchType.planningSearch){
+						planningTimeSearch(p);
+					} else if(p.type == SearchType.fixedTimeSearch){
+						fixedTimeSearch(p);
+					}
+					
+					searching = false;
+				}
+				sem.release();
+			}
+			
+			while(!searching){
+				try{
+					synchronized(this){
+						wait();
+					}
+				} catch(InterruptedException e){}
+			}
+		}
+	}
+	
+	/**
+	 * start a search that plans its time dynamically based on positional characteristics and alloted time
+	 * @param search
+	 * @param s
+	 * @param player
+	 * @param time
+	 * @param inc
+	 */
+	public void startTimePlanningSearch(State4 s, int player, long time, long inc, MoveSet moveStore){
+		synchronized(p){
+			p.type = SearchType.planningSearch;
+			p.s = s;
+			p.player = player;
+			p.time = time;
+			p.inc = inc;
+			p.moveStore = moveStore;
+			
+			searching = true;
+		}
+		interrupt();
+	}
+	
+	public void startFixedTimeSearch(State4 s, int player, long time, MoveSet moveStore){
+		synchronized(p){
+			p.type = SearchType.fixedTimeSearch;
+			p.s = s;
+			p.player = player;
+			p.time = time;
+			p.moveStore = moveStore;
+			
+			searching = true;
+		}
+	}
+	
+	private void fixedTimeSearch(TimeParams p){
+		long targetTime = p.time;
+		
+		final long start = System.currentTimeMillis();
+		long time;
+		while((time = System.currentTimeMillis()-start) < targetTime){
+			try{
+				Thread.sleep(time/2);
+			} catch(InterruptedException e){}
+		}
+		searcher.stopSearch();
+	}
+	
+	private void planningTimeSearch(TimeParams p){
+		State4 s = p.s;
+		long time = p.time;
+		long inc = p.inc;
+		
 		long start = System.currentTimeMillis();
 		final int material = getMaterial(s);
 		long target = time / (getHalfMovesRemaining(material)/2);
 		target *= .8;
 		target += .8*inc;
-		
-		
-		search.setListener(l);
-		//final long maxTime = (long)(time*(material >= 60? .04: .06));
 		long maxTime = (long)(target * 1.3);
-		
-		if(debug){
-			System.out.println("moves remaining = "+(getHalfMovesRemaining(material)/2));
-			System.out.println("target time = "+target);
-			System.out.println("max time = "+maxTime);
-		}
-		
-		final Thread t = new Thread(){
-			public void run(){
-				search.search(player, s, moveStore);
-			}
-		};
-		t.setDaemon(true);
-		t.start();
 		
 		long move = 0;
 		int currentPly = 0;
@@ -117,10 +177,8 @@ public final class TimerThread5 extends Thread{
 		if(pawns <= 4) minDepth++;
 		if(checking) minDepth++;
 		
-		
-		while(System.currentTimeMillis()-start < target &&
-				System.currentTimeMillis()-start < maxTime && 
-				!stopSearch.get()){ //so we dont keep extending forever
+		long currentTime;
+		while((currentTime = System.currentTimeMillis()-start) < target && currentTime < maxTime && searching){
 			
 			while(!plyq.isEmpty()){
 				PlySearchResult r = plyq.poll();
@@ -145,66 +203,35 @@ public final class TimerThread5 extends Thread{
 			}
 			
 			//handle adjustments from search failures
-			while(!q.isEmpty()){
+			/*while(!q.isEmpty()){
 				//int failType = q.poll();
 				//double scale = failType == failHigh? .005: .01;
 				double scale = 0;
 				target += target*scale;
-			}
+			}*/
 
-			final long remainingTime = (target-(System.currentTimeMillis()-start))/2;
-			if(remainingTime > 10){
+			final long sleepTime = (target-(System.currentTimeMillis()-start))/2;
+			if(sleepTime >= 1){
 				try{
-					Thread.sleep(remainingTime);
+					Thread.sleep(sleepTime);
 				} catch(InterruptedException e){}
 			}
 		}
 		
-		search.cutoffSearch();
-		while(t.isAlive()){
-			search.cutoffSearch();
-			try{
-				t.join(500);
-			} catch(InterruptedException e){}
-		}
-		isFinished.set(true);
+		searcher.stopSearch();
 	}
 	
+	public void stopSearch(){
+		searching = false;
+		searcher.stopSearch();
+		
+		sem.acquireUninterruptibly();
+		sem.release();
+	}
+
 	/** tests to see if the passed player is in check*/
 	private static boolean isChecked(final int player, final State4 s){
 		return State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
-	}
-	
-	public static void searchBlocking(Search4 search, State4 s, int player, long time, long inc, MoveSet moveStore){
-		final TimerThread5 t = new TimerThread5(search, s, player, time, inc, moveStore);
-		t.start();
-		while(t.isAlive()){
-			try{
-				t.join();
-			} catch(InterruptedException e){}
-		}
-	}
-	
-	public static Controller searchNonBlocking(final Search4 search, final State4 s, final int player,
-			final long time, final long inc, final MoveSet moveStore){
-		final TimerThread5 t = new TimerThread5(search, s, player, time, inc, moveStore);
-		final Controller temp = new Controller(){
-			@Override
-			public void stopSearch() {
-				t.endSearch();
-			}
-			@Override
-			public boolean isFinished() {
-				return t.isFinished.get();
-			}
-		};
-		t.start();
-		return temp;
-	}
-	
-	private void endSearch(){
-		stopSearch.set(true);
-		interrupt();
 	}
 	
 	private static int getMaterial(State4 s){
@@ -234,4 +261,8 @@ public final class TimerThread5 extends Thread{
 			return (int)(5./4*material-30);
 		}
 	}
-};
+
+	public SearchListener2 getListener(){
+		return l;
+	}
+}

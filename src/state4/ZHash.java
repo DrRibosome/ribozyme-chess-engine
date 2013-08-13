@@ -6,7 +6,9 @@ import java.util.Random;
 public final class ZHash {
 	
 	/** indexed [player][type][position]*/
-	public final long[][][] zhash;
+	public final long[] zhash;
+	/** player information block size in {@link #zhash}, used to determine index offsets*/
+	private final static int playerOffset = 6*64;
 	
 	/** records castling rights, indexed [player][castle-side] where castle-side==left? 0: 1*/
 	public final long[][] canCastle;
@@ -25,12 +27,13 @@ public final class ZHash {
 	
 	public ZHash(final long seed){
 		Random r = new Random(seed);
-		zhash = new long[2][7][64];
+		
+		zhash = new long[2*playerOffset];
 		for(int q = 0; q < 2; q++){
-			for(int i = 0; i < zhash[0].length; i++){
+			for(int i = 0; i < 6; i++){
 				for(int a = 0; a < 64; a++){
-					zhash[q][i][a] = r.nextLong();
-					//System.out.println(zhash[q][i][a]);
+					int index = q*playerOffset + i*64 + a;
+					zhash[index] = r.nextLong();
 				}
 			}
 		}
@@ -53,5 +56,10 @@ public final class ZHash {
 		canCastle[0][1] = r.nextLong();
 		canCastle[1][0] = r.nextLong();
 		canCastle[1][1] = r.nextLong();
+	}
+	
+	public long getZHash(final int player, final int pieceType, final int position){
+		final int index = player*playerOffset + (pieceType-1)*64 + position;
+		return zhash[index];
 	}
 }
