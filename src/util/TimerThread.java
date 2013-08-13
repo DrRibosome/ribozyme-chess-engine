@@ -68,9 +68,7 @@ public final class TimerThread extends Thread{
 	
 	@Override
 	public void run(){
-		
 		for(;;){
-			
 			if(searching){
 				sem.acquireUninterruptibly();
 				synchronized(p){
@@ -111,6 +109,7 @@ public final class TimerThread extends Thread{
 			p.type = SearchType.planningSearch;
 			p.s = s;
 			p.player = player;
+			p.time = time;
 			p.inc = inc;
 			p.moveStore = moveStore;
 			
@@ -124,6 +123,7 @@ public final class TimerThread extends Thread{
 			p.type = SearchType.fixedTimeSearch;
 			p.s = s;
 			p.player = player;
+			p.time = time;
 			p.moveStore = moveStore;
 			
 			searching = true;
@@ -147,7 +147,6 @@ public final class TimerThread extends Thread{
 		State4 s = p.s;
 		long time = p.time;
 		long inc = p.inc;
-		
 		
 		long start = System.currentTimeMillis();
 		final int material = getMaterial(s);
