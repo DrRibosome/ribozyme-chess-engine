@@ -6,7 +6,6 @@ import search.search34.Search34v4;
 import state4.BitUtil;
 import state4.Masks;
 import state4.State4;
-import time.TimerThread5;
 import eval.Evaluator3;
 import eval.e9.E9v3;
 
