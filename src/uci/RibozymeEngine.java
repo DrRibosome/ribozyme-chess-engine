@@ -45,10 +45,8 @@ public final class RibozymeEngine implements UCIEngine{
 		} else if(params.type == GoParams.SearchType.fixedTime){ //fixed time per move
 			timerThread.startFixedTimeSearch(p.s, player, params.time[player], moveStore);
 		} else if(params.type == GoParams.SearchType.infinite){
-			assert false;
 			searchThread.startSearch(player, p.s, moveStore);
 		} else if(params.type == GoParams.SearchType.fixedDepth){
-			assert false;
 			searchThread.startSearch(player, p.s, moveStore, params.depth);
 		}
 	}
