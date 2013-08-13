@@ -57,9 +57,8 @@ public final class SearchThread extends Thread{
 			p.maxDepth = maxDepth;
 			
 			searching = true;
-			
-			notify();
 		}
+		interrupt();
 	}
 	
 	public void stopSearch(){

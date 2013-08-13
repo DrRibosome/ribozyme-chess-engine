@@ -116,6 +116,7 @@ public final class TimerThread extends Thread{
 			
 			searching = true;
 		}
+		interrupt();
 	}
 	
 	public void startFixedTimeSearch(State4 s, int player, long time, MoveSet moveStore){
@@ -130,7 +131,6 @@ public final class TimerThread extends Thread{
 	}
 	
 	private void fixedTimeSearch(TimeParams p){
-		State4 s = p.s;
 		long targetTime = p.time;
 		
 		final long start = System.currentTimeMillis();
