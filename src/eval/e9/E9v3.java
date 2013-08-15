@@ -104,11 +104,11 @@ public final class E9v3 implements Evaluator3{
 	static{
 		//clutterIndex calculated by linear interpolation
 		clutterIndex = new double[64];
-		final double start = .9;
-		final double end = 1.1;
+		final double start = .8;
+		final double end = 1.2;
 		final double diff = end-start;
 		for(int a = 0; a < 64; a++){
-			clutterIndex[a] = start + diff*(a/64.);
+			clutterIndex[a] = start + diff*(a/63.);
 		}
 		
 		kingDangerTable = new int[128];
