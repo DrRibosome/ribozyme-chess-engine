@@ -75,8 +75,6 @@ public final class Search34v4 implements Search4{
 	/** sequence number for hash entries*/
 	private int seq;
 	private final MoveGen2 moveGen = new MoveGen2();
-	/** controls printing pv to console for debugging*/
-	private final boolean printPV;
 	private final TTEntry fillEntry = new TTEntry();
 	private volatile boolean cutoffSearch = false;
 	private final static int[][] lmrReduction = new int[32][64];
@@ -99,12 +97,8 @@ public final class Search34v4 implements Search4{
 	private static int lmrReduction(final int depth, final int moveCount){
 		return lmrReduction[depth > 31? 31: depth][moveCount > 63? 63: moveCount];
 	}
-
-	public Search34v4(Evaluator3 e, int hashSize){
-		this(e, hashSize, false);
-	}
 	
-	public Search34v4(Evaluator3 e, int hashSize, boolean printPV){
+	public Search34v4(Evaluator3 e, int hashSize){
 		this.e = e;
 		
 		//m = new ZMap3(hashSize);
@@ -115,8 +109,6 @@ public final class Search34v4 implements Search4{
 			stack[i] = new MoveList();
 		}
 		stats.scores = new int[stackSize];
-		
-		this.printPV = printPV;
 	}
 	
 	public SearchStat32k getStats(){
@@ -221,13 +213,11 @@ public final class Search34v4 implements Search4{
 				if(l != null){
 					l.plySearched(bestMove, i, score);
 				}
-				if(printPV){
-					final String pvString = getPVString(player, s, "", 0, i);
-					System.out.println("info depth "+i+" score cp "+(int)score+" time "+
-							((System.currentTimeMillis()-stats.searchTime)/1000.)+
-							" nodes "+stats.nodesSearched+" nps "+(int)(stats.nodesSearched*1000./
-							(System.currentTimeMillis()-stats.searchTime))+" pv "+pvString);
-				}
+				final String pvString = getPVString(player, s, "", 0, i);
+				System.out.println("info depth "+i+" score cp "+(int)score+" time "+
+						((System.currentTimeMillis()-stats.searchTime)/1000.)+
+						" nodes "+stats.nodesSearched+" nps "+(int)(stats.nodesSearched*1000./
+						(System.currentTimeMillis()-stats.searchTime))+" pv "+pvString);
 			}
 			if(i-1 < stats.scores.length){
 				stats.scores[i-1] = score;
@@ -418,12 +408,12 @@ public final class Search34v4 implements Search4{
 				!tteMove &&
 				!pawnPrePromotion){
 			
-			final int razorMargin = 270 * (int)depth*50;
+			final int razorMargin = 270 * (int)depth*50; //error here, should be fixed
 			if(eval + razorMargin < beta){
 				final int rbeta = beta-razorMargin;
 				final int v = qsearch(player, rbeta-1, rbeta, 0, stackIndex+1, nt, s);
 				if(v <= rbeta-1){
-					return v+rbeta; // return v+rbeta => score (one level up) < alpha 
+					return v+rbeta;
 				}
 			}
 		}

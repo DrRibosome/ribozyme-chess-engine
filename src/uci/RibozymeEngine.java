@@ -24,7 +24,7 @@ public final class RibozymeEngine implements UCIEngine{
 		
 		final Evaluator3 e = new E9v3(pawnHashSize);
 		
-		s = new Search34v4(e, hashSize, true);
+		s = new Search34v4(e, hashSize);
 		
 		searchThread = new SearchThread(s);
 		timerThread = new TimerThread(searchThread);
