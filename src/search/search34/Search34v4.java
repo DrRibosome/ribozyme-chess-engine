@@ -472,7 +472,7 @@ public final class Search34v4 implements Search4{
 		if(!tteMove && depth >= (nt == NodeType.pv? 5: 8)*ONE_PLY &&
 				(nt == NodeType.pv || (!alliedKingAttacked && eval+256 >= beta))){
 			final int d = nt == NodeType.pv? depth-2*ONE_PLY: depth/2;
-			stack[stackIndex+1].futilityPrune = ml.futilityPrune;
+			stack[stackIndex+1].futilityPrune = false; //would never have arrived here if futility pruned above, set false
 			stack[stackIndex+1].skipNullMove = true;
 			recurse(player, alpha, beta, d, nt, stackIndex+1, s);
 			stack[stackIndex+1].skipNullMove = false;
