@@ -83,6 +83,9 @@ public final class TimerThread extends Thread{
 					
 					searching = false;
 				}
+				synchronized(this){
+					notifyAll();
+				}
 				sem.release();
 			}
 			
@@ -127,6 +130,18 @@ public final class TimerThread extends Thread{
 			p.moveStore = moveStore;
 			
 			searching = true;
+		}
+		interrupt();
+	}
+	
+	public void startFixedTimeSearchBlocking(State4 s, int player, long time, MoveSet moveStore){
+		startFixedTimeSearch(s, player, time, moveStore);
+		synchronized(this){
+			while(searching){
+				try{
+					wait();
+				} catch(InterruptedException e){}
+			}
 		}
 	}
 	
