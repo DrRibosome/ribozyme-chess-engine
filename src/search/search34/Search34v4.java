@@ -370,6 +370,7 @@ public final class Search34v4 implements Search4{
 		final boolean nonMateScore = Math.abs(beta) < 70000 && Math.abs(alpha) < 70000;
 		
 		//futility pruning
+		//refute previous passive move when we are really far ahead
 		if(nt != NodeType.pv && depth <= 3*ONE_PLY &&
 				!pawnPrePromotion &&
 				!alliedKingAttacked &&
@@ -394,6 +395,7 @@ public final class Search34v4 implements Search4{
 		}
 		
 		//razoring
+		//quick check for refutation of previous refutation (cut) move
 		int razorReduction = 0;
 		if(nt == NodeType.all &&
 				nonMateScore &&
@@ -407,6 +409,7 @@ public final class Search34v4 implements Search4{
 				final int r = alpha-razorMargin;
 				final int v = qsearch(player, r-1, r, 0, stackIndex+1, nt, s);
 				if(v <= r-1){
+					//fail low, probably cant recover from their refutation move
 					return v+razorMargin;
 				}
 			}
