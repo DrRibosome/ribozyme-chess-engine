@@ -6,7 +6,6 @@ import java.util.concurrent.Semaphore;
 import search.MoveSet;
 import search.SearchListener2;
 import state4.BitUtil;
-import state4.Masks;
 import state4.State4;
 
 public final class TimerThread extends Thread{
@@ -64,6 +63,7 @@ public final class TimerThread extends Thread{
 	
 	public TimerThread(SearchThread s){
 		this.searcher = s;
+		setDaemon(true);
 	}
 	
 	@Override
@@ -82,6 +82,9 @@ public final class TimerThread extends Thread{
 					}
 					
 					searching = false;
+				}
+				synchronized(this){
+					notifyAll();
 				}
 				sem.release();
 			}
@@ -127,6 +130,18 @@ public final class TimerThread extends Thread{
 			p.moveStore = moveStore;
 			
 			searching = true;
+		}
+		interrupt();
+	}
+	
+	public void startFixedTimeSearchBlocking(State4 s, int player, long time, MoveSet moveStore){
+		startFixedTimeSearch(s, player, time, moveStore);
+		synchronized(this){
+			while(searching){
+				try{
+					wait();
+				} catch(InterruptedException e){}
+			}
 		}
 	}
 	

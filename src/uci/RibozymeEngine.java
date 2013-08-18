@@ -3,9 +3,6 @@ package uci;
 import search.MoveSet;
 import search.Search4;
 import search.search34.Search34v4;
-import state4.BitUtil;
-import state4.Masks;
-import state4.State4;
 import util.SearchThread;
 import util.TimerThread;
 import eval.Evaluator3;
@@ -24,7 +21,7 @@ public final class RibozymeEngine implements UCIEngine{
 		
 		final Evaluator3 e = new E9v3(pawnHashSize);
 		
-		s = new Search34v4(e, hashSize, true);
+		s = new Search34v4(e, hashSize);
 		
 		searchThread = new SearchThread(s);
 		timerThread = new TimerThread(searchThread);

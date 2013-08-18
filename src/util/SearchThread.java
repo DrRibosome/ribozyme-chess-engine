@@ -26,7 +26,7 @@ public final class SearchThread extends Thread{
 	
 	public SearchThread(Search4 s){
 		this.s = s;
-		setDaemon(false);
+		setDaemon(true);
 	}
 	
 	public void setSearchListener(SearchListener2 l){

@@ -75,8 +75,6 @@ public final class Search34v4 implements Search4{
 	/** sequence number for hash entries*/
 	private int seq;
 	private final MoveGen2 moveGen = new MoveGen2();
-	/** controls printing pv to console for debugging*/
-	private final boolean printPV;
 	private final TTEntry fillEntry = new TTEntry();
 	private volatile boolean cutoffSearch = false;
 	private final static int[][] lmrReduction = new int[32][64];
@@ -99,12 +97,8 @@ public final class Search34v4 implements Search4{
 	private static int lmrReduction(final int depth, final int moveCount){
 		return lmrReduction[depth > 31? 31: depth][moveCount > 63? 63: moveCount];
 	}
-
-	public Search34v4(Evaluator3 e, int hashSize){
-		this(e, hashSize, false);
-	}
 	
-	public Search34v4(Evaluator3 e, int hashSize, boolean printPV){
+	public Search34v4(Evaluator3 e, int hashSize){
 		this.e = e;
 		
 		//m = new ZMap3(hashSize);
@@ -115,8 +109,6 @@ public final class Search34v4 implements Search4{
 			stack[i] = new MoveList();
 		}
 		stats.scores = new int[stackSize];
-		
-		this.printPV = printPV;
 	}
 	
 	public SearchStat32k getStats(){
@@ -221,13 +213,11 @@ public final class Search34v4 implements Search4{
 				if(l != null){
 					l.plySearched(bestMove, i, score);
 				}
-				if(printPV){
-					final String pvString = getPVString(player, s, "", 0, i);
-					System.out.println("info depth "+i+" score cp "+(int)score+" time "+
-							((System.currentTimeMillis()-stats.searchTime)/1000.)+
-							" nodes "+stats.nodesSearched+" nps "+(int)(stats.nodesSearched*1000./
-							(System.currentTimeMillis()-stats.searchTime))+" pv "+pvString);
-				}
+				final String pvString = getPVString(player, s, "", 0, i);
+				System.out.println("info depth "+i+" score cp "+(int)score+" time "+
+						((System.currentTimeMillis()-stats.searchTime)/1000.)+
+						" nodes "+stats.nodesSearched+" nps "+(int)(stats.nodesSearched*1000./
+						(System.currentTimeMillis()-stats.searchTime))+" pv "+pvString);
 			}
 			if(i-1 < stats.scores.length){
 				stats.scores[i-1] = score;
@@ -377,31 +367,26 @@ public final class Search34v4 implements Search4{
 		final boolean alliedKingAttacked = isChecked(player, s);
 		final boolean pawnPrePromotion = (s.pawns[player] & Masks.pawnPrePromote[player]) != 0;
 		final boolean hasNonPawnMaterial = s.pieceCounts[player][0]-s.pieceCounts[player][State4.PIECE_TYPE_PAWN] > 1;
+		final boolean nonMateScore = Math.abs(beta) < 70000 && Math.abs(alpha) < 70000;
 		
-		//static null move pruning
-		//
-		//prune here if we are doing really well
-		//
-		//check that previous move wasnt a take to counter horizon effect of
-		//taking a high value piece then assessing that we are ahead before
-		//they have a chance to take back
-		if(nt != NodeType.pv && depth < 4*ONE_PLY &&
+		//futility pruning
+		//refute previous passive move when we are really far ahead
+		if(nt != NodeType.pv && depth <= 3*ONE_PLY &&
 				!pawnPrePromotion &&
 				!alliedKingAttacked &&
 				hasNonPawnMaterial &&
-				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000 &&
+				nonMateScore &&
 				ml.futilityPrune){
-			final int d = (int)depth;
+			
 			final int futilityMargin;
-			if(d <= 1*ONE_PLY){
+			if(depth <= 1*ONE_PLY){
 				futilityMargin = 250;
-			} else if(d <= 2*ONE_PLY){
+			} else if(depth <= 2*ONE_PLY){
 				futilityMargin = 300;
-			} else if(d <= 3*ONE_PLY){
+			} else { //depth <= 3*ONE_PLY
 				futilityMargin = 425;
-			} else{
-				futilityMargin = 500; //prob never reaches here (currently only full ply extensions)
 			}
+			
 			final int futilityScore = eval - futilityMargin;
 			
 			if(futilityScore >= beta){
@@ -410,20 +395,22 @@ public final class Search34v4 implements Search4{
 		}
 		
 		//razoring
+		//quick check for refutation of previous refutation (cut) move
 		int razorReduction = 0;
 		if(nt == NodeType.all &&
-				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000 &&
-				depth < 4*ONE_PLY &&
+				nonMateScore &&
+				depth <= 1*ONE_PLY &&
 				!alliedKingAttacked &&
 				!tteMove &&
 				!pawnPrePromotion){
 			
-			final int razorMargin = 270 * (int)depth*50;
-			if(eval + razorMargin < beta){
-				final int rbeta = beta-razorMargin;
-				final int v = qsearch(player, rbeta-1, rbeta, 0, stackIndex+1, nt, s);
-				if(v <= rbeta-1){
-					return v+rbeta; // return v+rbeta => score (one level up) < alpha 
+			final int razorMargin = 270;
+			if(eval + razorMargin < alpha){
+				final int r = alpha-razorMargin;
+				final int v = qsearch(player, r-1, r, 0, stackIndex+1, nt, s);
+				if(v <= r-1){
+					//fail low, probably cant recover from their refutation move
+					return v+razorMargin;
 				}
 			}
 		}
@@ -431,7 +418,7 @@ public final class Search34v4 implements Search4{
 		//null move pruning
 		final boolean threatMove; //true if opponent can make a move that causes null-move fail low
 		if(nt != NodeType.pv && !ml.skipNullMove && depth > 3*ONE_PLY && !alliedKingAttacked &&
-				hasNonPawnMaterial && Math.abs(beta) < 70000 && Math.abs(alpha) < 70000){
+				hasNonPawnMaterial && nonMateScore){
 			
 			final int r = 3*ONE_PLY + depth/4;
 			
@@ -479,10 +466,10 @@ public final class Search34v4 implements Search4{
 		}
 
 		//internal iterative deepening
-		if(!tteMove && depth >= (nt == NodeType.pv? 5: 8)*ONE_PLY &&
+		if(!tteMove && depth >= (nt == NodeType.pv? 5: 8)*ONE_PLY && nonMateScore &&
 				(nt == NodeType.pv || (!alliedKingAttacked && eval+256 >= beta))){
 			final int d = nt == NodeType.pv? depth-2*ONE_PLY: depth/2;
-			stack[stackIndex+1].futilityPrune = ml.futilityPrune;
+			stack[stackIndex+1].futilityPrune = false; //would never have arrived here if futility pruned above, set false
 			stack[stackIndex+1].skipNullMove = true;
 			recurse(player, alpha, beta, d, nt, stackIndex+1, s);
 			stack[stackIndex+1].skipNullMove = false;
