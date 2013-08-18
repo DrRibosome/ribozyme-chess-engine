@@ -383,7 +383,7 @@ public final class Search34v4 implements Search4{
 				futilityMargin = 250;
 			} else if(depth <= 2*ONE_PLY){
 				futilityMargin = 300;
-			} else {
+			} else { //depth <= 3*ONE_PLY
 				futilityMargin = 425;
 			}
 			
