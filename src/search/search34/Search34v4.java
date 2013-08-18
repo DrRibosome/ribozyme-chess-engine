@@ -367,31 +367,25 @@ public final class Search34v4 implements Search4{
 		final boolean alliedKingAttacked = isChecked(player, s);
 		final boolean pawnPrePromotion = (s.pawns[player] & Masks.pawnPrePromote[player]) != 0;
 		final boolean hasNonPawnMaterial = s.pieceCounts[player][0]-s.pieceCounts[player][State4.PIECE_TYPE_PAWN] > 1;
+		final boolean nonMateScore = Math.abs(beta) < 70000 && Math.abs(alpha) < 70000;
 		
-		//static null move pruning
-		//
-		//prune here if we are doing really well
-		//
-		//check that previous move wasnt a take to counter horizon effect of
-		//taking a high value piece then assessing that we are ahead before
-		//they have a chance to take back
-		if(nt != NodeType.pv && depth < 4*ONE_PLY &&
+		//futility pruning
+		if(nt != NodeType.pv && depth <= 3*ONE_PLY &&
 				!pawnPrePromotion &&
 				!alliedKingAttacked &&
 				hasNonPawnMaterial &&
-				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000 &&
+				nonMateScore &&
 				ml.futilityPrune){
-			final int d = (int)depth;
+			
 			final int futilityMargin;
-			if(d <= 1*ONE_PLY){
+			if(depth <= 1*ONE_PLY){
 				futilityMargin = 250;
-			} else if(d <= 2*ONE_PLY){
+			} else if(depth <= 2*ONE_PLY){
 				futilityMargin = 300;
-			} else if(d <= 3*ONE_PLY){
+			} else {
 				futilityMargin = 425;
-			} else{
-				futilityMargin = 500; //prob never reaches here (currently only full ply extensions)
 			}
+			
 			final int futilityScore = eval - futilityMargin;
 			
 			if(futilityScore >= beta){
@@ -402,18 +396,18 @@ public final class Search34v4 implements Search4{
 		//razoring
 		int razorReduction = 0;
 		if(nt == NodeType.all &&
-				Math.abs(beta) < 70000 && Math.abs(alpha) < 70000 &&
-				depth < 4*ONE_PLY &&
+				nonMateScore &&
+				depth <= 1*ONE_PLY &&
 				!alliedKingAttacked &&
 				!tteMove &&
 				!pawnPrePromotion){
 			
-			final int razorMargin = 270 * (int)depth*50; //error here, should be fixed
-			if(eval + razorMargin < beta){
-				final int rbeta = beta-razorMargin;
-				final int v = qsearch(player, rbeta-1, rbeta, 0, stackIndex+1, nt, s);
-				if(v <= rbeta-1){
-					return v+rbeta;
+			final int razorMargin = 270;
+			if(eval + razorMargin < alpha){
+				final int r = alpha-razorMargin;
+				final int v = qsearch(player, r-1, r, 0, stackIndex+1, nt, s);
+				if(v <= r-1){
+					return v+razorMargin;
 				}
 			}
 		}
@@ -421,7 +415,7 @@ public final class Search34v4 implements Search4{
 		//null move pruning
 		final boolean threatMove; //true if opponent can make a move that causes null-move fail low
 		if(nt != NodeType.pv && !ml.skipNullMove && depth > 3*ONE_PLY && !alliedKingAttacked &&
-				hasNonPawnMaterial && Math.abs(beta) < 70000 && Math.abs(alpha) < 70000){
+				hasNonPawnMaterial && nonMateScore){
 			
 			final int r = 3*ONE_PLY + depth/4;
 			
@@ -469,7 +463,7 @@ public final class Search34v4 implements Search4{
 		}
 
 		//internal iterative deepening
-		if(!tteMove && depth >= (nt == NodeType.pv? 5: 8)*ONE_PLY &&
+		if(!tteMove && depth >= (nt == NodeType.pv? 5: 8)*ONE_PLY && nonMateScore &&
 				(nt == NodeType.pv || (!alliedKingAttacked && eval+256 >= beta))){
 			final int d = nt == NodeType.pv? depth-2*ONE_PLY: depth/2;
 			stack[stackIndex+1].futilityPrune = false; //would never have arrived here if futility pruned above, set false
