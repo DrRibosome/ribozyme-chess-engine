@@ -688,7 +688,8 @@ public final class E9v3 implements Evaluator3{
 	 * @param kingIndex index of the players king for whom pressure is to be evaluated
 	 * @param player player owning the king for whom pressure is to be evaluated
 	 * @param s
-	 * @param alliedAttackMask attack mask for allied pieces
+	 * @param alliedAttackMask attack mask for allied pieces, excluding the king;
+	 * generated via {@link #scoreMobility(int, State4, double, int[], long[])}
 	 * @return returns king pressure score
 	 */
 	private static int evalKingPressure3(final int kingIndex, final int player,
