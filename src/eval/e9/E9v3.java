@@ -683,6 +683,14 @@ public final class E9v3 implements Evaluator3{
 		{6, 62}, //castle right index
 	};
 	
+	/**
+	 * evaluates king pressure
+	 * @param kingIndex index of the players king for whom pressure is to be evaluated
+	 * @param player player owning the king for whom pressure is to be evaluated
+	 * @param s
+	 * @param alliedAttackMask attack mask for allied pieces
+	 * @return returns king pressure score
+	 */
 	private static int evalKingPressure3(final int kingIndex, final int player,
 			final State4 s, final long alliedAttackMask){
 		
@@ -698,13 +706,14 @@ public final class E9v3 implements Evaluator3{
 				~(PositionMasks.pawnAttacks[0][kingIndex] | PositionMasks.pawnAttacks[1][kingIndex]);
 		final long bishopContactCheckMask = kingRing & ~rookContactCheckMask;
 		
-		final long bishops = s.bishops[1-player];
-		final long rooks = s.rooks[1-player];
-		final long queens = s.queens[1-player];
-		final long pawns = s.pawns[1-player];
-		final long knights = s.knights[1-player];
+		final int enemyPlayer = 1-player;
+		final long bishops = s.bishops[enemyPlayer];
+		final long rooks = s.rooks[enemyPlayer];
+		final long queens = s.queens[enemyPlayer];
+		final long pawns = s.pawns[enemyPlayer];
+		final long knights = s.knights[enemyPlayer];
 		
-		//process queen attacks
+		//process enemy queen attacks
 		int supportedQueenAttacks = 0;
 		for(long tempQueens = queens; tempQueens != 0; tempQueens &= tempQueens-1){
 			final long q = tempQueens & -tempQueens;
@@ -732,7 +741,7 @@ public final class E9v3 implements Evaluator3{
 		//index += supportedQueenAttacks*16;
 		index += supportedQueenAttacks*4;
 
-		//process rook attacks
+		//process enemy rook attacks
 		int supportedRookAttacks = 0;
 		int supportedRookContactChecks = 0;
 		for(long tempRooks = rooks; tempRooks != 0; tempRooks &= tempRooks-1){
@@ -762,7 +771,7 @@ public final class E9v3 implements Evaluator3{
 		index += supportedRookAttacks*1;
 		index += supportedRookContactChecks*2;
 		
-		//process bishop attacks
+		//process enemy bishop attacks
 		int supportedBishopAttacks = 0;
 		int supportedBishopContactChecks = 0;
 		for(long tempBishops = bishops; tempBishops != 0; tempBishops &= tempBishops-1){
@@ -792,7 +801,7 @@ public final class E9v3 implements Evaluator3{
 		index += supportedBishopAttacks*1;
 		index += supportedBishopContactChecks*2;
 		
-		//process knight attacks
+		//process enemy knight attacks
 		int supportedKnightAttacks = 0;
 		for(long tempKnights = knights; tempKnights != 0; tempKnights &= tempKnights-1){
 			final long k = tempKnights & -tempKnights;
