@@ -185,7 +185,7 @@ public final class SEE {
 	 * move piece on from square to target square
 	 * <p> note, this is faster than the alternative {@link #see(int, long, long, State4)},
 	 * but it does not get the magnitude of gain or loss
-	 * @param player
+	 * @param player player owning the piece being moved
 	 * @param from
 	 * @param target
 	 * @param s
