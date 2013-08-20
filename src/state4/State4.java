@@ -194,7 +194,7 @@ public final class State4 {
 		return hm.get(zkey) >= 3;
 	}
 	
-	/** if true, game is a forced draw (via 50 move draw)*/
+	/** if true, game is a forced draw (via 50 move draw, piece combinations, etc)*/
 	public boolean isForcedDraw(){
 		final long pieces1 = pieces[0];
 		final long pieces2 = pieces[1];
