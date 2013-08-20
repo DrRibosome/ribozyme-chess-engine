@@ -235,11 +235,6 @@ public final class State4 {
 	public static boolean isAttacked2(final int pos, final int player, final State4 s){
 		final long l = 1L<<pos;
 		
-		/*long colMask = player == 0? Masks.colMaskExc[7]: Masks.colMaskExc[0];
-		final long pawns = s.pawns[player];
-		long temp = player == 0? (pawns << 7) & colMask & l: (pawns >>> 7) & colMask & l;
-		colMask = player == 0? Masks.colMaskExc[0]: Masks.colMaskExc[7];
-		temp |= player == 0? (pawns << 9) & colMask & l: (pawns >>> 9) & colMask & l;*/
 		final long colMask = pawnColMask[player];
 		final long pawns = s.pawns[player];
 		final long attacks1 = (player == 0? pawns << 7: pawns >>> 7) & colMask & l;
@@ -248,21 +243,6 @@ public final class State4 {
 		final long pawnAttacks = attacks1 | attacks2;
 
 		final long agg = s.pieces[0] | s.pieces[1] | l;
-		
-		/*System.out.println("pawn attacks = "+temp);
-		System.out.println("bishop attackes = "+(Masks.getRawBishopMoves(agg, l) & (s.queens[player]|s.bishops[player])));
-		System.out.println("rook attackes = "+(Masks.getRawRookMoves(agg, l) & (s.queens[player]|s.rooks[player])));
-		System.out.println("knight attacks = "+(Masks.getRawKnightMoves(l) & s.knights[player]));
-		System.out.println("king attacks = "+(Masks.getRawKingMoves(l) & s.kings[player]));
-		System.out.println(Masks.getString(Masks.getRawBishopMoves(agg|l, l)));
-		System.out.println(Masks.getString(getBishopMoves(1-player, s.pieces, l)));
-		System.out.println(Masks.getString(agg));*/
-		
-		/*return pawnAttacks != 0 ||
-				((Masks.getRawBishopMoves(agg, l) & (s.queens[player]|s.bishops[player])) |
-				(Masks.getRawRookMoves(agg, l) & (s.queens[player]|s.rooks[player])) |
-				(Masks.getRawKnightMoves(l) & s.knights[player]) |
-				(Masks.getRawKingMoves(l) & s.kings[player])) != 0;*/
 		
 		return pawnAttacks != 0 ||
 				(Masks.getRawBishopMoves(agg, l) & (s.queens[player]|s.bishops[player])) != 0 ||
