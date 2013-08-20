@@ -1,5 +1,7 @@
 package uci;
 
+import state4.State4;
+
 public class UCIMove {
 	public enum MoveType{
 		Normal,
@@ -7,10 +9,20 @@ public class UCIMove {
 		Null;
 	}
 	public enum PromotionType{
-		Knight,
-		Queen,
-		Bishop,
-		Rook;
+		Knight(State4.PROMOTE_KNIGHT),
+		Queen(State4.PROMOTE_QUEEN),
+		Bishop(State4.PROMOTE_BISHOP),
+		Rook(State4.PROMOTE_ROOK);
+		
+		private final int code;
+		PromotionType(int code){
+			this.code = code;
+		}
+		
+		/** get the correspoding {@link State4} promotion code*/
+		int getCode(){
+			return code;
+		}
 	}
 	
 	final int[] move = new int[2];

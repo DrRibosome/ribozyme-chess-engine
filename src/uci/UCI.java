@@ -53,7 +53,7 @@ public final class UCI {
 							UCIMove m = parseMove(ml[a]);
 							long encoding = 0;
 							if(m.type == UCIMove.MoveType.Normal){
-								encoding = pos.s.executeMove(turn, 1L<<m.move[0], 1L<<m.move[1]);
+								encoding = pos.s.executeMove(turn, 1L<<m.move[0], 1L<<m.move[1], m.ptype.getCode());
 							} else if(m.type == UCIMove.MoveType.Null){
 								pos.s.nullMove();
 							}
