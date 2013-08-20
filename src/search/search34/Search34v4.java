@@ -78,6 +78,9 @@ public final class Search34v4 implements Search4{
 	private final TTEntry fillEntry = new TTEntry();
 	private volatile boolean cutoffSearch = false;
 	private final static int[][] lmrReduction = new int[32][64];
+	private final boolean printPV;
+	/** stores pv line as its encounted in PVS search*/
+	private final long[] pvStore = new long[64];
 
 	static{
 		for(int d = 0; d < lmrReduction.length; d++){
@@ -99,6 +102,10 @@ public final class Search34v4 implements Search4{
 	}
 	
 	public Search34v4(Evaluator3 e, int hashSize){
+		this(e, hashSize, true);
+	}
+	
+	public Search34v4(Evaluator3 e, int hashSize, boolean printPV){
 		this.e = e;
 		
 		//m = new ZMap3(hashSize);
@@ -109,6 +116,8 @@ public final class Search34v4 implements Search4{
 			stack[i] = new MoveList();
 		}
 		stats.scores = new int[stackSize];
+		
+		this.printPV = printPV;
 	}
 	
 	public SearchStat32k getStats(){
@@ -193,7 +202,6 @@ public final class Search34v4 implements Search4{
 						continue;
 					}
 				} else{
-					//minRestartDepth += 1;
 					minRestartDepth = i+1;
 					
 					i -= i/4+.5;
@@ -213,11 +221,27 @@ public final class Search34v4 implements Search4{
 				if(l != null){
 					l.plySearched(bestMove, i, score);
 				}
-				final String pvString = getPVString(player, s, "", 0, i);
-				System.out.println("info depth "+i+" score cp "+(int)score+" time "+
-						((System.currentTimeMillis()-stats.searchTime)/1000.)+
-						" nodes "+stats.nodesSearched+" nps "+(int)(stats.nodesSearched*1000./
-						(System.currentTimeMillis()-stats.searchTime))+" pv "+pvString);
+				
+				if(printPV){
+					String pvString = "";
+					for(int a = 0; a < i; a++){
+						long move = pvStore[a];
+						int pos1 = MoveEncoder.getPos1(move);
+						int pos2 = MoveEncoder.getPos2(move);
+						pvString += moveString(pos1)+moveString(pos2)+" ";
+					}
+					
+					long time = System.currentTimeMillis()-stats.searchTime;
+					int nps = (int)(stats.nodesSearched*1000./time);
+					
+					String infoString = "info depth "+i+" score cp "+(int)score +
+							" time "+time +
+							" nodes "+stats.nodesSearched +
+							" nps "+nps +
+							" pv "+pvString;
+					
+					System.out.println(infoString);
+				}
 			}
 			if(i-1 < stats.scores.length){
 				stats.scores[i-1] = score;
@@ -235,25 +259,6 @@ public final class Search34v4 implements Search4{
 		}
 		
 		stats.searchTime = System.currentTimeMillis()-stats.searchTime;
-	}
-	
-	private String getPVString(int player, State4 s, String pv, int depth, int maxDepth){
-		final TTEntry e = m.get(s.zkey());
-		if(depth < maxDepth && e != null && e.move != 0){
-			int pos1 = MoveEncoder.getPos1(e.move);
-			int pos2 = MoveEncoder.getPos2(e.move);
-
-			long pmask = 1L<<pos1;
-			long mmask = 1L<<pos2;
-			s.executeMove(player, pmask, mmask);
-
-			pv += moveString(pos1)+moveString(pos2)+" ";
-			
-			String r = getPVString(1-player, s, pv, depth+1, maxDepth);
-			s.undoMove();
-			return r;
-		}
-		return pv;
 	}
 	
 	private static String moveString(int pos){
@@ -703,6 +708,10 @@ public final class Search34v4 implements Search4{
 			//m.put2(zkey, bestMove, bestScore, depth, cutoffFlag);
 			fillEntry.fill(zkey, bestMove, bestScore, scoreEncoding, (int)depth, nt == NodeType.pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
 			m.put(zkey, fillEntry);
+			
+			if(nt == NodeType.pv){
+				pvStore[stackIndex] = bestMove;
+			}
 		}
 		return bestScore;
 	}
