@@ -224,7 +224,7 @@ public final class Search34v4 implements Search4{
 				if(printPV){
 					final String pvString = getPVString(player, s, "", 0, i);
 					System.out.println("info depth "+i+" score cp "+(int)score+" time "+
-							((System.currentTimeMillis()-stats.searchTime)/1000.)+
+							(System.currentTimeMillis()-stats.searchTime)+
 							" nodes "+stats.nodesSearched+" nps "+(int)(stats.nodesSearched*1000./
 							(System.currentTimeMillis()-stats.searchTime))+" pv "+pvString);
 				}
