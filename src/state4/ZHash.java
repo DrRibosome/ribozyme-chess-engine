@@ -59,6 +59,7 @@ public final class ZHash {
 	}
 	
 	public long getZHash(final int player, final int pieceType, final int position){
+		assert pieceType != State4.PIECE_TYPE_EMPTY;
 		final int index = player*playerOffset + (pieceType-1)*64 + position;
 		return zhash[index];
 	}
