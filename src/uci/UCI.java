@@ -74,6 +74,13 @@ public final class UCI {
 					engine.go(params, pos);
 				} else if(s[0].equalsIgnoreCase("quit")){
 					break;
+				} else if(s[0].equalsIgnoreCase("print")){ //print state information
+					if(pos == null){
+						System.out.println("no state information");
+					} else{
+						System.out.println("side to move: "+pos.sideToMove);
+						System.out.println(pos.s);
+					}
 				}
 			}
 			scanner.close();
