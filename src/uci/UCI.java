@@ -103,6 +103,8 @@ public final class UCI {
 		move = move.toLowerCase();
 		m.move[0] = move.charAt(0)-'a'+(move.charAt(1)-'1')*8;
 		m.move[1] = move.charAt(2)-'a'+(move.charAt(3)-'1')*8;
+		
+		m.ptype = UCIMove.PromotionType.Queen;
 		if(move.length() == 5){
 			char promotion = move.charAt(4);
 			if(promotion == 'q'){
