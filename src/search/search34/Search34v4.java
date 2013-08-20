@@ -234,7 +234,7 @@ public final class Search34v4 implements Search4{
 					long time = System.currentTimeMillis()-stats.searchTime;
 					int nps = (int)(stats.nodesSearched*1000./time);
 					
-					String infoString = "info depth "+i+" score cp "+(int)score +
+					String infoString = "info depth "+i+" score cp "+score +
 							" time "+time +
 							" nodes "+stats.nodesSearched +
 							" nps "+nps +
