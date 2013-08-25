@@ -1,4 +1,4 @@
-<project name="chess2" default="dist" basedir=".">
+<project name="chess2" default="jar" basedir=".">
 
 	<property name="src" location="src"/>
 	<property name="bin" location="bin"/>
@@ -7,8 +7,6 @@
 	<property name="proguard.jar" location="/usr/share/proguard/proguard.jar"/>
 	<property name="proguard.config" value="proguard.cfg"/>
 
-	<taskdef resource="proguard/ant/task.properties" classpath="${proguard.jar}" />
-	<proguard configuration="${proguard.config}"/>
 
 	<target name="compile" >
 		<mkdir dir="${bin}"/>
@@ -29,8 +27,12 @@
 	</target>
 
 	<target name="dist" depends="jar">
+		<taskdef resource="proguard/ant/task.properties" classpath="${proguard.jar}" />
+		<proguard configuration="${proguard.config}"/>
+		<!--
 		<java jar="${proguard.dir}/proguard.jar" fork="true" failonerror="true">
 			<arg value="${proguard.config}" />
 		</java>
+		-->
 	</target>
 </project>
