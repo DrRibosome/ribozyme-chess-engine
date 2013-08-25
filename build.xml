@@ -4,6 +4,12 @@
 	<property name="bin" location="bin"/>
 	<property name="ribozyme.jar" location="ribozyme.jar"/>
 
+	<property name="proguard.jar" location="/usr/share/proguard/proguard.jar"/>
+	<property name="proguard.config" value="proguard.cfg"/>
+
+	<taskdef resource="proguard/ant/task.properties" classpath="${proguard.jar}" />
+	<proguard configuration="${proguard.config}"/>
+
 	<target name="compile" >
 		<mkdir dir="${bin}"/>
 		<javac srcdir="${src}" destdir="${bin}"/>
@@ -20,5 +26,11 @@
 	<target name="clean">
 		<delete dir="${bin}"/>
 		<delete file="${ribozyme.jar}"/>
+	</target>
+
+	<target name="dist" depends="jar">
+		<java jar="${proguard.dir}/proguard.jar" fork="true" failonerror="true">
+			<arg value="${proguard.config}" />
+		</java>
 	</target>
 </project>
