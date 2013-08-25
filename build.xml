@@ -26,7 +26,7 @@
 		<delete file="${ribozyme.jar}"/>
 	</target>
 
-	<target name="dist" depends="jar">
+	<target name="obfuscate" depends="jar">
 		<taskdef resource="proguard/ant/task.properties" classpath="${proguard.jar}" />
 		<proguard configuration="${proguard.config}"/>
 		<!--
