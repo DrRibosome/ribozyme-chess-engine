@@ -213,15 +213,8 @@ public final class Search34v4 implements Search4{
 			if(!cutoffSearch){
 				nodesSearched = stats.nodesSearched;
 				stats.maxPlySearched = i;
-			}
-			final TTEntry tte;
-			if((tte = m.get(s.zkey())) != null && tte.move != 0 && !cutoffSearch){
-				bestMove = tte.move;
-				stats.predictedScore = tte.score;
-				if(l != null){
-					l.plySearched(bestMove, i, score);
-				}
 				
+				bestMove = pvStore[0];
 				if(printPV){
 					String pvString = "";
 					for(int a = 0; a < i; a++){
@@ -242,9 +235,15 @@ public final class Search34v4 implements Search4{
 					
 					System.out.println(infoString);
 				}
-			}
-			if(i-1 < stats.scores.length){
-				stats.scores[i-1] = score;
+				
+				stats.predictedScore = score;
+				if(l != null){
+					l.plySearched(bestMove, i, score);
+				}
+				
+				if(i-1 < stats.scores.length){
+					stats.scores[i-1] = score;
+				}
 			}
 		}
 		

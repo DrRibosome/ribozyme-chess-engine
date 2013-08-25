@@ -35,15 +35,20 @@ public final class ZMap4 implements Hash{
 	}
 	
 	public void put(final long zkey, final TTEntry e){
-		final int index = (int)(zkey >>> (64-size));
-		final int seq = e.seq;
-		final TTEntry d = depthReplace[index];
-		if(d.seq != seq || e.depth <= d.depth){
-			temp.fill(d);
-			d.fill(e);
-			if(temp.zkey == zkey) return;
+		TTEntry t = get(zkey);
+		if(t != null && t.depth <= e.depth){
+			TTEntry.swap(t, e);
 		} else{
-			alwaysReplace.put(zkey, e);
+			final int index = (int)(zkey >>> (64-size));
+			final int seq = e.seq;
+			final TTEntry d = depthReplace[index];
+			if(d.seq != seq || e.depth >= d.depth){
+				temp.fill(d);
+				d.fill(e);
+				if(temp.zkey == zkey) return;
+			} else{
+				alwaysReplace.put(zkey, e);
+			}
 		}
 	}
 	
