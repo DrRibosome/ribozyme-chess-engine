@@ -330,6 +330,7 @@ public final class Search34v4 implements Search4{
 		final int scoreEncoding;
 		if(e != null){
 			stats.hashHits++;
+			
 			if(e.depth >= depth){
 				final int cutoffType = e.cutoffType;
 				if(nt == NodeType.pv? cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (e.score >= beta?
@@ -342,6 +343,7 @@ public final class Search34v4 implements Search4{
 					return e.score;
 				}
 			}
+			
 			if(e.move != 0){
 				tteMoveEncoding = e.move;
 				
@@ -556,7 +558,6 @@ public final class Search34v4 implements Search4{
 		//move generation
 		final int length = moveGen.genMoves(player, s, alliedKingAttacked, mset, w, false, stackIndex);
 		if(length == 0){ //no moves, draw
-			//m.put2(zkey, 0, 0, depth, ZMap.CUTOFF_TYPE_EXACT);
 			fillEntry.fill(zkey, 0, 0, scoreEncoding, (int)depth, TTEntry.CUTOFF_TYPE_EXACT, seq);
 			m.put(zkey, fillEntry);
 			return 0;
@@ -671,7 +672,6 @@ public final class Search34v4 implements Search4{
 					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 					if(alpha >= beta){
 						if(!cutoffSearch){
-							//m.put2(zkey, bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
 							fillEntry.fill(zkey, encoding, alpha, scoreEncoding, depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
 							m.put(zkey, fillEntry);
 						}
