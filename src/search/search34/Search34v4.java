@@ -340,7 +340,9 @@ public final class Search34v4 implements Search4{
 						attemptKillerStore(e.move, ml.skipNullMove, stack[stackIndex-1]);
 					}
 					
-					return e.score;
+					if(nt != NodeType.pv){
+						return e.score;
+					}
 				}
 			}
 			
