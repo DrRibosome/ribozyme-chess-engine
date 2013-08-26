@@ -36,8 +36,10 @@ public final class ZMap4 implements Hash{
 	
 	public void put(final long zkey, final TTEntry e){
 		TTEntry t = get(zkey);
-		if(t != null && t.depth <= e.depth){
-			TTEntry.swap(t, e);
+		if(t != null){
+			if(t.depth <= e.depth){
+				TTEntry.swap(t, e);
+			}
 		} else{
 			final int index = (int)(zkey >>> (64-size));
 			final int seq = e.seq;
