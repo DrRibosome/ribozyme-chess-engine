@@ -704,14 +704,14 @@ public final class Search34v4 implements Search4{
 		}
 
 		if(!cutoffSearch){
-			//m.put2(zkey, bestMove, bestScore, depth, cutoffFlag);
 			fillEntry.fill(zkey, bestMove, bestScore, scoreEncoding, (int)depth, nt == NodeType.pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
 			m.put(zkey, fillEntry);
-			
-			if(nt == NodeType.pv){
-				pvStore[stackIndex] = bestMove;
-			}
 		}
+		
+		if(nt == NodeType.pv){
+			pvStore[stackIndex] = bestMove;
+		}
+		
 		return bestScore;
 	}
 	
