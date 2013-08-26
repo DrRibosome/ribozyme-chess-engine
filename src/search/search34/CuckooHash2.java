@@ -34,12 +34,12 @@ public final class CuckooHash2{
 		for(int q = 0; q < maxAttempts; q++){
 			final int index1 = h1(a, t.zkey, size);
 			TTEntry.swap(l[index1], t);
-			if(t.zkey == 0 || t.seq != seq || t.depth < l[index1].depth){
+			if(t.zkey == 0 || t.seq != seq){
 				return;
 			} else{
 				final int index2 = h2(b, t.zkey, size);
 				TTEntry.swap(l[index2], t);
-				if(t.zkey == 0 || t.seq != seq || t.depth < l[index2].depth){
+				if(t.zkey == 0 || t.seq != seq){
 					return;
 				}
 			}

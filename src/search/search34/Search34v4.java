@@ -212,15 +212,8 @@ public final class Search34v4 implements Search4{
 			if(!cutoffSearch){
 				nodesSearched = stats.nodesSearched;
 				stats.maxPlySearched = i;
-			}
-			final TTEntry tte;
-			if((tte = m.get(s.zkey())) != null && tte.move != 0 && !cutoffSearch){
-				bestMove = tte.move;
-				stats.predictedScore = tte.score;
-				if(l != null){
-					l.plySearched(bestMove, i, score);
-				}
 				
+				bestMove = pvStore[0];
 				if(printPV){
 					String pvString = "";
 					for(int a = 0; a < i; a++){
@@ -241,9 +234,15 @@ public final class Search34v4 implements Search4{
 					
 					System.out.println(infoString);
 				}
-			}
-			if(i-1 < stats.scores.length){
-				stats.scores[i-1] = score;
+				
+				stats.predictedScore = score;
+				if(l != null){
+					l.plySearched(bestMove, i, score);
+				}
+				
+				if(i-1 < stats.scores.length){
+					stats.scores[i-1] = score;
+				}
 			}
 		}
 		
@@ -330,6 +329,7 @@ public final class Search34v4 implements Search4{
 		final int scoreEncoding;
 		if(e != null){
 			stats.hashHits++;
+			
 			if(e.depth >= depth){
 				final int cutoffType = e.cutoffType;
 				if(nt == NodeType.pv? cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (e.score >= beta?
@@ -339,9 +339,12 @@ public final class Search34v4 implements Search4{
 						attemptKillerStore(e.move, ml.skipNullMove, stack[stackIndex-1]);
 					}
 					
-					return e.score;
+					if(nt != NodeType.pv){
+						return e.score;
+					}
 				}
 			}
+			
 			if(e.move != 0){
 				tteMoveEncoding = e.move;
 				
@@ -556,7 +559,6 @@ public final class Search34v4 implements Search4{
 		//move generation
 		final int length = moveGen.genMoves(player, s, alliedKingAttacked, mset, w, false, stackIndex);
 		if(length == 0){ //no moves, draw
-			//m.put2(zkey, 0, 0, depth, ZMap.CUTOFF_TYPE_EXACT);
 			fillEntry.fill(zkey, 0, 0, scoreEncoding, (int)depth, TTEntry.CUTOFF_TYPE_EXACT, seq);
 			m.put(zkey, fillEntry);
 			return 0;
@@ -671,7 +673,6 @@ public final class Search34v4 implements Search4{
 					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 					if(alpha >= beta){
 						if(!cutoffSearch){
-							//m.put2(zkey, bestMove, alpha, depth, ZMap.CUTOFF_TYPE_LOWER);
 							fillEntry.fill(zkey, encoding, alpha, scoreEncoding, depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
 							m.put(zkey, fillEntry);
 						}
@@ -704,14 +705,14 @@ public final class Search34v4 implements Search4{
 		}
 
 		if(!cutoffSearch){
-			//m.put2(zkey, bestMove, bestScore, depth, cutoffFlag);
 			fillEntry.fill(zkey, bestMove, bestScore, scoreEncoding, (int)depth, nt == NodeType.pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
 			m.put(zkey, fillEntry);
-			
-			if(nt == NodeType.pv){
-				pvStore[stackIndex] = bestMove;
-			}
 		}
+		
+		if(nt == NodeType.pv){
+			pvStore[stackIndex] = bestMove;
+		}
+		
 		return bestScore;
 	}
 	
