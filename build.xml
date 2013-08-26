@@ -3,6 +3,7 @@
 	<property name="src" location="src"/>
 	<property name="bin" location="bin"/>
 	<property name="ribozyme.jar" location="ribozyme.jar"/>
+	<property name="ribozyme.jar.obfuscated" location="ribozyme-opt.jar"/>
 
 	<property name="proguard.jar" location="/usr/share/proguard/proguard.jar"/>
 	<property name="proguard.config" value="proguard.cfg"/>
@@ -24,15 +25,11 @@
 	<target name="clean">
 		<delete dir="${bin}"/>
 		<delete file="${ribozyme.jar}"/>
+		<delete file="${ribozyme.jar.obfuscated}"/>
 	</target>
 
 	<target name="obfuscate" depends="jar">
 		<taskdef resource="proguard/ant/task.properties" classpath="${proguard.jar}" />
 		<proguard configuration="${proguard.config}"/>
-		<!--
-		<java jar="${proguard.dir}/proguard.jar" fork="true" failonerror="true">
-			<arg value="${proguard.config}" />
-		</java>
-		-->
 	</target>
 </project>
