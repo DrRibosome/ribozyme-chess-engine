@@ -75,10 +75,6 @@ public final class HistoryMap2 {
 				return e2.count;
 			} 
 		}
-		/*final Entry e = getEntry(zkey);
-		if(e != null){
-			return e.count;
-		}*/
 		return 0;
 	}
 	
