@@ -108,7 +108,6 @@ public final class Search34v4 implements Search4{
 	public Search34v4(Evaluator3 e, int hashSize, boolean printPV){
 		this.e = e;
 		
-		//m = new ZMap3(hashSize);
 		m = new ZMap4(hashSize);
 		
 		stack = new MoveList[stackSize];
