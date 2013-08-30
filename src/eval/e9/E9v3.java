@@ -143,7 +143,7 @@ public final class E9v3 implements Evaluator3{
 	
 	/** gets the interpolatino factor for the weight*/
 	private static double getScale(final int totalMaterialScore, final int endMaterial, final int margin){
-		return min(1-(endMaterial-totalMaterialScore)*1./margin, 1);
+		return Math.min(1-(endMaterial-totalMaterialScore)*1./margin, 1);
 	}
 	
 	@Override
@@ -336,14 +336,6 @@ public final class E9v3 implements Evaluator3{
 			score -= evalKingPressure3(kingIndex, 1-player, s, attackMask[1-player]);
 		}
 		return score;
-	}
-	
-	private static double min(final double d1, final double d2){
-		return d1 < d2? d1: d2;
-	}
-	
-	private static double max(final double d1, final double d2){
-		return d1 > d2? d1: d2;
 	}
 	
 	/**
