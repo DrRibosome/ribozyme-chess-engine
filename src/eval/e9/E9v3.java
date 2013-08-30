@@ -390,7 +390,7 @@ public final class E9v3 implements Evaluator3{
 		//get pawn scores from hash entry, or recalculate if necessary
 		final long pawnZkey = s.pawnZkey();
 		if(pawnZkey != entry.zkey){
-			score += calculatePawnScore(player, s, entry);
+			score += analyzePawns(player, s, entry);
 
 			final long king = s.kings[player];
 			final int kingIndex = BitUtil.lsbIndex(king);
@@ -552,13 +552,25 @@ public final class E9v3 implements Evaluator3{
 		return d1 > d2? d1: d2;
 	}
 	
-	/** determines pawn score, except for passed pawns*/
-	private static int calculatePawnScore(final int player, final State4 s, final PawnHashEntry phEntry){
+	/**
+	 * determines pawn score, structure, etc (except for passed pawns)
+	 * <p>
+	 * raw pawn score is aggregated here but analysis of non-hashable features (for instance, pressure on
+	 * weak pawns) is handled elsewhere
+	 * <p>
+	 * results are recorded in pawn hash entry
+	 * @param player
+	 * @param s
+	 * @param phEntry
+	 * @return returns raw score for pawns
+	 */
+	private static int analyzePawns(final int player, final State4 s, final PawnHashEntry phEntry){
 		int pawnScore = 0;
 		long passedPawns = 0;
 		int isolatedPawnsCount = 0;
 		int doubledPawnsCount = 0;
 		int backwardPawnsCount = 0;
+		long weakPawns = 0; //mask aggregating weak pawns
 
 		final long enemyPawns = s.pawns[1-player];
 		final long alliedPawns = s.pawns[player];
@@ -591,22 +603,43 @@ public final class E9v3 implements Evaluator3{
 				pawnScore += pawnChain[col];
 			}
 
-			//backward pawn checking
+			//backward pawn determination
+			final boolean backward;
 			final long attackSpan = PositionMasks.isolatedPawnMask[col] & Masks.passedPawnMasks[player][index];
-			if(!passed && !isolated && !chain &&
+			if(!passed && !isolated && !chain && //preliminary checks for possibility of backward pawn
 					(attackSpan & enemyPawns) != 0 && //enemy pawns that can attack our pawns
 					(PositionMasks.pawnAttacks[player][index] & enemyPawns) == 0){ //not attacking enemy pawns
+				
 				long b = PositionMasks.pawnAttacks[player][index];
-				while((b & all) == 0){
-					b = player == 0? b << 8: b >>> 8;
-					assert b != 0;
+				if(player == 0){
+					while((b & all) == 0){
+						b = b << 8;
+						assert b != 0;
+					}
+				} else{
+					while((b & all) == 0){
+						b = b >>> 8;
+						assert b != 0;
+					}
 				}
-
-				final boolean backward = ((b | (player == 0? b << 8: b >>> 8)) & enemyPawns) != 0;
-				if(backward){
-					pawnScore += backwardPawns[opposedFlag][col];
-					backwardPawnsCount++;
-				}
+				
+				//if we encountered an enemy pawn, then backwards;
+				//else, if we encounted an allied pawn, must check that at least one
+				//square in front of the allied pawn
+				backward = ((b | (player == 0? b << 8: b >>> 8)) & enemyPawns) != 0;
+				
+			} else{
+				backward = false;
+			}
+			
+			if(backward){
+				//pawnScore += backwardPawns[opposedFlag][col];
+				backwardPawnsCount++;
+			}
+			
+			//record weap pawns for use in other parts of eval
+			if(isolated || backward){
+				weakPawns |= p;
 			}
 		}
 
@@ -622,6 +655,7 @@ public final class E9v3 implements Evaluator3{
 			phEntry.backwardPawns2 = backwardPawnsCount;
 		}
 		phEntry.passedPawns |= passedPawns;
+		phEntry.weakPawns |= weakPawns;
 		return pawnScore;
 	}
 	
