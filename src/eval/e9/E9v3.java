@@ -457,7 +457,6 @@ public final class E9v3 implements Evaluator3{
 			}
 		}
 		
-		//System.out.println(player+" pawn score = ("+mgScore(score)+", "+egScore(score)+")");
 		return score;
 	}
 	
