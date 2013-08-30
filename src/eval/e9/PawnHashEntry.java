@@ -3,14 +3,20 @@ package eval.e9;
 public final class PawnHashEntry {
 	/** score for white*/
 	public int score1;
+	/** number of isolated pawns for white*/
 	public int isolatedPawns1;
+	/** number of backward pawns for white*/
 	public int backwardPawns1;
+	/** number of doubled pawns for white*/
 	public int doubledPawns1;
 	
 	/** score for black*/
 	public int score2;
+	/** number of isolated pawns for white*/
 	public int isolatedPawns2;
+	/** number of backward pawns for white*/
 	public int backwardPawns2;
+	/** number of doubled pawns for white*/
 	public int doubledPawns2;
 	
 	/** all passed pawns in the game (ie, both players passed pawns aggregate)*/
