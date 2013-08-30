@@ -65,10 +65,11 @@ public final class ScoreEncoder {
 		
 		final int scoreShift = score >>> 31;
 		final int scoreNegative = scoreShift << (scoreBits-1);
-		final int scoreValue = scoreShift*(scoreNegative-Math.abs(score)) + (1-scoreShift)*score;
+		final int scoreValue = scoreShift*(scoreNegative+score) + (1-scoreShift)*score;
 		
-		final int marginNegative = (margin >>> 31) << (marginBits-1);
-		final int marginValue =  (margin >>> 31)*(marginNegative-Math.abs(margin)) + (1-(margin >>> 31))*margin;
+		final int marginShift = margin >>> 31;
+		final int marginNegative = marginShift << (marginBits-1);
+		final int marginValue =  marginShift*(marginNegative+margin) + (1-marginShift)*margin;
 		
 		return (scoreValue | scoreNegative) |
 				((marginValue|marginNegative) << marginMaskOffset) |
