@@ -345,7 +345,8 @@ public final class PawnEval {
 				backwardPawnsCount++;
 			}
 			
-			//record weap pawns for use in other parts of eval
+			//record weak pawns for use in other parts of eval
+			//should probably also include doubled pawns that are stuck and unsupported
 			if(isolated || backward){
 				weakPawns |= p;
 			}
