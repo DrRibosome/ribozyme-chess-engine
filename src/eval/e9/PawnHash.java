@@ -33,32 +33,30 @@ public final class PawnHash{
 	}
 	
 	public void put(final long zkey, final PawnHashEntry t){
-		if(get(zkey) == null){
-			PawnHashEntry.fill(t, loader);
-			loader.seq = seq++;
-			for(int q = 0; q < maxAttempts; q++){
-				final int index1 = h1(a, t.zkey, size);
+		PawnHashEntry.fill(t, loader);
+		loader.seq = seq++;
+		for(int q = 0; q < maxAttempts; q++){
+			final int index1 = h1(a, t.zkey, size);
+			
+			if(q == 0 || loader.seq > l[index1].seq){
+				final PawnHashEntry temp = loader;
+				loader = l[index1];
+				l[index1] = temp;
+			}
+			
+			if(loader.zkey == 0){
+				return;
+			} else{
+				final int index2 = h2(b, t.zkey, size);
 				
-				if(q == 0 || loader.seq > l[index1].seq){
-					final PawnHashEntry temp = loader;
-					loader = l[index1];
-					l[index1] = temp;
+				if(loader.seq > l[index2].seq){
+					final PawnHashEntry temp2 = loader;
+					loader = l[index2];
+					l[index2] = temp2;
 				}
 				
 				if(loader.zkey == 0){
 					return;
-				} else{
-					final int index2 = h2(b, t.zkey, size);
-					
-					if(loader.seq > l[index2].seq){
-						final PawnHashEntry temp2 = loader;
-						loader = l[index2];
-						l[index2] = temp2;
-					}
-					
-					if(loader.zkey == 0){
-						return;
-					}
 				}
 			}
 		}

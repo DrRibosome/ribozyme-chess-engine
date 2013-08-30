@@ -21,6 +21,8 @@ public final class PawnHashEntry {
 	
 	/** all passed pawns in the game (ie, both players passed pawns aggregate)*/
 	public long passedPawns;
+	/** all weak pawns in the game*/
+	public long weakPawns;
 	public long zkey;
 	int seq;
 	
@@ -36,6 +38,7 @@ public final class PawnHashEntry {
 		doubledPawns2 = 0;
 		
 		passedPawns = 0;
+		weakPawns = 0;
 		zkey = 0;
 	}
 	
@@ -51,6 +54,7 @@ public final class PawnHashEntry {
 		target.doubledPawns2 = src.doubledPawns2;
 		
 		target.passedPawns = src.passedPawns;
+		target.weakPawns = src.weakPawns;
 		target.zkey = src.zkey;
 	}
 }

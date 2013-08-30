@@ -72,8 +72,8 @@ public final class PositionMasks {
 	
 	public static void main(String[] args){
 		for(int a = 0; a < 64; a++){
-			//System.out.println("a="+a);
-			//System.out.println(Masks.getString(isolatedPawnMask[a]));
+			System.out.println("a="+a);
+			System.out.println(Masks.getString(pawnChainMask[0][a]));
 			//System.out.println(Masks.getString(isolatedPawnMask[a%8]));// & Masks.passedPawnMasks[1][a]));
 			//System.out.println(Masks.getString(isolatedPawnMask[a]));
 		}
