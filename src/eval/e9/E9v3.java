@@ -428,6 +428,7 @@ public final class E9v3 implements Evaluator3{
 			score += kingDangerScore;
 			
 		} else{
+			//could be improved here to only store score from white perspective
 			score += player == 0? entry.score1: entry.score2;
 		}
 		
