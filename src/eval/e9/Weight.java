@@ -1,22 +1,22 @@
 package eval.e9;
 
 /** handles evaluator weight encoding and interpoation*/
-final class Weight {
+public final class Weight {
 	private final static int weightValueMask = 0x7FFF;
 	private final static int weightSignMask = 1<<15;
 	
 	/** build a weight scaling from passed start,end values*/
-	static int encode(final int start, final int end){
+	public static int encode(final int start, final int end){
 		return (start&0xFFFF) + (end<<16);
 	}
 	
 	/** build a constant, non-scaling weight*/
-	static int encode(final int v){
+	public static int encode(final int v){
 		return encode(v, v);
 	}
 	
 	/** mid game score*/
-	static int mgScore(final int weight){
+	public static int mgScore(final int weight){
 		return  (weight & weightValueMask) - (weight & weightSignMask);
 	}
 	
@@ -33,7 +33,7 @@ final class Weight {
 		return (int)(start + (end-start)*scale);
 	}
 	
-	static int multWeight(final int weight, final double mult){
+	public static int multWeight(final int weight, final double mult){
 		final int start = (weight & weightValueMask) - (weight & weightSignMask);
 		final int shifted = weight >>> 16;
 		final int end = (shifted & weightValueMask) - (shifted & weightSignMask);
