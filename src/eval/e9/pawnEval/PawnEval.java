@@ -341,7 +341,7 @@ public final class PawnEval {
 			}
 			
 			if(backward){
-				//pawnScore += backwardPawns[opposedFlag][col];
+				pawnScore += backwardPawns[opposedFlag][col];
 				backwardPawnsCount++;
 			}
 			
