@@ -121,26 +121,29 @@ public final class UCI {
 		return m;
 	}
 	
-	public UCI(final int hashSize, final int pawnHashSize){
-		engine = new RibozymeEngine(hashSize, pawnHashSize);
+	public UCI(final int hashSize, final int pawnHashSize, boolean printInfo){
+		engine = new RibozymeEngine(hashSize, pawnHashSize, printInfo);
 		t.start();
 	}
 	
 	public static void main(String[] args){
 		int hashSize = 20; //hash size, as a power of 2
 		int pawnHashSize = 16;
+		boolean printInfo = true;
 		for(int a = 0; a < args.length; a++){
 			try{
 				if(args[a].equals("--hash")){
 					hashSize = Integer.parseInt(args[++a]);
 				} else if(args[a].equals("--pawnHash")){
 					pawnHashSize = Integer.parseInt(args[++a]);
-				} 
+				} else if(args[a].equals("--no-info")){
+					printInfo = false;
+				}
 			} catch(Exception e){
 				System.out.println("error, incorrect args");
 				System.exit(1);
 			}
 		}
-		new UCI(hashSize, pawnHashSize);
+		new UCI(hashSize, pawnHashSize, printInfo);
 	}
 }

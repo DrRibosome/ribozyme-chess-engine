@@ -17,11 +17,11 @@ public final class RibozymeEngine implements UCIEngine{
 	private final TimerThread timerThread;
 	private final SearchThread searchThread;
 	
-	public RibozymeEngine(final int hashSize, final int pawnHashSize){
+	public RibozymeEngine(final int hashSize, final int pawnHashSize, boolean printInfo){
 		
 		final Evaluator3 e = new E9v3(pawnHashSize);
 		
-		s = new Search34v4(e, hashSize);
+		s = new Search34v4(e, hashSize, printInfo);
 		
 		searchThread = new SearchThread(s);
 		timerThread = new TimerThread(searchThread);

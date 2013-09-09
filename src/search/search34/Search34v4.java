@@ -214,6 +214,7 @@ public final class Search34v4 implements Search4{
 				stats.maxPlySearched = i;
 				
 				bestMove = pvStore[0];
+				
 				if(printPV){
 					String pvString = "";
 					for(int a = 0; a < i; a++){
