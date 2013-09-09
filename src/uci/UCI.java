@@ -132,11 +132,11 @@ public final class UCI {
 		boolean printInfo = true;
 		for(int a = 0; a < args.length; a++){
 			try{
-				if(args[a].equals("--hash")){
+				if(args[a].equals("--hash")){ //sets main hash size (must be power of 2)
 					hashSize = Integer.parseInt(args[++a]);
-				} else if(args[a].equals("--pawnHash")){
+				} else if(args[a].equals("--pawnHash")){ //sets pawn hash size (must be power of 2)
 					pawnHashSize = Integer.parseInt(args[++a]);
-				} else if(args[a].equals("--no-info")){
+				} else if(args[a].equals("--no-info")){ //turns off uci info printing (ie, pv, score, time, etc)
 					printInfo = false;
 				}
 			} catch(Exception e){
