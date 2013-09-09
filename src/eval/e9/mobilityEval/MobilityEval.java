@@ -9,24 +9,27 @@ import eval.e9.Weight;
 /** container class for eval pertaining to mobility*/
 public final class MobilityEval {
 
-	private final static int[][] mobilityWeights = new int[7][];
+	private static final int[] knightMobilityWeights;
+	private static final int[] bishopMobilityWeights;
+	private static final int[] rookMobilityWeights;
+	private static final int[] queenMobilityWeights;
 	
 	static{
-		mobilityWeights[State4.PIECE_TYPE_KNIGHT] = new int[]{
+		knightMobilityWeights = new int[]{
 				S(-19,-49), S(-13,-40), S(-6,-27), S(-1,0), S(7,2),
 				S(12,10), S(14,28), S(16,44), S(17,48)
 		};
-		mobilityWeights[State4.PIECE_TYPE_BISHOP] = new int[]{
+		bishopMobilityWeights = new int[]{
 				S(-13,-30), S(-6,-20), S(1,-18), S(7,-10), S(15,-1),
 				S(24,8), S(28,14), S(24,18), S(30,20), S(34,23),
 				S(38,25), S(43,31), S(49,32), S(55,37), S(55,38), S(55,38)
 		};
-		mobilityWeights[State4.PIECE_TYPE_ROOK] = new int[]{
+		rookMobilityWeights = new int[]{
 				S(-10,-69), S(-7,-47), S(-4,-43), S(-1,-10), S(2,13), S(5,26),
 				S(7,35), S(10,43), S(11,50), S(12,56), S(12,60), S(13,63),
 				S(14,66), S(15,69), S(15,74), S(17,74)
 		};
-		mobilityWeights[State4.PIECE_TYPE_QUEEN] = new int[]{
+		queenMobilityWeights = new int[]{
 				S(-6,-69), S(-4,-49), S(-2,-45), S(-2,-28), S(-1,-9), S(0,10),
 				S(1,15), S(2,20), S(4,25), S(5,30), S(6,30), S(7,30), S(8,30),
 				S(8,30), S(9,30), S(10,35), S(12,35), S(14,35), S(15,35), S(15,35),
@@ -76,7 +79,7 @@ public final class MobilityEval {
 			final long rawMoves = Masks.getRawBishopMoves(agg, b);
 			final long moves = rawMoves & ~allied & ~enemyPawnAttacks;
 			final int count = (int)BitUtil.getSetBits(moves);
-			mobScore += Weight.multWeight(mobilityWeights[State4.PIECE_TYPE_BISHOP][count], clutterMult);
+			mobScore += Weight.multWeight(bishopMobilityWeights[count], clutterMult);
 			bishopAttackMask |= rawMoves;
 			
 			//penalize bishop for blocking allied pawns on bishop color
@@ -93,7 +96,7 @@ public final class MobilityEval {
 			final long rawMoves = Masks.getRawKnightMoves(k);
 			final long moves = rawMoves & ~allied & ~enemyPawnAttacks;
 			final int count = (int)BitUtil.getSetBits(moves);
-			mobScore += Weight.multWeight(mobilityWeights[State4.PIECE_TYPE_KNIGHT][count], clutterMult);
+			mobScore += Weight.multWeight(knightMobilityWeights[count], clutterMult);
 			knightAttackMask |= rawMoves;
 		}
 
@@ -107,7 +110,7 @@ public final class MobilityEval {
 			final long rawMoves = Masks.getRawRookMoves(agg, r);
 			final long moves = rawMoves & ~allied & ~enemyPawnAttacks;
 			final int moveCount = (int)BitUtil.getSetBits(moves);
-			mobScore += Weight.multWeight(mobilityWeights[State4.PIECE_TYPE_ROOK][moveCount], clutterMult);
+			mobScore += Weight.multWeight(rookMobilityWeights[moveCount], clutterMult);
 			rookAttackMask |= rawMoves;
 			
 			final int rindex = BitUtil.lsbIndex(r);
@@ -148,15 +151,13 @@ public final class MobilityEval {
 			final long rawMoves = Masks.getRawQueenMoves(agg, q);
 			final long moves = rawMoves & ~allied & ~enemyPawnAttacks;
 			final int count = (int)BitUtil.getSetBits(moves);
-			mobScore += Weight.multWeight(mobilityWeights[State4.PIECE_TYPE_QUEEN][count], clutterMult);
+			mobScore += Weight.multWeight(queenMobilityWeights[count], clutterMult);
 			queenAttackMask |= rawMoves;
 		}
 		
 		final long pawnAttackMask = Masks.getRawPawnAttacks(player, alliedPawns);
 		attackMask[player] = bishopAttackMask | knightAttackMask | rookAttackMask | queenAttackMask | pawnAttackMask;
 		
-
-		//System.out.println(player+" pawn score = ("+mgScore(mobScore)+", "+egScore(mobScore)+")");
 		return mobScore;
 	}
 
