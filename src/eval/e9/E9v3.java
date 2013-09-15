@@ -216,7 +216,7 @@ public final class E9v3 implements Evaluator3{
 		}
 		
 		boolean needsAttackMaskRecalc = true;
-		if(flags < 2){
+		if(flags == 1){
 			flags++;
 
 			final long whitePawnAttacks = Masks.getRawPawnAttacks(0, s.pawns[0]);
@@ -266,7 +266,7 @@ public final class E9v3 implements Evaluator3{
 			}
 		}
 		
-		if(flags < 3){
+		if(flags == 2){
 			assert queens != 0; //should be caugt by stage 2 eval if queens == 0
 			
 			flags++;
