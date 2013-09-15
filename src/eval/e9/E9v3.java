@@ -210,12 +210,17 @@ public final class E9v3 implements Evaluator3{
 				stage1MarginLower = 142;
 				stage1MarginUpper = -141;
 			}
+
+			final boolean lowerBoundCutoff = score+stage1MarginLower <= lowerBound;
+			final boolean upperBoundCutoff = score+stage1MarginUpper >= upperBound;
 			
-			if(score+stage1MarginLower <= lowerBound){
-				return ScoreEncoder.encode(score, stage1MarginLower, flags, true);
-			}
-			if(score+stage1MarginUpper >= upperBound){
-				return ScoreEncoder.encode(score, stage1MarginUpper, flags, false);
+			if(!lowerBoundCutoff || !upperBoundCutoff){
+				if(lowerBoundCutoff){
+					return ScoreEncoder.encode(score, stage1MarginLower, flags, true);
+				}
+				if(upperBoundCutoff){
+					return ScoreEncoder.encode(score, stage1MarginUpper, flags, false);
+				}
 			}
 		}
 		
@@ -265,10 +270,15 @@ public final class E9v3 implements Evaluator3{
 				stage2MarginUpper = -0;
 			}
 			
-			if(score+stage2MarginLower <= lowerBound){
-				return ScoreEncoder.encode(score, stage2MarginLower, flags, true);
-			} if(score+stage2MarginUpper >= upperBound){
-				return ScoreEncoder.encode(score, stage2MarginUpper, flags, false);
+			final boolean lowerBoundCutoff = score+stage2MarginLower <= lowerBound;
+			final boolean upperBoundCutoff = score+stage2MarginUpper >= upperBound;
+			if(!lowerBoundCutoff || !upperBoundCutoff){
+				if(lowerBoundCutoff){
+					return ScoreEncoder.encode(score, stage2MarginLower, flags, true);
+				}
+				if(upperBoundCutoff){
+					return ScoreEncoder.encode(score, stage2MarginUpper, flags, false);
+				}
 			}
 		}
 		
