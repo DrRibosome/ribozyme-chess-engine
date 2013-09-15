@@ -136,7 +136,7 @@ public final class E9v3 implements Evaluator3{
 		int flags = ScoreEncoder.getFlags(scoreEncoding);
 		boolean isLowerBound = ScoreEncoder.isLowerBound(scoreEncoding);
 		
-		if((flags < 3 && ((score+margin <= lowerBound && isLowerBound) || (score+margin >= upperBound && !isLowerBound))) ||
+		if((flags != 0 && ((score+margin <= lowerBound && isLowerBound) || (score+margin >= upperBound && !isLowerBound))) ||
 				flags == 3){
 			return scoreEncoding;
 		}
