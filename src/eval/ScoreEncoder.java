@@ -6,8 +6,9 @@ package eval;
 /** encoder for score, margin, and any flags*/
 public final class ScoreEncoder {
 	public final static int scoreBits = 18;
-	public final static int marginBits = 11;
+	public final static int marginBits = 10;
 	public final static int flagBits = 3;
+	public final static int cutoffTypeBits = 1;
 	
 	private final static int scoreMask;
 	private final static int scoreSignMask;
@@ -16,14 +17,19 @@ public final class ScoreEncoder {
 	private final static int marginSignMask;
 	
 	private final static int flagMask;
+	
+	private final static int cutoffTypeMask;
+	
 	private final static int scoreMaskOffset;
 	private final static int marginMaskOffset;
 	private final static int flagMaskOffset;
+	private final static int cutoffTypeMaskOffset;
 	
 	static{
 		scoreMaskOffset = 0;
 		marginMaskOffset = scoreBits;
-		flagMaskOffset = scoreBits + marginBits;
+		cutoffTypeMaskOffset = scoreBits + marginBits;
+		flagMaskOffset = scoreBits + marginBits + cutoffTypeBits;
 		
 		{
 			int temp = 0;
@@ -31,16 +37,22 @@ public final class ScoreEncoder {
 			scoreMask = temp;
 			scoreSignMask = 1 << scoreBits-1;
 		}
+		
 		{
 			int temp = 0;
 			for(int a = 0; a < marginBits-1; a++) temp |= 1 << a;
 			marginMask = temp;
 			marginSignMask = 1 << marginBits-1;
 		}
+		
 		{
 			int temp = 0;
 			for(int a = 0; a < flagBits; a++) temp |= 1 << (flagMaskOffset + a);
 			flagMask = temp;
+		}
+		
+		{
+			cutoffTypeMask = 1 << cutoffTypeMaskOffset;
 		}
 	}
 	
@@ -57,7 +69,11 @@ public final class ScoreEncoder {
 		return (scoreEncoding & flagMask) >>> flagMaskOffset;
 	}
 	
-	public static int encode(final int score, final int margin, final int flags){
+	public static boolean isLowerBound(final int score){
+		return (score & cutoffTypeMask) != 0;
+	}
+	
+	public static int encode(final int score, final int margin, final int flags, final boolean isLowerBound){
 		assert score < 1<<scoreBits;
 		assert margin < 1<<marginBits;
 		assert flags < 1<<flagBits;
@@ -73,6 +89,7 @@ public final class ScoreEncoder {
 		
 		return (scoreValue | scoreNegative) |
 				((marginValue|marginNegative) << marginMaskOffset) |
+				((isLowerBound? 1: 0) << cutoffTypeMaskOffset) |
 				(flags << flagMaskOffset);
 	}
 }
