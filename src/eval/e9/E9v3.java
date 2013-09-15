@@ -181,11 +181,17 @@ public final class E9v3 implements Evaluator3{
 			stage1Score += PawnEval.scorePawns(player, s, loader, enemyQueens, nonPawnMaterial) -
 					PawnEval.scorePawns(1-player, s, loader, alliedQueens, nonPawnMaterial);
 			
+			score = Weight.interpolate(stage1Score, scale) + Weight.interpolate(S((int)(Weight.egScore(stage1Score)*.1), 0), scale);
+			
 			if(phEntry == null){ //store newly calculated pawn values
 				loader.zkey = pawnZkey;
 				pawnHash.put(pawnZkey, loader);
 			}
-			
+		}
+		
+		//stage 1 complete (either we loaded it from hash, or just computed it)
+		//check score + margin for possible cutoff
+		if(flags == 1){
 			final int stage1MarginLower; //margin for a lower cutoff
 			final int stage1MarginUpper; //margin for an upper cutoff
 			if(alliedQueens != 0 && enemyQueens != 0){
@@ -204,8 +210,6 @@ public final class E9v3 implements Evaluator3{
 				stage1MarginLower = 142;
 				stage1MarginUpper = -141;
 			}
-			
-			score = Weight.interpolate(stage1Score, scale) + Weight.interpolate(S((int)(Weight.egScore(stage1Score)*.1), 0), scale);
 			
 			if(score+stage1MarginLower <= lowerBound){
 				return ScoreEncoder.encode(score, stage1MarginLower, flags, true);
@@ -231,38 +235,40 @@ public final class E9v3 implements Evaluator3{
 				flags++;
 				return ScoreEncoder.encode(score, 0, flags, true);
 			} else{
-				//stage 2 margin related to how much we expect the score to change
-				//maximally due to king safety
-				final int stage2MarginLower;
-				final int stage2MarginUpper;
-				if(alliedQueens != 0 && enemyQueens != 0){
-					//both sides have queen, apply even margin
-					stage2MarginLower = 3;
-					stage2MarginUpper = -3;
-				} else if(alliedQueens != 0){
-					//score will be higher because allied queen, no enemy queen
-					stage2MarginLower = 3;
-					stage2MarginUpper = -3;
-				}  else if(enemyQueens != 0){
-					//score will be lower because enemy queen, no allied queen
-					stage2MarginLower = 2;
-					stage2MarginUpper = -4;
-				} else{
-					//both sides no queen, aplly even margin
-					stage2MarginLower = 0;
-					stage2MarginUpper = -0;
-				}
-				
-				if(score+stage2MarginLower <= lowerBound){
-					return ScoreEncoder.encode(score, stage2MarginLower, flags, true);
-				} if(score+stage2MarginUpper >= upperBound){
-					return ScoreEncoder.encode(score, stage2MarginUpper, flags, false);
-				} else{
-					//margin cutoff failed, calculate king safety scores
-					
-					//record that attack masks were just calculated in stage 2
-					needsAttackMaskRecalc = false;
-				}
+				//record that attack masks were just calculated in stage 2
+				needsAttackMaskRecalc = false;
+			}
+		}
+		
+		//stage 2 was final completed stage (either we loaded it from hash, or just computed it)
+		//check score + margin for possible cutoff
+		if(flags == 2){
+			//stage 2 margin related to how much we expect the score to change
+			//maximally due to king safety
+			final int stage2MarginLower;
+			final int stage2MarginUpper;
+			if(alliedQueens != 0 && enemyQueens != 0){
+				//both sides have queen, apply even margin
+				stage2MarginLower = 3;
+				stage2MarginUpper = -3;
+			} else if(alliedQueens != 0){
+				//score will be higher because allied queen, no enemy queen
+				stage2MarginLower = 3;
+				stage2MarginUpper = -3;
+			}  else if(enemyQueens != 0){
+				//score will be lower because enemy queen, no allied queen
+				stage2MarginLower = 2;
+				stage2MarginUpper = -4;
+			} else{
+				//both sides no queen, aplly even margin
+				stage2MarginLower = 0;
+				stage2MarginUpper = -0;
+			}
+			
+			if(score+stage2MarginLower <= lowerBound){
+				return ScoreEncoder.encode(score, stage2MarginLower, flags, true);
+			} if(score+stage2MarginUpper >= upperBound){
+				return ScoreEncoder.encode(score, stage2MarginUpper, flags, false);
 			}
 		}
 		
