@@ -12,12 +12,6 @@ import eval.e9.pawnEval.PawnEval;
 
 public final class E9v3 implements Evaluator3{
 	
-	//evaluation stage flags, used to denote which eval stage is complete
-	private final static int stage1Flag = 1 << 0;
-	private final static int stage2Flag = 1 << 1;
-	private final static int stage3Flag = 1 << 2;
-	private final static int evalCompleteMask = stage1Flag | stage2Flag | stage3Flag;
-	
 	private final static int[] kingDangerTable;
 	
 	private final static int[] materialWeights = new int[7];
@@ -140,9 +134,10 @@ public final class E9v3 implements Evaluator3{
 		int score = ScoreEncoder.getScore(scoreEncoding);
 		int margin = ScoreEncoder.getMargin(scoreEncoding);
 		int flags = ScoreEncoder.getFlags(scoreEncoding);
+		boolean isLowerBound = ScoreEncoder.isLowerBound(scoreEncoding);
 		
-		if((flags != 0 && (score+margin <= lowerBound || score+margin >= upperBound)) ||
-				(evalCompleteMask & flags) == evalCompleteMask){
+		if((flags < 3 && ((score+margin <= lowerBound && isLowerBound) || (score+margin >= upperBound && !isLowerBound))) ||
+				flags == 3){
 			return scoreEncoding;
 		}
 
@@ -159,7 +154,7 @@ public final class E9v3 implements Evaluator3{
 		final long queens = alliedQueens | enemyQueens;
 		
 		if(flags == 0){
-			flags |= stage1Flag;
+			flags++;
 			
 			//load hashed pawn values, if any
 			final long pawnZkey = s.pawnZkey();
@@ -173,7 +168,6 @@ public final class E9v3 implements Evaluator3{
 				loader = phEntry;
 			}
 			
-			//System.out.println("material score = "+(materialScore[player] - materialScore[1-player]));
 			int stage1Score = S(materialScore[player] - materialScore[1-player]);
 			stage1Score += tempoWeight;
 			
@@ -214,15 +208,16 @@ public final class E9v3 implements Evaluator3{
 			score = Weight.interpolate(stage1Score, scale) + Weight.interpolate(S((int)(Weight.egScore(stage1Score)*.1), 0), scale);
 			
 			if(score+stage1MarginLower <= lowerBound){
-				return ScoreEncoder.encode(score, stage1MarginLower, flags);
+				return ScoreEncoder.encode(score, stage1MarginLower, flags, true);
 			}
 			if(score+stage1MarginUpper >= upperBound){
-				return ScoreEncoder.encode(score, stage1MarginUpper, flags);
+				return ScoreEncoder.encode(score, stage1MarginUpper, flags, false);
 			}
 		}
 		
-		if((flags & stage2Flag) == 0){
-			flags |= stage2Flag;
+		boolean needsAttackMaskRecalc = true;
+		if(flags < 2){
+			flags++;
 
 			final long whitePawnAttacks = Masks.getRawPawnAttacks(0, s.pawns[0]);
 			final long blackPawnAttacks = Masks.getRawPawnAttacks(1, s.pawns[1]);
@@ -233,8 +228,8 @@ public final class E9v3 implements Evaluator3{
 					MobilityEval.scoreMobility(1-player, s, clutterMult, nonPawnMaterial, attackMask);
 			score += Weight.interpolate(stage2Score, scale) + Weight.interpolate(S((int)(Weight.egScore(stage2Score)*.1), 0), scale);
 			if(queens == 0){
-				flags |= stage3Flag;
-				return ScoreEncoder.encode(score, 0, flags);
+				flags++;
+				return ScoreEncoder.encode(score, 0, flags, true);
 			} else{
 				//stage 2 margin related to how much we expect the score to change
 				//maximally due to king safety
@@ -259,39 +254,38 @@ public final class E9v3 implements Evaluator3{
 				}
 				
 				if(score+stage2MarginLower <= lowerBound){
-					return ScoreEncoder.encode(score, stage2MarginLower, flags);
+					return ScoreEncoder.encode(score, stage2MarginLower, flags, true);
 				} if(score+stage2MarginUpper >= upperBound){
-					return ScoreEncoder.encode(score, stage2MarginUpper, flags);
+					return ScoreEncoder.encode(score, stage2MarginUpper, flags, false);
 				} else{
-					flags |= stage3Flag;
 					//margin cutoff failed, calculate king safety scores
-					final int stage3Score = evalKingSafety(player, s, alliedQueens, enemyQueens);
-
-					score += Weight.interpolate(stage3Score, scale) + Weight.interpolate(S((int)(Weight.egScore(stage3Score)*.1), 0), scale);
 					
-					return ScoreEncoder.encode(score, 0, flags);
+					//record that attack masks were just calculated in stage 2
+					needsAttackMaskRecalc = false;
 				}
 			}
 		}
 		
-		if((flags & stage3Flag) == 0){
+		if(flags < 3){
 			assert queens != 0; //should be caugt by stage 2 eval if queens == 0
 			
-			flags |= stage3Flag;
+			flags++;
 
-			final long whitePawnAttacks = Masks.getRawPawnAttacks(0, s.pawns[0]);
-			final long blackPawnAttacks = Masks.getRawPawnAttacks(1, s.pawns[1]);
-			final long pawnAttacks = whitePawnAttacks | blackPawnAttacks;
-			final double clutterMult = clutterIndex[(int)BitUtil.getSetBits(pawnAttacks)];
-			
-			//recalculate attack masks
-			MobilityEval.scoreMobility(player, s, clutterMult, nonPawnMaterial, attackMask);
-			MobilityEval.scoreMobility(1-player, s, clutterMult, nonPawnMaterial, attackMask);
+			if(needsAttackMaskRecalc){
+				final long whitePawnAttacks = Masks.getRawPawnAttacks(0, s.pawns[0]);
+				final long blackPawnAttacks = Masks.getRawPawnAttacks(1, s.pawns[1]);
+				final long pawnAttacks = whitePawnAttacks | blackPawnAttacks;
+				final double clutterMult = clutterIndex[(int)BitUtil.getSetBits(pawnAttacks)];
+				
+				//recalculate attack masks
+				MobilityEval.scoreMobility(player, s, clutterMult, nonPawnMaterial, attackMask);
+				MobilityEval.scoreMobility(1-player, s, clutterMult, nonPawnMaterial, attackMask);
+			}
 
 			final int stage3Score = evalKingSafety(player, s, alliedQueens, enemyQueens);
 
 			score += Weight.interpolate(stage3Score, scale) + Weight.interpolate(S((int)(Weight.egScore(stage3Score)*.1), 0), scale);
-			return ScoreEncoder.encode(score, 0, flags);
+			return ScoreEncoder.encode(score, 0, flags, true);
 		}
 		
 		
