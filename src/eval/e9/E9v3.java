@@ -152,7 +152,8 @@ public final class E9v3 implements Evaluator3{
 		final long alliedQueens = s.queens[player];
 		final long enemyQueens = s.queens[1-player];
 		final long queens = alliedQueens | enemyQueens;
-		
+
+		//------------  stage 1 computations  -----------------------
 		if(flags == 0){
 			flags++;
 			
@@ -223,7 +224,8 @@ public final class E9v3 implements Evaluator3{
 				}
 			}
 		}
-		
+
+		//------------  stage 2 computations  -----------------------
 		boolean needsAttackMaskRecalc = true;
 		if(flags == 1){
 			flags++;
