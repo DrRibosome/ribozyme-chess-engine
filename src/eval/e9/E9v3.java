@@ -237,7 +237,7 @@ public final class E9v3 implements Evaluator3{
 					MobilityEval.scoreMobility(1-player, s, clutterMult, nonPawnMaterial, attackMask);
 			score += Weight.interpolate(stage2Score, scale) + Weight.interpolate(S((int)(Weight.egScore(stage2Score)*.1), 0), scale);
 			if(queens == 0){
-				flags++;
+				flags++; //increment flag to mark stage 3 as complete
 				return ScoreEncoder.encode(score, 0, flags, true);
 			} else{
 				//record that attack masks were just calculated in stage 2
@@ -282,32 +282,25 @@ public final class E9v3 implements Evaluator3{
 			}
 		}
 		
-		if(flags == 2){
-			assert queens != 0; //should be caugt by stage 2 eval if queens == 0
+		//------------  stage 3 computations  -----------------------
+		assert queens != 0; //should be caugt by stage 2 eval if queens == 0
+		flags++;
+
+		if(needsAttackMaskRecalc){
+			final long whitePawnAttacks = Masks.getRawPawnAttacks(0, s.pawns[0]);
+			final long blackPawnAttacks = Masks.getRawPawnAttacks(1, s.pawns[1]);
+			final long pawnAttacks = whitePawnAttacks | blackPawnAttacks;
+			final double clutterMult = clutterIndex[(int)BitUtil.getSetBits(pawnAttacks)];
 			
-			flags++;
-
-			if(needsAttackMaskRecalc){
-				final long whitePawnAttacks = Masks.getRawPawnAttacks(0, s.pawns[0]);
-				final long blackPawnAttacks = Masks.getRawPawnAttacks(1, s.pawns[1]);
-				final long pawnAttacks = whitePawnAttacks | blackPawnAttacks;
-				final double clutterMult = clutterIndex[(int)BitUtil.getSetBits(pawnAttacks)];
-				
-				//recalculate attack masks
-				MobilityEval.scoreMobility(player, s, clutterMult, nonPawnMaterial, attackMask);
-				MobilityEval.scoreMobility(1-player, s, clutterMult, nonPawnMaterial, attackMask);
-			}
-
-			final int stage3Score = evalKingSafety(player, s, alliedQueens, enemyQueens);
-
-			score += Weight.interpolate(stage3Score, scale) + Weight.interpolate(S((int)(Weight.egScore(stage3Score)*.1), 0), scale);
-			return ScoreEncoder.encode(score, 0, flags, true);
+			//recalculate attack masks
+			MobilityEval.scoreMobility(player, s, clutterMult, nonPawnMaterial, attackMask);
+			MobilityEval.scoreMobility(1-player, s, clutterMult, nonPawnMaterial, attackMask);
 		}
-		
-		
-		//evaluation should complete in one of the stages above
-		assert false;
-		return 0;
+
+		final int stage3Score = evalKingSafety(player, s, alliedQueens, enemyQueens);
+
+		score += Weight.interpolate(stage3Score, scale) + Weight.interpolate(S((int)(Weight.egScore(stage3Score)*.1), 0), scale);
+		return ScoreEncoder.encode(score, 0, flags, true);
 	}
 	
 	private int evalKingSafety(final int player, final State4 s, final long alliedQueens, final long enemyQueens){
