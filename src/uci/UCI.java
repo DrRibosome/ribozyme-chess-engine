@@ -12,6 +12,14 @@ import util.FenParser;
 public final class UCI {
 	private UCIEngine engine;
 	private Position pos;
+	/** if true ignores uci quit command*/
+	private final boolean ignoreQuit;
+
+	public UCI(final int hashSize, final int pawnHashSize, boolean printInfo, boolean ignoreQuit){
+		engine = new RibozymeEngine(hashSize, pawnHashSize, printInfo);
+		this.ignoreQuit = ignoreQuit;
+		t.start();
+	}
 	
 	private final Thread t = new Thread(){
 		@Override
@@ -72,7 +80,7 @@ public final class UCI {
 				} else if(s[0].equalsIgnoreCase("go")){
 					GoParams params = new GoParams(interfaceCommand);
 					engine.go(params, pos);
-				} else if(s[0].equalsIgnoreCase("quit")){
+				} else if(!ignoreQuit && s[0].equalsIgnoreCase("quit")){
 					break;
 				} else if(s[0].equalsIgnoreCase("print")){ //print state information
 					if(pos == null){
@@ -121,15 +129,12 @@ public final class UCI {
 		return m;
 	}
 	
-	public UCI(final int hashSize, final int pawnHashSize, boolean printInfo){
-		engine = new RibozymeEngine(hashSize, pawnHashSize, printInfo);
-		t.start();
-	}
-	
 	public static void main(String[] args){
 		int hashSize = 20; //hash size, as a power of 2
 		int pawnHashSize = 16;
 		boolean printInfo = true;
+		boolean ignoreQuit = false;
+		
 		for(int a = 0; a < args.length; a++){
 			try{
 				if(args[a].equals("--hash")){ //sets main hash size (must be power of 2)
@@ -138,12 +143,14 @@ public final class UCI {
 					pawnHashSize = Integer.parseInt(args[++a]);
 				} else if(args[a].equals("--no-info")){ //turns off uci info printing (ie, pv, score, time, etc)
 					printInfo = false;
+				} else if(args[a].equals("--ignore-quit")){ //turns off handling of uci quit command (need C-c to shutdown)
+					ignoreQuit = true;
 				}
 			} catch(Exception e){
 				System.out.println("error, incorrect args");
 				System.exit(1);
 			}
 		}
-		new UCI(hashSize, pawnHashSize, printInfo);
+		new UCI(hashSize, pawnHashSize, printInfo, ignoreQuit);
 	}
 }
