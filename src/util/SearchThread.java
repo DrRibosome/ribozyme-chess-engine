@@ -3,7 +3,7 @@ package util;
 import java.util.concurrent.Semaphore;
 
 import search.MoveSet;
-import search.Search4;
+import search.Search;
 import search.SearchListener2;
 import state4.BitUtil;
 import state4.Masks;
@@ -19,12 +19,12 @@ public final class SearchThread extends Thread{
 		volatile int maxDepth;
 	}
 	
-	private final Search4 s;
+	private final Search s;
 	volatile boolean searching = false;
 	private final SearchParams p = new SearchParams();
 	private final Semaphore sem = new Semaphore(1);
 	
-	public SearchThread(Search4 s){
+	public SearchThread(Search s){
 		this.s = s;
 		setDaemon(true);
 	}

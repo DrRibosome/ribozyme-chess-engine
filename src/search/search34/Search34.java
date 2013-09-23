@@ -1,7 +1,7 @@
 package search.search34;
 
 import search.MoveSet;
-import search.Search4;
+import search.Search;
 import search.SearchListener2;
 import search.SearchStat;
 import state4.BitUtil;
@@ -13,7 +13,7 @@ import eval.Evaluator3;
 import eval.ScoreEncoder;
 
 /** heavy search reductions for non-pv lines after depth 7*/
-public final class Search34v4 implements Search4{
+public final class Search34 implements Search{
 	/** pvs framework node types*/
 	private static enum NodeType{
 		pv(){
@@ -103,11 +103,11 @@ public final class Search34v4 implements Search4{
 		return lmrReduction[depth > 31? 31: depth][moveCount > 63? 63: moveCount];
 	}
 	
-	public Search34v4(Evaluator3 e, int hashSize){
+	public Search34(Evaluator3 e, int hashSize){
 		this(e, hashSize, true);
 	}
 	
-	public Search34v4(Evaluator3 e, int hashSize, boolean printPV){
+	public Search34(Evaluator3 e, int hashSize, boolean printPV){
 		this.e = e;
 		
 		m = new ZMap4(hashSize);
