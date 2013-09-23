@@ -305,9 +305,9 @@ public final class Search34v4 implements Search4{
 			return 0;
 		} else if(depth <= 0){
 			final int q = qsearch(player, alpha, beta, 0, stackIndex, nt, s);
-			if(q > 70000 && nt == NodeType.pv){
+			if(q > 70000 && nt == NodeType.pv){ //false mate for enemy king
 				return recurse(player, q, 90000, ONE_PLY, nt, stackIndex, s);
-			} else if(q < -70000 && nt == NodeType.pv){
+			} else if(q < -70000 && nt == NodeType.pv){ //false mate for allied king
 				return recurse(player, -90000, q, ONE_PLY, nt, stackIndex, s);
 			} else{
 				return q;
