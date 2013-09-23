@@ -5,7 +5,7 @@ import state4.BitUtil;
 import state4.Masks;
 import state4.State4;
 
-final class MoveGen2 {
+final class MoveGen {
 
 	public final static int tteMoveRank = -7;
 	public final static int promoteTakeRank = -6;
@@ -19,7 +19,7 @@ final class MoveGen2 {
 	
 	private final FeatureSet[] f;
 	
-	MoveGen2(){
+	MoveGen(){
 		f = new FeatureSet[2];
 		for(int a = 0; a < f.length; a++) f[a] = new FeatureSet();
 	}

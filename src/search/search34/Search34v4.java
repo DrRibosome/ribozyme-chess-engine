@@ -74,7 +74,7 @@ public final class Search34v4 implements Search4{
 	private final static int stackSize = 256;
 	/** sequence number for hash entries*/
 	private int seq;
-	private final MoveGen2 moveGen = new MoveGen2();
+	private final MoveGen moveGen = new MoveGen();
 	private final TTEntry fillEntry = new TTEntry();
 	private volatile boolean cutoffSearch = false;
 	private final static int[][] lmrReduction = new int[32][64];
@@ -354,7 +354,7 @@ public final class Search34v4 implements Search4{
 				final MoveSet temp = mset[w++];
 				temp.piece = 1L << MoveEncoder.getPos1(tteMoveEncoding);
 				temp.moves = 1L << MoveEncoder.getPos2(tteMoveEncoding);
-				temp.rank = MoveGen2.tteMoveRank;
+				temp.rank = MoveGen.tteMoveRank;
 				tteMove = true;
 			}
 			
@@ -490,7 +490,7 @@ public final class Search34v4 implements Search4{
 				final MoveSet tempMset = mset[w++];
 				tempMset.piece = 1L<<MoveEncoder.getPos1(tteMoveEncoding);
 				tempMset.moves = 1L<<MoveEncoder.getPos2(tteMoveEncoding);
-				tempMset.rank = MoveGen2.tteMoveRank;
+				tempMset.rank = MoveGen.tteMoveRank;
 			}
 		}
 		
@@ -507,7 +507,7 @@ public final class Search34v4 implements Search4{
 				final MoveSet temp = mset[w++];
 				temp.piece = 1L << MoveEncoder.getPos1(l1killer1Temp);
 				temp.moves = 1L << MoveEncoder.getPos2(l1killer1Temp);
-				temp.rank = MoveGen2.killerMoveRank;
+				temp.rank = MoveGen.killerMoveRank;
 				l1killer1 = l1killer1Temp & 0xFFFL;
 			} else{
 				l1killer1 = 0;
@@ -518,7 +518,7 @@ public final class Search34v4 implements Search4{
 				final MoveSet temp = mset[w++];
 				temp.piece = 1L << MoveEncoder.getPos1(l1killer2Temp);
 				temp.moves = 1L << MoveEncoder.getPos2(l1killer2Temp);
-				temp.rank = MoveGen2.killerMoveRank;
+				temp.rank = MoveGen.killerMoveRank;
 				l1killer2 = l1killer2Temp & 0xFFFL;
 			} else{
 				l1killer2 = 0;
@@ -532,7 +532,7 @@ public final class Search34v4 implements Search4{
 					final MoveSet temp = mset[w++];
 					temp.piece = 1L << MoveEncoder.getPos1(l2killer1Temp);
 					temp.moves = 1L << MoveEncoder.getPos2(l2killer1Temp);
-					temp.rank = MoveGen2.killerMoveRank;
+					temp.rank = MoveGen.killerMoveRank;
 					l2killer1 = l2killer1Temp & 0xFFFL;
 				} else{
 					l2killer1 = 0;
@@ -543,7 +543,7 @@ public final class Search34v4 implements Search4{
 					final MoveSet temp = mset[w++];
 					temp.piece = 1L << MoveEncoder.getPos1(l2killer2Temp);
 					temp.moves = 1L << MoveEncoder.getPos2(l2killer2Temp);
-					temp.rank = MoveGen2.killerMoveRank;
+					temp.rank = MoveGen.killerMoveRank;
 					l2killer2 = l2killer2Temp & 0xFFFL;
 				} else{
 					l2killer2 = 0;
@@ -753,7 +753,7 @@ public final class Search34v4 implements Search4{
 				final MoveSet temp = mset[w++];
 				temp.piece = 1L<<MoveEncoder.getPos1(encoding);
 				temp.moves = 1L<<MoveEncoder.getPos2(encoding);
-				temp.rank = MoveGen2.tteMoveRank;
+				temp.rank = MoveGen.tteMoveRank;
 				hasTTMove = true;
 				ttMove = encoding;
 			} else{
