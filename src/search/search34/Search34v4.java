@@ -64,6 +64,8 @@ public final class Search34v4 implements Search4{
 	}
 	
 	private final static int ONE_PLY = 8;
+	private final static int maxScore = 90000;
+	private final static int minScore = -90000;
 
 	private final MoveList[] stack;
 	private final SearchStat32k stats = new SearchStat32k();
@@ -153,11 +155,8 @@ public final class Search34v4 implements Search4{
 		long bestMove = 0;
 		int score = 0;
 		
-		final int max = 90000;
-		final int min = -90000;
-		
-		int alpha = min;
-		int beta = max;
+		int alpha = minScore;
+		int beta = maxScore;
 		
 		long nodesSearched = 0;
 		boolean skipAdjust = false;
@@ -166,8 +165,8 @@ public final class Search34v4 implements Search4{
 			s.resetHistory();
 			
 			if(i <= 3){
-				alpha = min;
-				beta = max;
+				alpha = minScore;
+				beta = maxScore;
 			} else if(i > 3 && !skipAdjust){
 				final int index = i-1-1; //index of most recent score observation
 				int est = stats.scores[index];
@@ -306,9 +305,9 @@ public final class Search34v4 implements Search4{
 		} else if(depth <= 0){
 			final int q = qsearch(player, alpha, beta, 0, stackIndex, nt, s);
 			if(q > 70000 && nt == NodeType.pv){ //false mate for enemy king
-				return recurse(player, q, 90000, ONE_PLY, nt, stackIndex, s);
+				return recurse(player, q, maxScore, ONE_PLY, nt, stackIndex, s);
 			} else if(q < -70000 && nt == NodeType.pv){ //false mate for allied king
-				return recurse(player, -90000, q, ONE_PLY, nt, stackIndex, s);
+				return recurse(player, minScore, q, ONE_PLY, nt, stackIndex, s);
 			} else{
 				return q;
 			}
