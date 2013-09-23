@@ -10,7 +10,7 @@ import eval.ScoreEncoder;
 import eval.e9.mobilityEval.MobilityEval;
 import eval.e9.pawnEval.PawnEval;
 
-public final class E9v3 implements Evaluator3{
+public final class E9 implements Evaluator3{
 	
 	private final static int[] kingDangerTable;
 	
@@ -75,11 +75,11 @@ public final class E9v3 implements Evaluator3{
 		materialWeights[State4.PIECE_TYPE_PAWN] = 100;
 	}
 	
-	public E9v3(){
+	public E9(){
 		this(16);
 	}
 	
-	public E9v3(int pawnHashSize){
+	public E9(int pawnHashSize){
 		int startMaterial = (
 				  materialWeights[State4.PIECE_TYPE_PAWN]*8
 				+ materialWeights[State4.PIECE_TYPE_KNIGHT]*2
