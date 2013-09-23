@@ -5,7 +5,7 @@ import search.Search;
 import search.search34.Search34;
 import util.SearchThread;
 import util.TimerThread;
-import eval.Evaluator3;
+import eval.Evaluator;
 import eval.e9.E9;
 
 public final class RibozymeEngine implements UCIEngine{
@@ -19,7 +19,7 @@ public final class RibozymeEngine implements UCIEngine{
 	
 	public RibozymeEngine(final int hashSize, final int pawnHashSize, boolean printInfo){
 		
-		final Evaluator3 e = new E9(pawnHashSize);
+		final Evaluator e = new E9(pawnHashSize);
 		
 		s = new Search34(e, hashSize, printInfo);
 		

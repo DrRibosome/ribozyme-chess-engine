@@ -4,13 +4,13 @@ import state4.BitUtil;
 import state4.Masks;
 import state4.MoveEncoder;
 import state4.State4;
-import eval.Evaluator3;
+import eval.Evaluator;
 import eval.PositionMasks;
 import eval.ScoreEncoder;
 import eval.e9.mobilityEval.MobilityEval;
 import eval.e9.pawnEval.PawnEval;
 
-public final class E9 implements Evaluator3{
+public final class E9 implements Evaluator{
 	
 	private final static int[] kingDangerTable;
 	

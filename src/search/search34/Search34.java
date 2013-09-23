@@ -9,7 +9,7 @@ import state4.Masks;
 import state4.MoveEncoder;
 import state4.SEE;
 import state4.State4;
-import eval.Evaluator3;
+import eval.Evaluator;
 import eval.ScoreEncoder;
 
 /** heavy search reductions for non-pv lines after depth 7*/
@@ -69,7 +69,7 @@ public final class Search34 implements Search{
 
 	private final MoveList[] stack;
 	private final SearchStat32k stats = new SearchStat32k();
-	private final Evaluator3 e;
+	private final Evaluator e;
 	private final int qply = 12;
 	private final Hash m;
 	private SearchListener2 l;
@@ -103,11 +103,11 @@ public final class Search34 implements Search{
 		return lmrReduction[depth > 31? 31: depth][moveCount > 63? 63: moveCount];
 	}
 	
-	public Search34(Evaluator3 e, int hashSize){
+	public Search34(Evaluator e, int hashSize){
 		this(e, hashSize, true);
 	}
 	
-	public Search34(Evaluator3 e, int hashSize, boolean printPV){
+	public Search34(Evaluator e, int hashSize, boolean printPV){
 		this.e = e;
 		
 		m = new ZMap4(hashSize);
