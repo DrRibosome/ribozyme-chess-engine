@@ -306,7 +306,9 @@ public final class Search34v4 implements Search4{
 		} else if(depth <= 0){
 			final int q = qsearch(player, alpha, beta, 0, stackIndex, nt, s);
 			if(q > 70000 && nt == NodeType.pv){
-				return recurse(player, alpha, beta, ONE_PLY, nt, stackIndex, s);
+				return recurse(player, q, 90000, ONE_PLY, nt, stackIndex, s);
+			} else if(q < -70000 && nt == NodeType.pv){
+				return recurse(player, -90000, q, ONE_PLY, nt, stackIndex, s);
 			} else{
 				return q;
 			}
