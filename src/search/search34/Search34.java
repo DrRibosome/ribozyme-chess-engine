@@ -818,7 +818,7 @@ public final class Search34 implements Search{
 			s.undoMove();
 			this.e.undoMove(encoding);
 
-			if(isDrawable && 0 > g){// && -10*depth > g){ //can draw instead of making the move
+			if(isDrawable && 0 > g){ //can draw instead of making the move
 				g = 0;
 				encoding = 0;
 			}
