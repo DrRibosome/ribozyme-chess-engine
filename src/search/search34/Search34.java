@@ -760,7 +760,7 @@ public final class Search34 implements Search{
 				ttMove = 0;
 			}
 			
-			scoreEncoding = nt == NodeType.pv? this.e.refine(player, s, -90000, 90000, e.staticEval):
+			scoreEncoding = nt == NodeType.pv? this.e.refine(player, s, minScore, maxScore, e.staticEval):
 				this.e.refine(player, s, alpha, beta, e.staticEval);
 		} else{
 			hasTTMove = false;
