@@ -1,27 +1,27 @@
 package uci;
 
 import search.MoveSet;
-import search.Search4;
-import search.search34.Search34v4;
+import search.Search;
+import search.search34.Search34;
 import util.SearchThread;
 import util.TimerThread;
-import eval.Evaluator3;
-import eval.e9.E9v3;
+import eval.Evaluator;
+import eval.e9.E9;
 
 public final class RibozymeEngine implements UCIEngine{
 
 	private final static String name = "ribozyme 0.1.2";
 	
-	private final Search4 s;
+	private final Search s;
 	private final MoveSet moveStore = new MoveSet();
 	private final TimerThread timerThread;
 	private final SearchThread searchThread;
 	
-	public RibozymeEngine(final int hashSize, final int pawnHashSize){
+	public RibozymeEngine(final int hashSize, final int pawnHashSize, boolean printInfo){
 		
-		final Evaluator3 e = new E9v3(pawnHashSize);
+		final Evaluator e = new E9(pawnHashSize);
 		
-		s = new Search34v4(e, hashSize);
+		s = new Search34(e, hashSize, printInfo);
 		
 		searchThread = new SearchThread(s);
 		timerThread = new TimerThread(searchThread);

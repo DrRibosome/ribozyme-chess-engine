@@ -1,7 +1,7 @@
 package search.search34;
 
 import search.MoveSet;
-import search.Search4;
+import search.Search;
 import search.SearchListener2;
 import search.SearchStat;
 import state4.BitUtil;
@@ -9,11 +9,11 @@ import state4.Masks;
 import state4.MoveEncoder;
 import state4.SEE;
 import state4.State4;
-import eval.Evaluator3;
+import eval.Evaluator;
 import eval.ScoreEncoder;
 
 /** heavy search reductions for non-pv lines after depth 7*/
-public final class Search34v4 implements Search4{
+public final class Search34 implements Search{
 	/** pvs framework node types*/
 	private static enum NodeType{
 		pv(){
@@ -64,17 +64,19 @@ public final class Search34v4 implements Search4{
 	}
 	
 	private final static int ONE_PLY = 8;
+	private final static int maxScore = 90000;
+	private final static int minScore = -90000;
 
 	private final MoveList[] stack;
 	private final SearchStat32k stats = new SearchStat32k();
-	private final Evaluator3 e;
+	private final Evaluator e;
 	private final int qply = 12;
 	private final Hash m;
 	private SearchListener2 l;
 	private final static int stackSize = 256;
 	/** sequence number for hash entries*/
 	private int seq;
-	private final MoveGen2 moveGen = new MoveGen2();
+	private final MoveGen moveGen = new MoveGen();
 	private final TTEntry fillEntry = new TTEntry();
 	private volatile boolean cutoffSearch = false;
 	private final static int[][] lmrReduction = new int[32][64];
@@ -101,11 +103,11 @@ public final class Search34v4 implements Search4{
 		return lmrReduction[depth > 31? 31: depth][moveCount > 63? 63: moveCount];
 	}
 	
-	public Search34v4(Evaluator3 e, int hashSize){
+	public Search34(Evaluator e, int hashSize){
 		this(e, hashSize, true);
 	}
 	
-	public Search34v4(Evaluator3 e, int hashSize, boolean printPV){
+	public Search34(Evaluator e, int hashSize, boolean printPV){
 		this.e = e;
 		
 		m = new ZMap4(hashSize);
@@ -153,11 +155,8 @@ public final class Search34v4 implements Search4{
 		long bestMove = 0;
 		int score = 0;
 		
-		final int max = 90000;
-		final int min = -90000;
-		
-		int alpha = min;
-		int beta = max;
+		int alpha = minScore;
+		int beta = maxScore;
 		
 		long nodesSearched = 0;
 		boolean skipAdjust = false;
@@ -166,8 +165,8 @@ public final class Search34v4 implements Search4{
 			s.resetHistory();
 			
 			if(i <= 3){
-				alpha = min;
-				beta = max;
+				alpha = minScore;
+				beta = maxScore;
 			} else if(i > 3 && !skipAdjust){
 				final int index = i-1-1; //index of most recent score observation
 				int est = stats.scores[index];
@@ -214,6 +213,7 @@ public final class Search34v4 implements Search4{
 				stats.maxPlySearched = i;
 				
 				bestMove = pvStore[0];
+				
 				if(printPV){
 					String pvString = "";
 					for(int a = 0; a < i; a++){
@@ -304,8 +304,10 @@ public final class Search34v4 implements Search4{
 			return 0;
 		} else if(depth <= 0){
 			final int q = qsearch(player, alpha, beta, 0, stackIndex, nt, s);
-			if(q > 70000 && nt == NodeType.pv){
-				return recurse(player, alpha, beta, ONE_PLY, nt, stackIndex, s);
+			if(q > 70000 && nt == NodeType.pv){ //false mate for enemy king
+				return recurse(player, q, maxScore, ONE_PLY, nt, stackIndex, s);
+			} else if(q < -70000 && nt == NodeType.pv){ //false mate for allied king
+				return recurse(player, minScore, q, ONE_PLY, nt, stackIndex, s);
 			} else{
 				return q;
 			}
@@ -351,7 +353,7 @@ public final class Search34v4 implements Search4{
 				final MoveSet temp = mset[w++];
 				temp.piece = 1L << MoveEncoder.getPos1(tteMoveEncoding);
 				temp.moves = 1L << MoveEncoder.getPos2(tteMoveEncoding);
-				temp.rank = MoveGen2.tteMoveRank;
+				temp.rank = MoveGen.tteMoveRank;
 				tteMove = true;
 			}
 			
@@ -487,7 +489,7 @@ public final class Search34v4 implements Search4{
 				final MoveSet tempMset = mset[w++];
 				tempMset.piece = 1L<<MoveEncoder.getPos1(tteMoveEncoding);
 				tempMset.moves = 1L<<MoveEncoder.getPos2(tteMoveEncoding);
-				tempMset.rank = MoveGen2.tteMoveRank;
+				tempMset.rank = MoveGen.tteMoveRank;
 			}
 		}
 		
@@ -504,7 +506,7 @@ public final class Search34v4 implements Search4{
 				final MoveSet temp = mset[w++];
 				temp.piece = 1L << MoveEncoder.getPos1(l1killer1Temp);
 				temp.moves = 1L << MoveEncoder.getPos2(l1killer1Temp);
-				temp.rank = MoveGen2.killerMoveRank;
+				temp.rank = MoveGen.killerMoveRank;
 				l1killer1 = l1killer1Temp & 0xFFFL;
 			} else{
 				l1killer1 = 0;
@@ -515,7 +517,7 @@ public final class Search34v4 implements Search4{
 				final MoveSet temp = mset[w++];
 				temp.piece = 1L << MoveEncoder.getPos1(l1killer2Temp);
 				temp.moves = 1L << MoveEncoder.getPos2(l1killer2Temp);
-				temp.rank = MoveGen2.killerMoveRank;
+				temp.rank = MoveGen.killerMoveRank;
 				l1killer2 = l1killer2Temp & 0xFFFL;
 			} else{
 				l1killer2 = 0;
@@ -529,7 +531,7 @@ public final class Search34v4 implements Search4{
 					final MoveSet temp = mset[w++];
 					temp.piece = 1L << MoveEncoder.getPos1(l2killer1Temp);
 					temp.moves = 1L << MoveEncoder.getPos2(l2killer1Temp);
-					temp.rank = MoveGen2.killerMoveRank;
+					temp.rank = MoveGen.killerMoveRank;
 					l2killer1 = l2killer1Temp & 0xFFFL;
 				} else{
 					l2killer1 = 0;
@@ -540,7 +542,7 @@ public final class Search34v4 implements Search4{
 					final MoveSet temp = mset[w++];
 					temp.piece = 1L << MoveEncoder.getPos1(l2killer2Temp);
 					temp.moves = 1L << MoveEncoder.getPos2(l2killer2Temp);
-					temp.rank = MoveGen2.killerMoveRank;
+					temp.rank = MoveGen.killerMoveRank;
 					l2killer2 = l2killer2Temp & 0xFFFL;
 				} else{
 					l2killer2 = 0;
@@ -750,7 +752,7 @@ public final class Search34v4 implements Search4{
 				final MoveSet temp = mset[w++];
 				temp.piece = 1L<<MoveEncoder.getPos1(encoding);
 				temp.moves = 1L<<MoveEncoder.getPos2(encoding);
-				temp.rank = MoveGen2.tteMoveRank;
+				temp.rank = MoveGen.tteMoveRank;
 				hasTTMove = true;
 				ttMove = encoding;
 			} else{
@@ -758,7 +760,7 @@ public final class Search34v4 implements Search4{
 				ttMove = 0;
 			}
 			
-			scoreEncoding = nt == NodeType.pv? this.e.refine(player, s, -90000, 90000, e.staticEval):
+			scoreEncoding = nt == NodeType.pv? this.e.refine(player, s, minScore, maxScore, e.staticEval):
 				this.e.refine(player, s, alpha, beta, e.staticEval);
 		} else{
 			hasTTMove = false;
@@ -816,7 +818,7 @@ public final class Search34v4 implements Search4{
 			s.undoMove();
 			this.e.undoMove(encoding);
 
-			if(isDrawable && 0 > g){// && -10*depth > g){ //can draw instead of making the move
+			if(isDrawable && 0 > g){ //can draw instead of making the move
 				g = 0;
 				encoding = 0;
 			}

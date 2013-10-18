@@ -3,18 +3,26 @@ package eval.e9;
 public final class PawnHashEntry {
 	/** score for white*/
 	public int score1;
+	/** number of isolated pawns for white*/
 	public int isolatedPawns1;
+	/** number of backward pawns for white*/
 	public int backwardPawns1;
+	/** number of doubled pawns for white*/
 	public int doubledPawns1;
 	
 	/** score for black*/
 	public int score2;
+	/** number of isolated pawns for white*/
 	public int isolatedPawns2;
+	/** number of backward pawns for white*/
 	public int backwardPawns2;
+	/** number of doubled pawns for white*/
 	public int doubledPawns2;
 	
 	/** all passed pawns in the game (ie, both players passed pawns aggregate)*/
 	public long passedPawns;
+	/** all weak pawns in the game*/
+	public long weakPawns;
 	public long zkey;
 	int seq;
 	
@@ -30,6 +38,7 @@ public final class PawnHashEntry {
 		doubledPawns2 = 0;
 		
 		passedPawns = 0;
+		weakPawns = 0;
 		zkey = 0;
 	}
 	
@@ -45,6 +54,7 @@ public final class PawnHashEntry {
 		target.doubledPawns2 = src.doubledPawns2;
 		
 		target.passedPawns = src.passedPawns;
+		target.weakPawns = src.weakPawns;
 		target.zkey = src.zkey;
 	}
 }

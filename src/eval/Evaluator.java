@@ -2,7 +2,7 @@ package eval;
 
 import state4.State4;
 
-public interface Evaluator3 {
+public interface Evaluator {
 	
 	public int eval(int player, State4 s);
 	

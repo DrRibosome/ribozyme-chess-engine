@@ -10,6 +10,7 @@ public final class PositionMasks {
 	public final static long[][] opposedPawnMask;
 	/** single pawn attacks, index [player][position-64]*/
 	public final static long[][] pawnAttacks;
+	/** mask to determine of a pawn is supported by another pawn (ie, chained) <p> indexed [player][position-64]*/
 	public final static long[][] pawnChainMask;
 	/** mask for bishop square type (ie, light/dark), index=0: dark, index=1, light*/
 	public final static long[] bishopSquareMask;
@@ -71,8 +72,8 @@ public final class PositionMasks {
 	
 	public static void main(String[] args){
 		for(int a = 0; a < 64; a++){
-			//System.out.println("a="+a);
-			//System.out.println(Masks.getString(isolatedPawnMask[a]));
+			System.out.println("a="+a);
+			System.out.println(Masks.getString(pawnChainMask[0][a]));
 			//System.out.println(Masks.getString(isolatedPawnMask[a%8]));// & Masks.passedPawnMasks[1][a]));
 			//System.out.println(Masks.getString(isolatedPawnMask[a]));
 		}

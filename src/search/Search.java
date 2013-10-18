@@ -3,7 +3,7 @@ package search;
 import state4.State4;
 
 
-public interface Search4 {
+public interface Search {
 	/** search until {@link #cutoffSearch()} is called, moveStore should be length 2*/
 	public void search(int player, State4 s, MoveSet moveStore);
 	/** search up to a max depth*/
