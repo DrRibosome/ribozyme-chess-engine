@@ -283,7 +283,6 @@ final class MoveGen {
 					temp.piece = p;
 					temp.moves = m;
 					
-					
 					final int rank;
 					if(take && promote){
 						rank = promoteTakeRank;
@@ -299,13 +298,11 @@ final class MoveGen {
 					temp.promotionType = State4.PROMOTE_QUEEN;
 					
 					if(promote){
-						final MoveSet temp2 = mset[w++];
-						temp2.piece = p;
-						temp2.moves = m;
-						
-						final int rank2 = take? 8: 9;
-						temp2.rank = rank2;
-						temp2.promotionType = State4.PROMOTE_KNIGHT;
+						final MoveSet knightPromoteMove = mset[w++];
+						knightPromoteMove.piece = p;
+						knightPromoteMove.moves = m;
+						knightPromoteMove.rank = take? 8: 9;
+						knightPromoteMove.promotionType = State4.PROMOTE_KNIGHT;
 					}
 				}
 			}
