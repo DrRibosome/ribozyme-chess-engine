@@ -489,7 +489,8 @@ public final class E9 implements Evaluator{
 			materialScore[1-player] -= dir*materialWeights[State4.PIECE_TYPE_PAWN];
 		}
 		if(MoveEncoder.isPawnPromotion(encoding)){
-			materialScore[player] += dir*(materialWeights[State4.PIECE_TYPE_QUEEN]-
+			int promotionType = MoveEncoder.getPawnPromotionType(encoding)+2; //translate pawn promotion type into piece type
+			materialScore[player] += dir*(materialWeights[promotionType]-
 					materialWeights[State4.PIECE_TYPE_PAWN]);
 		}
 	}
