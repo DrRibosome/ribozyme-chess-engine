@@ -27,7 +27,7 @@ public final class RibozymeEngine implements UCIEngine{
 		if(warmUp){
 			//warm up via a number of fixed depth searches
 			final long fenSeed = 34827L;
-			final int searchDepth = 7;
+			final int searchDepth = 8;
 			
 			String[] warmUpFens = new String[]{
 					"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
