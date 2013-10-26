@@ -15,8 +15,10 @@ public final class UCI {
 	/** if true ignores uci quit command*/
 	private final boolean ignoreQuit;
 
-	public UCI(final int hashSize, final int pawnHashSize, boolean printInfo, boolean ignoreQuit){
-		engine = new RibozymeEngine(hashSize, pawnHashSize, printInfo);
+	public UCI(final int hashSize, final int pawnHashSize,
+			boolean printInfo, boolean ignoreQuit, boolean warmUp){
+		engine = new RibozymeEngine(hashSize, pawnHashSize, printInfo, warmUp);
+		
 		this.ignoreQuit = ignoreQuit;
 		t.start();
 	}
@@ -134,6 +136,7 @@ public final class UCI {
 		int pawnHashSize = 16;
 		boolean printInfo = true;
 		boolean ignoreQuit = false;
+		boolean warmUp = false;
 		
 		for(int a = 0; a < args.length; a++){
 			try{
@@ -145,12 +148,15 @@ public final class UCI {
 					printInfo = false;
 				} else if(args[a].equals("--ignore-quit")){ //turns off handling of uci quit command (need C-c to shutdown)
 					ignoreQuit = true;
+				} else if(args[a].equals("--warm-up")){ //warm up the jvm
+					warmUp = true;
 				}
 			} catch(Exception e){
 				System.out.println("error, incorrect args");
 				System.exit(1);
 			}
 		}
-		new UCI(hashSize, pawnHashSize, printInfo, ignoreQuit);
+		
+		new UCI(hashSize, pawnHashSize, printInfo, ignoreQuit, warmUp);
 	}
 }
