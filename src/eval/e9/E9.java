@@ -17,7 +17,7 @@ public final class E9 implements Evaluator{
 	private final static int[] materialWeights = new int[7];
 	
 	private final static int tempoWeight = S(14, 5);
-	private final static int bishopPairWeight = S(10, 42);
+	private final static int bishopPairWeight = S(5, 20);
 
 	private final static int[] zeroi = new int[2];
 	
