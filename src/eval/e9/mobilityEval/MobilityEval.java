@@ -70,17 +70,6 @@ public final class MobilityEval {
 				S(15,35), S(15,35), S(15,35), S(15,35), S(15,35)
 		};*/
 		
-		int[][] temp = new int[][]{
-				knightMobilityWeights,
-				bishopMobilityWeights,
-				rookMobilityWeights,
-				queenMobilityWeights
-		};
-		for(int a = 0; a < temp.length; a++){
-			for(int q = 0; q < temp[a].length; q++){
-				temp[a][q] = Weight.multWeight(temp[a][q], .5);
-			}
-		}
 	}
 	
 	/** build a weight scaling from passed start,end values*/
