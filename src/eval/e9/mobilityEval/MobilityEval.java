@@ -44,7 +44,7 @@ public final class MobilityEval {
 		}*/;
 		
 		bishopMobilityWeights = new int[16];
-		interpolate(new int[]{0,-3}, new double[]{-4,-2}, new double[]{60,45}, bishopMobilityWeights);
+		interpolate(new int[]{0,-3}, new double[]{-4,-2}, new double[]{25,45}, bishopMobilityWeights);
 		/*bishopMobilityWeights = new int[]{
 				S(-13,-30), S(-6,-20), S(1,-18), S(7,-10), S(15,-1),
 				S(24,8), S(28,14), S(24,18), S(30,20), S(34,23),
