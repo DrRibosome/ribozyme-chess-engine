@@ -235,8 +235,8 @@ public final class E9 implements Evaluator{
 			final long pawnAttacks = whitePawnAttacks | blackPawnAttacks;
 			final double clutterMult = clutterIndex[(int)BitUtil.getSetBits(pawnAttacks)];
 			
-			final int stage2Score = MobilityEval.scoreMobility(player, s, clutterMult, nonPawnMaterial, attackMask, true) -
-					MobilityEval.scoreMobility(1-player, s, clutterMult, nonPawnMaterial, attackMask, true);
+			final int stage2Score = MobilityEval.scoreMobility(player, s, clutterMult, nonPawnMaterial, attackMask) -
+					MobilityEval.scoreMobility(1-player, s, clutterMult, nonPawnMaterial, attackMask);
 			score += Weight.interpolate(stage2Score, scale) + Weight.interpolate(S((int)(Weight.egScore(stage2Score)*.1), 0), scale);
 			if(queens == 0){
 				flags++; //increment flag to mark stage 3 as complete
@@ -295,8 +295,8 @@ public final class E9 implements Evaluator{
 			final double clutterMult = clutterIndex[(int)BitUtil.getSetBits(pawnAttacks)];
 			
 			//recalculate attack masks
-			MobilityEval.scoreMobility(player, s, clutterMult, nonPawnMaterial, attackMask, true);
-			MobilityEval.scoreMobility(1-player, s, clutterMult, nonPawnMaterial, attackMask, true);
+			MobilityEval.scoreMobility(player, s, clutterMult, nonPawnMaterial, attackMask);
+			MobilityEval.scoreMobility(1-player, s, clutterMult, nonPawnMaterial, attackMask);
 		}
 
 		final int stage3Score = evalKingSafety(player, s, alliedQueens, enemyQueens);
