@@ -25,9 +25,9 @@ public final class MobilityEval {
 		double diff = p.upperAsymptote-p.lowerAsymptote;
 		return diff*2*(1/(1+Math.exp(-x)-.5));
 	}
-	private static void interpolate(int[] center, LogisticParams lower, LogisticParams upper, int[] store){
+	private static void interpolate(int[] center, double[] yoffset, LogisticParams lower, LogisticParams upper, int[] store){
 		for(int a = 0; a < store.length; a++){
-			store[a] = Weight.encode((int)(logistic(a-center[0], lower)), (int)(logistic(a-center[1], upper)+.5));
+			store[a] = Weight.encode((int)(logistic(a-center[0], lower)+yoffset[0]+.5), (int)(logistic(a-center[1], upper)+yoffset[1]+.5));
 		}
 	}
 	
@@ -35,22 +35,28 @@ public final class MobilityEval {
 		LogisticParams knightLower = new LogisticParams(-20,20);
 		LogisticParams knightUpper = new LogisticParams(-35,35);
 		knightMobilityWeights = new int[9];
-		interpolate(new int[]{4,3}, knightLower, knightUpper, knightMobilityWeights);
+		interpolate(new int[]{4,3}, new double[]{-4,-7}, knightLower, knightUpper, knightMobilityWeights);
 		/*knightMobilityWeights = new int[]{
 				S(-19,-49), S(-13,-40), S(-6,-27), S(-1,0), S(7,2),
 				S(12,10), S(14,28), S(16,44), S(17,48)
 		}*/;
 		
-		bishopMobilityWeights = new int[]{
+		LogisticParams bishopLower = new LogisticParams(-20,20);
+		LogisticParams bishopUpper = new LogisticParams(-35,40);
+		bishopMobilityWeights = new int[16];
+		interpolate(new int[]{3,3}, new double[]{-4,-7}, bishopLower, bishopUpper, bishopMobilityWeights);
+		/*bishopMobilityWeights = new int[]{
 				S(-13,-30), S(-6,-20), S(1,-18), S(7,-10), S(15,-1),
 				S(24,8), S(28,14), S(24,18), S(30,20), S(34,23),
 				S(38,25), S(43,31), S(49,32), S(55,37), S(55,38), S(55,38)
-		};
+		};*/
+		
 		rookMobilityWeights = new int[]{
 				S(-10,-69), S(-7,-47), S(-4,-43), S(-1,-10), S(2,13), S(5,26),
 				S(7,35), S(10,43), S(11,50), S(12,56), S(12,60), S(13,63),
 				S(14,66), S(15,69), S(15,74), S(17,74)
 		};
+		
 		queenMobilityWeights = new int[]{
 				S(-6,-69), S(-4,-49), S(-2,-45), S(-2,-28), S(-1,-9), S(0,10),
 				S(1,15), S(2,20), S(4,25), S(5,30), S(6,30), S(7,30), S(8,30),
