@@ -61,7 +61,7 @@ public final class MobilityEval {
 		};*/
 		
 		queenMobilityWeights = new int[32];
-		interpolate(new int[]{-3,-1}, new double[]{-4,-7}, new double[]{20,50}, queenMobilityWeights);
+		interpolate(new int[]{-3,-2}, new double[]{-4,-20}, new double[]{20,80}, queenMobilityWeights);
 		/*queenMobilityWeights = new int[]{
 				S(-6,-69), S(-4,-49), S(-2,-45), S(-2,-28), S(-1,-9), S(0,10),
 				S(1,15), S(2,20), S(4,25), S(5,30), S(6,30), S(7,30), S(8,30),
