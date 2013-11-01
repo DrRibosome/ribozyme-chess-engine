@@ -37,7 +37,7 @@ public final class MobilityEval {
 	
 	static{
 		knightMobilityWeights = new int[9];
-		interpolate(new int[]{-3,-3}, new double[]{-4,-4}, new double[]{20,50}, knightMobilityWeights);
+		interpolate(new int[]{-2,-2}, new double[]{-4,-4}, new double[]{20,50}, knightMobilityWeights);
 		/*knightMobilityWeights = new int[]{
 				S(-19,-49), S(-13,-40), S(-6,-27), S(-1,0), S(7,2),
 				S(12,10), S(14,28), S(16,44), S(17,48)
