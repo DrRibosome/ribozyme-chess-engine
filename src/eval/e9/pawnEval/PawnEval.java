@@ -85,21 +85,6 @@ public final class PawnEval {
 	
 	static{
 		for(int a = 0; a < 64; a++) kingDangerSquares[1][a] = kingDangerSquares[0][63-a];
-		
-		int[][] temp = new int[][]{
-				isolatedPawns[0],
-				isolatedPawns[1],
-				pawnChain,
-				doubledPawns[0],
-				doubledPawns[1],
-				backwardPawns[0],
-				backwardPawns[1]
-		};
-		for(int a = 0; a < temp.length; a++){
-			for(int q = 0; q < temp[a].length; q++){
-				temp[a][q] = Weight.multWeight(temp[a][q], .5);
-			}
-		}
 	}
 	
 	/** build a weight scaling from passed start,end values*/
