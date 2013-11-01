@@ -25,9 +25,9 @@ public final class MobilityEval {
 		double diff = p.upperAsymptote-p.lowerAsymptote;
 		return diff*2*(1/(1+Math.exp(-x)-.5));
 	}
-	private static void interpolate(int center, LogisticParams lower, LogisticParams upper, int[] store){
+	private static void interpolate(int[] center, LogisticParams lower, LogisticParams upper, int[] store){
 		for(int a = 0; a < store.length; a++){
-			store[a] = Weight.encode((int)(logistic(a-center, lower)), (int)(logistic(a-center, upper)+.5));
+			store[a] = Weight.encode((int)(logistic(a-center[0], lower)), (int)(logistic(a-center[1], upper)+.5));
 		}
 	}
 	
@@ -35,7 +35,7 @@ public final class MobilityEval {
 		LogisticParams knightLower = new LogisticParams(-20,20);
 		LogisticParams knightUpper = new LogisticParams(-35,35);
 		knightMobilityWeights = new int[9];
-		interpolate(3, knightLower, knightUpper, knightMobilityWeights);
+		interpolate(new int[]{4,3}, knightLower, knightUpper, knightMobilityWeights);
 		/*knightMobilityWeights = new int[]{
 				S(-19,-49), S(-13,-40), S(-6,-27), S(-1,0), S(7,2),
 				S(12,10), S(14,28), S(16,44), S(17,48)
