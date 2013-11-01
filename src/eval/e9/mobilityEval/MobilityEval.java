@@ -79,7 +79,7 @@ public final class MobilityEval {
 
 	/** calculates mobility and danger to enemy king from mobility*/
 	public static int scoreMobility(final int player, final State4 s,
-			final double clutterMult, final int[] nonPawnMaterial, final long[] attackMask){
+			final double clutterMult, final int[] nonPawnMaterial, final long[] attackMask, final boolean hasTempo){
 		int mobScore = 0;
 		
 		final long alliedPawns = s.pawns[player];
@@ -187,6 +187,11 @@ public final class MobilityEval {
 			final int count = (int)BitUtil.getSetBits(moves);
 			mobScore += Weight.multWeight(queenMobilityWeights[count], clutterMult);
 			queenAttackMask |= rawMoves;
+		}
+		
+
+		if(hasTempo){
+			mobScore = Weight.multWeight(mobScore, 1.1);
 		}
 		
 		final long pawnAttackMask = Masks.getRawPawnAttacks(player, alliedPawns);
