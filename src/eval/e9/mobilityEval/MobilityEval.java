@@ -14,12 +14,24 @@ public final class MobilityEval {
 	private static final int[] rookMobilityWeights;
 	private static final int[] queenMobilityWeights;
 	
-	private static double logistic(double x, double range){
-		return range*(1/(1+Math.exp(-x)-.5));
+	/** compute logistic (sigmoid) function centered around 0*/
+	private static double logistic(double x){
+		return 1*(1/(1+Math.exp(-x)-.5));
 	}
+	
+	/**
+	 * fill passed result store with values from parameterized centered logistic function
+	 * @param center x offset
+	 * @param yoffset y offset
+	 * @param range range of the logistic function, scales the results linearly
+	 * @param store result store
+	 * @see #logistic(double)
+	 */
 	private static void interpolate(int[] center, double[] yoffset, double[] range, int[] store){
 		for(int a = 0; a < store.length; a++){
-			store[a] = Weight.encode((int)(logistic(a-center[0], range[0])+yoffset[0]+.5), (int)(logistic(a-center[1], range[1])+yoffset[1]+.5));
+			store[a] = Weight.encode(
+					(int)(range[0]*logistic(a-center[0])+yoffset[0]+.5),
+					(int)(range[1]*logistic(a-center[1])+yoffset[1]+.5));
 		}
 	}
 	
