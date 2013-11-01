@@ -16,7 +16,7 @@ public final class MobilityEval {
 	
 	/** compute logistic (sigmoid) function centered around 0*/
 	private static double logistic(double x){
-		return 1*(1/(1+Math.exp(-x)-.5));
+		return 1./(1+Math.exp(-x))-.5;
 	}
 	
 	/**
@@ -69,6 +69,20 @@ public final class MobilityEval {
 				S(15,35), S(15,35), S(15,35), S(15,35), S(15,35), S(15,35), S(15,35),
 				S(15,35), S(15,35), S(15,35), S(15,35), S(15,35)
 		};*/
+		
+		int[][] temp = new int[][]{
+				knightMobilityWeights,
+				bishopMobilityWeights,
+				rookMobilityWeights,
+				queenMobilityWeights
+		};
+		
+		for(int a = 0; a < temp.length; a++){
+			for(int q = 0; q < temp[a].length; q++){
+				System.out.print(Weight.mgScore(temp[a][q])+", ");
+			}
+			System.out.println();
+		}
 		
 	}
 	
