@@ -37,14 +37,14 @@ public final class MobilityEval {
 	
 	static{
 		knightMobilityWeights = new int[9];
-		interpolate(new int[]{-2,-2}, new double[]{-2,-2}, new double[]{20,60}, knightMobilityWeights);
+		interpolate(new int[]{-2,-2}, new double[]{-2,-2}, new double[]{20,50}, knightMobilityWeights);
 		/*knightMobilityWeights = new int[]{
 				S(-19,-49), S(-13,-40), S(-6,-27), S(-1,0), S(7,2),
 				S(12,10), S(14,28), S(16,44), S(17,48)
 		}*/;
 		
 		bishopMobilityWeights = new int[16];
-		interpolate(new int[]{0,-3}, new double[]{-4,-2}, new double[]{60,45}, bishopMobilityWeights);
+		interpolate(new int[]{0,-3}, new double[]{-4,-2}, new double[]{25,45}, bishopMobilityWeights);
 		/*bishopMobilityWeights = new int[]{
 				S(-13,-30), S(-6,-20), S(1,-18), S(7,-10), S(15,-1),
 				S(24,8), S(28,14), S(24,18), S(30,20), S(34,23),
@@ -53,7 +53,7 @@ public final class MobilityEval {
 		
 
 		rookMobilityWeights = new int[16];
-		interpolate(new int[]{-3,-3}, new double[]{-4,-7}, new double[]{30,70}, rookMobilityWeights);
+		interpolate(new int[]{-3,-3}, new double[]{-4,-7}, new double[]{30,60}, rookMobilityWeights);
 		/*rookMobilityWeights = new int[]{
 				S(-10,-69), S(-7,-47), S(-4,-43), S(-1,-10), S(2,13), S(5,26),
 				S(7,35), S(10,43), S(11,50), S(12,56), S(12,60), S(13,63),
@@ -61,7 +61,7 @@ public final class MobilityEval {
 		};*/
 		
 		queenMobilityWeights = new int[32];
-		interpolate(new int[]{-3,-2}, new double[]{-4,-20}, new double[]{20,60}, queenMobilityWeights);
+		interpolate(new int[]{-3,-2}, new double[]{-4,-20}, new double[]{20,55}, queenMobilityWeights);
 		/*queenMobilityWeights = new int[]{
 				S(-6,-69), S(-4,-49), S(-2,-45), S(-2,-28), S(-1,-9), S(0,10),
 				S(1,15), S(2,20), S(4,25), S(5,30), S(6,30), S(7,30), S(8,30),
