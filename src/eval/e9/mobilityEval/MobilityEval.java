@@ -162,17 +162,17 @@ public final class MobilityEval {
 				if(alliedKingRow == backRank && moveCount <= 4){
 					if(alliedKingCol >= 4 && col > alliedKingCol){
 						if(!s.kingMoved[player] && !s.rookMoved[player][1]){
-							mobScore += S(-20, -30); //trapped, but can castle right
+							mobScore += S(-20, -50); //trapped, but can castle right
 						} else{
-							mobScore += S(-40, -70); //trapped, cannot castle
+							mobScore += S(-50, -120); //trapped, cannot castle
 							//old, 80, 150
 						}
 					}
 					if(alliedKingCol <= 3 && col < alliedKingCol){
 						if(!s.kingMoved[player] && !s.rookMoved[player][0]){
-							mobScore += S(-20, -30); //trapped, but can castle left
+							mobScore += S(-20, -50); //trapped, but can castle left
 						} else{
-							mobScore += S(-40, -70); //trapped, cannot castle
+							mobScore += S(-50, -120); //trapped, cannot castle
 						}
 					}
 				}
