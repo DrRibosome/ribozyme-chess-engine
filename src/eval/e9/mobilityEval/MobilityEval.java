@@ -111,7 +111,7 @@ public final class MobilityEval {
 		for(long bishops = s.bishops[player]; bishops != 0; bishops &= bishops-1){
 			final long b = bishops & -bishops;
 			final long rawMoves = Masks.getRawBishopMoves(agg, b);
-			final long moves = rawMoves;// & ~allied & ~enemyPawnAttacks;
+			final long moves = rawMoves & ~allied & ~enemyPawnAttacks;
 			final int count = (int)BitUtil.getSetBits(moves);
 			mobScore += Weight.multWeight(bishopMobilityWeights[count], clutterMult);
 			bishopAttackMask |= rawMoves;
@@ -128,7 +128,7 @@ public final class MobilityEval {
 		for(long knights = s.knights[player]; knights != 0; knights &= knights-1){
 			final long k = knights & -knights;
 			final long rawMoves = Masks.getRawKnightMoves(k);
-			final long moves = rawMoves;// & ~allied & ~enemyPawnAttacks;
+			final long moves = rawMoves & ~allied & ~enemyPawnAttacks;
 			final int count = (int)BitUtil.getSetBits(moves);
 			mobScore += Weight.multWeight(knightMobilityWeights[count], clutterMult);
 			knightAttackMask |= rawMoves;
@@ -142,7 +142,7 @@ public final class MobilityEval {
 		for(long rooks = s.rooks[player]; rooks != 0; rooks &= rooks-1){
 			final long r = rooks&-rooks;
 			final long rawMoves = Masks.getRawRookMoves(agg, r);
-			final long moves = rawMoves;// & ~allied & ~enemyPawnAttacks;
+			final long moves = rawMoves & ~allied & ~enemyPawnAttacks;
 			final int moveCount = (int)BitUtil.getSetBits(moves);
 			mobScore += Weight.multWeight(rookMobilityWeights[moveCount], clutterMult);
 			rookAttackMask |= rawMoves;
@@ -183,7 +183,7 @@ public final class MobilityEval {
 		for(long queens = s.queens[player]; queens != 0; queens &= queens-1){
 			final long q = queens&-queens;
 			final long rawMoves = Masks.getRawQueenMoves(agg, q);
-			final long moves = rawMoves;// & ~allied & ~enemyPawnAttacks;
+			final long moves = rawMoves & ~allied & ~enemyPawnAttacks;
 			final int count = (int)BitUtil.getSetBits(moves);
 			mobScore += Weight.multWeight(queenMobilityWeights[count], clutterMult);
 			queenAttackMask |= rawMoves;
