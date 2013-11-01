@@ -53,7 +53,7 @@ public final class MobilityEval {
 		
 
 		rookMobilityWeights = new int[16];
-		interpolate(new int[]{-3,-3}, new double[]{-4,-7}, new double[]{30,70}, rookMobilityWeights);
+		interpolate(new int[]{-1,-3}, new double[]{-2,-7}, new double[]{25,73}, rookMobilityWeights);
 		/*rookMobilityWeights = new int[]{
 				S(-10,-69), S(-7,-47), S(-4,-43), S(-1,-10), S(2,13), S(5,26),
 				S(7,35), S(10,43), S(11,50), S(12,56), S(12,60), S(13,63),
