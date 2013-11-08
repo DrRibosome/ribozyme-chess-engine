@@ -70,7 +70,7 @@ public final class E9 implements Evaluator{
 		
 		materialWeights[State4.PIECE_TYPE_QUEEN] = 900;
 		materialWeights[State4.PIECE_TYPE_ROOK] = 470;
-		materialWeights[State4.PIECE_TYPE_BISHOP] = 306;
+		materialWeights[State4.PIECE_TYPE_BISHOP] = 301;
 		materialWeights[State4.PIECE_TYPE_KNIGHT] = 301;
 		materialWeights[State4.PIECE_TYPE_PAWN] = 100;
 	}
