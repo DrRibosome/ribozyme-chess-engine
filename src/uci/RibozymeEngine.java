@@ -11,7 +11,7 @@ import eval.e9.E9;
 
 public final class RibozymeEngine implements UCIEngine{
 
-	private final static String name = "ribozyme 0.1.2";
+	private final static String name = "ribozyme";
 	
 	private final Search s;
 	private final MoveSet moveStore = new MoveSet();
