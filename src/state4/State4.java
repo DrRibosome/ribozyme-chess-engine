@@ -672,14 +672,6 @@ public final class State4 {
 		assert (pieces[player] & pieces[1-player]) == 0;
 	}
 	
-	public void executeMove(int player, int x1, int y1, int x2, int y2) {
-		int pos1 = x1+8*y1;
-		int pos2 = x2+8*y2;
-		final long q = 1;
-		//System.out.println("moving: player = "+player+", pos1 = "+pos1+", pos2 = "+pos2);
-		executeMove(player, q<<pos1, q<<pos2);
-	}
-	
 	/** collects all pieces onto the player piece aggregators*/
 	public void collect(){
 		pieces[0] = pawns[0] | knights[0] | kings[0] | queens[0] | rooks[0] | bishops[0];
