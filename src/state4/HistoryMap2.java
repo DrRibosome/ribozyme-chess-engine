@@ -1,5 +1,7 @@
 package state4;
 
+import java.util.Random;
+
 /** stores number of times long key inserted into the hash*/
 public final class HistoryMap2 {
 	private final static class Entry{
@@ -9,8 +11,10 @@ public final class HistoryMap2 {
 	private final Entry[] e;
 	private final int size;
 	private final static int maxAttempts = 32;
-	private long a = (long)(Math.random()*Long.MAX_VALUE);
-	private long b = (long)(Math.random()*Long.MAX_VALUE);
+	
+	private final Random r = new Random(47271L);
+	private long a = (long)(r.nextDouble()*Long.MAX_VALUE);
+	private long b = (long)(r.nextDouble()*Long.MAX_VALUE);
 	/** temp entry for rehash swapping*/
 	private final Entry temp = new Entry();
 	
@@ -111,8 +115,8 @@ public final class HistoryMap2 {
 	}
 	
 	private void rehash(){
-		a = (long)(Math.random()*Long.MAX_VALUE);
-		b = (long)(Math.random()*Long.MAX_VALUE);
+		a = (long)(r.nextDouble()*Long.MAX_VALUE);
+		b = (long)(r.nextDouble()*Long.MAX_VALUE);
 		for(int q = 0; q < 1<<size; q++){
 			final Entry entry = e[q];
 			final long key = entry.key;
