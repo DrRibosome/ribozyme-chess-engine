@@ -1,5 +1,9 @@
 package uci;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -7,53 +11,85 @@ import java.util.regex.Pattern;
 import state4.MoveEncoder;
 import state4.State4;
 import uci.UCIMove.MoveType;
+import uci.controlExtension.ControlExtension;
+import uci.controlExtension.PrintPositionExt;
 import util.FenParser;
 
 public final class UCI {
 	private UCIEngine engine;
 	private Position pos;
+	private final static Pattern fenSel = Pattern.compile("fen ((.*?\\s+){5}.*?)(\\s+|$)");
+	private final static Pattern moveSel = Pattern.compile("moves\\s+(.*)");
+	private final static Map<String, ControlExtension> controllerExtMap = new HashMap<>();
+
 	/** if true ignores uci quit command*/
 	private final boolean ignoreQuit;
+	/** controls whether controlled extensionmodules should be allowed
+	 * execute. Should be turned off for better uci controller performance*/
+	private final boolean controllerExtras;
 
-	public UCI(final int hashSize, final int pawnHashSize,
-			boolean printInfo, boolean ignoreQuit, boolean warmUp){
-		engine = new RibozymeEngine(hashSize, pawnHashSize, printInfo, warmUp);
-		
-		this.ignoreQuit = ignoreQuit;
-		t.start();
+	/** convenience class for easily expanding uci param list while
+	 * providing defaults values*/
+	private final static class UCIParams{
+		int hashSize = 20; //hash size, as a power of 2
+		int pawnHashSize = 16;
+		boolean printInfo = true;
+		boolean ignoreQuit = false;
+		boolean warmUp = false;
+		boolean controllerExtras = false;
+
+		/** controls whether fen used for speed profiling*/
+		boolean profile = false;
+		/** fen to use for profiling*/
+		String profileFen;
+	}
+
+	static{
+		controllerExtMap.put("print", new PrintPositionExt());
+	}
+
+	public UCI(UCIParams p){
+
+		this.ignoreQuit = p.ignoreQuit;
+		this.controllerExtras = p.controllerExtras;
+
+		if(!p.profile){
+			//prepare and start engine for normal operation
+			engine = new RibozymeEngine(p.hashSize, p.pawnHashSize, p.printInfo, p.warmUp);
+			t.start();
+		} else{
+			//profile engine on passed fen file
+			engine = new RibozymeEngine(p.hashSize, p.pawnHashSize, false, p.warmUp);
+			engine.profile(new File(p.profileFen));
+		}
 	}
 	
 	private final Thread t = new Thread(){
 		@Override
 		public void run(){
 			Scanner scanner = new Scanner(System.in);
-			
+
 			while(scanner.hasNextLine()){
 				String interfaceCommand = scanner.nextLine();
-				
 				interfaceCommand = interfaceCommand.replace("\r", "");
-				
 				String[] s = interfaceCommand.split("\\s+");
-				
-				
+
 				if(s[0].equalsIgnoreCase("uci")){
-					send("id name "+engine.getName());
-					send("id author Jack Crawford");
-					send("uciok");
+					System.out.println("id name " + engine.getName());
+					System.out.println("id author Jack Crawford");
+					System.out.println("uciok");
 				} else if(s[0].equalsIgnoreCase("ucinewgame")){
 					engine.resetEngine();
 					pos = Position.startPos();
 				} else if(s[0].equalsIgnoreCase("position")){
 					if(s[1].equalsIgnoreCase("fen")){
-						Pattern fenSel = Pattern.compile("fen ((.*?\\s+){5}.*?)(\\s+|$)");
 						Matcher temp = fenSel.matcher(interfaceCommand);
 						temp.find();
 						pos = FenParser.parse(temp.group(1));
 					} else if(s[1].equalsIgnoreCase("startpos")){
 						pos = Position.startPos();
 					}
-					
-					Pattern moveSel = Pattern.compile("moves\\s+(.*)");
+
 					Matcher temp = moveSel.matcher(interfaceCommand);
 					if(temp.find()){
 						int turn = pos.sideToMove;
@@ -76,7 +112,7 @@ public final class UCI {
 						pos.sideToMove = turn;
 					}
 				} else if(s[0].equalsIgnoreCase("isready")){
-					send("readyok");
+					System.out.println("readyok");
 				} else if(s[0].equalsIgnoreCase("stop")){
 					engine.stop();
 				} else if(s[0].equalsIgnoreCase("go")){
@@ -84,23 +120,16 @@ public final class UCI {
 					engine.go(params, pos);
 				} else if(!ignoreQuit && s[0].equalsIgnoreCase("quit")){
 					break;
-				} else if(s[0].equalsIgnoreCase("print")){ //print state information
-					if(pos == null){
-						System.out.println("no state information");
-					} else{
-						System.out.println("side to move: "+pos.sideToMove);
-						System.out.println(pos.s);
+				} else if(controllerExtras){
+					ControlExtension ext = controllerExtMap.get(s[0]);
+					if(ext != null){
+						ext.execute(interfaceCommand, pos, engine);
 					}
 				}
 			}
 			scanner.close();
 		}
 	};
-	
-	private void send(String s){
-		System.out.println(s);
-		System.out.flush();
-	}
 	
 	private static UCIMove parseMove(String move){
 		UCIMove m = new UCIMove();
@@ -132,24 +161,25 @@ public final class UCI {
 	}
 	
 	public static void main(String[] args){
-		int hashSize = 20; //hash size, as a power of 2
-		int pawnHashSize = 16;
-		boolean printInfo = true;
-		boolean ignoreQuit = false;
-		boolean warmUp = false;
+		UCIParams p = new UCIParams();
 		
 		for(int a = 0; a < args.length; a++){
 			try{
 				if(args[a].equals("--hash")){ //sets main hash size (must be power of 2)
-					hashSize = Integer.parseInt(args[++a]);
+					p.hashSize = Integer.parseInt(args[++a]);
 				} else if(args[a].equals("--pawnHash")){ //sets pawn hash size (must be power of 2)
-					pawnHashSize = Integer.parseInt(args[++a]);
+					p.pawnHashSize = Integer.parseInt(args[++a]);
 				} else if(args[a].equals("--no-info")){ //turns off uci info printing (ie, pv, score, time, etc)
-					printInfo = false;
+					p.printInfo = false;
 				} else if(args[a].equals("--ignore-quit")){ //turns off handling of uci quit command (need C-c to shutdown)
-					ignoreQuit = true;
+					p.ignoreQuit = true;
 				} else if(args[a].equals("--warm-up")){ //warm up the jvm
-					warmUp = true;
+					p.warmUp = true;
+				} else if(args[a].equals("--extras")){ //turn on console controller extensions
+					p.controllerExtras = true;
+				} else if(args[a].equals("--profile")){ //profile engine on passed fen file then exit
+					p.profile = true;
+					p.profileFen = args[++a];
 				}
 			} catch(Exception e){
 				System.out.println("error, incorrect args");
@@ -157,6 +187,6 @@ public final class UCI {
 			}
 		}
 		
-		new UCI(hashSize, pawnHashSize, printInfo, ignoreQuit, warmUp);
+		new UCI(p);
 	}
 }
