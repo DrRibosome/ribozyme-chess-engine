@@ -17,7 +17,7 @@
 	<target name="jar" depends="compile">
 		<jar destfile="${ribozyme.jar}" basedir="${bin}">
 			<manifest>
-				<attribute name="Main-Class" value="uci.UCI"/>
+				<attribute name="Main-Class" value="chess.uci.UCI"/>
 			</manifest>
 		</jar>
 	</target>

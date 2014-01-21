@@ -12,7 +12,6 @@ search25.stats
 search27.stats
 search29.stats
 *.jar
-uci-log.txt
 game-archive/temp
 *.sh
 millionbase-2.22.pgn
