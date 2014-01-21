@@ -16,7 +16,7 @@ game-archive/temp
 *.sh
 millionbase-2.22.pgn
 megabook.bk
-sample*
+*.fen
 genetic-results/*
 state5-experimental.zip
 .idea
