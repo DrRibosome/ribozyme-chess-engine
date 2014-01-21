@@ -21,13 +21,13 @@ public final class UCI {
 	private final static Pattern moveSel = Pattern.compile("moves\\s+(.*)");
 	private final static Map<String, ControlExtension> controllerExtMap = new HashMap<>();
 
-	/** if true ignores chess.uci quit command*/
+	/** if true ignores uci quit command*/
 	private final boolean ignoreQuit;
 	/** controls whether controlled extensionmodules should be allowed
-	 * execute. Should be turned off for better chess.uci controller performance*/
+	 * execute. Should be turned off for better uci controller performance*/
 	private final boolean controllerExtras;
 
-	/** convenience class for easily expanding chess.uci param list while
+	/** convenience class for easily expanding uci param list while
 	 * providing defaults values*/
 	private final static class UCIParams{
 		int hashSize = 20; //hash size, as a power of 2
@@ -73,7 +73,7 @@ public final class UCI {
 				interfaceCommand = interfaceCommand.replace("\r", "");
 				String[] s = interfaceCommand.split("\\s+");
 
-				if(s[0].equalsIgnoreCase("chess/uci")){
+				if(s[0].equalsIgnoreCase("uci")){
 					System.out.println("id name " + engine.getName());
 					System.out.println("id author Jack Crawford");
 					System.out.println("uciok");
@@ -170,7 +170,7 @@ public final class UCI {
 					p.pawnHashSize = Integer.parseInt(args[++a]);
 				} else if(args[a].equals("--no-info")){ //turns off chess.uci info printing (ie, pv, score, time, etc)
 					p.printInfo = false;
-				} else if(args[a].equals("--ignore-quit")){ //turns off handling of chess.uci quit command (need C-c to shutdown)
+				} else if(args[a].equals("--ignore-quit")){ //turns off handling of uci quit command (need C-c to shutdown)
 					p.ignoreQuit = true;
 				} else if(args[a].equals("--warm-up")){ //warm up the jvm
 					p.warmUp = true;
