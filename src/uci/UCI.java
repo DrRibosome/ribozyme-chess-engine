@@ -16,7 +16,7 @@ import uci.controlExtension.PrintPositionExt;
 import util.FenParser;
 
 public final class UCI {
-	private UCIEngine engine;
+	private final UCIEngine engine;
 	private Position pos;
 	private final static Pattern fenSel = Pattern.compile("fen ((.*?\\s+){5}.*?)(\\s+|$)");
 	private final static Pattern moveSel = Pattern.compile("moves\\s+(.*)");
