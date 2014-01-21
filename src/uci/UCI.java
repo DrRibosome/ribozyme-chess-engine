@@ -1,5 +1,7 @@
 package uci;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -35,6 +37,11 @@ public final class UCI {
 		boolean ignoreQuit = false;
 		boolean warmUp = false;
 		boolean controllerExtras = false;
+
+		/** controls whether fen used for speed profiling*/
+		boolean profile = false;
+		/** fen to use for profiling*/
+		String profileFen;
 	}
 
 	static{
@@ -42,12 +49,19 @@ public final class UCI {
 	}
 
 	public UCI(UCIParams p){
-		engine = new RibozymeEngine(p.hashSize, p.pawnHashSize, p.printInfo, p.warmUp);
-		
+
 		this.ignoreQuit = p.ignoreQuit;
 		this.controllerExtras = p.controllerExtras;
 
-		t.start();
+		if(!p.profile){
+			//prepare and start engine for normal operation
+			engine = new RibozymeEngine(p.hashSize, p.pawnHashSize, p.printInfo, p.warmUp);
+			t.start();
+		} else{
+			//profile engine on passed fen file
+			engine = new RibozymeEngine(p.hashSize, p.pawnHashSize, false, p.warmUp);
+			engine.profile(new File(p.profileFen));
+		}
 	}
 	
 	private final Thread t = new Thread(){
@@ -61,7 +75,7 @@ public final class UCI {
 				String[] s = interfaceCommand.split("\\s+");
 
 				if(s[0].equalsIgnoreCase("uci")){
-					System.out.println("id name "+engine.getName());
+					System.out.println("id name " + engine.getName());
 					System.out.println("id author Jack Crawford");
 					System.out.println("uciok");
 				} else if(s[0].equalsIgnoreCase("ucinewgame")){
@@ -161,8 +175,11 @@ public final class UCI {
 					p.ignoreQuit = true;
 				} else if(args[a].equals("--warm-up")){ //warm up the jvm
 					p.warmUp = true;
-				} else if(args[a].equals("--extras")){ //warm up the jvm
+				} else if(args[a].equals("--extras")){ //turn on console controller extensions
 					p.controllerExtras = true;
+				} else if(args[a].equals("--profile")){ //profile engine on passed fen file then exit
+					p.profile = true;
+					p.profileFen = args[++a];
 				}
 			} catch(Exception e){
 				System.out.println("error, incorrect args");

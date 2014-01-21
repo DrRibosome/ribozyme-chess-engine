@@ -9,6 +9,10 @@ import util.TimerThread;
 import eval.Evaluator;
 import eval.e9.E9;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
+
 public final class RibozymeEngine implements UCIEngine{
 
 	private final static String name = "ribozyme";
@@ -54,7 +58,40 @@ public final class RibozymeEngine implements UCIEngine{
 	public String getName(){
 		return name;
 	}
-	
+
+	@Override
+	public void profile(File fens) {
+		try(Scanner scanner = new Scanner(fens)){
+			final int searchDepth = 7;
+
+			long nodes = 0;
+			long totalTime = 0;
+			int entries = 0;
+
+			while(scanner.hasNextLine()){
+				entries++;
+				Position p = FenParser.parse(scanner.nextLine());
+
+				long start = System.currentTimeMillis();
+				s.search(p.sideToMove, p.s, null, searchDepth);
+				totalTime += System.currentTimeMillis() - start;
+				nodes += s.getStats().nodesSearched;
+
+				s.resetSearch();
+
+				if(entries % 50 == 0 || !scanner.hasNextLine()){
+					System.out.println("------------------------");
+					System.out.println("avg nodes/msec = "+(nodes*1./totalTime)+" = "+nodes+" / "+totalTime);
+					System.out.println("avg nodes = "+(nodes*1./entries)+" = "+nodes+" / "+entries);
+					System.out.println("avg time (msec) = "+(totalTime*1./entries)+" = "+totalTime+" / "+entries);
+				}
+			}
+
+		} catch (IOException e){
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public void go(final GoParams params, final Position p) {
 		final int player = p.sideToMove;
