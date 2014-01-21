@@ -6,7 +6,7 @@ import uci.Position;
 public class PrintPositionExt implements ControlExtension {
 
 	@Override
-	public void execute(String[] args, Position pos) {
+	public void execute(String command, Position pos) {
 		if(pos == null){
 			System.out.println("no state information");
 		} else{

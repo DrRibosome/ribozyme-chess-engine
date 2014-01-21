@@ -109,7 +109,7 @@ public final class UCI {
 				} else if(controllerExtras){
 					ControlExtension ext = controllerExtMap.get(s[0]);
 					if(ext != null){
-						ext.execute(s, pos);
+						ext.execute(interfaceCommand, pos);
 					}
 				}
 			}
