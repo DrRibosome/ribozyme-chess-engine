@@ -12,8 +12,9 @@ public final class UnsafeUtil {
 	            f.setAccessible(true);
 	            return (Unsafe)f.get(null);
 	    } catch (Exception e){
-	    	System.out.println("unable to get reference to Unsafe class");
+	    	System.out.println("unable to get reference to Unsafe class, exiting");
 	    	e.printStackTrace();
+			System.exit(0);
 	    }
 	    return null;
 	}
