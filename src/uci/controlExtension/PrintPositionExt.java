@@ -1,12 +1,13 @@
 package uci.controlExtension;
 
 import uci.Position;
+import uci.UCIEngine;
 
 /** extension for printing a position*/
 public class PrintPositionExt implements ControlExtension {
 
 	@Override
-	public void execute(String command, Position pos) {
+	public void execute(String command, Position pos, UCIEngine engine) {
 		if(pos == null){
 			System.out.println("no state information");
 		} else{
