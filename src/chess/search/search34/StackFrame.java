@@ -43,6 +43,4 @@ public class StackFrame {
 	public final MoveList mlist = new MoveList(defSize);
 	/** holds killer moves as first 12 bits (ie, masked 0xFFF) of move encoding*/
 	public final long[] killer = new long[2];
-	/** controls whether we should futility prune*/
-	public boolean futilityPrune;
 }

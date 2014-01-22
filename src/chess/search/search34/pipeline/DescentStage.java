@@ -115,7 +115,7 @@ public class DescentStage implements FinalStage{
 						MoveEncoder.isCastle(encoding) != 0 ||
 						isPassedPawnPush;
 
-				stack[c.stackIndex+1].futilityPrune = !isDangerous && !isCapture && !isPawnPromotion;
+				//stack[c.stackIndex+1].futilityPrune = !isDangerous && !isCapture && !isPawnPromotion;
 
 				final int ext = (isDangerous && nt == NodeType.pv? Search34.ONE_PLY: 0) +
 						(threatMove && nt == NodeType.pv? 0: 0) + razorReduction;
