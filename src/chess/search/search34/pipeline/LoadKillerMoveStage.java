@@ -31,11 +31,6 @@ public class LoadKillerMoveStage implements MidStage {
 			final StackFrame prev = stack[c.stackIndex-1];
 			final long l1killer1Temp = prev.killer[0];
 			if(l1killer1Temp != 0 && isPseudoLegal(c.player, l1killer1Temp, s)){
-				/*assert MoveEncoder.getPos1(l1killer1Temp) != MoveEncoder.getPos2(l1killer1Temp);
-				final MoveSet temp = mset[w++];
-				temp.piece = 1L << MoveEncoder.getPos1(l1killer1Temp);
-				temp.moves = 1L << MoveEncoder.getPos2(l1killer1Temp);
-				temp.rank = MoveGen.killerMoveRank;*/
 				l1killer1 = l1killer1Temp & 0xFFFL;
 				mlist.add(l1killer1, MoveGen.killerMoveRank);
 			} else{
@@ -44,11 +39,6 @@ public class LoadKillerMoveStage implements MidStage {
 
 			final long l1killer2Temp = prev.killer[1];
 			if(l1killer2Temp != 0 && isPseudoLegal(c.player, l1killer2Temp, s)){
-				/*assert MoveEncoder.getPos1(l1killer2Temp) != MoveEncoder.getPos2(l1killer2Temp);
-				final MoveSet temp = mset[w++];
-				temp.piece = 1L << MoveEncoder.getPos1(l1killer2Temp);
-				temp.moves = 1L << MoveEncoder.getPos2(l1killer2Temp);
-				temp.rank = MoveGen.killerMoveRank;*/
 				l1killer2 = l1killer2Temp & 0xFFFL;
 				mlist.add(l1killer2, MoveGen.killerMoveRank);
 			} else{
@@ -59,11 +49,6 @@ public class LoadKillerMoveStage implements MidStage {
 				final StackFrame prev2 = stack[c.stackIndex-3];
 				final long l2killer1Temp = prev2.killer[0];
 				if(l2killer1Temp != 0 && isPseudoLegal(c.player, l2killer1Temp, s)){
-					/*assert MoveEncoder.getPos1(l2killer1Temp) != MoveEncoder.getPos2(l2killer1Temp);
-					final MoveSet temp = mset[w++];
-					temp.piece = 1L << MoveEncoder.getPos1(l2killer1Temp);
-					temp.moves = 1L << MoveEncoder.getPos2(l2killer1Temp);
-					temp.rank = MoveGen.killerMoveRank;*/
 					l2killer1 = l2killer1Temp & 0xFFFL;
 					mlist.add(l2killer1, MoveGen.killerMoveRank);
 				} else{
@@ -72,11 +57,6 @@ public class LoadKillerMoveStage implements MidStage {
 
 				final long l2killer2Temp = prev2.killer[1];
 				if(l2killer2Temp != 0 && isPseudoLegal(c.player, l2killer2Temp, s)){
-					/*assert MoveEncoder.getPos1(l2killer2Temp) != MoveEncoder.getPos2(l2killer2Temp);
-					final MoveSet temp = mset[w++];
-					temp.piece = 1L << MoveEncoder.getPos1(l2killer2Temp);
-					temp.moves = 1L << MoveEncoder.getPos2(l2killer2Temp);
-					temp.rank = MoveGen.killerMoveRank;*/
 					l2killer2 = l2killer2Temp & 0xFFFL;
 					mlist.add(l2killer2, MoveGen.killerMoveRank);
 				} else{
