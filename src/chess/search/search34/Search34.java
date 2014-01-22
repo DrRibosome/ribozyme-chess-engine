@@ -7,7 +7,10 @@ import chess.search.Search;
 import chess.search.SearchListener2;
 import chess.search.SearchStat;
 import chess.search.search34.pipeline.*;
-import chess.state4.*;
+import chess.state4.BitUtil;
+import chess.state4.MoveEncoder;
+import chess.state4.SEE;
+import chess.state4.State4;
 
 /** heavy chess.search reductions for non-pv lines after depth 7*/
 public final class Search34 implements Search{
@@ -62,14 +65,6 @@ public final class Search34 implements Search{
 				}
 			}
 		}
-	}
-	
-	private static int lmrReduction(final int depth, final int moveCount){
-		return lmrReduction[depth > 31? 31: depth][moveCount > 63? 63: moveCount];
-	}
-	
-	public Search34(Evaluator e, int hashSize){
-		this(e, hashSize, true);
 	}
 	
 	public Search34(Evaluator e, int hashSize, boolean printPV){
@@ -239,29 +234,6 @@ public final class Search34 implements Search{
 		return ""+(char)('a'+(pos%8))+(pos/8+1);
 	}
 	
-	/**
-	 * Traverses TT entries until the leaf state from which the evaluation was performed
-	 * is found. This can potentially fail if the TT path has been broken
-	 * <p> note, this should be called directly after a chess.search has been performed
-	 * @param player
-	 * @param s
-	 * @param depth
-	 * @param maxDepth
-	 * @param result store for the result
-	 */
-	public void getPredictedLeafState(int player, State4 s, int depth, int maxDepth, State4 result){
-		final TTEntry e = m.get(s.zkey());
-		if(depth < maxDepth && e != null && e.move != 0){
-			final long pmask = 1L<<MoveEncoder.getPos1(e.move);
-			final long mmask = 1L<<MoveEncoder.getPos2(e.move);
-			s.executeMove(player, pmask, mmask);
-			getPredictedLeafState(1-player, s, depth+1, maxDepth, result);
-			s.undoMove();
-			return;
-		}
-		State4.copy(s, result);
-	}
-	
 	public void cutoffSearch(){
 		cutoffSearch = true;
 	}
@@ -386,7 +358,7 @@ public final class Search34 implements Search{
 			long encoding = s.executeMove(player, pieceMask, move, promotionType);
 			this.e.makeMove(encoding);
 			final boolean isDrawable = s.isDrawable();
-			
+
 			if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
 				//king in check after move
 				g = -77777;
@@ -437,57 +409,6 @@ public final class Search34 implements Search{
 			m.put(zkey, fillEntry);
 		}
 		return bestScore;
-	}
-	
-
-	/**
-	 * checks too see if a move is legal, assumming we do not start in check,
-	 * moving does not yield self check, we are not castling, and if moving a pawn
-	 * we have chosen a non take move that could be legal if no piece is
-	 * blocking the target square
-	 * 
-	 * <p> used to check that killer moves are legal
-	 * @param player
-	 * @param encoding
-	 * @param s
-	 * @return
-	 */
-	private static boolean isPseudoLegal(final int player, final long encoding, final State4 s){
-		final int pos1 = MoveEncoder.getPos1(encoding);
-		final int pos2 = MoveEncoder.getPos2(encoding);
-		final int takenType = MoveEncoder.getTakenType(encoding);
-		final long p = 1L << pos1;
-		final long m = 1L << pos2;
-		final long[] pieces = s.pieces;
-		final long agg = pieces[0] | pieces[1];
-		final long allied = pieces[player];
-		final long open = ~allied;
-		
-		if((allied & p) != 0 && takenType == s.mailbox[pos2]){
-			final int type = s.mailbox[pos1];
-			switch(type){
-			case State4.PIECE_TYPE_BISHOP:
-				final long tempBishopMoves = Masks.getRawBishopMoves(agg, p) & open;
-				return (m & tempBishopMoves) != 0;
-			case State4.PIECE_TYPE_KNIGHT:
-				final long tempKnightMoves = Masks.getRawKnightMoves(p) & open;
-				return (m & tempKnightMoves) != 0;
-			case State4.PIECE_TYPE_QUEEN:
-				final long tempQueenMoves = Masks.getRawQueenMoves(agg, p) & open;
-				return (m & tempQueenMoves) != 0;
-			case State4.PIECE_TYPE_ROOK:
-				final long tempRookMoves = Masks.getRawRookMoves(agg, p) & open;
-				return (m & tempRookMoves) != 0;
-			case State4.PIECE_TYPE_KING:
-				final long tempKingMoves = (Masks.getRawKingMoves(p) & open) | State4.getCastleMoves(player, s);
-				return (m & tempKingMoves) != 0;
-			case State4.PIECE_TYPE_PAWN:
-				final long tempPawnMoves = Masks.getRawAggPawnMoves(player, agg, s.pawns[player]);
-				return (m & tempPawnMoves) != 0;
-			}
-		}
-		
-		return false;
 	}
 	
 	/**
