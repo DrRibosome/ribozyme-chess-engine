@@ -16,6 +16,7 @@ public class DescentStage implements FinalStage{
 	private final MoveGen moveGen = new MoveGen();
 	private final Evaluator e;
 	private final Hash m;
+	private final long[] pvStore;
 
 	private final static int[][] lmrReduction = new int[32][64];
 	private final TTEntry fillEntry = new TTEntry();
@@ -35,10 +36,11 @@ public class DescentStage implements FinalStage{
 		}
 	}
 
-	public DescentStage(Evaluator e, StackFrame[] stack, Hash m, Search34 searcher){
+	public DescentStage(Evaluator e, StackFrame[] stack, Hash m, long[] pvStore, Search34 searcher){
 		this.e = e;
 		this.stack = stack;
 		this.m = m;
+		this.pvStore = pvStore;
 		this.searcher = searcher;
 	}
 
@@ -60,7 +62,7 @@ public class DescentStage implements FinalStage{
 		//move generation
 		final int length = moveGen.genMoves(c.player, s, props.alliedKingAttacked, mset, w, false, c.stackIndex);
 		if(length == 0){ //no moves, draw
-			fillEntry.fill(zkey, 0, 0, scoreEncoding, c.depth, TTEntry.CUTOFF_TYPE_EXACT, seq);
+			fillEntry.fill(zkey, 0, 0, props.scoreEncoding, c.depth, TTEntry.CUTOFF_TYPE_EXACT, seq);
 			m.put(zkey, fillEntry);
 			return 0;
 		}
@@ -170,7 +172,7 @@ public class DescentStage implements FinalStage{
 					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 					if(alpha >= c.beta){
 						if(!cutoffSearch){
-							fillEntry.fill(zkey, encoding, alpha, scoreEncoding, c.depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
+							fillEntry.fill(zkey, encoding, alpha, props.scoreEncoding, c.depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
 							m.put(zkey, fillEntry);
 						}
 
@@ -202,7 +204,8 @@ public class DescentStage implements FinalStage{
 		}
 
 		if(!cutoffSearch){
-			fillEntry.fill(zkey, bestMove, bestScore, scoreEncoding, c.depth, nt == NodeType.pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
+			fillEntry.fill(zkey, bestMove, bestScore, props.scoreEncoding,
+					c.depth, nt == NodeType.pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
 			m.put(zkey, fillEntry);
 		}
 

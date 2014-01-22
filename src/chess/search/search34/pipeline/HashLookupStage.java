@@ -83,8 +83,9 @@ public final class HashLookupStage implements EntryStage {
 		final boolean hasNonPawnMaterial = s.pieceCounts[c.player][0]-s.pieceCounts[c.player][State4.PIECE_TYPE_PAWN] > 1;
 		final boolean nonMateScore = Math.abs(c.beta) < 70000 && Math.abs(c.alpha) < 70000;
 
-		NodeProps stats = new NodeProps(eval, alliedKingAttacked,
-				pawnPrePromotion, hasNonPawnMaterial, nonMateScore, tteMove);
-		return next.eval(c, stats, s);
+		return next.eval(c,
+				new NodeProps(eval, scoreEncoding, alliedKingAttacked,
+						pawnPrePromotion, hasNonPawnMaterial, nonMateScore, tteMove),
+				s);
 	}
 }
