@@ -20,7 +20,6 @@ public final class Search34 implements Search{
 		public long forcedQuietCutoffs;
 		public long nullMoveVerifications;
 		public long nullMoveCutoffs;
-		public long nullMoveFailLow;
 		/** scores seen pes ply*/
 		public int[] scores;
 		public int maxPlySearched;
@@ -46,26 +45,10 @@ public final class Search34 implements Search{
 	private final MoveGen moveGen = new MoveGen();
 	private final TTEntry fillEntry = new TTEntry();
 	private volatile boolean cutoffSearch = false;
-	private final static int[][] lmrReduction = new int[32][64];
 	private final boolean printPV;
 	/** stores pv line as its encounted in PVS chess.search*/
 	private final long[] pvStore = new long[64];
 	private final EntryStage searchPipeline;
-
-	static{
-		for(int d = 0; d < lmrReduction.length; d++){
-			for(int mc = 0; mc < lmrReduction[d].length; mc++){
-				if(d != 0 && mc != 0){
-					final double pvRed = Math.log(d) * Math.log(mc) / 3.0;
-					//double nonPVRed = 0.33 + log(double(hd)) * log(double(mc)) / 2.25;
-					lmrReduction[d][mc] = (int)(pvRed >= 1.0 ? Math.floor(pvRed*ONE_PLY*3/4) : 0);
-					//Reductions[0][hd][mc] = (int8_t) (nonPVRed >= 1.0 ? floor(nonPVRed * int(ONE_PLY)) : 0);
-				} else{
-					lmrReduction[d][mc] = 0;
-				}
-			}
-		}
-	}
 	
 	public Search34(Evaluator e, int hashSize, boolean printPV){
 		this.e = e;
@@ -124,7 +107,7 @@ public final class Search34 implements Search{
 		cutoffSearch = false;
 		
 		long bestMove = 0;
-		int score = 0;
+		int score;
 		
 		int alpha = minScore;
 		int beta = maxScore;
