@@ -1,16 +1,12 @@
 package chess.search.search34;
 
+import chess.eval.Evaluator;
+import chess.eval.ScoreEncoder;
 import chess.search.MoveSet;
 import chess.search.Search;
 import chess.search.SearchListener2;
 import chess.search.SearchStat;
-import chess.state4.BitUtil;
-import chess.state4.Masks;
-import chess.state4.MoveEncoder;
-import chess.state4.SEE;
-import chess.state4.State4;
-import chess.eval.Evaluator;
-import chess.eval.ScoreEncoder;
+import chess.state4.*;
 
 /** heavy chess.search reductions for non-pv lines after depth 7*/
 public final class Search34 implements Search{
@@ -179,7 +175,7 @@ public final class Search34 implements Search{
 			}
 			skipAdjust = false;
 			
-			score = recurse(player, alpha, beta, i*ONE_PLY, NodeType.pv, 0, s);
+			score = recurse(new SearchContext(player, alpha, beta, i*ONE_PLY, NodeType.pv, 0), s);
 			
 			if((score <= alpha || score >= beta) && !cutoffSearch){
 				if(score <= alpha){
@@ -191,7 +187,7 @@ public final class Search34 implements Search{
 				}
 				
 				if(i < minRestartDepth){
-					score = recurse(player, alpha, beta, i*ONE_PLY, NodeType.pv, 0, s);
+					score = recurse(new SearchContext(player, alpha, beta, i*ONE_PLY, NodeType.pv, 0), s);
 					if((score <= alpha || score >= beta) && !cutoffSearch){
 						i--;
 						if(score <= alpha) alpha = score-150;
@@ -294,10 +290,31 @@ public final class Search34 implements Search{
 	private static boolean isChecked(final int player, final State4 s){
 		return State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
 	}
+
+	private final static class SearchContext{
+		final int player, alpha, beta, depth, stackIndex;
+		final NodeType nt;
+
+		SearchContext(int player, int alpha, int beta, int depth, NodeType nt, int stackIndex){
+			this.player = player;
+			this.alpha = alpha;
+			this.beta = beta;
+			this.depth = depth;
+			this.nt = nt;
+			this.stackIndex = stackIndex;
+		}
+	}
 	
-	private int recurse(final int player, int alpha, final int beta, final int depth,
-			NodeType nt, final int stackIndex, final State4 s){
+	private int recurse(SearchContext context, final State4 s){
 		stats.nodesSearched++;
+
+		final int player = context.player;
+		int alpha = context.alpha;
+		final int beta = context.beta;
+		final int depth = context.depth;
+		NodeType nt = context.nt;
+		final int stackIndex = context.stackIndex;
+
 		assert alpha < beta;
 		
 		if(s.isForcedDraw()){
@@ -305,9 +322,9 @@ public final class Search34 implements Search{
 		} else if(depth <= 0){
 			final int q = qsearch(player, alpha, beta, 0, stackIndex, nt, s);
 			if(q > 70000 && nt == NodeType.pv){ //false mate for enemy king
-				return recurse(player, q, maxScore, ONE_PLY, nt, stackIndex, s);
+				return recurse(new SearchContext(player, q, maxScore, ONE_PLY, nt, stackIndex), s);
 			} else if(q < -70000 && nt == NodeType.pv){ //false mate for allied king
-				return recurse(player, minScore, q, ONE_PLY, nt, stackIndex, s);
+				return recurse(new SearchContext(player, minScore, q, ONE_PLY, nt, stackIndex), s);
 			} else{
 				return q;
 			}
@@ -436,7 +453,7 @@ public final class Search34 implements Search{
 			stack[stackIndex+1].skipNullMove = true;
 			s.nullMove();
 			final long nullzkey = s.zkey();
-			int n = -recurse(1-player, -beta, -alpha, depth-r, nt, stackIndex+1, s);
+			int n = -recurse(new SearchContext(1-player, -beta, -alpha, depth-r, nt, stackIndex+1), s);
 			s.undoNullMove();
 			stack[stackIndex+1].skipNullMove = false;
 			
@@ -455,7 +472,7 @@ public final class Search34 implements Search{
 				//verification chess.search
 				stack[stackIndex+1].futilityPrune = false;
 				stack[stackIndex+1].skipNullMove = true;
-				double v = recurse(player, alpha, beta, depth-r, nt, stackIndex+1, s);
+				double v = recurse(new SearchContext(player, alpha, beta, depth-r, nt, stackIndex+1), s);
 				stack[stackIndex+1].skipNullMove = false;
 				if(v >= beta){
 					stats.nullMoveCutoffs++;
@@ -480,7 +497,7 @@ public final class Search34 implements Search{
 			final int d = nt == NodeType.pv? depth-2*ONE_PLY: depth/2;
 			stack[stackIndex+1].futilityPrune = false; //would never have arrived here if futility pruned above, set false
 			stack[stackIndex+1].skipNullMove = true;
-			recurse(player, alpha, beta, d, nt, stackIndex+1, s);
+			recurse(new SearchContext(player, alpha, beta, d, nt, stackIndex+1), s);
 			stack[stackIndex+1].skipNullMove = false;
 			final TTEntry temp;
 			if((temp = m.get(zkey)) != null && temp.move != 0){
@@ -637,7 +654,7 @@ public final class Search34 implements Search{
 					final int lmrReduction = lmrReduction(depth/ONE_PLY, moveCount) + (nt == NodeType.pv? 0: ONE_PLY);
 					final int reducedDepth = nextDepth - lmrReduction;
 					
-					g = -recurse(1-player, -alpha-1, -alpha, reducedDepth, nt.next(), stackIndex+1, s);
+					g = -recurse(new SearchContext(1-player, -alpha-1, -alpha, reducedDepth, nt.next(), stackIndex+1), s);
 					fullSearch = g > alpha && lmrReduction != 0;
 				} else{
 					fullSearch = true;
@@ -646,12 +663,12 @@ public final class Search34 implements Search{
 				if(fullSearch){
 					//descend negascout style
 					if(!pvMove){
-						g = -recurse(1-player, -alpha-1, -alpha, nextDepth, nt.next(), stackIndex+1, s);
+						g = -recurse(new SearchContext(1-player, -alpha-1, -alpha, nextDepth, nt.next(), stackIndex+1), s);
 						if(alpha < g && g < beta && nt == NodeType.pv){
-							g = -recurse(1-player, -beta, -alpha, nextDepth, NodeType.pv, stackIndex+1, s);
+							g = -recurse(new SearchContext(1-player, -beta, -alpha, nextDepth, NodeType.pv, stackIndex+1), s);
 						}
 					} else{
-						g = -recurse(1-player, -beta, -alpha, nextDepth, NodeType.pv, stackIndex+1, s);
+						g = -recurse(new SearchContext(1-player, -beta, -alpha, nextDepth, NodeType.pv, stackIndex+1), s);
 					}
 				}
 			}
