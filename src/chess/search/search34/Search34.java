@@ -88,7 +88,8 @@ public final class Search34 implements Search{
 
 		FinalStage finalStage = new DescentStage(e, stack, m, pvStore, this);
 		MidStage loadKillers = new LoadKillerMoveStage(stack, finalStage);
-		MidStage nullMovePruning = new NullMoveStage(stack, m, this, loadKillers);
+		MidStage internalIterativeDeepening = new InternalIterativeDeepeningStage(m, this, loadKillers);
+		MidStage nullMovePruning = new NullMoveStage(stack, m, this, internalIterativeDeepening);
 		MidStage razoring = new RazoringStage(this, nullMovePruning);
 		MidStage futilityPruning = new FutilityPruningStage(razoring);
 		EntryStage entry = new HashLookupStage(stack, m, e, futilityPruning);
