@@ -60,7 +60,8 @@ public class NullMoveStage implements MidStage {
 			} else if(n < c.alpha){
 				final TTEntry nullTTEntry = m.get(nullzkey);
 				if(nullTTEntry != null && nullTTEntry.move != 0){
-					stack[c.stackIndex].killer[0] = nullTTEntry.move & 0xFFFL; //doesnt matter which we store to, killer is at node start
+					//doesnt matter which we store to, no killers stored at this point in execution
+					stack[c.stackIndex].killer[0] = nullTTEntry.move & 0xFFFL;
 				}
 			} //case alpha < n < beta can only happen in pv nodes, at which we dont null move prune
 		} else{
