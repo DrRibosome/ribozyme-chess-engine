@@ -6,29 +6,12 @@ import chess.search.MoveSet;
 import chess.search.Search;
 import chess.search.SearchListener2;
 import chess.search.SearchStat;
+import chess.search.search34.pipeline.NodeType;
+import chess.search.search34.pipeline.SearchContext;
 import chess.state4.*;
 
 /** heavy chess.search reductions for non-pv lines after depth 7*/
 public final class Search34 implements Search{
-	/** pvs framework node types*/
-	private static enum NodeType{
-		pv(){
-			NodeType next(){
-				return cut;
-			}
-		},
-		cut(){
-			NodeType next(){
-				return all;
-			}
-		},
-		all(){
-			NodeType next(){
-				return cut;
-			}
-		};
-		abstract NodeType next();
-	};
 	
 	public final static class SearchStat32k extends SearchStat{
 		/** scores returned from quiet chess.search without bottoming out*/
@@ -59,7 +42,7 @@ public final class Search34 implements Search{
 		}
 	}
 	
-	private final static int ONE_PLY = 8;
+	public final static int ONE_PLY = 8;
 	private final static int maxScore = 90000;
 	private final static int minScore = -90000;
 
@@ -287,25 +270,11 @@ public final class Search34 implements Search{
 	}
 	
 	/** tests to see if the passed player is in check*/
-	private static boolean isChecked(final int player, final State4 s){
+	public static boolean isChecked(final int player, final State4 s){
 		return State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
 	}
-
-	private final static class SearchContext{
-		final int player, alpha, beta, depth, stackIndex;
-		final NodeType nt;
-
-		SearchContext(int player, int alpha, int beta, int depth, NodeType nt, int stackIndex){
-			this.player = player;
-			this.alpha = alpha;
-			this.beta = beta;
-			this.depth = depth;
-			this.nt = nt;
-			this.stackIndex = stackIndex;
-		}
-	}
 	
-	private int recurse(SearchContext context, final State4 s){
+	public int recurse(SearchContext context, final State4 s){
 		stats.nodesSearched++;
 
 		final int player = context.player;
@@ -578,7 +547,7 @@ public final class Search34 implements Search{
 		//move generation
 		final int length = moveGen.genMoves(player, s, alliedKingAttacked, mset, w, false, stackIndex);
 		if(length == 0){ //no moves, draw
-			fillEntry.fill(zkey, 0, 0, scoreEncoding, (int)depth, TTEntry.CUTOFF_TYPE_EXACT, seq);
+			fillEntry.fill(zkey, 0, 0, scoreEncoding, depth, TTEntry.CUTOFF_TYPE_EXACT, seq);
 			m.put(zkey, fillEntry);
 			return 0;
 		}
@@ -724,7 +693,7 @@ public final class Search34 implements Search{
 		}
 
 		if(!cutoffSearch){
-			fillEntry.fill(zkey, bestMove, bestScore, scoreEncoding, (int)depth, nt == NodeType.pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
+			fillEntry.fill(zkey, bestMove, bestScore, scoreEncoding, depth, nt == NodeType.pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
 			m.put(zkey, fillEntry);
 		}
 		
@@ -735,7 +704,7 @@ public final class Search34 implements Search{
 		return bestScore;
 	}
 	
-	private int qsearch(final int player, int alpha, int beta, final int depth,
+	public int qsearch(final int player, int alpha, int beta, final int depth,
 			final int stackIndex, final NodeType nt, final State4 s){
 		stats.nodesSearched++;
 		
@@ -876,8 +845,7 @@ public final class Search34 implements Search{
 	 * 
 	 * <p> used to check that killer moves are legal
 	 * @param player
-	 * @param piece
-	 * @param move
+	 * @param encoding
 	 * @param s
 	 * @return
 	 */
@@ -925,7 +893,7 @@ public final class Search34 implements Search{
 	 * @param skipNullMove current skip null move status
 	 * @param prev previous move list
 	 */
-	private static void attemptKillerStore(final long move, final boolean skipNullMove, final MoveList prev){
+	public static void attemptKillerStore(final long move, final boolean skipNullMove, final StackFrame prev){
 		assert prev != null;
 		if(move != 0 && !skipNullMove &&
 				(move&0xFFF) != prev.killer[0] &&

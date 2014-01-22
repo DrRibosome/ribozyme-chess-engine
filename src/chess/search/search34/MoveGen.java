@@ -5,7 +5,7 @@ import chess.state4.BitUtil;
 import chess.state4.Masks;
 import chess.state4.State4;
 
-final class MoveGen {
+public final class MoveGen {
 
 	public final static int tteMoveRank = -7;
 	public final static int promoteTakeRank = -6;
@@ -19,7 +19,7 @@ final class MoveGen {
 	
 	private final FeatureSet[] f;
 	
-	MoveGen(){
+	public MoveGen(){
 		f = new FeatureSet[2];
 		for(int a = 0; a < f.length; a++) f[a] = new FeatureSet();
 	}
