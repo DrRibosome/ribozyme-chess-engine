@@ -84,7 +84,7 @@ public class DescentStage implements FinalStage{
 		boolean hasMove = props.alliedKingAttacked;
 		final boolean inCheck = props.alliedKingAttacked;
 		for(int i = 0; i < length; i++){
-			if(i >=5 && nt == NodeType.cut){
+			if(i >= 5 && nt == NodeType.cut){
 				nt = NodeType.all;
 			}
 
