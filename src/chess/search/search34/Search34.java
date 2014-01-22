@@ -435,7 +435,7 @@ public final class Search34 implements Search{
 	 * @param mset
 	 * @param length
 	 */
-	private static void isort(final MoveSet[] mset, final int length){
+	public static void isort(final MoveSet[] mset, final int length){
 		for(int i = 1; i < length; i++){
 			for(int a = i; a > 0 && mset[a-1].rank > mset[a].rank; a--){
 				final MoveSet temp = mset[a];

@@ -68,7 +68,7 @@ public class DescentStage implements FinalStage{
 			m.put(props.zkey, fillEntry);
 			return 0;
 		}
-		isort(mset, length);
+		Search34.isort(mset, length);
 
 		int g = alpha;
 		long bestMove = 0;
@@ -216,21 +216,6 @@ public class DescentStage implements FinalStage{
 		}
 
 		return bestScore;
-	}
-
-	/**
-	 * insertion sort (lowest rank first)
-	 * @param mset
-	 * @param length
-	 */
-	private static void isort(final MoveSet[] mset, final int length){
-		for(int i = 1; i < length; i++){
-			for(int a = i; a > 0 && mset[a-1].rank > mset[a].rank; a--){
-				final MoveSet temp = mset[a];
-				mset[a] = mset[a-1];
-				mset[a-1] = temp;
-			}
-		}
 	}
 
 	private static int lmrReduction(final int depth, final int moveCount){
