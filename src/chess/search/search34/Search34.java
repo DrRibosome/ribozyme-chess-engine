@@ -271,11 +271,6 @@ public final class Search34 implements Search{
 			return 0;
 		}
 
-
-		final StackFrame ml = stack[c.stackIndex];
-		ml.killer[0] = 0;
-		ml.killer[1] = 0;
-
 		return searchPipeline.eval(c, s);
 	}
 	
