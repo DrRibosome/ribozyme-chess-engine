@@ -18,8 +18,8 @@ public class FutilityPruningStage implements MidStage {
 				!props.pawnPrePromotion &&
 				!props.alliedKingAttacked &&
 				props.hasNonPawnMaterial &&
-				props.nonMateScore &&
-				c.futilityPrune){
+				//c.futilityPrune &&
+				props.nonMateScore){
 
 			final int futilityMargin;
 			if(c.depth <= 1 * Search34.ONE_PLY){

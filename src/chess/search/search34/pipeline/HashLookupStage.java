@@ -85,7 +85,8 @@ public final class HashLookupStage implements EntryStage {
 
 		return next.eval(c,
 				new NodeProps(eval, scoreEncoding, alliedKingAttacked,
-						pawnPrePromotion, hasNonPawnMaterial, nonMateScore, tteMove),
+						pawnPrePromotion, hasNonPawnMaterial, nonMateScore,
+						tteMove, tteMoveEncoding),
 				s);
 	}
 }

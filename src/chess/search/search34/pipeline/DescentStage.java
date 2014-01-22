@@ -105,7 +105,7 @@ public class DescentStage implements FinalStage{
 				final boolean isPawnPromotion = MoveEncoder.isPawnPromotion(encoding);
 				final boolean isPassedPawnPush = isPawnPromotion || (MoveEncoder.getMovePieceType(encoding) == State4.PIECE_TYPE_PAWN &&
 						(Masks.passedPawnMasks[c.player][MoveEncoder.getPos1(encoding)] & s.pawns[1-c.player]) == 0);
-				final boolean isTTEMove = props.hasTTMove && encoding == tteMoveEncoding;
+				final boolean isTTEMove = props.hasTTMove && encoding == props.tteMoveEncoding;
 				final boolean isKillerMove = kms.contains(encoding);
 
 				final boolean isDangerous = givesCheck ||
