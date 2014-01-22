@@ -81,7 +81,7 @@ public final class Search34 implements Search{
 		this.printPV = printPV;
 
 
-		FinalStage finalStage = new DescentStage(e, stack, m, pvStore, this);
+		FinalStage finalStage = new DescentStage(moveGen, e, stack, m, pvStore, this);
 		MidStage loadKillers = new LoadKillerMoveStage(stack, finalStage);
 		MidStage internalIterativeDeepening = new InternalIterativeDeepeningStage(m, this, loadKillers);
 		MidStage nullMovePruning = new NullMoveStage(stack, m, this, internalIterativeDeepening);

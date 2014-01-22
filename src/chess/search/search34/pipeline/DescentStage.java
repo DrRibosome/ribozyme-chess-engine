@@ -13,7 +13,7 @@ public class DescentStage implements FinalStage{
 
 	private final StackFrame[] stack;
 	private final Search34 searcher;
-	private final MoveGen moveGen = new MoveGen();
+	private final MoveGen moveGen;
 	private final Evaluator e;
 	private final Hash m;
 	private final long[] pvStore;
@@ -36,7 +36,8 @@ public class DescentStage implements FinalStage{
 		}
 	}
 
-	public DescentStage(Evaluator e, StackFrame[] stack, Hash m, long[] pvStore, Search34 searcher){
+	public DescentStage(MoveGen moveGen, Evaluator e, StackFrame[] stack, Hash m, long[] pvStore, Search34 searcher){
+		this.moveGen = moveGen;
 		this.e = e;
 		this.stack = stack;
 		this.m = m;
