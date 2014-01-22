@@ -62,7 +62,7 @@ public class DescentStage implements FinalStage{
 		//move generation
 		final int length = moveGen.genMoves(c.player, s, props.alliedKingAttacked, mset, w, false, c.stackIndex);
 		if(length == 0){ //no moves, draw
-			fillEntry.fill(zkey, 0, 0, props.scoreEncoding, c.depth, TTEntry.CUTOFF_TYPE_EXACT, seq);
+			fillEntry.fill(zkey, 0, 0, props.scoreEncoding, c.depth, TTEntry.CUTOFF_TYPE_EXACT, searcher.getSeq());
 			m.put(zkey, fillEntry);
 			return 0;
 		}
@@ -171,8 +171,8 @@ public class DescentStage implements FinalStage{
 					alpha = g;
 					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 					if(alpha >= c.beta){
-						if(!cutoffSearch){
-							fillEntry.fill(zkey, encoding, alpha, props.scoreEncoding, c.depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
+						if(!searcher.isCutoffSearch()){
+							fillEntry.fill(zkey, encoding, alpha, props.scoreEncoding, c.depth, TTEntry.CUTOFF_TYPE_LOWER, searcher.getSeq());
 							m.put(zkey, fillEntry);
 						}
 
@@ -203,9 +203,9 @@ public class DescentStage implements FinalStage{
 			cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 		}
 
-		if(!cutoffSearch){
+		if(!searcher.isCutoffSearch()){
 			fillEntry.fill(zkey, bestMove, bestScore, props.scoreEncoding,
-					c.depth, nt == NodeType.pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
+					c.depth, nt == NodeType.pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, searcher.getSeq());
 			m.put(zkey, fillEntry);
 		}
 

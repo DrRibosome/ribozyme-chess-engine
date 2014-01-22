@@ -3,7 +3,7 @@ package chess.search.search34.pipeline;
 import chess.search.search34.Search34;
 import chess.state4.State4;
 
-/** refute previous passive move when we are really far ahead */
+/** futility pruning, refute previous passive move when we are really far ahead */
 public class FutilityPruningStage implements MidStage {
 
 	private final MidStage next;
