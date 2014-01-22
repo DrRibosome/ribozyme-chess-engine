@@ -53,17 +53,19 @@ public class DescentStage implements FinalStage{
 		//unimplemented misc from previous search
 		final int razorReduction = 0;
 		final boolean threatMove = false;
-		final long zkey = s.zkey(); //called earlier in pipeline, should reuse
 
 		StackFrame frame = stack[c.stackIndex];
 		MoveSet[] mset = frame.mlist.list;
 		int w = frame.mlist.len;
 
 		//move generation
+		if(props.hasTTMove){
+			frame.mlist.add(props.tteMoveEncoding, MoveGen.tteMoveRank);
+		}
 		final int length = moveGen.genMoves(c.player, s, props.alliedKingAttacked, mset, w, false, c.stackIndex);
 		if(length == 0){ //no moves, draw
-			fillEntry.fill(zkey, 0, 0, props.scoreEncoding, c.depth, TTEntry.CUTOFF_TYPE_EXACT, searcher.getSeq());
-			m.put(zkey, fillEntry);
+			fillEntry.fill(props.zkey, 0, 0, props.scoreEncoding, c.depth, TTEntry.CUTOFF_TYPE_EXACT, searcher.getSeq());
+			m.put(props.zkey, fillEntry);
 			return 0;
 		}
 		isort(mset, length);
@@ -154,7 +156,7 @@ public class DescentStage implements FinalStage{
 			}
 			s.undoMove();
 			this.e.undoMove(encoding);
-			assert zkey == s.zkey(); //keys should be unchanged after undo
+			assert props.zkey == s.zkey(); //keys should be unchanged after undo
 			assert drawCount == s.drawCount;
 			assert pawnZkey == s.pawnZkey();
 
@@ -172,8 +174,8 @@ public class DescentStage implements FinalStage{
 					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 					if(alpha >= c.beta){
 						if(!searcher.isCutoffSearch()){
-							fillEntry.fill(zkey, encoding, alpha, props.scoreEncoding, c.depth, TTEntry.CUTOFF_TYPE_LOWER, searcher.getSeq());
-							m.put(zkey, fillEntry);
+							fillEntry.fill(props.zkey, encoding, alpha, props.scoreEncoding, c.depth, TTEntry.CUTOFF_TYPE_LOWER, searcher.getSeq());
+							m.put(props.zkey, fillEntry);
 						}
 
 						//check to see if killer move can be stored
@@ -204,9 +206,9 @@ public class DescentStage implements FinalStage{
 		}
 
 		if(!searcher.isCutoffSearch()){
-			fillEntry.fill(zkey, bestMove, bestScore, props.scoreEncoding,
+			fillEntry.fill(props.zkey, bestMove, bestScore, props.scoreEncoding,
 					c.depth, nt == NodeType.pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, searcher.getSeq());
-			m.put(zkey, fillEntry);
+			m.put(props.zkey, fillEntry);
 		}
 
 		if(nt == NodeType.pv){

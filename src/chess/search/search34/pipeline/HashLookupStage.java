@@ -45,7 +45,7 @@ public final class HashLookupStage implements EntryStage {
 						cutoffType == TTEntry.CUTOFF_TYPE_LOWER: cutoffType == TTEntry.CUTOFF_TYPE_UPPER)){
 
 					if(c.stackIndex-1 >= 0 && hashEntry.score >= c.beta){
-						Search34.attemptKillerStore(hashEntry.move, ml.skipNullMove, stack[c.stackIndex-1]);
+						Search34.attemptKillerStore(hashEntry.move, c.skipNullMove, stack[c.stackIndex-1]);
 					}
 
 					if(c.nt != NodeType.pv){
@@ -56,9 +56,7 @@ public final class HashLookupStage implements EntryStage {
 
 			if(hashEntry.move != 0){
 				tteMoveEncoding = hashEntry.move;
-				list.add(1L << MoveEncoder.getPos1(tteMoveEncoding),
-						1L << MoveEncoder.getPos2(tteMoveEncoding),
-						MoveGen.tteMoveRank);
+				//tte move added to move list in descent stage
 				tteMove = true;
 			}
 
@@ -84,7 +82,7 @@ public final class HashLookupStage implements EntryStage {
 		final boolean nonMateScore = Math.abs(c.beta) < 70000 && Math.abs(c.alpha) < 70000;
 
 		return next.eval(c,
-				new NodeProps(eval, scoreEncoding, alliedKingAttacked,
+				new NodeProps(zkey, eval, scoreEncoding, alliedKingAttacked,
 						pawnPrePromotion, hasNonPawnMaterial, nonMateScore,
 						tteMove, tteMoveEncoding),
 				s);
