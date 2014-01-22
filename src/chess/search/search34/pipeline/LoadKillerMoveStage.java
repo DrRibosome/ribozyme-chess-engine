@@ -1,11 +1,13 @@
 package chess.search.search34.pipeline;
 
+import chess.search.search34.MoveGen;
 import chess.search.search34.StackFrame;
 import chess.state4.Masks;
 import chess.state4.MoveEncoder;
 import chess.state4.State4;
 
-/** loads legal killer moves to pass on to a final pipeline stage component*/
+/** loads legal killer moves to pass on to a final pipeline stage component;
+ * additionally, adds killer moves to move list */
 public class LoadKillerMoveStage implements MidStage {
 
 	private final StackFrame[] stack;
@@ -23,6 +25,8 @@ public class LoadKillerMoveStage implements MidStage {
 		final long l2killer1;
 		final long l2killer2;
 
+		final StackFrame.MoveList mlist = stack[c.stackIndex].mlist;
+
 		if(c.stackIndex-1 >= 0 && !c.skipNullMove){
 			final StackFrame prev = stack[c.stackIndex-1];
 			final long l1killer1Temp = prev.killer[0];
@@ -33,6 +37,7 @@ public class LoadKillerMoveStage implements MidStage {
 				temp.moves = 1L << MoveEncoder.getPos2(l1killer1Temp);
 				temp.rank = MoveGen.killerMoveRank;*/
 				l1killer1 = l1killer1Temp & 0xFFFL;
+				mlist.add(l1killer1, MoveGen.killerMoveRank);
 			} else{
 				l1killer1 = 0;
 			}
@@ -45,6 +50,7 @@ public class LoadKillerMoveStage implements MidStage {
 				temp.moves = 1L << MoveEncoder.getPos2(l1killer2Temp);
 				temp.rank = MoveGen.killerMoveRank;*/
 				l1killer2 = l1killer2Temp & 0xFFFL;
+				mlist.add(l1killer2, MoveGen.killerMoveRank);
 			} else{
 				l1killer2 = 0;
 			}
@@ -59,6 +65,7 @@ public class LoadKillerMoveStage implements MidStage {
 					temp.moves = 1L << MoveEncoder.getPos2(l2killer1Temp);
 					temp.rank = MoveGen.killerMoveRank;*/
 					l2killer1 = l2killer1Temp & 0xFFFL;
+					mlist.add(l2killer1, MoveGen.killerMoveRank);
 				} else{
 					l2killer1 = 0;
 				}
@@ -71,6 +78,7 @@ public class LoadKillerMoveStage implements MidStage {
 					temp.moves = 1L << MoveEncoder.getPos2(l2killer2Temp);
 					temp.rank = MoveGen.killerMoveRank;*/
 					l2killer2 = l2killer2Temp & 0xFFFL;
+					mlist.add(l2killer2, MoveGen.killerMoveRank);
 				} else{
 					l2killer2 = 0;
 				}
