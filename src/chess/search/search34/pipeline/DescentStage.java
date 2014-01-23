@@ -57,13 +57,12 @@ public class DescentStage implements FinalStage{
 
 		StackFrame frame = stack[c.stackIndex];
 		MoveSet[] mset = frame.mlist.list;
-		int w = frame.mlist.len;
 
 		//move generation
 		if(props.hasTTMove){
 			frame.mlist.add(props.tteMoveEncoding, MoveGen.tteMoveRank);
 		}
-		final int length = moveGen.genMoves(c.player, s, props.alliedKingAttacked, mset, w, false, c.stackIndex);
+		final int length = moveGen.genMoves(c.player, s, props.alliedKingAttacked, mset, frame.mlist.len, false, c.stackIndex);
 		if(length == 0){ //no moves, draw
 			fillEntry.fill(props.zkey, 0, 0, props.scoreEncoding, c.depth, TTEntry.CUTOFF_TYPE_EXACT, searcher.getSeq());
 			m.put(props.zkey, fillEntry);
