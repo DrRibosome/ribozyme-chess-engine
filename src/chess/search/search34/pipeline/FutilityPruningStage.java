@@ -14,7 +14,8 @@ public class FutilityPruningStage implements MidStage {
 
 	@Override
 	public int eval(SearchContext c, NodeProps props, State4 s) {
-		if(c.nt != NodeType.pv && c.depth <= 3 * Search34.ONE_PLY &&
+		if(c.nt != NodeType.pv &&
+				c.depth <= 3 * Search34.ONE_PLY &&
 				!props.pawnPrePromotion &&
 				!props.alliedKingAttacked &&
 				props.hasNonPawnMaterial &&
