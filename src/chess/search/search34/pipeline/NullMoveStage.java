@@ -27,8 +27,8 @@ public class NullMoveStage implements MidStage {
 
 		if(c.nt != NodeType.pv &&
 				!c.skipNullMove &&
-				c.depth > 3 * Search34.ONE_PLY
-				&& !props.alliedKingAttacked &&
+				c.depth > 3 * Search34.ONE_PLY &&
+				!props.alliedKingAttacked &&
 				props.hasNonPawnMaterial &&
 				props.nonMateScore){
 
