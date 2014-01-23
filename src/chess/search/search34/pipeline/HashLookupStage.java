@@ -24,12 +24,12 @@ public final class HashLookupStage implements EntryStage {
 
 	@Override
 	public int eval(SearchContext c, State4 s) {
-		final StackFrame ml = stack[c.stackIndex];
-		final StackFrame.MoveList list = ml.mlist;
+		final StackFrame frame = stack[c.stackIndex];
+		final StackFrame.MoveList list = frame.mlist;
 		list.clear();
 
-		ml.killer[0] = 0;
-		ml.killer[1] = 0;
+		frame.killer[0] = 0;
+		frame.killer[1] = 0;
 
 		final long zkey = s.zkey();
 		final TTEntry hashEntry = hash.get(zkey);
