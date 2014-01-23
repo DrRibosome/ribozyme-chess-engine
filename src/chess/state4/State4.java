@@ -79,86 +79,12 @@ public final class State4 {
 	public State4(){
 		this(47388L, 100);
 	}
-	
-	/** returns the seed used to generate the zobrist hash keys*/
-	public long getZkeySeed(){
-		return zkeySeed;
-	}
-	
-	/**
-	 * gets rook moves for a specified rook
-	 * @param pieces aggregate piece masks
-	 * @param rook uses lsb as rook
-	 * @return returns move mask for viable moves
-	 */
-	public static long getRookMoves(final int player, final long[] pieces, final long rook){
-		/*long agg = pieces[0] | pieces[1];
-		int pos = BitUtil.lsbIndex(rook);
-		long attackMask = Masks.rookMoves[pos] & agg;
-		int hashIndex = (int)(attackMask*Magics.rookMagics[pos] >>> (64-Magics.rookBits));
-		long move = Magics.rookMoveLookup[pos][hashIndex];*/
-		final long move = Masks.getRawRookMoves(pieces[0]|pieces[1], rook);
-		return (move & pieces[player]) ^ move;
-	}
-	
-	/** {@link #getRookMoves(int, long[], long)} */
-	public static long getBishopMoves(final int player, final long[] pieces, final long bishop){
-		/*long agg = pieces[0] | pieces[1];
-		int pos = BitUtil.lsbIndex(bishop);
-		long attackMask = Masks.bishopMoves[pos] & agg;
-		int hashIndex = (int)(attackMask*Magics.bishopMagics[pos] >>> (64-Magics.bishopBits));
-		long move = Magics.bishopMoveLookup[pos][hashIndex];*/
-		final long move = Masks.getRawBishopMoves(pieces[0]|pieces[1], bishop);
-		return (move & pieces[player]) ^ move;
-	}
-	
-	public static long getQueenMoves(final int player, final long[] pieces, final long queens){
-		return getRookMoves(player, pieces, queens) | getBishopMoves(player, pieces, queens);
-	}
 
 	/** returns knight moves for king in lsb position*/
 	public static long getKingMoves(final int player, final long[] pieces, final long king){
 		int index = BitUtil.lsbIndex(king);
 		//return Masks.kingMoves[index] & (~(pieces[0]|pieces[1]) | pieces[1-player]);
 		return (Masks.kingMoves[index] & pieces[player]) ^ Masks.kingMoves[index];
-	}
-	
-	/** returns knight moves for knight in lsb position*/
-	public static long getKnightMoves(final int player, final long[] pieces, final long knights){
-		int index = BitUtil.lsbIndex(knights);
-		//return Masks.knightMoves[index] & (~(pieces[0]|pieces[1]) | pieces[1-player]);
-		return (Masks.knightMoves[index] & pieces[player]) ^ Masks.knightMoves[index];
-	}
-	
-	public static long getLeftPawnAttacks(final int player, final long[] pieces, final long enPassante, final long pawns){
-		long colMask = player == 0? Masks.colMaskExc[7]: Masks.colMaskExc[0];
-		long enemy = pieces[1-player]|enPassante;
-		return player == 0? (pawns << 7) & colMask & enemy:
-			(pawns >>> 7) & colMask & enemy;
-	}
-	
-	public static long getRightPawnAttacks(final int player, final long[] pieces, final long enPassante, final long pawns){
-		long colMask = player == 0? Masks.colMaskExc[0]: Masks.colMaskExc[7];
-		long enemy = pieces[1-player]|enPassante;
-		return player == 0? (pawns << 9) & colMask & enemy:
-			(pawns >>> 9) & colMask & enemy;
-	}
-	
-	/** gets pawn moves that move the pawns 1 square*/
-	public static long getPawnMoves(int player, long[] pieces, long pawns){
-		final int offset = player == 0? 8: -8;
-		final long open = ~(pieces[0] | pieces[1]);
-		return offset >= 0? (pawns << offset) & open: (pawns >>> -offset) & open;
-	}
-
-	/** gets pawn moves that move the pawns 2 squares*/
-	public static long getPawnMoves2(int player, long[] pieces, long pawns){
-		final int offset = player == 0? 8: -8;
-		final long open = ~(pieces[0] | pieces[1]);
-		pawns &= player == 0? 0xFF00L: 0xFF000000000000L;
-		return offset >= 0?
-				(((pawns << offset) & open) << offset & open):
-				(((pawns >>> -offset) & open) >>> -offset & open);
 	}
 	
 	public static long getCastleMoves(int player, State4 s){
@@ -176,12 +102,6 @@ public final class State4 {
 			return moves;
 		}
 		return 0;
-	}
-	
-	/** copies history into passed buffer, returns length of history*/
-	public int copyHistory(final long[] buff){
-		System.arraycopy(history, 0, buff, 0, hindex);
-		return hindex;
 	}
 	
 	/** clears stored history, should be called just before beginning a new chess.search*/
@@ -267,17 +187,6 @@ public final class State4 {
 		return false;
 	}
 	
-	/** conveneince method for executing a move stored in a move encoding*/
-	public long executeMove(final int player, final long encoding){
-		final long pieceMask = 1L<<MoveEncoder.getPos1(encoding);
-		final long moveMask = 1L<<MoveEncoder.getPos2(encoding);
-		return executeMove(player, pieceMask, moveMask);
-	}
-	
-	public long executeMove(final int player, final long pieceMask, final long moveMask){
-		return executeMove(player, pieceMask, moveMask, State4.PROMOTE_QUEEN);
-	}
-	
 	/**
 	 * executs passed move
 	 * @param player player moving
@@ -333,7 +242,7 @@ public final class State4 {
 							zhash.getZHash(0, PIECE_TYPE_ROOK, 5);
 					encoding = MoveEncoder.setCastle(encoding);
 				}
-			} else if(player == 1){
+			} else { //player 1
 				if(pos2 == 58){
 					//castle left
 					rooks[1] &= ~0x100000000000000L;
@@ -378,17 +287,8 @@ public final class State4 {
 		//move the first piece
 		final long[] b1 = pieceMasks[movingType];
 		b1[player] = (b1[player] & ~pieceMask) | moveMask;
-		//remove the second piece if move was a take (non-branching)
-		/*final long isTake = BitUtil.isDef(mailbox[pos2]);
-		final long[] b2 = pieceMasks[takenType];
-		b2[1-player] = b2[1-player] & ~(moveMask*isTake);
-		pieceCounts[1-player][takenType] -= 1*isTake;
-		pieceCounts[1-player][PIECE_TYPE_EMPTY] -= 1*isTake;
-		zkey ^= zhash.zhash[1-player][mailbox[pos2]][pos2]*isTake;
-		if(takenType == PIECE_TYPE_PAWN){
-			pawnZkey ^= z2;
-		}*/
-		//remove the second piece if move was a take (branching)
+
+		//remove the second piece if move was a take
 		if(takenType != PIECE_TYPE_EMPTY){ //handle piece take
 			pieceMasks[takenType][1-player] &= ~moveMask;
 			pieceCounts[1-player][takenType]--;
@@ -501,13 +401,13 @@ public final class State4 {
 		assert encoding != 0;
 		assert (pieces[0] & pieces[1]) == 0;
 		
-		
 		final long q = 1;
 		final int pos1 = MoveEncoder.getPos1(encoding);
 		final int pos2 = MoveEncoder.getPos2(encoding);
 		final int takenType = MoveEncoder.getTakenType(encoding);
 		final int moveType = MoveEncoder.getMovePieceType(encoding);
 		final int player = MoveEncoder.getPlayer(encoding);
+		assert player == 0 || player == 1;
 		
 		zkey ^= zhash.turnChange;
 		int type = mailbox[pos2];
@@ -519,8 +419,7 @@ public final class State4 {
 		if(type == PIECE_TYPE_PAWN || type == PIECE_TYPE_KING){
 			pawnZkey ^= z;
 		}
-		
-		//final long[] b1 = getBoard(mailbox[pos2]);
+
 		final long[] b1 = pieceMasks[mailbox[pos2]];
 		
 		if(mailbox[pos2] == PIECE_TYPE_KING && MoveEncoder.isFirstKingMove(encoding)){
@@ -545,7 +444,7 @@ public final class State4 {
 					zkey ^= zhash.getZHash(0, PIECE_TYPE_ROOK, 5) ^
 							zhash.getZHash(0, PIECE_TYPE_ROOK, 7);
 				}
-			} else if(player == 1){
+			} else { //player 1
 				if(pos2 == 58){
 					//castle left
 					rooks[1] &= ~0x800000000000000L;
@@ -579,17 +478,8 @@ public final class State4 {
 		b1[player] = (b1[player] & ~(q<<pos2)) | q<<pos1;
 		mailbox[pos1] = mailbox[pos2];
 		mailbox[pos2] = takenType;
-		//add back taken piece (non-branching)
-		/*long isTake = BitUtil.isDef(takenType);
-		final long[] b2 = pieceMasks[takenType];
-		b2[1-player] |= (q<<pos2)*isTake;
-		pieceCounts[1-player][takenType] += 1*isTake;
-		pieceCounts[1-player][PIECE_TYPE_EMPTY] += 1*isTake;
-		zkey ^= zhash.zhash[1-player][takenType][pos2]*isTake;
-		if(takenType == PIECE_TYPE_PAWN){
-			pawnZkey ^= zhash.zhash[1-player][PIECE_TYPE_PAWN][pos2];
-		}*/
-		//add back take piece (branching)
+
+		//add back take piece
 		if(takenType != PIECE_TYPE_EMPTY){
 			pieceMasks[takenType][1-player] |= 1L<<pos2;
 			pieceCounts[1-player][takenType]++;
@@ -618,40 +508,21 @@ public final class State4 {
 			zkey ^= pzkey ^ zhash.getZHash(player, ptype, pos1);
 			pawnZkey ^= pzkey;
 		}
-		
-		//clear any current en passant square (non-branching)
-		//zkey ^= BitUtil.isDef(enPassante)*zhash.enPassante[BitUtil.lsbIndex(enPassante)];
-		//clear any current en passant square (branching)
+
+		//clear any current en passant square
 		if(enPassante != 0){
 			zkey ^= zhash.enPassante[BitUtil.lsbIndex(enPassante)];
 		}
 		
 		enPassante = 0;
 		
-		//re-apply previous en passant square (non-branching)
+		//re-apply previous en passant square
 		final long prevEnPassantPos = MoveEncoder.getPrevEnPassantePos(encoding);
 		final long hasPrevEnPassant = BitUtil.isDef(prevEnPassantPos);
 		enPassante = (1L<<prevEnPassantPos)*hasPrevEnPassant;
 		zkey ^= zhash.enPassante[BitUtil.lsbIndex(enPassante)]*hasPrevEnPassant;
-		//re-apply previous en passant square (branching)
-		/*if(MoveEncoder.getPrevEnPassantePos(encoding) != 0){
-			//pawn moved 2 squares, set en passante
-			enPassante = 1L<<MoveEncoder.getPrevEnPassantePos(encoding);
-			zkey ^= zhash.enPassante[BitUtil.lsbIndex(enPassante)];
-		}*/
-		
-		//undo an en passant take (non-branching)
-		/*long isEnPassantTake = BitUtil.isDef(MoveEncoder.isEnPassanteTake(encoding));
-		final long takePos = isEnPassantTake*((1-player)*((1L<<pos2) >>> 8) + player*((1L<<pos2) << 8));
-		pawns[1-player] |= takePos;
-		int pos3 = BitUtil.lsbIndex(takePos);
-		long type3 = mailbox[pos3]*(1-isEnPassantTake) + PIECE_TYPE_PAWN*isEnPassantTake;
-		mailbox[pos3] = 0;
-		mailbox[pos3] += type3;
-		pieceCounts[1-player][PIECE_TYPE_PAWN] += 1*isEnPassantTake;
-		pieceCounts[1-player][PIECE_TYPE_EMPTY] += 1*isEnPassantTake;
-		zkey ^= zhash.zhash[1-player][PIECE_TYPE_PAWN][pos3] * isEnPassantTake;*/
-		//undo an en passante take (branching)
+
+		//undo an en passante take
 		if(MoveEncoder.isEnPassanteTake(encoding) != 0){
 			final long takePos = player == 0? (1L<<pos2) >>> 8: (1L<<pos2) << 8;
 			pawns[1-player] |= takePos;
@@ -762,30 +633,6 @@ public final class State4 {
 		return pawnZkey;
 	}
 	
-	/**
-	 * copies all relevant information from source into the destination
-	 * and clears the history information (as well as the hash holding
-	 * historical positions) from the destination
-	 * @param src
-	 * @param dest
-	 */
-	public static void copy(final State4 src, final State4 dest){
-		for(int a = 0; a < src.pieceMasks.length; a++){
-			System.arraycopy(src.pieceMasks[a], 0, dest.pieceMasks[a], 0, 2);
-		}
-		dest.enPassante = src.enPassante;
-		System.arraycopy(src.mailbox, 0, dest.mailbox, 0, 64);
-		for(int a = 0; a < src.pieceCounts.length; a++){
-			System.arraycopy(src.pieceCounts[a], 0, dest.pieceCounts[a], 0, 7);
-		}
-		System.arraycopy(src.kingMoved, 0, dest.kingMoved, 0, 2);
-		System.arraycopy(src.rookMoved[0], 0, dest.rookMoved[0], 0, 2);
-		System.arraycopy(src.rookMoved[1], 0, dest.rookMoved[1], 0, 2);
-		dest.zkey = src.zkey;
-		dest.resetHistory();
-		dest.hm.clear();
-	}
-	
 	/** 
 	 * updates mailbox, zkey, etc to the pieces set on the board
 	 * <p> this should only be called once after the pieces have been set up
@@ -826,18 +673,6 @@ public final class State4 {
 		if(enPassante != 0){
 			zkey ^= zhash.enPassante[BitUtil.lsbIndex(enPassante)];
 		}
-		
-		//add castling rights into zkey
-		/*for(int a = 0; a < 2; a++){
-			if(!kingMoved[a]){
-				for(int q = 0; q < 2; q++){
-					if(!rookMoved[a][q]){
-						zkey ^= zhash.canCastle[a][q];
-					}
-				}
-			}
-		}*/
-		
 
 		hm.clear();
 		hm.put(zkey);
