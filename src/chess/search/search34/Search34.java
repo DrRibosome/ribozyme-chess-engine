@@ -2,6 +2,7 @@ package chess.search.search34;
 
 import chess.eval.Evaluator;
 import chess.eval.ScoreEncoder;
+import chess.eval.e9.pipeline.EvalResult;
 import chess.search.MoveSet;
 import chess.search.Search;
 import chess.search.SearchListener2;
@@ -275,7 +276,7 @@ public final class Search34 implements Search{
 		final TTEntry e = m.get(zkey);
 		final boolean hasTTMove;
 		final long ttMove;
-		final long scoreEncoding;
+		final EvalResult staticEval;
 		if(e != null){
 			stats.hashHits++;
 			if(e.depth >= depth){
@@ -298,12 +299,12 @@ public final class Search34 implements Search{
 				ttMove = 0;
 			}
 			
-			scoreEncoding = (nt == NodeType.pv? this.e.refine(player, s, minScore, maxScore, e.staticEval):
-				this.e.refine(player, s, alpha, beta, e.staticEval)).toScoreEncoding();
+			staticEval = nt == NodeType.pv? this.e.refine(player, s, minScore, maxScore, e.staticEval):
+				this.e.refine(player, s, alpha, beta, e.staticEval);
 		} else{
 			hasTTMove = false;
 			ttMove = 0;
-			scoreEncoding = (nt == NodeType.pv? this.e.eval(player, s): this.e.eval(player, s, alpha, beta)).toScoreEncoding();
+			staticEval = nt == NodeType.pv? this.e.eval(player, s): this.e.eval(player, s, alpha, beta);
 		}
 		
 		int bestScore;
@@ -311,7 +312,7 @@ public final class Search34 implements Search{
 		if(alliedKingAttacked){
 			bestScore = -77777;
 		} else{
-			bestScore = (int)(ScoreEncoder.getScore(scoreEncoding) + ScoreEncoder.getLowerMargin(scoreEncoding));
+			bestScore = staticEval.score + staticEval.lowerMargin;
 			if(bestScore >= beta){ //standing pat
 				return bestScore;
 			} else if(bestScore > alpha && nt == NodeType.pv){
@@ -369,7 +370,7 @@ public final class Search34 implements Search{
 					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 					if(g >= beta){
 						if(!cutoffSearch){
-							fillEntry.fill(zkey, encoding, g, scoreEncoding, depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
+							fillEntry.fill(zkey, encoding, g, staticEval.toScoreEncoding(), depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
 							m.put(zkey, fillEntry);
 						}
 						return g;
@@ -379,7 +380,8 @@ public final class Search34 implements Search{
 		}
 
 		if(!cutoffSearch){
-			fillEntry.fill(zkey, bestMove, bestScore, scoreEncoding, depth, nt == NodeType.pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
+			fillEntry.fill(zkey, bestMove, bestScore, staticEval.toScoreEncoding(),
+					depth, nt == NodeType.pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
 			m.put(zkey, fillEntry);
 		}
 		return bestScore;
