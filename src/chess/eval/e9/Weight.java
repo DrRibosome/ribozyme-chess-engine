@@ -21,13 +21,13 @@ public final class Weight {
 	}
 	
 	/** end game score*/
-	static int egScore(final int weight){
+	public static int egScore(final int weight){
 		final int shifted = weight >>> 16;
 		return (shifted & weightValueMask) - (shifted & weightSignMask);
 	}
 	
 	/** interpolate a passed weight value, scale in [0,1]*/
-	static int interpolate(final int weight, final double scale){
+	public static int interpolate(final int weight, final double scale){
 		final int start = mgScore(weight);
 		final int end = egScore(weight);
 		return (int)(start + (end-start)*scale);

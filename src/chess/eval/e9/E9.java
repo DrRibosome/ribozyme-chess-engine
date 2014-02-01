@@ -143,11 +143,10 @@ public final class E9 implements Evaluator{
 
 		final int totalMaterialScore = materialScore[0]+materialScore[1];
 		final double scale = getScale(totalMaterialScore, endMaterial, scaleMargin);
-		
-		final int pawnType = State4.PIECE_TYPE_PAWN;
-		final int pawnWeight = materialWeights[pawnType];
-		nonPawnMaterial[0] = materialScore[0]-s.pieceCounts[0][pawnType]*pawnWeight;
-		nonPawnMaterial[1] = materialScore[1]-s.pieceCounts[1][pawnType]*pawnWeight;
+
+		final int pawnWeight = materialWeights[State4.PIECE_TYPE_PAWN];
+		nonPawnMaterial[0] = materialScore[0]-s.pieceCounts[0][State4.PIECE_TYPE_PAWN]*pawnWeight;
+		nonPawnMaterial[1] = materialScore[1]-s.pieceCounts[1][State4.PIECE_TYPE_PAWN]*pawnWeight;
 		
 		final long alliedQueens = s.queens[player];
 		final long enemyQueens = s.queens[1-player];

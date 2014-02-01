@@ -99,7 +99,7 @@ public final class PawnEval {
 	
 	/** scores pawn structure*/
 	public static int scorePawns(final int player, final State4 s,
-			final PawnHashEntry entry, final long enemyQueens, final int[] nonPawnMaterial){
+			final PawnHashEntry entry, final long enemyQueens, final int nonPawnMaterialScore){
 		int score = 0;
 		
 		//get pawn scores from hash entry, or recalculate if necessary
@@ -152,14 +152,16 @@ public final class PawnEval {
 		if(passedPawns != 0){
 			for(long pp = passedPawns; pp != 0; pp &= pp-1){
 				final long p = pp & -pp;
-				score += analyzePassedPawn(player, p, s, nonPawnMaterial);
+				score += analyzePassedPawn(player, p, s, nonPawnMaterialScore);
 			}
 		}
 		
 		//adjustments for non-pawn disadvantage
-		final boolean nonPawnDisadvantage = nonPawnMaterial[player]-nonPawnMaterial[1-player]+20 < 0;
+		//final boolean nonPawnDisadvantage = nonPawnMaterial[player]-nonPawnMaterial[1-player]+20 < 0;
+		final boolean nonPawnDisadvantage = nonPawnMaterialScore+20 < 0;
 		if(nonPawnDisadvantage){
-			final double npDisMult = Math.max(Math.min(nonPawnMaterial[1-player]-nonPawnMaterial[player], 300), 0)/300.;
+			//final double npDisMult = Math.max(Math.min(nonPawnMaterial[1-player]-nonPawnMaterial[player], 300), 0)/300.;
+			final double npDisMult = Math.max(Math.min(-nonPawnMaterialScore, 300), 0)/300.;
 			if(player == 0){
 				score += Weight.multWeight(S(-10, -20), npDisMult*entry.isolatedPawns1);
 				score += Weight.multWeight(S(-10, -10), npDisMult*entry.doubledPawns1);
@@ -178,7 +180,7 @@ public final class PawnEval {
 		return a1 > a2? a1: a2;
 	}
 	
-	private static int analyzePassedPawn(final int player, final long p, final State4 s, final int[] nonPawnMaterial){
+	private static int analyzePassedPawn(final int player, final long p, final State4 s, final int nonPawnMaterialScore){
 		
 		int passedPawnSore = 0;
 		
@@ -205,7 +207,8 @@ public final class PawnEval {
 		}
 		
 		//pawn closer than enemy king and no material remaining
-		if(pawnDist < enemyKingDist && nonPawnMaterial[1-player] == 0){
+		boolean enemyHasNonPawnMaterial = (s.pieces[1-player] & ~s.pawns[1-player] & ~s.kings[1-player]) == 0;
+		if(pawnDist < enemyKingDist && !enemyHasNonPawnMaterial){
 			passedPawnSore += S(500);
 		}
 		
@@ -242,7 +245,8 @@ public final class PawnEval {
 		//checks to see whether we have a non-pawn material disadvantage,
 		//its very hard to keep a passed pawn when behind
 		//final int nonPawnMaterialDiff = nonPawnMaterial[player]-nonPawnMaterial[1-player];
-		final double npDisMult = Math.max(Math.min(nonPawnMaterial[1-player]-nonPawnMaterial[player], 300), 0)/300.;
+		//final double npDisMult = Math.max(Math.min(nonPawnMaterial[1-player]-nonPawnMaterial[player], 300), 0)/300.;
+		final double npDisMult = Math.max(Math.min(-nonPawnMaterialScore, 300), 0)/300.;
 		passedPawnSore += Weight.multWeight(S(-start*2/3, -end*2/3), npDisMult);
 		
 		//passed pawn supported by rook bonus
