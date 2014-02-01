@@ -8,6 +8,7 @@ public final class TTEntry {
 	public final static int CUTOFF_TYPE_LOWER = 2;
 	
 	public long zkey;
+	/** node score as evaluated via search*/
 	public int score;
 	/** score encoding from {@link ScoreEncoder}*/
 	public long staticEval;

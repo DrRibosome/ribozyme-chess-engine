@@ -70,7 +70,7 @@ public final class Stage2 implements LateStage {
 		int score = Weight.interpolate(stage2Score, c.scale) +
 				Weight.interpolate(S((int)(Weight.egScore(stage2Score)*.1), 0), c.scale);
 
-		return cutoffCheck.eval(allied, enemy, adv, c, s, previousScore);
+		return cutoffCheck.eval(allied, enemy, adv, c, s, score);
 	}
 
 	/** build a weight scaling from passed start,end values*/
