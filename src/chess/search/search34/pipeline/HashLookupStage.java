@@ -69,9 +69,9 @@ public final class HashLookupStage implements EntryStage {
 		//construct node static eval score
 		final int eval;
 		if(hashEntry != null && ((hashEntry.cutoffType == TTEntry.CUTOFF_TYPE_LOWER &&
-				hashEntry.score > staticScore.score+staticScore.lowerMargin) ||
+				hashEntry.score > staticScore.score) ||
 				(hashEntry.cutoffType == TTEntry.CUTOFF_TYPE_UPPER &&
-				hashEntry.score < staticScore.score+staticScore.upperMargin))){
+				hashEntry.score < staticScore.score))){
 			eval = hashEntry.score;
 		} else{
 			eval = staticScore.score;
