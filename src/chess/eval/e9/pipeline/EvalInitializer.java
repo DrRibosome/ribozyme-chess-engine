@@ -31,7 +31,7 @@ public class EvalInitializer implements EntryStage{
 		Team allied = Team.load(player, s);
 		Team enemy = Team.load(1-player, s);
 
-		EvalBasics basics = scoreMaterial(allied, enemy);
+		BasicAttributes basics = scoreMaterial(allied, enemy);
 
 		double scale = getScale(basics.totalMaterialScore, endMaterial, scaleMargin);
 
@@ -49,7 +49,7 @@ public class EvalInitializer implements EntryStage{
 		return endMaterial-startMaterial;
 	}
 
-	private static EvalBasics scoreMaterial(Team allied, Team enemy){
+	private static BasicAttributes scoreMaterial(Team allied, Team enemy){
 		int alliedMaterialScore = 0;
 		alliedMaterialScore += allied.bishopCount * PieceWeights.bishop;
 		alliedMaterialScore += allied.knightCount * PieceWeights.knight;
@@ -69,6 +69,6 @@ public class EvalInitializer implements EntryStage{
 
 		int materialScore = alliedMaterialScore - enemyMaterialScore;
 		int totalMaterialScore = alliedMaterialScore + enemyMaterialScore;
-		return new EvalBasics(materialScore, nonPawnScore, totalMaterialScore);
+		return new BasicAttributes(materialScore, nonPawnScore, totalMaterialScore);
 	}
 }

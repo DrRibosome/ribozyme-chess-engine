@@ -22,7 +22,7 @@ public final class Stage1 implements MidStage {
 		}
 
 		@Override
-		public EvalResult eval(Team allied, Team enemy, EvalBasics basics, EvalContext c, State4 s, int score) {
+		public EvalResult eval(Team allied, Team enemy, BasicAttributes basics, EvalContext c, State4 s, int score) {
 			final int stage1MarginLower; //margin for a lower cutoff
 			final int stage1MarginUpper; //margin for an upper cutoff
 			if(allied.queenCount != 0 && enemy.queenCount != 0){
@@ -66,7 +66,7 @@ public final class Stage1 implements MidStage {
 	}
 
 	@Override
-	public EvalResult eval(Team allied, Team enemy, EvalBasics basics, EvalContext c, State4 s, int prevScore) {
+	public EvalResult eval(Team allied, Team enemy, BasicAttributes basics, EvalContext c, State4 s, int prevScore) {
 		int player = c.player;
 
 		//load hashed pawn values, if any

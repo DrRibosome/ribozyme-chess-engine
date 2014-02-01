@@ -37,7 +37,7 @@ public class MobilityProvider implements MidStage{
 	}
 
 	@Override
-	public EvalResult eval(Team allied, Team enemy, EvalBasics basics, EvalContext c, State4 s, int previousScore) {
+	public EvalResult eval(Team allied, Team enemy, BasicAttributes basics, EvalContext c, State4 s, int previousScore) {
 		final long whitePawnAttacks = Masks.getRawPawnAttacks(0, s.pawns[0]);
 		final long blackPawnAttacks = Masks.getRawPawnAttacks(1, s.pawns[1]);
 		final long pawnAttacks = whitePawnAttacks | blackPawnAttacks;
