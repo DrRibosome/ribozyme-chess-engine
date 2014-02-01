@@ -24,20 +24,20 @@ public final class Stage2 implements LateStage {
 			final int stage2MarginUpper;
 			if(allied.queenCount != 0 && enemy.queenCount != 0){
 				//both sides have queen, apply even margin
-				stage2MarginLower = 3;
-				stage2MarginUpper = -3;
+				stage2MarginLower = -30;
+				stage2MarginUpper = 30;
 			} else if(allied.queenCount != 0){
 				//score will be higher because allied queen, no enemy queen
-				stage2MarginLower = 3;
-				stage2MarginUpper = -3;
+				stage2MarginLower = -30;
+				stage2MarginUpper = 30;
 			}  else if(enemy.queenCount != 0){
 				//score will be lower because enemy queen, no allied queen
-				stage2MarginLower = 2;
-				stage2MarginUpper = -4;
+				stage2MarginLower = -20;
+				stage2MarginUpper = 40;
 			} else{
 				//both sides no queen, aplly even margin
-				stage2MarginLower = 0;
-				stage2MarginUpper = -0;
+				stage2MarginLower = -0;
+				stage2MarginUpper = 0;
 			}
 
 			final boolean lowerBoundCutoff = score+stage2MarginLower <= c.lowerBound;

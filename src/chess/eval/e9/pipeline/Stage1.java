@@ -27,19 +27,19 @@ public final class Stage1 implements MidStage {
 			final int stage1MarginUpper; //margin for an upper cutoff
 			if(allied.queenCount != 0 && enemy.queenCount != 0){
 				//both sides have queen, apply even margin
-				stage1MarginLower = 82; //margin scores taken from profiled mean score diff, 1.7 std
-				stage1MarginUpper = -76;
+				stage1MarginLower = -82; //margin scores taken from profiled mean score diff, 1.7 std
+				stage1MarginUpper = 76;
 			} else if(allied.queenCount != 0){
 				//score will be higher because allied queen, no enemy queen
-				stage1MarginLower = 120;
-				stage1MarginUpper = -96;
+				stage1MarginLower = -120;
+				stage1MarginUpper = 96;
 			} else if(enemy.queenCount != 0){
 				//score will be lower because enemy queen, no allied queen
-				stage1MarginLower = 92;
-				stage1MarginUpper = -128;
+				stage1MarginLower = -92;
+				stage1MarginUpper = 128;
 			} else{
-				stage1MarginLower = 142;
-				stage1MarginUpper = -141;
+				stage1MarginLower = -142;
+				stage1MarginUpper = 141;
 			}
 
 			final boolean lowerBoundCutoff = score+stage1MarginLower <= c.lowerBound;

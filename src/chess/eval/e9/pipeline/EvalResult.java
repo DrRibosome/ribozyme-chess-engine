@@ -22,6 +22,14 @@ public final class EvalResult {
 		this.stage = stage;
 	}
 
+	public int getScoreLowerBound(){
+		return score + lowerMargin;
+	}
+
+	public int getScoreUpperBound(){
+		return score + upperMargin;
+	}
+
 	public long toScoreEncoding(){
 		return ScoreEncoder.encode(score, lowerMargin, upperMargin, stage);
 	}
