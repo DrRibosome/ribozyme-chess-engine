@@ -19,10 +19,6 @@ public final class E9 implements Evaluator{
 	private final EntryStage pipeline;
 	private final PawnHash pawnHash;
 	
-	//cached values
-	/** stores total king distance from allied pawns*/
-	private final int[] kingPawnDist = new int[2];
-	
 	public E9(){
 		this(16);
 	}
@@ -64,8 +60,7 @@ public final class E9 implements Evaluator{
 			return scoreEncoding;
 		}*/
 
-		EvalResult result = pipeline.eval(player, lowerBound, upperBound, s);
-		return result;
+		return pipeline.eval(player, lowerBound, upperBound, s);
 	}
 	
 	@Override
