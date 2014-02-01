@@ -1,5 +1,7 @@
 package chess.eval.e9.pipeline;
 
+import chess.eval.ScoreEncoder;
+
 /** gives evaluation score, and lower/upper margins if applicable.
  * <p>score+lowerMargin <= score <= score+upperMargin</p>*/
 public final class EvalResult {
@@ -18,5 +20,17 @@ public final class EvalResult {
 		this.lowerMargin = lowerMargin;
 		this.upperMargin = upperMargin;
 		this.stage = stage;
+	}
+
+	public long toScoreEncoding(){
+		return ScoreEncoder.encode(score, lowerMargin, upperMargin, stage);
+	}
+
+	/** decode a score encoding into an eval result*/
+	public EvalResult decode(long scoreEncoding){
+		return new EvalResult((int)ScoreEncoder.getScore(scoreEncoding),
+				(int)ScoreEncoder.getLowerMargin(scoreEncoding),
+				(int)ScoreEncoder.getUpperMargin(scoreEncoding),
+				(int)ScoreEncoder.getFlag(scoreEncoding));
 	}
 }

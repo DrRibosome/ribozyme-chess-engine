@@ -1,12 +1,14 @@
 package chess.search.search34.pipeline;
 
+import chess.eval.e9.pipeline.EvalResult;
+
 class NodeProps {
 	final long zkey;
 
 	/** static eval for current node*/
 	final int eval;
-	/** raw score encoding for a node outputed by the evaluator*/
-	final int scoreEncoding;
+	/** static node state evaluation outputed via an {@linkplain chess.eval.Evaluator}*/
+	final EvalResult staticScore;
 	final boolean alliedKingAttacked, pawnPrePromotion, hasNonPawnMaterial, nonMateScore;
 
 	/** records presence of transposition table lookup move*/
@@ -14,12 +16,12 @@ class NodeProps {
 	/** encoding of move retrieved from transposition table*/
 	final long tteMoveEncoding;
 
-	NodeProps(long zkey, int eval, int scoreEncoding, boolean alliedKingAttacked,
+	NodeProps(long zkey, int eval, EvalResult staticScore, boolean alliedKingAttacked,
 			  boolean pawnPrePromotion, boolean hasNonPawnMaterial,
 			  boolean nonMateScore, boolean hasTTMove, long tteMoveEncoding){
 		this.zkey = zkey;
 		this.eval = eval;
-		this.scoreEncoding = scoreEncoding;
+		this.staticScore = staticScore;
 		this.alliedKingAttacked = alliedKingAttacked;
 		this.pawnPrePromotion = pawnPrePromotion;
 		this.hasNonPawnMaterial = hasNonPawnMaterial;
@@ -30,7 +32,7 @@ class NodeProps {
 
 	/** convenience method for regenerating a node props object with tte move included*/
 	NodeProps addTTEMove(long tteMoveEncoding){
-		return new NodeProps(zkey, eval, scoreEncoding,
+		return new NodeProps(zkey, eval, staticScore,
 				alliedKingAttacked, pawnPrePromotion,
 				hasNonPawnMaterial, nonMateScore, true, tteMoveEncoding);
 	}

@@ -14,7 +14,6 @@ public class DescentStage implements FinalStage{
 	private final StackFrame[] stack;
 	private final Search34 searcher;
 	private final MoveGen moveGen;
-	private final Evaluator e;
 	private final Hash m;
 	private final long[] pvStore;
 
@@ -36,9 +35,8 @@ public class DescentStage implements FinalStage{
 		}
 	}
 
-	public DescentStage(MoveGen moveGen, Evaluator e, StackFrame[] stack, Hash m, long[] pvStore, Search34 searcher){
+	public DescentStage(MoveGen moveGen, StackFrame[] stack, Hash m, long[] pvStore, Search34 searcher){
 		this.moveGen = moveGen;
-		this.e = e;
 		this.stack = stack;
 		this.m = m;
 		this.pvStore = pvStore;
@@ -64,7 +62,7 @@ public class DescentStage implements FinalStage{
 		}
 		final int length = moveGen.genMoves(c.player, s, props.alliedKingAttacked, mset, frame.mlist.len, false, c.stackIndex);
 		if(length == 0){ //no moves, draw
-			fillEntry.fill(props.zkey, 0, 0, props.scoreEncoding, c.depth, TTEntry.CUTOFF_TYPE_EXACT, searcher.getSeq());
+			fillEntry.fill(props.zkey, 0, 0, props.staticScore.toScoreEncoding(), c.depth, TTEntry.CUTOFF_TYPE_EXACT, searcher.getSeq());
 			m.put(props.zkey, fillEntry);
 			return 0;
 		}
@@ -92,7 +90,6 @@ public class DescentStage implements FinalStage{
 			final int promotionType = set.promotionType;
 			final long move = set.moves;
 			long encoding = s.executeMove(c.player, pieceMask, move, promotionType);
-			this.e.makeMove(encoding);
 			boolean isDrawable = s.isDrawable(); //player can take a draw
 
 			if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[c.player]), 1-c.player, s)){
@@ -155,7 +152,6 @@ public class DescentStage implements FinalStage{
 				}
 			}
 			s.undoMove();
-			this.e.undoMove(encoding);
 			assert props.zkey == s.zkey(); //keys should be unchanged after undo
 			assert drawCount == s.drawCount;
 			assert pawnZkey == s.pawnZkey();
@@ -174,7 +170,7 @@ public class DescentStage implements FinalStage{
 					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 					if(alpha >= c.beta){
 						if(!searcher.isCutoffSearch()){
-							fillEntry.fill(props.zkey, encoding, alpha, props.scoreEncoding, c.depth, TTEntry.CUTOFF_TYPE_LOWER, searcher.getSeq());
+							fillEntry.fill(props.zkey, encoding, alpha, props.staticScore.toScoreEncoding(), c.depth, TTEntry.CUTOFF_TYPE_LOWER, searcher.getSeq());
 							m.put(props.zkey, fillEntry);
 						}
 
@@ -206,7 +202,7 @@ public class DescentStage implements FinalStage{
 		}
 
 		if(!searcher.isCutoffSearch()){
-			fillEntry.fill(props.zkey, bestMove, bestScore, props.scoreEncoding,
+			fillEntry.fill(props.zkey, bestMove, bestScore, props.staticScore.toScoreEncoding(),
 					c.depth, nt == NodeType.pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, searcher.getSeq());
 			m.put(props.zkey, fillEntry);
 		}

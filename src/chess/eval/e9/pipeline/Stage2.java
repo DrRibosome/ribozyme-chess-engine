@@ -8,10 +8,10 @@ import chess.state4.State4;
 public final class Stage2 implements LateStage {
 
 	public final static class CutoffCheck implements LateStage{
-		private final MidStage next;
+		private final LateStage next;
 		private final int stage;
 
-		public CutoffCheck(MidStage next, int stage){
+		public CutoffCheck(LateStage next, int stage){
 			this.next = next;
 			this.stage = stage;
 		}
@@ -53,7 +53,7 @@ public final class Stage2 implements LateStage {
 	private final CutoffCheck cutoffCheck;
 	private final int stage;
 
-	public Stage2(MidStage next, int stage){
+	public Stage2(LateStage next, int stage){
 		cutoffCheck = new CutoffCheck(next, stage);
 		this.stage = stage;
 	}

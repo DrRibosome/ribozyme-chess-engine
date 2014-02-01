@@ -64,7 +64,7 @@ public final class Search34 implements Search{
 		this.printPV = printPV;
 
 		//construct search pipeline
-		FinalStage finalStage = new DescentStage(moveGen, e, stack, m, pvStore, this);
+		FinalStage finalStage = new DescentStage(moveGen, stack, m, pvStore, this);
 		MidStage loadKillers = new LoadKillerMoveStage(stack, finalStage);
 		MidStage internalIterativeDeepening = new InternalIterativeDeepeningStage(m, this, loadKillers);
 		MidStage nullMovePruning = new NullMoveStage(stack, m, this, internalIterativeDeepening);
@@ -102,7 +102,6 @@ public final class Search34 implements Search{
 		
 		//chess.search initialization
 		seq++;
-		e.initialize(s);
 		moveGen.dampen();
 		cutoffSearch = false;
 		
@@ -276,7 +275,7 @@ public final class Search34 implements Search{
 		final TTEntry e = m.get(zkey);
 		final boolean hasTTMove;
 		final long ttMove;
-		final int scoreEncoding;
+		final long scoreEncoding;
 		if(e != null){
 			stats.hashHits++;
 			if(e.depth >= depth){
@@ -299,12 +298,12 @@ public final class Search34 implements Search{
 				ttMove = 0;
 			}
 			
-			scoreEncoding = nt == NodeType.pv? this.e.refine(player, s, minScore, maxScore, e.staticEval):
-				this.e.refine(player, s, alpha, beta, e.staticEval);
+			scoreEncoding = (nt == NodeType.pv? this.e.refine(player, s, minScore, maxScore, e.staticEval):
+				this.e.refine(player, s, alpha, beta, e.staticEval)).toScoreEncoding();
 		} else{
 			hasTTMove = false;
 			ttMove = 0;
-			scoreEncoding = nt == NodeType.pv? this.e.eval(player, s): this.e.eval(player, s, alpha, beta);
+			scoreEncoding = (nt == NodeType.pv? this.e.eval(player, s): this.e.eval(player, s, alpha, beta)).toScoreEncoding();
 		}
 		
 		int bestScore;
@@ -312,7 +311,7 @@ public final class Search34 implements Search{
 		if(alliedKingAttacked){
 			bestScore = -77777;
 		} else{
-			bestScore = ScoreEncoder.getScore(scoreEncoding) + ScoreEncoder.getMargin(scoreEncoding);
+			bestScore = (int)(ScoreEncoder.getScore(scoreEncoding) + ScoreEncoder.getLowerMargin(scoreEncoding));
 			if(bestScore >= beta){ //standing pat
 				return bestScore;
 			} else if(bestScore > alpha && nt == NodeType.pv){
@@ -334,7 +333,6 @@ public final class Search34 implements Search{
 			final int promotionType = set.promotionType;
 			final long move = set.moves;
 			long encoding = s.executeMove(player, pieceMask, move, promotionType);
-			this.e.makeMove(encoding);
 			final boolean isDrawable = s.isDrawable();
 
 			if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
@@ -345,7 +343,6 @@ public final class Search34 implements Search{
 						(!hasTTMove || encoding != ttMove)){
 					s.undoMove();
 					if(SEE.seeSign(player, pieceMask, move, s) < 0){
-						this.e.undoMove(encoding);
 						continue;
 					} else{
 						s.executeMove(player, pieceMask, move, promotionType);
@@ -355,7 +352,6 @@ public final class Search34 implements Search{
 				g = -qsearch(1-player, -beta, -alpha, depth-1, stackIndex+1, nt, s);
 			}
 			s.undoMove();
-			this.e.undoMove(encoding);
 
 			if(isDrawable && 0 > g){ //can draw instead of making the move
 				g = 0;
