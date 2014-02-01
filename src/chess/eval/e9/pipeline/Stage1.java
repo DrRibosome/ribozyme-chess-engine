@@ -1,6 +1,5 @@
 package chess.eval.e9.pipeline;
 
-import chess.eval.ScoreEncoder;
 import chess.eval.e9.PawnHash;
 import chess.eval.e9.PawnHashEntry;
 import chess.eval.e9.Weight;
@@ -12,23 +11,64 @@ import chess.state4.State4;
  */
 public final class Stage1 implements MidStage {
 
+	/** helper stage to check for score cutoffs*/
+	public final static class CutoffCheck implements MidStage{
+		private final MidStage next;
+		private final int stage;
+
+		public CutoffCheck(MidStage next, int stage){
+			this.next = next;
+			this.stage = stage;
+		}
+
+		@Override
+		public EvalResult eval(Team allied, Team enemy, EvalBasics basics, EvalContext c, State4 s, int score) {
+			final int stage1MarginLower; //margin for a lower cutoff
+			final int stage1MarginUpper; //margin for an upper cutoff
+			if(allied.queenCount != 0 && enemy.queenCount != 0){
+				//both sides have queen, apply even margin
+				stage1MarginLower = 82; //margin scores taken from profiled mean score diff, 1.7 std
+				stage1MarginUpper = -76;
+			} else if(allied.queenCount != 0){
+				//score will be higher because allied queen, no enemy queen
+				stage1MarginLower = 120;
+				stage1MarginUpper = -96;
+			} else if(enemy.queenCount != 0){
+				//score will be lower because enemy queen, no allied queen
+				stage1MarginLower = 92;
+				stage1MarginUpper = -128;
+			} else{
+				stage1MarginLower = 142;
+				stage1MarginUpper = -141;
+			}
+
+			final boolean lowerBoundCutoff = score+stage1MarginLower <= c.lowerBound;
+			final boolean upperBoundCutoff = score+stage1MarginUpper >= c.upperBound;
+
+			if(!lowerBoundCutoff || !upperBoundCutoff){
+				return new EvalResult(score, stage1MarginLower, stage1MarginUpper, stage);
+			} else{
+				return next.eval(allied, enemy, basics, c, s, score);
+			}
+		}
+	}
 	private final static int tempoWeight = S(14, 5);
 	private final static int bishopPairWeight = S(10, 42);
 
-	private final MidStage next;
+	/** assist stage to check for score cutoffs before continuing down eval pipeline*/
+	private final MidStage cutoffChecker;
 	private final PawnHash pawnHash;
 	private final PawnHashEntry filler = new PawnHashEntry();
 
-	public Stage1(PawnHash pawnHash, MidStage next){
+	public Stage1(PawnHash pawnHash, MidStage next, int stage){
 		this.pawnHash = pawnHash;
-		this.next = next;
+		this.cutoffChecker = new CutoffCheck(next, stage);
 	}
 
 	@Override
 	public EvalResult eval(Team allied, Team enemy, EvalBasics basics, EvalContext c, State4 s, int prevScore) {
 		int player = c.player;
 
-		//--------------------- score node -------------------------
 		//load hashed pawn values, if any
 		final long pawnZkey = s.pawnZkey();
 		final PawnHashEntry phEntry = pawnHash.get(pawnZkey);
@@ -62,35 +102,8 @@ public final class Stage1 implements MidStage {
 			pawnHash.put(pawnZkey, loader);
 		}
 
-
-		//--------------------- check for cutoffs -------------------------
-		final int stage1MarginLower; //margin for a lower cutoff
-		final int stage1MarginUpper; //margin for an upper cutoff
-		if(allied.queenCount != 0 && enemy.queenCount != 0){
-			//both sides have queen, apply even margin
-			stage1MarginLower = 82; //margin scores taken from profiled mean score diff, 1.7 std
-			stage1MarginUpper = -76;
-		} else if(allied.queenCount != 0){
-			//score will be higher because allied queen, no enemy queen
-			stage1MarginLower = 120;
-			stage1MarginUpper = -96;
-		} else if(enemy.queenCount != 0){
-			//score will be lower because enemy queen, no allied queen
-			stage1MarginLower = 92;
-			stage1MarginUpper = -128;
-		} else{
-			stage1MarginLower = 142;
-			stage1MarginUpper = -141;
-		}
-
-		final boolean lowerBoundCutoff = score+stage1MarginLower <= c.lowerBound;
-		final boolean upperBoundCutoff = score+stage1MarginUpper >= c.upperBound;
-
-		if(!lowerBoundCutoff || !upperBoundCutoff){
-			return new EvalResult(score, stage1MarginLower, stage1MarginUpper);
-		} else{
-			return next.eval(allied, enemy, basics, c, s, score);
-		}
+		//check for score cutoff then continue if necessary
+		return cutoffChecker.eval(allied, enemy, basics, c, s, score);
 	}
 
 	/** build a weight scaling from passed start,end values*/

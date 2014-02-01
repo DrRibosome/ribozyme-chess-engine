@@ -10,9 +10,13 @@ public final class EvalResult {
 	/** lower margin on eval score, score+lowerMargin <= score <= score+upperMargin*/
 	public final int lowerMargin;
 
-	EvalResult(int score, int lowerMargin, int upperMargin) {
+	/** final stage at which evaluation occurred before result was constructed*/
+	public final int stage;
+
+	EvalResult(int score, int lowerMargin, int upperMargin, int stage) {
 		this.score = score;
 		this.lowerMargin = lowerMargin;
 		this.upperMargin = upperMargin;
+		this.stage = stage;
 	}
 }
