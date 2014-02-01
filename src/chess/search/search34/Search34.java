@@ -315,7 +315,7 @@ public final class Search34 implements Search{
 			bestScore = staticEval.score;
 			if(bestScore >= beta){ //standing pat
 				return bestScore;
-			} else if(bestScore > alpha && nt == NodeType.pv){
+			} else if(bestScore > alpha){ //redundent to check 'nt == NodeType.pv' because non-pv has null window
 				alpha = bestScore;
 			}
 		}
