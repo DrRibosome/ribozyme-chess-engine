@@ -42,7 +42,7 @@ public final class Stage2 implements LateStage {
 
 			final boolean lowerBoundCutoff = score+stage2MarginUpper <= c.lowerBound; //highest score still less than alpha
 			final boolean upperBoundCutoff = score+stage2MarginLower >= c.upperBound; //lowest score still greater than beta
-			if(!lowerBoundCutoff || !upperBoundCutoff){
+			if(lowerBoundCutoff || upperBoundCutoff){
 				return new EvalResult(score, stage2MarginLower, stage2MarginUpper, stage);
 			} else{
 				return next.eval(allied, enemy, basics, c, s, score);
