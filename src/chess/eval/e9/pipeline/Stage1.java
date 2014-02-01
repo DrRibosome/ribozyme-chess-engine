@@ -42,8 +42,8 @@ public final class Stage1 implements MidStage {
 				stage1MarginUpper = 141;
 			}
 
-			final boolean lowerBoundCutoff = score+stage1MarginLower <= c.lowerBound;
-			final boolean upperBoundCutoff = score+stage1MarginUpper >= c.upperBound;
+			final boolean lowerBoundCutoff = score+stage1MarginUpper <= c.lowerBound; //highest score still less than alpha
+			final boolean upperBoundCutoff = score+stage1MarginLower >= c.upperBound; //lowest score still greater than beta
 
 			if(!lowerBoundCutoff || !upperBoundCutoff){
 				return new EvalResult(score, stage1MarginLower, stage1MarginUpper, stage);

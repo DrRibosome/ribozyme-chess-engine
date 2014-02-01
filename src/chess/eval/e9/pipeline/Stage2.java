@@ -40,8 +40,8 @@ public final class Stage2 implements LateStage {
 				stage2MarginUpper = 0;
 			}
 
-			final boolean lowerBoundCutoff = score+stage2MarginLower <= c.lowerBound;
-			final boolean upperBoundCutoff = score+stage2MarginUpper >= c.upperBound;
+			final boolean lowerBoundCutoff = score+stage2MarginUpper <= c.lowerBound; //highest score still less than alpha
+			final boolean upperBoundCutoff = score+stage2MarginLower >= c.upperBound; //lowest score still greater than beta
 			if(!lowerBoundCutoff || !upperBoundCutoff){
 				return new EvalResult(score, stage2MarginLower, stage2MarginUpper, stage);
 			} else{
