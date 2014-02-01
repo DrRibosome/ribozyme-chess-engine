@@ -312,7 +312,7 @@ public final class Search34 implements Search{
 		if(alliedKingAttacked){
 			bestScore = -77777;
 		} else{
-			bestScore = staticEval.score + staticEval.lowerMargin;
+			bestScore = staticEval.getScoreLowerBound();
 			if(bestScore >= beta){ //standing pat
 				return bestScore;
 			} else if(bestScore > alpha && nt == NodeType.pv){
