@@ -95,7 +95,10 @@ public final class Stage2 implements MidStage {
 		MobilityEval.MobilityResult enemyMobility = MobilityEval.scoreMobility(1-c.player, s, clutterMult);
 
 		stage2Score += alliedMobility.score - enemyMobility.score;
-		
+
+
+
+
 		int score = Weight.interpolate(stage2Score, c.scale) +
 				Weight.interpolate(S((int)(Weight.egScore(stage2Score)*.1), 0), c.scale);
 
