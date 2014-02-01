@@ -1,7 +1,7 @@
 package chess.eval.e9.pipeline;
 
 /** collection class for basic eval primitives*/
-public final class EvalBasics {
+public class EvalBasics {
 	/** all material score, from perspective of eval player*/
 	final int materialScore;
 	/** non pawn material score, from perspective of eval player*/

@@ -6,7 +6,7 @@ import chess.state4.BitUtil;
 import chess.state4.Masks;
 import chess.state4.State4;
 
-public class Stage3 implements MidStage{
+public class Stage3 implements LateStage {
 
 	private final static int[] kingDangerTable;
 
@@ -27,10 +27,11 @@ public class Stage3 implements MidStage{
 	}
 
 	@Override
-	public EvalResult eval(Team allied, Team enemy, EvalBasics basics, EvalContext c, State4 s, int previousScore) {
+	public EvalResult eval(Team allied, Team enemy, AdvancedAttributes adv, EvalContext c, State4 s, int previousScore) {
 		if(allied.queenCount != 0 || enemy.queenCount != 0){
 			int stage3Score = previousScore;
-			stage3Score += evalKingSafety(c.player, s, allied.queens, enemy.queens);
+			stage3Score += evalKingSafety(c.player, s, allied.queens, enemy.queens,
+					adv.alliedMobility.attackMask, adv.enemyMobility.attackMask);
 
 			int score = Weight.interpolate(stage3Score, c.scale) +
 					Weight.interpolate(S((int)(Weight.egScore(stage3Score)*.1), 0), c.scale);
@@ -41,17 +42,18 @@ public class Stage3 implements MidStage{
 		}
 	}
 
-	private int evalKingSafety(final int player, final State4 s, final long alliedQueens, final long enemyQueens){
+	private int evalKingSafety(final int player, final State4 s, final long alliedQueens, final long enemyQueens,
+							   long alliedAttackMask, long enemyAttackMask){
 		int score = 0;
 		if(enemyQueens != 0){
 			final long king = s.kings[player];
 			final int kingIndex = BitUtil.lsbIndex(king);
-			score += evalKingPressure3(kingIndex, player, s, attackMask[player]);
+			score += evalKingPressure3(kingIndex, player, s, alliedAttackMask);
 		}
 		if(alliedQueens != 0){
 			final long king = s.kings[1-player];
 			final int kingIndex = BitUtil.lsbIndex(king);
-			score -= evalKingPressure3(kingIndex, 1-player, s, attackMask[1-player]);
+			score -= evalKingPressure3(kingIndex, 1-player, s, enemyAttackMask);
 		}
 		return score;
 	}
@@ -61,8 +63,7 @@ public class Stage3 implements MidStage{
 	 * @param kingIndex index of the players king for whom pressure is to be evaluated
 	 * @param player player owning the king for whom pressure is to be evaluated
 	 * @param s
-	 * @param alliedAttackMask attack mask for allied pieces, excluding the king;
-	 * generated via {@link #scoreMobility(int, State4, double, int[], long[])}
+	 * @param alliedAttackMask attack mask for allied pieces, excluding the king
 	 * @return returns king pressure score
 	 */
 	private static int evalKingPressure3(final int kingIndex, final int player,
