@@ -16,7 +16,8 @@ import java.util.Scanner;
 public final class RibozymeEngine implements UCIEngine{
 
 	private final static String name = "ribozyme";
-	
+
+	private final Evaluator e;
 	private final Search s;
 	private final MoveSet moveStore = new MoveSet();
 	private final TimerThread timerThread;
@@ -24,7 +25,7 @@ public final class RibozymeEngine implements UCIEngine{
 	
 	public RibozymeEngine(final int hashSize, final int pawnHashSize, boolean printInfo, boolean warmUp){
 		
-		final Evaluator e = new E9(pawnHashSize);
+		this.e = new E9(pawnHashSize);
 		
 		s = new Search34(e, hashSize, printInfo);
 
@@ -53,7 +54,12 @@ public final class RibozymeEngine implements UCIEngine{
 		timerThread.start();
 		searchThread.start();
 	}
-	
+
+	@Override
+	public Evaluator getEval() {
+		return e;
+	}
+
 	@Override
 	public String getName(){
 		return name;
