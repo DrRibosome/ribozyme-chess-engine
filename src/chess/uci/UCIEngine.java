@@ -1,5 +1,7 @@
 package chess.uci;
 
+import chess.eval.Evaluator;
+
 import java.io.File;
 
 /** defines common interface for engines to work with UCI protocol*/
@@ -12,4 +14,5 @@ public interface UCIEngine {
 	public void resetEngine();
 	public String getName();
 	public void profile(File fens);
+	public Evaluator getEval();
 }
