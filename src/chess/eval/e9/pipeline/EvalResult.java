@@ -35,7 +35,7 @@ public final class EvalResult {
 	}
 
 	/** decode a score encoding into an eval result*/
-	public EvalResult decode(long scoreEncoding){
+	public static EvalResult decode(long scoreEncoding){
 		return new EvalResult((int)ScoreEncoder.getScore(scoreEncoding),
 				(int)ScoreEncoder.getLowerMargin(scoreEncoding),
 				(int)ScoreEncoder.getUpperMargin(scoreEncoding),
