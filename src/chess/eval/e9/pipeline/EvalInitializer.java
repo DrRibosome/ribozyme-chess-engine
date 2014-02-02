@@ -69,6 +69,7 @@ public class EvalInitializer implements EntryStage{
 
 		int materialScore = alliedMaterialScore - enemyMaterialScore;
 		int totalMaterialScore = alliedMaterialScore + enemyMaterialScore;
+
 		return new BasicAttributes(materialScore, nonPawnScore, totalMaterialScore);
 	}
 }

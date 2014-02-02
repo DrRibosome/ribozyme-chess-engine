@@ -51,11 +51,9 @@ public final class Stage2 implements LateStage {
 	}
 
 	private final CutoffCheck cutoffCheck;
-	private final int stage;
 
 	public Stage2(LateStage next, int stage){
 		cutoffCheck = new CutoffCheck(next, stage);
-		this.stage = stage;
 	}
 
 	@Override
