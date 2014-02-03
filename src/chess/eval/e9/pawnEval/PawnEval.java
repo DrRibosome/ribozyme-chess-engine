@@ -207,7 +207,7 @@ public final class PawnEval {
 		}
 		
 		//pawn closer than enemy king and no material remaining
-		boolean enemyHasNonPawnMaterial = (s.pieces[1-player] & ~s.pawns[1-player] & ~s.kings[1-player]) == 0;
+		boolean enemyHasNonPawnMaterial = (s.pieces[1-player] & ~s.pawns[1-player] & ~s.kings[1-player]) != 0;
 		if(pawnDist < enemyKingDist && !enemyHasNonPawnMaterial){
 			passedPawnSore += S(500);
 		}
