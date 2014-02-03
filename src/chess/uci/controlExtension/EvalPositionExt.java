@@ -10,6 +10,7 @@ public final class EvalPositionExt implements ControlExtension {
 	@Override
 	public void execute(String command, Position pos, UCIEngine engine) {
 		Evaluator e = engine.getEval();
+		e.initialize(pos.s);
 		int scoreEncoding = e.eval(pos.sideToMove, pos.s);
 		int score = ScoreEncoder.getScore(scoreEncoding);
 		System.out.println("score = "+score);
