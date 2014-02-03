@@ -93,7 +93,7 @@ public final class Stage1 implements MidStage {
 		}
 
 		stage1Score += PawnEval.scorePawns(player, s, loader, enemy.queens, basics.nonPawnMaterialScore) -
-				PawnEval.scorePawns(1-player, s, loader, allied.queens, basics.nonPawnMaterialScore);
+				PawnEval.scorePawns(1-player, s, loader, allied.queens, -basics.nonPawnMaterialScore);
 
 		int score = prevScore +
 				Weight.interpolate(stage1Score, c.scale) +
