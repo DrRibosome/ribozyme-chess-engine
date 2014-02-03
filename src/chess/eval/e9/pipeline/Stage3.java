@@ -29,11 +29,12 @@ public class Stage3 implements LateStage {
 	@Override
 	public EvalResult eval(Team allied, Team enemy, AdvancedAttributes adv, EvalContext c, State4 s, int previousScore) {
 		if(allied.queenCount != 0 || enemy.queenCount != 0){
-			int stage3Score = previousScore;
+			int stage3Score = 0;
 			stage3Score += evalKingSafety(c.player, s, allied.queens, enemy.queens,
 					adv.alliedMobility.attackMask, adv.enemyMobility.attackMask);
 
-			int score = Weight.interpolate(stage3Score, c.scale) +
+			int score = previousScore +
+					Weight.interpolate(stage3Score, c.scale) +
 					Weight.interpolate(S((int)(Weight.egScore(stage3Score)*.1), 0), c.scale);
 
 			return new EvalResult(score, 0, 0, stage);

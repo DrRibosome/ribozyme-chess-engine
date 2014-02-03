@@ -81,8 +81,8 @@ public final class Stage1 implements MidStage {
 			loader = phEntry;
 		}
 
-		int stage1Score = prevScore;
-		stage1Score += basics.materialScore;
+		int stage1Score = 0;
+		stage1Score += S(basics.materialScore);
 		stage1Score += tempoWeight;
 
 		if(allied.bishopCount == 2){ //note, case 2 bishops on same square is not caught
@@ -95,7 +95,9 @@ public final class Stage1 implements MidStage {
 		stage1Score += PawnEval.scorePawns(player, s, loader, enemy.queens, basics.nonPawnMaterialScore) -
 				PawnEval.scorePawns(1-player, s, loader, allied.queens, basics.nonPawnMaterialScore);
 
-		int score = Weight.interpolate(stage1Score, c.scale) + Weight.interpolate(S((int)(Weight.egScore(stage1Score)*.1), 0), c.scale);
+		int score = prevScore +
+				Weight.interpolate(stage1Score, c.scale) +
+				Weight.interpolate(S((int)(Weight.egScore(stage1Score)*.1), 0), c.scale);
 
 		if(phEntry == null){ //store newly calculated pawn values
 			loader.zkey = pawnZkey;
@@ -109,5 +111,9 @@ public final class Stage1 implements MidStage {
 	/** build a weight scaling from passed start,end values*/
 	private static int S(int start, int end){
 		return Weight.encode(start, end);
+	}
+
+	private static int S(int weight){
+		return Weight.encode(weight, weight);
 	}
 }

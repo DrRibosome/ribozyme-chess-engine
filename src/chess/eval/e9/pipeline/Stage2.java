@@ -58,14 +58,15 @@ public final class Stage2 implements LateStage {
 
 	@Override
 	public EvalResult eval(Team allied, Team enemy, AdvancedAttributes adv, EvalContext c, State4 s, int previousScore) {
-		int stage2Score = previousScore;
+		int stage2Score = 0;
 
 		MobilityEval.MobilityResult alliedMobility = adv.alliedMobility;
 		MobilityEval.MobilityResult enemyMobility = adv.enemyMobility;
 
 		stage2Score += alliedMobility.score - enemyMobility.score;
 
-		int score = Weight.interpolate(stage2Score, c.scale) +
+		int score = previousScore +
+				Weight.interpolate(stage2Score, c.scale) +
 				Weight.interpolate(S((int)(Weight.egScore(stage2Score)*.1), 0), c.scale);
 
 		return cutoffCheck.eval(allied, enemy, adv, c, s, score);
