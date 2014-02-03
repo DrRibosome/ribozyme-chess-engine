@@ -28,12 +28,12 @@ public final class Stage2 implements LateStage {
 				stage2MarginUpper = 30;
 			} else if(allied.queenCount != 0){
 				//score will be higher because allied queen, no enemy queen
-				stage2MarginLower = -30;
-				stage2MarginUpper = 30;
-			}  else if(enemy.queenCount != 0){
-				//score will be lower because enemy queen, no allied queen
 				stage2MarginLower = -20;
 				stage2MarginUpper = 40;
+			}  else if(enemy.queenCount != 0){
+				//score will be lower because enemy queen, no allied queen
+				stage2MarginLower = -40;
+				stage2MarginUpper = 20;
 			} else{
 				//both sides no queen, aplly even margin
 				stage2MarginLower = -0;
