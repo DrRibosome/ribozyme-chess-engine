@@ -9,6 +9,16 @@ import chess.eval.e9.Weight;
 /** container class for chess.eval pertaining to mobility*/
 public final class MobilityEval {
 
+	public final static class MobilityResult{
+		public final int score;
+		public final long attackMask;
+
+		public MobilityResult(int score, long attackMask) {
+			this.score = score;
+			this.attackMask = attackMask;
+		}
+	}
+
 	private static final int[] knightMobilityWeights;
 	private static final int[] bishopMobilityWeights;
 	private static final int[] rookMobilityWeights;
@@ -77,8 +87,8 @@ public final class MobilityEval {
 	}
 
 	/** calculates mobility and danger to enemy king from mobility*/
-	public static int scoreMobility(final int player, final State4 s,
-			final double clutterMult, final int[] nonPawnMaterial, final long[] attackMask){
+	public static MobilityResult scoreMobility(final int player, final State4 s,
+			final double clutterMult){
 		int mobScore = 0;
 		
 		final long alliedPawns = s.pawns[player];
@@ -189,9 +199,9 @@ public final class MobilityEval {
 		}
 		
 		final long pawnAttackMask = Masks.getRawPawnAttacks(player, alliedPawns);
-		attackMask[player] = bishopAttackMask | knightAttackMask | rookAttackMask | queenAttackMask | pawnAttackMask;
+		long attackMask = bishopAttackMask | knightAttackMask | rookAttackMask | queenAttackMask | pawnAttackMask;
 		
-		return mobScore;
+		return new MobilityResult(mobScore, attackMask);
 	}
 
 	

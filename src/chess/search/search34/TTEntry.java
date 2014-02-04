@@ -8,9 +8,10 @@ public final class TTEntry {
 	public final static int CUTOFF_TYPE_LOWER = 2;
 	
 	public long zkey;
+	/** node score as evaluated via search*/
 	public int score;
 	/** score encoding from {@link ScoreEncoder}*/
-	public int staticEval;
+	public long staticEval;
 	public long move;
 	public int depth;
 	public int seq;
@@ -36,7 +37,7 @@ public final class TTEntry {
 		this.seq = t.seq;
 	}
 	
-	public void fill(final long zkey, final long move, final int score, final int staticEval,
+	public void fill(final long zkey, final long move, final int score, final long staticEval,
 			final int depth, final int cutoffType, final int seq){
 		this.zkey = zkey;
 		this.move = move;
@@ -56,7 +57,7 @@ public final class TTEntry {
 		s1.score = s2.score;
 		s2.score = temp2;
 		
-		final int tempStaticEval = s1.staticEval;
+		final long tempStaticEval = s1.staticEval;
 		s1.staticEval = s2.staticEval;
 		s2.staticEval = tempStaticEval;
 		

@@ -2,6 +2,7 @@ package chess.search.search34.pipeline;
 
 import chess.eval.Evaluator;
 import chess.eval.ScoreEncoder;
+import chess.eval.e9.pipeline.EvalResult;
 import chess.search.search34.*;
 import chess.state4.BitUtil;
 import chess.state4.Masks;
@@ -37,7 +38,7 @@ public final class HashLookupStage implements EntryStage {
 		long tteMoveEncoding = 0;
 
 		//query hash for stored node results
-		final int scoreEncoding;
+		final EvalResult staticScore;
 		if(hashEntry != null){
 			if(hashEntry.depth >= c.depth){
 				final int cutoffType = hashEntry.cutoffType;
@@ -60,19 +61,20 @@ public final class HashLookupStage implements EntryStage {
 				tteMove = true;
 			}
 
-			scoreEncoding = evaluator.refine(c.player, s, c.alpha, c.beta, hashEntry.staticEval);
+			staticScore = evaluator.refine(c.player, s, c.alpha, c.beta, hashEntry.staticEval);
 		} else{
-			scoreEncoding = evaluator.eval(c.player, s, c.alpha, c.beta);
+			staticScore = evaluator.eval(c.player, s, c.alpha, c.beta);
 		}
 
 		//construct node static eval score
-		final int staticEval = ScoreEncoder.getScore(scoreEncoding) + ScoreEncoder.getMargin(scoreEncoding);
 		final int eval;
-		if(hashEntry != null && ((hashEntry.cutoffType == TTEntry.CUTOFF_TYPE_LOWER && hashEntry.score > staticEval) ||
-				(hashEntry.cutoffType == TTEntry.CUTOFF_TYPE_UPPER && hashEntry.score < staticEval))){
+		if(hashEntry != null && ((hashEntry.cutoffType == TTEntry.CUTOFF_TYPE_LOWER &&
+				hashEntry.score > staticScore.score) ||
+				(hashEntry.cutoffType == TTEntry.CUTOFF_TYPE_UPPER &&
+				hashEntry.score < staticScore.score))){
 			eval = hashEntry.score;
 		} else{
-			eval = staticEval;
+			eval = staticScore.score;
 		}
 
 		//calculate node properties for reuse in later sections
@@ -82,7 +84,7 @@ public final class HashLookupStage implements EntryStage {
 		final boolean nonMateScore = Math.abs(c.beta) < 70000 && Math.abs(c.alpha) < 70000;
 
 		return next.eval(c,
-				new NodeProps(zkey, eval, scoreEncoding, alliedKingAttacked,
+				new NodeProps(zkey, eval, staticScore, alliedKingAttacked,
 						pawnPrePromotion, hasNonPawnMaterial, nonMateScore,
 						tteMove, tteMoveEncoding),
 				s);
