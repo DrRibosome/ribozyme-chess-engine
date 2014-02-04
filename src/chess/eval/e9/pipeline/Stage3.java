@@ -34,8 +34,8 @@ public class Stage3 implements LateStage {
 					adv.alliedMobility.attackMask, adv.enemyMobility.attackMask);
 
 			int score = previousScore +
-					Weight.interpolate(stage3Score, c.scale) +
-					Weight.interpolate(S((int)(Weight.egScore(stage3Score)*.1), 0), c.scale);
+					(Weight.interpolate(stage3Score, c.scale) +
+					Weight.interpolate(S((int)(Weight.egScore(stage3Score)*.1), 0), c.scale)) * 8 / 10;
 
 			return new EvalResult(score, 0, 0, stage);
 		} else{
