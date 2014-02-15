@@ -79,6 +79,7 @@ public final class SearchThread extends Thread{
 						s.search(p.player, p.s, p.moveStore, p.maxDepth);
 					}
 					System.out.println("bestmove "+buildMoveString(p.player, p.s, p.moveStore));
+					System.out.flush();
 					sem.release();
 					searching = false;
 				}

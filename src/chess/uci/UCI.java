@@ -79,6 +79,7 @@ public final class UCI {
 					System.out.println("id name " + engine.getName());
 					System.out.println("id author Jack Crawford");
 					System.out.println("uciok");
+					System.out.flush();
 				} else if(s[0].equalsIgnoreCase("ucinewgame")){
 					engine.resetEngine();
 					pos = Position.startPos();
@@ -114,6 +115,7 @@ public final class UCI {
 					}
 				} else if(s[0].equalsIgnoreCase("isready")){
 					System.out.println("readyok");
+					System.out.flush();
 				} else if(s[0].equalsIgnoreCase("stop")){
 					engine.stop();
 				} else if(s[0].equalsIgnoreCase("go")){
