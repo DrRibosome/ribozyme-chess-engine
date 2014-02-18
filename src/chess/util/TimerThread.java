@@ -246,7 +246,7 @@ public final class TimerThread extends Thread{
 
 	/** tests to see if the passed player is in check*/
 	private static boolean isChecked(final int player, final State4 s){
-		return State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
+		return State4.posIsAttacked(BitUtil.lsbIndex(s.kings[player]), 1 - player, s);
 	}
 	
 	private static int getMaterial(State4 s){

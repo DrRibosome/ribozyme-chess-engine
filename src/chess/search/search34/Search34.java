@@ -1,7 +1,6 @@
 package chess.search.search34;
 
 import chess.eval.Evaluator;
-import chess.eval.ScoreEncoder;
 import chess.eval.e9.pipeline.EvalResult;
 import chess.search.MoveSet;
 import chess.search.Search;
@@ -231,7 +230,7 @@ public final class Search34 implements Search{
 	
 	/** tests to see if the passed player is in check*/
 	public static boolean isChecked(final int player, final State4 s){
-		return State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
+		return State4.posIsAttacked(BitUtil.lsbIndex(s.kings[player]), 1 - player, s);
 	}
 	
 	public int recurse(SearchContext c, final State4 s){
@@ -308,7 +307,7 @@ public final class Search34 implements Search{
 		}
 		
 		int bestScore;
-		final boolean alliedKingAttacked = State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s);
+		final boolean alliedKingAttacked = State4.posIsAttacked(BitUtil.lsbIndex(s.kings[player]), 1 - player, s);
 		if(alliedKingAttacked){
 			bestScore = -77777;
 		} else{
@@ -323,8 +322,7 @@ public final class Search34 implements Search{
 		final int length = moveGen.genMoves(player, s, alliedKingAttacked, mset, w, true, stackIndex);
 		isort(mset, length);
 
-		
-		int g = alpha;
+
 		int cutoffFlag = TTEntry.CUTOFF_TYPE_UPPER;
 		long bestMove = 0;
 		final int drawCount = s.drawCount; //stored for error checking purposes
@@ -336,9 +334,10 @@ public final class Search34 implements Search{
 			long encoding = s.executeMove(player, pieceMask, move, promotionType);
 			final boolean isDrawable = s.isDrawable();
 
-			if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[player]), 1-player, s)){
+			final int moveScore;
+			if(State4.posIsAttacked(s.kings[player], 1 - player, s)){
 				//king in check after move
-				g = -77777;
+				moveScore = -77777;
 			} else{
 				if(nt != NodeType.pv && !alliedKingAttacked && !MoveEncoder.isPawnPromotion(encoding) &&
 						(!hasTTMove || encoding != ttMove)){
@@ -349,32 +348,35 @@ public final class Search34 implements Search{
 						s.executeMove(player, pieceMask, move, promotionType);
 					}
 				}
-				
-				g = -qsearch(1-player, -beta, -alpha, depth-1, stackIndex+1, nt, s);
+
+				moveScore = -qsearch(1-player, -beta, -alpha, depth-1, stackIndex+1, nt, s);
 			}
 			s.undoMove();
 
-			if(isDrawable && 0 > g){ //can draw instead of making the move
-				g = 0;
+			final int score;
+			if(isDrawable && 0 > moveScore){ //can draw instead of making the move
+				score = 0;
 				encoding = 0;
+			} else{
+				score = moveScore;
 			}
 
 			assert zkey == s.zkey();
 			assert drawCount == s.drawCount;
 
-			if(g > bestScore){
-				bestScore = g;
+			if(score > bestScore){
+				bestScore = score;
 				bestMove = encoding;
-				if(g > alpha){
-					alpha = g;
-					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
-					if(g >= beta){
-						if(!cutoffSearch){
-							fillEntry.fill(zkey, encoding, g, staticEval.toScoreEncoding(), depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
-							m.put(zkey, fillEntry);
-						}
-						return g;
+
+				if(bestScore >= beta){
+					if(!cutoffSearch){
+						fillEntry.fill(zkey, encoding, bestScore, staticEval.toScoreEncoding(), depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
+						m.put(zkey, fillEntry);
 					}
+					return bestScore;
+				} else if(bestScore > alpha){
+					alpha = bestScore;
+					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
 				}
 			}
 		}

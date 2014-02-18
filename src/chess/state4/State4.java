@@ -85,11 +85,11 @@ public final class State4 {
 			long moves = 0;
 			final long agg = s.pieces[0]|s.pieces[1];
 			if(!s.rookMoved[player][0] && (Masks.castleBlockedMask[player][0] & agg) == 0 &&
-					!isAttacked(Masks.castleThroughCheck[player][0], 1-player, s)){
+					!maskIsAttacked(Masks.castleThroughCheck[player][0], 1 - player, s)){
 				moves |= Masks.castleMask[player][0];
 			}
 			if(!s.rookMoved[player][1] && (Masks.castleBlockedMask[player][1] & agg) == 0 &&
-					!isAttacked(Masks.castleThroughCheck[player][1], 1-player, s)){
+					!maskIsAttacked(Masks.castleThroughCheck[player][1], 1 - player, s)){
 				moves |= Masks.castleMask[player][1];
 			}
 			return moves;
@@ -136,32 +136,46 @@ public final class State4 {
 		final boolean onlyKings = pieces1 == king1 && pieces2 == king2;
 		return drawCount >= maxDrawCount || onlyKings || kingBishop || kingKnight;
 	}
-	
+
+	/** helper for method {@linkplain #posIsAttacked(long, int, State4)}*/
 	private final static long[] pawnColMask = new long[]{Masks.colMaskExc[7], Masks.colMaskExc[0]};
 	/**
 	 * quicker check to see if a single position index is attacked.
-	 * use {@link #isAttacked(long, int, State4)} to handle entire position masks
-	 * @param pos
+	 * use {@link #maskIsAttacked(long, int, State4)} to handle entire position masks
+	 * @param posMask mask of the position to test
 	 * @param player player doing the attacking attacking
 	 * @param s
+	 * @return returns true of passed position is attacked, false otherwise
 	 */
-	public static boolean isAttacked2(final int pos, final int player, final State4 s){
-		final long l = 1L<<pos;
-		
+	public static boolean posIsAttacked(final long posMask, final int player, final State4 s){
+		assert posMask != 0 && (posMask & (posMask-1)) == 0; //assert exactly one position marked in the mask
+
 		final long colMask = pawnColMask[player];
 		final long pawns = s.pawns[player];
-		final long attacks1 = (player == 0? pawns << 7: pawns >>> 7) & colMask & l;
+		final long attacks1 = (player == 0? pawns << 7: pawns >>> 7) & colMask & posMask;
 		final long colMask2 = pawnColMask[1-player];
-		final long attacks2 =  (player == 0? pawns << 9: pawns >>> 9) & colMask2 & l;
+		final long attacks2 =  (player == 0? pawns << 9: pawns >>> 9) & colMask2 & posMask;
 		final long pawnAttacks = attacks1 | attacks2;
 
-		final long agg = s.pieces[0] | s.pieces[1] | l;
+		final long agg = s.pieces[0] | s.pieces[1] | posMask;
 		
 		return pawnAttacks != 0 ||
-				(Masks.getRawBishopMoves(agg, l) & (s.queens[player]|s.bishops[player])) != 0 ||
-				(Masks.getRawRookMoves(agg, l) & (s.queens[player]|s.rooks[player])) != 0 ||
-				(Masks.getRawKnightMoves(l) & s.knights[player]) != 0 ||
-				(Masks.getRawKingMoves(l) & s.kings[player]) != 0;
+				(Masks.getRawBishopMoves(agg, posMask) & (s.queens[player]|s.bishops[player])) != 0 ||
+				(Masks.getRawRookMoves(agg, posMask) & (s.queens[player]|s.rooks[player])) != 0 ||
+				(Masks.getRawKnightMoves(posMask) & s.knights[player]) != 0 ||
+				(Masks.getRawKingMoves(posMask) & s.kings[player]) != 0;
+	}
+
+	/**
+	 * quicker check to see if a single position index is attacked.
+	 * use {@link #maskIsAttacked(long, int, State4)} to handle entire position masks
+	 * @param posIndex index (0-63) of the position to test
+	 * @param player player doing the attacking attacking
+	 * @param s
+	 * @return returns true of passed position is attacked, false otherwise
+	 */
+	public static boolean posIsAttacked(final int posIndex, final int player, final State4 s){
+		return posIsAttacked(1L << posIndex, player, s);
 	}
 	
 	/**
@@ -171,9 +185,9 @@ public final class State4 {
 	 * @param s
 	 * @return returns true if attacked, false otherwise
 	 */
-	public static boolean isAttacked(long posMask, final int player, final State4 s){
+	public static boolean maskIsAttacked(long posMask, final int player, final State4 s){
 		for(; posMask != 0; posMask &= posMask-1){
-			if(isAttacked2(BitUtil.lsbIndex(posMask), player, s)){
+			if(posIsAttacked(BitUtil.lsb(posMask), player, s)){
 				return true;
 			}
 		}

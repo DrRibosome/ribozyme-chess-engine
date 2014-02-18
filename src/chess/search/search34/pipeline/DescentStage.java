@@ -1,6 +1,5 @@
 package chess.search.search34.pipeline;
 
-import chess.eval.Evaluator;
 import chess.search.MoveSet;
 import chess.search.search34.*;
 import chess.state4.BitUtil;
@@ -92,7 +91,7 @@ public class DescentStage implements FinalStage{
 			long encoding = s.executeMove(c.player, pieceMask, move, promotionType);
 			boolean isDrawable = s.isDrawable(); //player can take a draw
 
-			if(State4.isAttacked2(BitUtil.lsbIndex(s.kings[c.player]), 1-c.player, s)){
+			if(State4.posIsAttacked(s.kings[c.player], 1 - c.player, s)){
 				//king in check after move
 				g = -88888+c.stackIndex+1;
 			} else{
