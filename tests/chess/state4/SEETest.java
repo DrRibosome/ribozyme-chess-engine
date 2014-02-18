@@ -13,7 +13,7 @@ import chess.util.FenParser;
 public class SEETest {
 
 	@Test
-	public void testSeeSign() {
+	public void testSEESign() {
 		class TestCase{
 			final String fen;
 			final int player;
@@ -52,7 +52,7 @@ public class SEETest {
 	}
 	
 	@Test
-	public void testSee() {
+	public void testSEE() {
 		class TestCase{
 			final String fen;
 			final int player;
