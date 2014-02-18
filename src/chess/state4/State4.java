@@ -79,13 +79,6 @@ public final class State4 {
 	public State4(){
 		this(47388L, 100);
 	}
-
-	/** returns knight moves for king in lsb position*/
-	public static long getKingMoves(final int player, final long[] pieces, final long king){
-		int index = BitUtil.lsbIndex(king);
-		//return Masks.kingMoves[index] & (~(pieces[0]|pieces[1]) | pieces[1-player]);
-		return (Masks.kingMoves[index] & pieces[player]) ^ Masks.kingMoves[index];
-	}
 	
 	public static long getCastleMoves(int player, State4 s){
 		if(!s.kingMoved[player] && (!s.rookMoved[player][0] || !s.rookMoved[player][1])){

@@ -220,7 +220,7 @@ public final class MoveGen {
 		
 		final long kingUpTakes = s.pieces[1-player];
 		if(alliedKingAttacked){
-			long kingMoves = State4.getKingMoves(player, s.pieces, s.kings[player]);
+			long kingMoves = Masks.getRawKingMoves(s.kings[player]) & ~allied;
 			w = recordMoves(player, State4.PIECE_TYPE_KING, s.kings[player], kingMoves,
 					enemyPawnAttacks, enemy, kingUpTakes, mset, w, s, false, f);
 		}
@@ -309,7 +309,8 @@ public final class MoveGen {
 		}
 
 		if(!alliedKingAttacked){
-			long kingMoves = State4.getKingMoves(player, s.pieces, s.kings[player])|State4.getCastleMoves(player, s);
+			long kingMoves = (Masks.getRawKingMoves(s.kings[player]) & ~allied)
+					| State4.getCastleMoves(player, s);
 			w = recordMoves(player, State4.PIECE_TYPE_KING, s.kings[player], kingMoves,
 					enemyPawnAttacks, enemy, kingUpTakes, mset, w, s, quiesce, f);
 		}
