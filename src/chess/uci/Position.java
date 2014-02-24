@@ -4,7 +4,7 @@ import chess.state4.State4;
 
 public final class Position {
 	public int sideToMove;
-	public State4 s;
+	public final State4 s;
 	public int halfMoves;
 	public int fullMoves;
 
