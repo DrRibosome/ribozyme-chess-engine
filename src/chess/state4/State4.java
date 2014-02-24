@@ -137,8 +137,6 @@ public final class State4 {
 		return drawCount >= maxDrawCount || onlyKings || kingBishop || kingKnight;
 	}
 
-	/** helper for method {@linkplain #posIsAttacked(long, int, State4)}*/
-	private final static long[] pawnColMask = new long[]{Masks.colMaskExc[7], Masks.colMaskExc[0]};
 	/**
 	 * quicker check to see if a single position index is attacked.
 	 * use {@link #maskIsAttacked(long, int, State4)} to handle entire position masks
@@ -148,15 +146,9 @@ public final class State4 {
 	 * @return returns true of passed position is attacked, false otherwise
 	 */
 	public static boolean posIsAttacked(final long posMask, final int player, final State4 s){
-		assert posMask != 0 && (posMask & (posMask-1)) == 0; //assert exactly one position marked in the mask
+		//assert posMask != 0 && (posMask & (posMask-1)) == 0; //assert exactly one position marked in the mask
 
-		//TODO: should replace the following with Masks.getRawPawnAttacks call
-		final long colMask = pawnColMask[player];
-		final long pawns = s.pawns[player];
-		final long attacks1 = (player == 0? pawns << 7: pawns >>> 7) & colMask & posMask;
-		final long colMask2 = pawnColMask[1-player];
-		final long attacks2 =  (player == 0? pawns << 9: pawns >>> 9) & colMask2 & posMask;
-		final long pawnAttacks = attacks1 | attacks2;
+		final long pawnAttacks = Masks.getRawPawnAttacks(player, s.pawns[player]) & posMask;
 
 		final long agg = s.pieces[0] | s.pieces[1] | posMask;
 		
