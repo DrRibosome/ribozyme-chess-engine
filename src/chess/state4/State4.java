@@ -142,7 +142,7 @@ public final class State4 {
 	 * use {@link #maskIsAttacked(long, int, State4)} to handle entire position masks
 	 * @param posMask mask of the position to test
 	 * @param player player doing the attacking attacking
-	 * @param s
+	 * @param s board state to check for attacks
 	 * @return returns true of passed position is attacked, false otherwise
 	 */
 	public static boolean posIsAttacked(final long posMask, final int player, final State4 s){
@@ -164,7 +164,7 @@ public final class State4 {
 	 * use {@link #maskIsAttacked(long, int, State4)} to handle entire position masks
 	 * @param posIndex index (0-63) of the position to test
 	 * @param player player doing the attacking attacking
-	 * @param s
+	 * @param s board state to check for attacks
 	 * @return returns true of passed position is attacked, false otherwise
 	 */
 	public static boolean posIsAttacked(final int posIndex, final int player, final State4 s){
@@ -173,9 +173,9 @@ public final class State4 {
 	
 	/**
 	 * checks to see if the passed position mask is attacked by passed player
-	 * @param posMask
-	 * @param player
-	 * @param s
+	 * @param posMask mask containing positions to check for attacks
+	 * @param player player doing the attacking
+	 * @param s board state to check for attacks
 	 * @return returns true if attacked, false otherwise
 	 */
 	public static boolean maskIsAttacked(long posMask, final int player, final State4 s){
