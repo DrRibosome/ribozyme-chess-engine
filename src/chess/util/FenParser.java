@@ -7,14 +7,12 @@ import chess.state4.State4;
 import chess.uci.Position;
 
 public class FenParser {
-	public static Position parse(String fen){
-		return parse(fen, 88373L);
-	}
-	
-	public static Position parse(String fen, long seed){
-		Position p = new Position();
-		p.s = new State4(seed);
-		
+	/**
+	 * parses fen and stores result in passed position object
+	 * @param fen fen to read position from
+	 * @param p position in which to store the loaded fen
+	 */
+	public static void parse(String fen, Position p){
 		String[] s = fen.split("\\s+");
 		
 		parsePieces(s[0], p.s);
@@ -26,7 +24,6 @@ public class FenParser {
 		p.fullMoves = s[5].equals("-")? 0: Integer.parseInt(s[5]);
 
 		p.s.update(p.sideToMove);
-		return p;
 	}
 	
 	private static void parseEnPassant(String p, State4 state){
@@ -109,21 +106,5 @@ public class FenParser {
 				}
 			}
 		}
-	}
-	
-	public static void main(String[] args){
-		String fen = "8/8/Q4p1p/3p1K2/5Q2/4k2P/6P1/8 b - - - -";
-		System.out.println("fen = "+fen);
-		Position p = parse(fen);
-		System.out.println(p.s);
-		System.out.println("side to move = "+p.sideToMove);
-		
-		
-
-		String fen2 = "fen rnbqkbnr/1ppp2pp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1";
-		Pattern p2 = Pattern.compile("fen ((.*?\\s+){5}.*?)(\\s+|$)");
-		Matcher m = p2.matcher(fen2);
-		m.find();
-		System.out.println(m.group(1));
 	}
 }

@@ -17,7 +17,7 @@ import chess.util.FenParser;
 
 public final class UCI {
 	private final UCIEngine engine;
-	private Position pos;
+	private final Position pos = new Position();
 	private final static Pattern fenSel = Pattern.compile("fen ((.*?\\s+){5}.*?)(\\s+|$)");
 	private final static Pattern moveSel = Pattern.compile("moves\\s+(.*)");
 	private final static Map<String, ControlExtension> controllerExtMap = new HashMap<>();
@@ -82,14 +82,13 @@ public final class UCI {
 					System.out.flush();
 				} else if(s[0].equalsIgnoreCase("ucinewgame")){
 					engine.resetEngine();
-					pos = Position.startPos();
 				} else if(s[0].equalsIgnoreCase("position")){
 					if(s[1].equalsIgnoreCase("fen")){
 						Matcher temp = fenSel.matcher(interfaceCommand);
 						temp.find();
-						pos = FenParser.parse(temp.group(1));
+						FenParser.parse(temp.group(1), pos);
 					} else if(s[1].equalsIgnoreCase("startpos")){
-						pos = Position.startPos();
+						pos.startPos();
 					}
 
 					Matcher temp = moveSel.matcher(interfaceCommand);

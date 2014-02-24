@@ -16,9 +16,9 @@ public class State4Test {
 	public void testGetCastleMoves() {
 		class TestCase{
 			final long exp;
-			final Position p;
+			final Position p = new Position();
 			TestCase(String fen, long exp){
-				p = FenParser.parse(fen);
+				FenParser.parse(fen, p);
 				this.exp = exp;
 			}
 		}
@@ -37,9 +37,9 @@ public class State4Test {
 		class TestCase{
 			final boolean exp;
 			final int loc; //location being attacked
-			final Position p;
+			final Position p = new Position();
 			TestCase(String fen, final int loc, boolean exp){
-				p = FenParser.parse(fen);
+				FenParser.parse(fen, p);
 				this.exp = exp;
 				this.loc = loc;
 			}
@@ -60,9 +60,9 @@ public class State4Test {
 	public void testIsForcedDraw() {
 		class TestCase{
 			final boolean exp;
-			final Position p;
+			final Position p = new Position();
 			TestCase(String fen, boolean exp){
-				p = FenParser.parse(fen);
+				FenParser.parse(fen, p);
 				this.exp = exp;
 			}
 		}

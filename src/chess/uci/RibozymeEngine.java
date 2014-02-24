@@ -31,7 +31,6 @@ public final class RibozymeEngine implements UCIEngine{
 
 		if(warmUp){
 			//warm up via a number of fixed depth searches
-			final long fenSeed = 34827L;
 			final int searchDepth = 7;
 			
 			String[] warmUpFens = new String[]{
@@ -40,9 +39,10 @@ public final class RibozymeEngine implements UCIEngine{
 					"7r/q7/2nbNk1p/3p1B2/1n1P2P1/4Q2P/5PK1/4R3 b - - 0 34",
 					"3r2k1/1pb1qppp/2p1r3/p7/P1Q5/1PPbPB1P/3BKPP1/R2R4 w - - 0 21"
 			};
-			
+
+			Position p = new Position();
 			for(int a = 0; a < warmUpFens.length; a++){
-				Position p = FenParser.parse(warmUpFens[a], fenSeed);
+				FenParser.parse(warmUpFens[a], p);
 				s.search(p.sideToMove, p.s, null, searchDepth);
 			}
 			
@@ -74,9 +74,10 @@ public final class RibozymeEngine implements UCIEngine{
 			long totalTime = 0;
 			int entries = 0;
 
+			Position p = new Position();
 			while(scanner.hasNextLine()){
 				entries++;
-				Position p = FenParser.parse(scanner.nextLine());
+				FenParser.parse(scanner.nextLine(), p);
 
 				long start = System.currentTimeMillis();
 				s.search(p.sideToMove, p.s, null, searchDepth);

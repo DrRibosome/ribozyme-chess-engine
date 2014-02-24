@@ -28,7 +28,8 @@ public class SEETest {
 				this.expected = expected;
 			}
 			boolean test(){
-				final Position p = FenParser.parse(fen);
+				final Position p = new Position();
+				FenParser.parse(fen, p);
 				//System.out.println(p.s);
 				//System.out.println(from+" -> "+to+" = "+SEE.see(player, 1L << from, 1L << to, p.s));
 				//System.out.println("sign = "+SEE.seeSign(player, 1L << from, 1L << to, p.s)+"\n");
@@ -67,7 +68,8 @@ public class SEETest {
 				this.expected = expected;
 			}
 			boolean test(){
-				final Position p = FenParser.parse(fen);
+				final Position p = new Position();
+				FenParser.parse(fen, p);
 				return SEE.see(player, 1L << from, 1L << to, p.s) == expected;
 			}
 		}

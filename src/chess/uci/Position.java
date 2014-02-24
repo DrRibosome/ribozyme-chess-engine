@@ -7,12 +7,19 @@ public final class Position {
 	public State4 s;
 	public int halfMoves;
 	public int fullMoves;
-	
-	public static Position startPos(){
-		Position p = new Position();
-		p.sideToMove = State4.WHITE;
-		p.s = new State4();
-		p.s.initialize();
-		return p;
+
+	public Position(long stateSeed){
+		s = new State4(stateSeed);
+	}
+
+	public Position(){
+		s = new State4();
+	}
+
+	public void startPos(){
+		sideToMove = State4.WHITE;
+		s.initialize();
+		halfMoves = 0;
+		fullMoves = 0;
 	}
 }
