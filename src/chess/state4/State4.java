@@ -659,7 +659,9 @@ public final class State4 {
 	}
 
 	/** 
-	 * updates mailbox, zkey, etc to the pieces set on the board
+	 * (1) updates mailbox, zkey, to reflect board position
+	 * (2) clears history
+	 * (3) properly collects pieces into piece aggregrates
 	 * <p> this should only be called once after the pieces have been set up
 	 * on a new board. Afterwards, everything will be maintained incrementally
 	 */
