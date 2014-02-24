@@ -335,8 +335,8 @@ public final class Masks {
 		//final long colMask2 = player == 0? Masks.colMaskExc[0]: Masks.colMaskExc[7];
 		final long colMask1 = pawnColMasks[player];
 		final long colMask2 = pawnColMasks[1-player];
-		final long attacks1 = player == 0? (pawns << 7) & colMask1: (pawns >>> 7) & colMask1;
-		final long attacks2 = player == 0? (pawns << 9) & colMask2: (pawns >>> 9) & colMask2;
+		final long attacks1 = (player == 0? (pawns << 7): (pawns >>> 7)) & colMask1;
+		final long attacks2 = (player == 0? (pawns << 9): (pawns >>> 9)) & colMask2;
 		return attacks1 | attacks2;
 	}
 }
