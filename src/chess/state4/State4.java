@@ -666,6 +666,8 @@ public final class State4 {
 		pieceCounts[0][PIECE_TYPE_EMPTY] = 0;
 		pieceCounts[1][PIECE_TYPE_EMPTY] = 0;
 
+		for(int a = 0; a < 64; a++) mailbox[a] = PIECE_TYPE_EMPTY;
+
 		for(int p = 0; p < 2; p++){
 			setPieceMetaInfo(p, PIECE_TYPE_PAWN, pawns[p]);
 			setPieceMetaInfo(p, PIECE_TYPE_BISHOP, bishops[p]);

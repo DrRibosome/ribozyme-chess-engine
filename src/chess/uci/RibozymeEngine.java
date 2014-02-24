@@ -40,8 +40,8 @@ public final class RibozymeEngine implements UCIEngine{
 					"3r2k1/1pb1qppp/2p1r3/p7/P1Q5/1PPbPB1P/3BKPP1/R2R4 w - - 0 21"
 			};
 
+			Position p = new Position();
 			for(int a = 0; a < warmUpFens.length; a++){
-				Position p = new Position();
 				FenParser.parse(warmUpFens[a], p);
 				s.search(p.sideToMove, p.s, null, searchDepth);
 			}
@@ -74,9 +74,9 @@ public final class RibozymeEngine implements UCIEngine{
 			long totalTime = 0;
 			int entries = 0;
 
+			Position p = new Position();
 			while(scanner.hasNextLine()){
 				entries++;
-				Position p = new Position();
 				FenParser.parse(scanner.nextLine(), p);
 
 				long start = System.currentTimeMillis();
