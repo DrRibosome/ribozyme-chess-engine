@@ -25,15 +25,15 @@ public final class Stage1 implements MidStage {
 		public EvalResult eval(Team allied, Team enemy, BasicAttributes basics, EvalContext c, State4 s, int score) {
 			final int stage1MarginLower; //margin for a lower cutoff
 			final int stage1MarginUpper; //margin for an upper cutoff
-			if(allied.queenCount != 0 && enemy.queenCount != 0){
+			if(allied.queens != 0 && enemy.queens != 0){
 				//both sides have queen, apply even margin
 				stage1MarginLower = -82; //margin scores taken from profiled mean score diff, 1.7 std
 				stage1MarginUpper = 76;
-			} else if(allied.queenCount != 0){
+			} else if(allied.queens != 0){
 				//score will be higher because allied queen, no enemy queen
 				stage1MarginLower = -120;
 				stage1MarginUpper = 96;
-			} else if(enemy.queenCount != 0){
+			} else if(enemy.queens != 0){
 				//score will be lower because enemy queen, no allied queen
 				stage1MarginLower = -92;
 				stage1MarginUpper = 128;
@@ -85,10 +85,10 @@ public final class Stage1 implements MidStage {
 		stage1Score += S(basics.materialScore);
 		stage1Score += tempoWeight;
 
-		if(allied.bishopCount == 2){ //note, case 2 bishops on same square is not caught
+		if(s.pieceCounts[player][State4.PIECE_TYPE_BISHOP] == 2){ //note, case 2 bishops on same square is not caught
 			stage1Score += bishopPairWeight;
 		}
-		if(enemy.bishopCount == 2){
+		if(s.pieceCounts[1-player][State4.PIECE_TYPE_BISHOP] == 2){
 			stage1Score += -bishopPairWeight;
 		}
 

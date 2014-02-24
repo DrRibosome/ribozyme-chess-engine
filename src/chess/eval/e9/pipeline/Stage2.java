@@ -22,15 +22,15 @@ public final class Stage2 implements LateStage {
 			//maximally due to king safety
 			final int stage2MarginLower;
 			final int stage2MarginUpper;
-			if(allied.queenCount != 0 && enemy.queenCount != 0){
+			if(allied.queens != 0 && enemy.queens != 0){
 				//both sides have queen, apply even margin
 				stage2MarginLower = -30;
 				stage2MarginUpper = 30;
-			} else if(allied.queenCount != 0){
+			} else if(allied.queens != 0){
 				//score will be higher because allied queen, no enemy queen
 				stage2MarginLower = -20;
 				stage2MarginUpper = 40;
-			}  else if(enemy.queenCount != 0){
+			}  else if(enemy.queens != 0){
 				//score will be lower because enemy queen, no allied queen
 				stage2MarginLower = -40;
 				stage2MarginUpper = 20;
