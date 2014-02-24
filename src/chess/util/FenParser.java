@@ -28,6 +28,7 @@ public class FenParser {
 	
 	private static void parseEnPassant(String p, State4 state){
 		if(p.length() == 1 && p.equals("-")){
+			state.enPassante = 0;
 			return;
 		}
 		
@@ -62,6 +63,13 @@ public class FenParser {
 	}
 	
 	private static void parsePieces(String p, State4 state){
+
+		for(int a = 0; a < 2; a++){
+			for(int q = 0; q < 7; q++){
+				state.pieceMasks[q][a] = 0;
+			}
+		}
+
 		String[] s = p.split("/");
 		for(int a = 0; a < 8; a++){
 			
@@ -75,34 +83,24 @@ public class FenParser {
 				} else{
 					int player = Character.isUpperCase(c)? State4.WHITE: State4.BLACK;
 					c = Character.toLowerCase(c);
-					long[] pieces = null;
-					int type = 0;
+					final long[] pieces;
 					
 					if(c == 'q'){
 						pieces = state.queens;
-						type = State4.PIECE_TYPE_QUEEN;
 					} else if(c == 'b'){
 						pieces = state.bishops;
-						type = State4.PIECE_TYPE_BISHOP;
 					} else if(c == 'r'){
 						pieces = state.rooks;
-						type = State4.PIECE_TYPE_ROOK;
 					} else if(c == 'k'){
 						pieces = state.kings;
-						type = State4.PIECE_TYPE_KING;
 					} else if(c == 'n'){
 						pieces = state.knights;
-						type = State4.PIECE_TYPE_KNIGHT;
-					} else if(c == 'p'){
+					} else{// if(c == 'p'){
 						pieces = state.pawns;
-						type = State4.PIECE_TYPE_PAWN;
 					}
 					
 					final int index = (7-a)*8+off+i;
 					pieces[player] |= 1L << index;
-					//state.mailbox[index] = type; //handled by update below
-					state.pieceCounts[player][type]++;
-					state.pieceCounts[player][State4.PIECE_TYPE_EMPTY]++;
 				}
 			}
 		}

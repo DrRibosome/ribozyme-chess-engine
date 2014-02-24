@@ -201,9 +201,9 @@ public final class State4 {
 		assert pieceMask != 0;
 		assert moveMask != 0;
 		assert player == 0 || player == 1;
+		assert (pieces[player] & pieces[1-player]) == 0;
 		assert (pieceMask & pieces[1-player]) == 0;
 		assert (moveMask & pieces[player]) == 0;
-		assert (pieces[player] & pieces[1-player]) == 0;
 		
 		zkey ^= zhash.turnChange;
 		final int movingType = mailbox[pos1];
@@ -363,7 +363,6 @@ public final class State4 {
 		}
 		
 		collect();
-		assert (pieces[player] & pieces[1-player]) == 0;
 		
 		history[hindex++] = encoding;
 		hm.put(zkey);
@@ -542,14 +541,13 @@ public final class State4 {
 
 		collect();
 		drawCount = MoveEncoder.getPrevDrawCount(encoding);
-		
-		assert (pieces[player] & pieces[1-player]) == 0;
 	}
 	
 	/** collects all pieces onto the player piece aggregators*/
-	public void collect(){
+	private void collect(){
 		pieces[0] = pawns[0] | knights[0] | kings[0] | queens[0] | rooks[0] | bishops[0];
 		pieces[1] = pawns[1] | knights[1] | kings[1] | queens[1] | rooks[1] | bishops[1];
+		assert (pieces[0] & pieces[1]) == 0;
 	}
 	
 	public String toString(){
@@ -594,14 +592,6 @@ public final class State4 {
 		long n = 0x42L;
 		long b = 0x24L;
 		long r = 0x81L;
-		pieceCounts[0][PIECE_TYPE_PAWN] = 8;
-		pieceCounts[0][PIECE_TYPE_KING] = 1;
-		pieceCounts[0][PIECE_TYPE_QUEEN] = 1;
-		pieceCounts[0][PIECE_TYPE_BISHOP] = 2;
-		pieceCounts[0][PIECE_TYPE_KNIGHT] = 2;
-		pieceCounts[0][PIECE_TYPE_ROOK] = 2;
-		pieceCounts[0][PIECE_TYPE_EMPTY] = 16;
-		System.arraycopy(pieceCounts[0], 0, pieceCounts[1], 0, 7);
 		
 		pawns[0] = p<<8;
 		pawns[1] = p<<8*6;
@@ -656,6 +646,10 @@ public final class State4 {
 
 			piece = piece&(piece-1);
 		}
+
+		int count = (int)BitUtil.getSetBits(pieces);
+		pieceCounts[player][PIECE_TYPE_EMPTY] += count;
+		pieceCounts[player][pieceType] = count;
 	}
 
 	/** 
@@ -666,10 +660,13 @@ public final class State4 {
 	 * on a new board. Afterwards, everything will be maintained incrementally
 	 */
 	public void update(int sideToMove){
-		//build zkey and mailbox
+		//build zkey, mailbox, and piece counts
 		zkey = 0;
 		pawnZkey = 0;
-		for(int p = 0; p <= 1; p++){
+		pieceCounts[0][PIECE_TYPE_EMPTY] = 0;
+		pieceCounts[1][PIECE_TYPE_EMPTY] = 0;
+
+		for(int p = 0; p < 2; p++){
 			setPieceMetaInfo(p, PIECE_TYPE_PAWN, pawns[p]);
 			setPieceMetaInfo(p, PIECE_TYPE_BISHOP, bishops[p]);
 			setPieceMetaInfo(p, PIECE_TYPE_KNIGHT, knights[p]);
