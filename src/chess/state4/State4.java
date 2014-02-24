@@ -616,7 +616,7 @@ public final class State4 {
 		rooks[0] = r;
 		rooks[1] = r<<8*7;
 		
-		update();
+		update(State4.WHITE);
 	}
 	
 	public long zkey(){
@@ -663,7 +663,7 @@ public final class State4 {
 	 * <p> this should only be called once after the pieces have been set up
 	 * on a new board. Afterwards, everything will be maintained incrementally
 	 */
-	public void update(){
+	public void update(int sideToMove){
 		//build zkey and mailbox
 		zkey = 0;
 		pawnZkey = 0;
@@ -676,7 +676,7 @@ public final class State4 {
 			setPieceMetaInfo(p, PIECE_TYPE_KING, kings[p]);
 		}
 
-		zkey ^= zhash.turn[0]; //NOTE: THIS METHOD SHOULD PROB BE CALLED WITH A PLAYER TO CORRECTLY SET THIS
+		zkey ^= zhash.turn[sideToMove];
 		if(enPassante != 0){
 			zkey ^= zhash.enPassante[BitUtil.lsbIndex(enPassante)];
 		}

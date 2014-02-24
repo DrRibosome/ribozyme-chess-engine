@@ -24,7 +24,8 @@ public class FenParser {
 		p.halfMoves = s[4].equals("-")? 0: Integer.parseInt(s[4]);
 		p.s.drawCount = p.halfMoves;
 		p.fullMoves = s[5].equals("-")? 0: Integer.parseInt(s[5]);
-		
+
+		p.s.update(p.sideToMove);
 		return p;
 	}
 	
@@ -108,8 +109,6 @@ public class FenParser {
 				}
 			}
 		}
-		
-		state.update();
 	}
 	
 	public static void main(String[] args){
