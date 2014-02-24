@@ -605,6 +605,13 @@ public final class State4 {
 		bishops[1] = b<<8*7;
 		rooks[0] = r;
 		rooks[1] = r<<8*7;
+
+		for(int player = 0; player < 2; player++){
+			kingMoved[player] = false;
+			for(int rook = 0; rook < 2; rook++){
+				rookMoved[player][rook] = false;
+			}
+		}
 		
 		update(State4.WHITE);
 	}
@@ -644,7 +651,7 @@ public final class State4 {
 				pawnZkey ^= z;
 			}
 
-			piece = piece&(piece-1);
+			piece &= piece-1;
 		}
 
 		int count = (int)BitUtil.getSetBits(pieces);
