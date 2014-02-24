@@ -317,18 +317,17 @@ public final class State4 {
 		mailbox[pos1] = PIECE_TYPE_EMPTY;
 
 		long prevEnPassante = enPassante; //make new copy to clear old
-		
-		if(enPassante != 0){
-			zkey ^= zhash.enPassante[BitUtil.lsbIndex(enPassante)];
+		if(prevEnPassante != 0){
+			zkey ^= zhash.enPassante[BitUtil.lsbIndex(prevEnPassante)];
 			encoding = MoveEncoder.setPrevEnPassantePos(prevEnPassante, encoding);
 		}
 		
 		//special pawn code for promotion, en passant
 		enPassante = 0;
 		if(movingType == PIECE_TYPE_PAWN){
-			if((moveMask & Masks.pawnPromotionMask[player]) != 0){ //pawn promotion
-				final int ptype = pawnPromoteType+2; //piece type for promotion
+			if((moveMask & Masks.pawnPromotionMask[player]) != 0){
 				//pawn promotion
+				final int ptype = pawnPromoteType+2; //piece type for promotion
 				mailbox[pos2] = ptype;
 				pawns[player] &= ~moveMask;
 				pieceMasks[ptype][player] |= moveMask;
