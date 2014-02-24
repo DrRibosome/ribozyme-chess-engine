@@ -632,7 +632,7 @@ public final class State4 {
 	 * @param pieceType type to set mailbox index
 	 * @param pieces mask containing piece locations to set
 	 */
-	private void setPieceMetaInfo(int player, int pieceType, long pieces){
+	private void setPieceMetaInfo(final int player, final int pieceType, final long pieces){
 		long piece = pieces;
 		while(piece != 0){
 			int index = BitUtil.lsbIndex(piece);
