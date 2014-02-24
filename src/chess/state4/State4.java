@@ -150,6 +150,7 @@ public final class State4 {
 	public static boolean posIsAttacked(final long posMask, final int player, final State4 s){
 		assert posMask != 0 && (posMask & (posMask-1)) == 0; //assert exactly one position marked in the mask
 
+		//TODO: should replace the following with Masks.getRawPawnAttacks call
 		final long colMask = pawnColMask[player];
 		final long pawns = s.pawns[player];
 		final long attacks1 = (player == 0? pawns << 7: pawns >>> 7) & colMask & posMask;
@@ -340,9 +341,13 @@ public final class State4 {
 				pawnZkey ^= pkey;
 			} else if((player == 0 && (pieceMask & 0xFF00L) != 0 && (moveMask & 0xFF000000L) != 0) ||
 					(player == 1 && (pieceMask & 0xFF000000000000L) != 0 && (moveMask & 0xFF00000000L) != 0)){
-				//pawn moved 2 squares, set en passante
-				enPassante = player == 0? moveMask >>> 8: moveMask << 8;
-				zkey ^= zhash.enPassante[BitUtil.lsbIndex(enPassante)];
+				//pawn moved 2 squares
+				long enPassantMask = player == 0? moveMask >>> 8: moveMask << 8;
+				if((enPassantMask & Masks.getRawPawnAttacks(1-player, pawns[1-player])) != 0){
+					//en passant matters (enemy pawn can attack), set en passant
+					enPassante = enPassantMask;
+					zkey ^= zhash.enPassante[BitUtil.lsbIndex(enPassante)];
+				}
 			} else if(moveMask == prevEnPassante){
 				//making an en passante take move
 				final long takePos = player == 0? moveMask >>> 8: moveMask << 8;
