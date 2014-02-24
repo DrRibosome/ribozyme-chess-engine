@@ -635,43 +635,47 @@ public final class State4 {
 	public long pawnZkey(){
 		return pawnZkey;
 	}
-	
+
+	/**
+	 * convenience method for setting mailbox and zkey information
+	 * for all pieces of a certain type
+	 * @param pieceType type to set mailbox index
+	 * @param pieces mask containing piece locations to set
+	 */
+	private void setPieceMetaInfo(int player, int pieceType, long pieces){
+		long piece = pieces;
+		while(piece != 0){
+			int index = BitUtil.lsbIndex(piece);
+			mailbox[index] = pieceType;
+
+			final long z = zhash.getZHash(player, pieceType, index);
+			zkey ^= z;
+			if(pieceType == PIECE_TYPE_PAWN){
+				pawnZkey ^= z;
+			}
+
+			piece = piece&(piece-1);
+		}
+	}
+
 	/** 
 	 * updates mailbox, zkey, etc to the pieces set on the board
 	 * <p> this should only be called once after the pieces have been set up
 	 * on a new board. Afterwards, everything will be maintained incrementally
 	 */
 	public void update(){
-		long[][] l = new long[][]{pawns,kings,queens,rooks,bishops,knights};
-		int[] rep = new int[]{PIECE_TYPE_PAWN, PIECE_TYPE_KING, PIECE_TYPE_QUEEN,
-				PIECE_TYPE_ROOK, PIECE_TYPE_BISHOP, PIECE_TYPE_KNIGHT};
-		for(int i = 0; i < l.length; i++){
-			for(int a = 0; a <= 1; a++){
-				long piece = l[i][a];
-				while(piece != 0){
-					int index = BitUtil.lsbIndex(piece);
-					mailbox[index] = rep[i];
-					piece = piece&(piece-1);
-				}
-			}
-		}
-		
-		//build zkey
+		//build zkey and mailbox
 		zkey = 0;
-		for(int f = 0; f < l.length; f++){
-			for(int i = 0; i < 2; i++){
-				long w = l[f][i];
-				while(w != 0){
-					int pos = BitUtil.lsbIndex(w&-w);
-					w &= w-1;
-					final long z = zhash.getZHash(i, rep[f], pos);
-					zkey ^= z;
-					if(rep[f] == PIECE_TYPE_PAWN){
-						pawnZkey ^= z;
-					}
-				}
-			}
+		pawnZkey = 0;
+		for(int p = 0; p <= 1; p++){
+			setPieceMetaInfo(p, PIECE_TYPE_PAWN, pawns[p]);
+			setPieceMetaInfo(p, PIECE_TYPE_BISHOP, bishops[p]);
+			setPieceMetaInfo(p, PIECE_TYPE_KNIGHT, knights[p]);
+			setPieceMetaInfo(p, PIECE_TYPE_ROOK, rooks[p]);
+			setPieceMetaInfo(p, PIECE_TYPE_QUEEN, queens[p]);
+			setPieceMetaInfo(p, PIECE_TYPE_KING, kings[p]);
 		}
+
 		zkey ^= zhash.turn[0]; //NOTE: THIS METHOD SHOULD PROB BE CALLED WITH A PLAYER TO CORRECTLY SET THIS
 		if(enPassante != 0){
 			zkey ^= zhash.enPassante[BitUtil.lsbIndex(enPassante)];
