@@ -2,7 +2,6 @@ package chess.search.search34.pipeline;
 
 import chess.search.MoveSet;
 import chess.search.search34.*;
-import chess.state4.BitUtil;
 import chess.state4.Masks;
 import chess.state4.MoveEncoder;
 import chess.state4.State4;
