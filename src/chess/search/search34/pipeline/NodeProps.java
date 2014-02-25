@@ -2,7 +2,7 @@ package chess.search.search34.pipeline;
 
 import chess.eval.e9.pipeline.EvalResult;
 
-class NodeProps {
+final class NodeProps {
 	final long zkey;
 
 	/** static eval for current node*/

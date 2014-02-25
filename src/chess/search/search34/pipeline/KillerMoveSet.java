@@ -1,7 +1,7 @@
 package chess.search.search34.pipeline;
 
 /** set of killer moves detected for the node*/
-public class KillerMoveSet {
+public final class KillerMoveSet {
 	final long l1killer1;
 	final long l1killer2;
 	final long l2killer1;

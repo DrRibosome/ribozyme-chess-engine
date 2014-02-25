@@ -1,6 +1,6 @@
 package chess.search.search34.pipeline;
 
-public class SearchContext{
+public final class SearchContext{
 
 	public final static int NODE_TYPE_PV = 2;
 	public final static int NODE_TYPE_CUT = 1;

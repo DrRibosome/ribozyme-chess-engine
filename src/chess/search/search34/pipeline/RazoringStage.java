@@ -4,7 +4,7 @@ import chess.search.search34.Search34;
 import chess.state4.State4;
 
 /**quick check for refutation of previous refutation (cut) move */
-public class RazoringStage implements MidStage {
+public final class RazoringStage implements MidStage {
 
 	private final Search34 searcher;
 	private final MidStage next;

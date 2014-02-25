@@ -7,7 +7,7 @@ import chess.search.search34.TTEntry;
 import chess.state4.State4;
 
 /** null move pruning */
-public class NullMoveStage implements MidStage {
+public final class NullMoveStage implements MidStage {
 
 	private final StackFrame[] stack;
 	private final Hash m;

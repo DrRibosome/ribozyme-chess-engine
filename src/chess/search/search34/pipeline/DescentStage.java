@@ -8,7 +8,7 @@ import chess.state4.MoveEncoder;
 import chess.state4.State4;
 
 /** final search stage, explore possible moves*/
-public class DescentStage implements FinalStage{
+public final class DescentStage implements FinalStage{
 
 	private final StackFrame[] stack;
 	private final Search34 searcher;

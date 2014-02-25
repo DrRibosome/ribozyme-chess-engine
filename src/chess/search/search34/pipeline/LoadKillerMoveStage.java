@@ -8,7 +8,7 @@ import chess.state4.State4;
 
 /** loads legal killer moves to pass on to a final pipeline stage component;
  * additionally, adds killer moves to move list */
-public class LoadKillerMoveStage implements MidStage {
+public final class LoadKillerMoveStage implements MidStage {
 
 	private final StackFrame[] stack;
 	private final FinalStage next;

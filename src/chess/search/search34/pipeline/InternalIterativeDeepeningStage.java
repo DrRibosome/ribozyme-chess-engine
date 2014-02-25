@@ -6,7 +6,7 @@ import chess.search.search34.TTEntry;
 import chess.state4.State4;
 
 /** internal iterative deepening*/
-public class InternalIterativeDeepeningStage implements MidStage {
+public final class InternalIterativeDeepeningStage implements MidStage {
 
 	private final Hash m;
 	private final Search34 searcher;
