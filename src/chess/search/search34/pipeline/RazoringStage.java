@@ -17,7 +17,7 @@ public class RazoringStage implements MidStage {
 	@Override
 	public int eval(SearchContext c, NodeProps props, State4 s) {
 
-		if(c.nt == NodeType.all &&
+		if(c.nt == SearchContext.NODE_TYPE_ALL &&
 				props.nonMateScore &&
 				c.depth <= 1* Search34.ONE_PLY &&
 				!props.alliedKingAttacked &&

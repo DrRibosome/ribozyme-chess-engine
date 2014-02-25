@@ -42,14 +42,14 @@ public final class HashLookupStage implements EntryStage {
 		if(hashEntry != null){
 			if(hashEntry.depth >= c.depth){
 				final int cutoffType = hashEntry.cutoffType;
-				if(c.nt == NodeType.pv? cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (hashEntry.score >= c.beta?
+				if(c.nt == SearchContext.NODE_TYPE_PV? cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (hashEntry.score >= c.beta?
 						cutoffType == TTEntry.CUTOFF_TYPE_LOWER: cutoffType == TTEntry.CUTOFF_TYPE_UPPER)){
 
 					if(c.stackIndex-1 >= 0 && hashEntry.score >= c.beta){
 						Search34.attemptKillerStore(hashEntry.move, c.skipNullMove, stack[c.stackIndex-1]);
 					}
 
-					if(c.nt != NodeType.pv){
+					if(c.nt != SearchContext.NODE_TYPE_PV){
 						return hashEntry.score;
 					}
 				}

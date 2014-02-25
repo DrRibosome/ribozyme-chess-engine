@@ -46,7 +46,7 @@ public class DescentStage implements FinalStage{
 	public int eval(SearchContext c, NodeProps props, KillerMoveSet kms, State4 s) {
 
 		int alpha = c.alpha;
-		NodeType nt = c.nt;
+		int nt = c.nt;
 
 		//unimplemented misc from previous search
 		final int razorReduction = 0;
@@ -80,8 +80,8 @@ public class DescentStage implements FinalStage{
 		boolean hasMove = props.alliedKingAttacked;
 		final boolean inCheck = props.alliedKingAttacked;
 		for(int i = 0; i < length; i++){
-			if(i >= 5 && nt == NodeType.cut){
-				nt = NodeType.all;
+			if(i >= 5 && nt == SearchContext.NODE_TYPE_CUT){
+				nt = SearchContext.NODE_TYPE_ALL;
 			}
 
 			final MoveSet set = mset[i];
@@ -97,7 +97,7 @@ public class DescentStage implements FinalStage{
 			} else{
 				hasMove = true;
 
-				final boolean pvMove = nt == NodeType.pv && i==0;
+				final boolean pvMove = nt == SearchContext.NODE_TYPE_PV && i==0;
 				final boolean isCapture = MoveEncoder.getTakenType(encoding) != State4.PIECE_TYPE_EMPTY;
 				final boolean givesCheck = Search34.isChecked(1 - c.player, s);
 				final boolean isPawnPromotion = MoveEncoder.isPawnPromotion(encoding);
@@ -112,8 +112,8 @@ public class DescentStage implements FinalStage{
 
 				//stack[c.stackIndex+1].futilityPrune = !isDangerous && !isCapture && !isPawnPromotion;
 
-				final int ext = (isDangerous && nt == NodeType.pv? Search34.ONE_PLY: 0) +
-						(threatMove && nt == NodeType.pv? 0: 0) + razorReduction;
+				final int ext = (isDangerous && nt == SearchContext.NODE_TYPE_PV? Search34.ONE_PLY: 0) +
+						(threatMove && nt == SearchContext.NODE_TYPE_PV? 0: 0) + razorReduction;
 				//(!pv && depth > 7? -depth/10: 0);
 				//(!pv && depth > 7 && !isDangerous && !isCapture? -depth/10: 0);
 
@@ -123,16 +123,16 @@ public class DescentStage implements FinalStage{
 				final boolean fullSearch;
 				//final int reduction;
 				if(c.depth > Search34.ONE_PLY && !pvMove && !isCapture && !inCheck && !isPawnPromotion &&
-						nt != NodeType.cut &&
+						nt != SearchContext.NODE_TYPE_CUT &&
 						!isDangerous &&
 						!isKillerMove &&
 						!isTTEMove){
 
 					moveCount++;
-					final int lmrReduction = lmrReduction(c.depth/Search34.ONE_PLY, moveCount) + (nt == NodeType.pv? 0: Search34.ONE_PLY);
+					final int lmrReduction = lmrReduction(c.depth/Search34.ONE_PLY, moveCount) + (nt == SearchContext.NODE_TYPE_PV? 0: Search34.ONE_PLY);
 					final int reducedDepth = nextDepth - lmrReduction;
 
-					g = -searcher.recurse(new SearchContext(1 - c.player, -alpha - 1, -alpha, reducedDepth, nt.next(), c.stackIndex + 1), s);
+					g = -searcher.recurse(new SearchContext(1 - c.player, -alpha - 1, -alpha, reducedDepth, SearchContext.nextNodeType(nt), c.stackIndex + 1), s);
 					fullSearch = g > alpha && lmrReduction != 0;
 				} else{
 					fullSearch = true;
@@ -141,12 +141,12 @@ public class DescentStage implements FinalStage{
 				if(fullSearch){
 					//descend negascout style
 					if(!pvMove){
-						g = -searcher.recurse(new SearchContext(1 - c.player, -alpha - 1, -alpha, nextDepth, nt.next(), c.stackIndex + 1), s);
-						if(alpha < g && g < c.beta && nt == NodeType.pv){
-							g = -searcher.recurse(new SearchContext(1 - c.player, -c.beta, -alpha, nextDepth, NodeType.pv, c.stackIndex + 1), s);
+						g = -searcher.recurse(new SearchContext(1 - c.player, -alpha - 1, -alpha, nextDepth, SearchContext.nextNodeType(nt), c.stackIndex + 1), s);
+						if(alpha < g && g < c.beta && nt == SearchContext.NODE_TYPE_PV){
+							g = -searcher.recurse(new SearchContext(1 - c.player, -c.beta, -alpha, nextDepth, SearchContext.NODE_TYPE_PV, c.stackIndex + 1), s);
 						}
 					} else{
-						g = -searcher.recurse(new SearchContext(1 - c.player, -c.beta, -alpha, nextDepth, NodeType.pv, c.stackIndex + 1), s);
+						g = -searcher.recurse(new SearchContext(1 - c.player, -c.beta, -alpha, nextDepth, SearchContext.NODE_TYPE_PV, c.stackIndex + 1), s);
 					}
 				}
 			}
@@ -202,11 +202,11 @@ public class DescentStage implements FinalStage{
 
 		if(!searcher.isCutoffSearch()){
 			fillEntry.fill(props.zkey, bestMove, bestScore, props.staticScore.toScoreEncoding(),
-					c.depth, nt == NodeType.pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, searcher.getSeq());
+					c.depth, nt == SearchContext.NODE_TYPE_PV? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, searcher.getSeq());
 			m.put(props.zkey, fillEntry);
 		}
 
-		if(nt == NodeType.pv){
+		if(nt == SearchContext.NODE_TYPE_PV){
 			pvStore[c.stackIndex] = bestMove;
 		}
 

@@ -25,7 +25,7 @@ public class NullMoveStage implements MidStage {
 	public int eval(SearchContext c, NodeProps props, State4 s) {
 		final boolean threatMove; //true if opponent can make a move that causes null-move fail low
 
-		if(c.nt != NodeType.pv &&
+		if(c.nt != SearchContext.NODE_TYPE_PV &&
 				!c.skipNullMove &&
 				c.depth > 3 * Search34.ONE_PLY &&
 				!props.alliedKingAttacked &&

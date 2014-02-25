@@ -132,7 +132,7 @@ public final class Search34 implements Search{
 			}
 			skipAdjust = false;
 			
-			score = recurse(new SearchContext(player, alpha, beta, i*ONE_PLY, NodeType.pv, 0), s);
+			score = recurse(new SearchContext(player, alpha, beta, i*ONE_PLY, SearchContext.NODE_TYPE_PV, 0), s);
 			
 			if((score <= alpha || score >= beta) && !cutoffSearch){
 				if(score <= alpha){
@@ -144,7 +144,7 @@ public final class Search34 implements Search{
 				}
 				
 				if(i < minRestartDepth){
-					score = recurse(new SearchContext(player, alpha, beta, i*ONE_PLY, NodeType.pv, 0), s);
+					score = recurse(new SearchContext(player, alpha, beta, i*ONE_PLY, SearchContext.NODE_TYPE_PV, 0), s);
 					if((score <= alpha || score >= beta) && !cutoffSearch){
 						i--;
 						if(score <= alpha) alpha = score-150;
@@ -242,9 +242,9 @@ public final class Search34 implements Search{
 			return 0;
 		} else if(c.depth <= 0){
 			final int q = qsearch(c.player, c.alpha, c.beta, 0, c.stackIndex, c.nt, s);
-			if(q > 70000 && c.nt == NodeType.pv){ //false mate for enemy king
+			if(q > 70000 && c.nt == SearchContext.NODE_TYPE_PV){ //false mate for enemy king
 				return recurse(new SearchContext(c.player, q, maxScore, ONE_PLY, c.nt, c.stackIndex), s);
-			} else if(q < -70000 && c.nt == NodeType.pv){ //false mate for allied king
+			} else if(q < -70000 && c.nt == SearchContext.NODE_TYPE_PV){ //false mate for allied king
 				return recurse(new SearchContext(c.player, minScore, q, ONE_PLY, c.nt, c.stackIndex), s);
 			} else{
 				return q;
@@ -257,7 +257,7 @@ public final class Search34 implements Search{
 	}
 	
 	public int qsearch(final int player, int alpha, int beta, final int depth,
-			final int stackIndex, final NodeType nt, final State4 s){
+			final int stackIndex, final int nt, final State4 s){
 		stats.nodesSearched++;
 		
 		if(depth < -qply){
@@ -280,7 +280,7 @@ public final class Search34 implements Search{
 			stats.hashHits++;
 			if(e.depth >= depth){
 				final int cutoffType = e.cutoffType;
-				if(nt == NodeType.pv? cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (e.score >= beta?
+				if(nt == SearchContext.NODE_TYPE_PV? cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (e.score >= beta?
 						cutoffType == TTEntry.CUTOFF_TYPE_LOWER: cutoffType == TTEntry.CUTOFF_TYPE_UPPER)){
 					return e.score;
 				}
@@ -298,12 +298,12 @@ public final class Search34 implements Search{
 				ttMove = 0;
 			}
 			
-			staticEval = nt == NodeType.pv? this.e.refine(player, s, minScore, maxScore, e.staticEval):
+			staticEval = nt == SearchContext.NODE_TYPE_PV? this.e.refine(player, s, minScore, maxScore, e.staticEval):
 				this.e.refine(player, s, alpha, beta, e.staticEval);
 		} else{
 			hasTTMove = false;
 			ttMove = 0;
-			staticEval = nt == NodeType.pv? this.e.eval(player, s): this.e.eval(player, s, alpha, beta);
+			staticEval = nt == SearchContext.NODE_TYPE_PV? this.e.eval(player, s): this.e.eval(player, s, alpha, beta);
 		}
 		
 		int bestScore;
@@ -339,7 +339,7 @@ public final class Search34 implements Search{
 				//king in check after move
 				moveScore = -77777;
 			} else{
-				if(nt != NodeType.pv && !alliedKingAttacked && !MoveEncoder.isPawnPromotion(encoding) &&
+				if(nt != SearchContext.NODE_TYPE_PV && !alliedKingAttacked && !MoveEncoder.isPawnPromotion(encoding) &&
 						(!hasTTMove || encoding != ttMove)){
 					s.undoMove();
 					if(SEE.seeSign(player, pieceMask, move, s) < 0){
@@ -383,7 +383,7 @@ public final class Search34 implements Search{
 
 		if(!cutoffSearch){
 			fillEntry.fill(zkey, bestMove, bestScore, staticEval.toScoreEncoding(),
-					depth, nt == NodeType.pv? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
+					depth, nt == SearchContext.NODE_TYPE_PV? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
 			m.put(zkey, fillEntry);
 		}
 		return bestScore;
