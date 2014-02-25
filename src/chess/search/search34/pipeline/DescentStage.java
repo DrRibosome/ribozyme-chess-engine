@@ -8,7 +8,27 @@ import chess.state4.MoveEncoder;
 import chess.state4.State4;
 
 /** final search stage, explore possible moves*/
-public final class DescentStage implements FinalStage{
+public final class DescentStage implements MidStage{
+
+	private final static class KillerMoveSet {
+		final long l1killer1;
+		final long l1killer2;
+		final long l2killer1;
+		final long l2killer2;
+
+		KillerMoveSet(long l1killer1, long l1killer2, long l2killer1, long l2killer2){
+			this.l1killer1 = l1killer1;
+			this.l1killer2 = l1killer2;
+			this.l2killer1 = l2killer1;
+			this.l2killer2 = l2killer2;
+		}
+
+		public boolean contains(long encoding){
+			final long rawEn = encoding & 0xFFFL; //raw encoding
+			return rawEn == l1killer1 || rawEn == l1killer2 ||
+					rawEn == l2killer1 || rawEn == l2killer2;
+		}
+	}
 
 	private final StackFrame[] stack;
 	private final Search34 searcher;
@@ -43,7 +63,9 @@ public final class DescentStage implements FinalStage{
 	}
 
 	@Override
-	public int eval(SearchContext c, NodeProps props, KillerMoveSet kms, State4 s) {
+	public int eval(SearchContext c, NodeProps props, State4 s) {
+
+		final KillerMoveSet kms = buildKMS(c, s);
 
 		int alpha = c.alpha;
 		int nt = c.nt;
@@ -215,5 +237,118 @@ public final class DescentStage implements FinalStage{
 
 	private static int lmrReduction(final int depth, final int moveCount){
 		return lmrReduction[depth > 31? 31: depth][moveCount > 63? 63: moveCount];
+	}
+
+	/**
+	 * builds killer move set
+	 * @param c search context to
+	 * @param s state to use in testing killer moves for legality
+	 * @return returns killer move set
+	 */
+	private KillerMoveSet buildKMS(SearchContext c, State4 s) {
+		final long l1killer1;
+		final long l1killer2;
+		final long l2killer1;
+		final long l2killer2;
+
+		final StackFrame.MoveList mlist = stack[c.stackIndex].mlist;
+
+		if(c.stackIndex-1 >= 0 && !c.skipNullMove){
+			final StackFrame prev = stack[c.stackIndex-1];
+			final long l1killer1Temp = prev.killer[0];
+			if(l1killer1Temp != 0 && isPseudoLegal(c.player, l1killer1Temp, s)){
+				l1killer1 = l1killer1Temp & 0xFFFL;
+				mlist.add(l1killer1, MoveGen.killerMoveRank);
+			} else{
+				l1killer1 = 0;
+			}
+
+			final long l1killer2Temp = prev.killer[1];
+			if(l1killer2Temp != 0 && isPseudoLegal(c.player, l1killer2Temp, s)){
+				l1killer2 = l1killer2Temp & 0xFFFL;
+				mlist.add(l1killer2, MoveGen.killerMoveRank);
+			} else{
+				l1killer2 = 0;
+			}
+
+			if(c.stackIndex-3 >= 0){
+				final StackFrame prev2 = stack[c.stackIndex-3];
+				final long l2killer1Temp = prev2.killer[0];
+				if(l2killer1Temp != 0 && isPseudoLegal(c.player, l2killer1Temp, s)){
+					l2killer1 = l2killer1Temp & 0xFFFL;
+					mlist.add(l2killer1, MoveGen.killerMoveRank);
+				} else{
+					l2killer1 = 0;
+				}
+
+				final long l2killer2Temp = prev2.killer[1];
+				if(l2killer2Temp != 0 && isPseudoLegal(c.player, l2killer2Temp, s)){
+					l2killer2 = l2killer2Temp & 0xFFFL;
+					mlist.add(l2killer2, MoveGen.killerMoveRank);
+				} else{
+					l2killer2 = 0;
+				}
+			} else{
+				l2killer1 = 0;
+				l2killer2 = 0;
+			}
+		} else{
+			l1killer1 = 0;
+			l1killer2 = 0;
+			l2killer1 = 0;
+			l2killer2 = 0;
+		}
+
+		return new KillerMoveSet(l1killer1, l1killer2, l2killer1, l2killer2);
+	}
+
+	/**
+	 * checks too see if a move is legal, assumming we do not start in check,
+	 * moving does not yield self check, we are not castling, and if moving a pawn
+	 * we have chosen a non take move that could be legal if no piece is
+	 * blocking the target square
+	 *
+	 * <p> used to check that killer moves are legal
+	 * @param player
+	 * @param encoding
+	 * @param s
+	 * @return
+	 */
+	private static boolean isPseudoLegal(final int player, final long encoding, final State4 s){
+		final int pos1 = MoveEncoder.getPos1(encoding);
+		final int pos2 = MoveEncoder.getPos2(encoding);
+		final int takenType = MoveEncoder.getTakenType(encoding);
+		final long p = 1L << pos1;
+		final long m = 1L << pos2;
+		final long[] pieces = s.pieces;
+		final long agg = pieces[0] | pieces[1];
+		final long allied = pieces[player];
+		final long open = ~allied;
+
+		if((allied & p) != 0 && takenType == s.mailbox[pos2]){
+			final int type = s.mailbox[pos1];
+			switch(type){
+				case State4.PIECE_TYPE_BISHOP:
+					final long tempBishopMoves = Masks.getRawBishopMoves(agg, p) & open;
+					return (m & tempBishopMoves) != 0;
+				case State4.PIECE_TYPE_KNIGHT:
+					final long tempKnightMoves = Masks.getRawKnightMoves(p) & open;
+					return (m & tempKnightMoves) != 0;
+				case State4.PIECE_TYPE_QUEEN:
+					final long tempQueenMoves = Masks.getRawQueenMoves(agg, p) & open;
+					return (m & tempQueenMoves) != 0;
+				case State4.PIECE_TYPE_ROOK:
+					final long tempRookMoves = Masks.getRawRookMoves(agg, p) & open;
+					return (m & tempRookMoves) != 0;
+				case State4.PIECE_TYPE_KING:
+					final long tempKingMoves = (Masks.getRawKingMoves(p) & open) | State4.getCastleMoves(player, s);
+					return (m & tempKingMoves) != 0;
+				case State4.PIECE_TYPE_PAWN:
+					final long tempPawnMoves = Masks.getRawAggPawnMoves(player, agg, s.pawns[player]);
+					return (m & tempPawnMoves) != 0;
+			}
+		}
+
+		return false;
 	}
 }
