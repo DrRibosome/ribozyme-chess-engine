@@ -107,11 +107,9 @@ public final class Search34 implements Search{
 		long bestMove = 0;
 		int score = 0;
 		
-		int alpha = minScore;
-		int beta = maxScore;
+		int alpha, beta;
 		
 		long nodesSearched = 0;
-		boolean skipAdjust = false;
 		int minRestartDepth = 7;
 		for(int i = 1; (maxPly == -1 || i <= maxPly) && !cutoffSearch && i <= stackSize; i++){
 			s.resetHistory();
@@ -119,7 +117,7 @@ public final class Search34 implements Search{
 			if(i <= 3){
 				alpha = minScore;
 				beta = maxScore;
-			} else if(i > 3 && !skipAdjust){
+			} else {//if(i > 3){
 				final int index = i-1-1; //index of most recent score observation
 				int est = stats.scores[index];
 				est += stats.scores[index-1];
@@ -129,22 +127,23 @@ public final class Search34 implements Search{
 				alpha = est-25;
 				beta = est+25;
 			}
-			skipAdjust = false;
 
 			boolean research = true;
+			int k = 0;
 			while(research && !cutoffSearch){
 				research = false;
 				score = recurse(new SearchContext(player, alpha, beta, i*ONE_PLY, SearchContext.NODE_TYPE_PV, 0), s);
 
 				if(score <= alpha || score >= beta){
-					research = true;
-					alpha = Math.min(score-50, alpha);
-					beta = Math.max(score + 50, beta);
 					if(i >= minRestartDepth){
 						minRestartDepth = i+1;
 						i -= i/4+.5;
-						skipAdjust = true;
 						continue;
+					} else{
+						research = true;
+						alpha = Math.min(score - 35 - 10*k, alpha);
+						beta = Math.max(score + 35 + 10*k, beta);
+						k++;
 					}
 				}
 			}
