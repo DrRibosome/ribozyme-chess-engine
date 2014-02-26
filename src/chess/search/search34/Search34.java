@@ -105,7 +105,7 @@ public final class Search34 implements Search{
 		cutoffSearch = false;
 		
 		long bestMove = 0;
-		int score;
+		int score = 0;
 		
 		int alpha = minScore;
 		int beta = maxScore;
@@ -130,33 +130,22 @@ public final class Search34 implements Search{
 				beta = est+25;
 			}
 			skipAdjust = false;
-			
-			score = recurse(new SearchContext(player, alpha, beta, i*ONE_PLY, SearchContext.NODE_TYPE_PV, 0), s);
-			
-			if((score <= alpha || score >= beta) && !cutoffSearch){
-				if(score <= alpha){
-					alpha = score-50;
-					beta = score+15;
-				} else if(score >= beta){
-					beta = score+50;
-					alpha = score-15;
-				}
-				
-				if(i < minRestartDepth){
-					score = recurse(new SearchContext(player, alpha, beta, i*ONE_PLY, SearchContext.NODE_TYPE_PV, 0), s);
-					if((score <= alpha || score >= beta) && !cutoffSearch){
-						i--;
-						if(score <= alpha) alpha = score-150;
-						else if(score >= beta) beta = score+150;
+
+			boolean research = true;
+			while(research && !cutoffSearch){
+				research = false;
+				score = recurse(new SearchContext(player, alpha, beta, i*ONE_PLY, SearchContext.NODE_TYPE_PV, 0), s);
+
+				if(score <= alpha || score >= beta){
+					research = true;
+					alpha = Math.min(score-50, alpha);
+					beta = Math.max(score + 50, beta);
+					if(i >= minRestartDepth){
+						minRestartDepth = i+1;
+						i -= i/4+.5;
 						skipAdjust = true;
 						continue;
 					}
-				} else{
-					minRestartDepth = i+1;
-					
-					i -= i/4+.5;
-					skipAdjust = true;
-					continue;
 				}
 			}
 			
