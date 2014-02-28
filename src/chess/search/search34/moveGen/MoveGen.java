@@ -230,7 +230,7 @@ public final class MoveGen {
 		final long enemy = s.pieces[1 - player];
 		final long agg = allied | enemy;
 
-		final long enemyAttacks = genAttacks(1-player, s);
+		final long enemyAttacks = 0;//genAttacks(1-player, s);
 
 		final long quiesceMask = quiesce? enemy: ~0;
 		final long promotionMask = Masks.pawnPromotionMask[player];
