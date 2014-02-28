@@ -135,6 +135,10 @@ public final class DescentStage implements MidStage{
 				final boolean isPassedPawnPush = isPawnPromotion || (MoveEncoder.getMovePieceType(encoding) == State4.PIECE_TYPE_PAWN &&
 						(Masks.passedPawnMasks[c.player][MoveEncoder.getPos1(encoding)] & s.pawns[1-c.player]) == 0);
 				final boolean isTTEMove = props.hasTTMove && encoding == props.tteMoveEncoding;
+				if(isTTEMove && i != 0){
+					s.undoMove();
+					continue;
+				}
 				final boolean isKillerMove = kms.contains(encoding);
 
 				final boolean isDangerous = givesCheck ||
