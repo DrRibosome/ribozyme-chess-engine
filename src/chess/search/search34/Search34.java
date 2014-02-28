@@ -6,6 +6,8 @@ import chess.search.MoveSet;
 import chess.search.Search;
 import chess.search.SearchListener2;
 import chess.search.SearchStat;
+import chess.search.search34.moveGen.MoveGen;
+import chess.search.search34.moveGen.RankedMoveSet;
 import chess.search.search34.pipeline.*;
 import chess.state4.BitUtil;
 import chess.state4.MoveEncoder;
@@ -256,7 +258,7 @@ public final class Search34 implements Search{
 
 		
 		int w = 0;
-		final MoveSet[] mset = stack[stackIndex].mlist.list;
+		final RankedMoveSet[] mset = stack[stackIndex].mlist.list;
 
 		final long zkey = s.zkey();
 		final TTEntry e = m.get(zkey);
@@ -274,7 +276,7 @@ public final class Search34 implements Search{
 			}
 			if(e.move != 0){
 				final long encoding = e.move;
-				final MoveSet temp = mset[w++];
+				final RankedMoveSet temp = mset[w++];
 				temp.piece = 1L<<MoveEncoder.getPos1(encoding);
 				temp.moves = 1L<<MoveEncoder.getPos2(encoding);
 				temp.rank = MoveGen.tteMoveRank;
@@ -405,10 +407,10 @@ public final class Search34 implements Search{
 	 * @param mset move set for sorting
 	 * @param length length of move set
 	 */
-	public static void isort(final MoveSet[] mset, final int length){
+	public static void isort(final RankedMoveSet[] mset, final int length){
 		for(int i = 1; i < length; i++){
 			for(int a = i; a > 0 && mset[a-1].rank > mset[a].rank; a--){
-				final MoveSet temp = mset[a];
+				final RankedMoveSet temp = mset[a];
 				mset[a] = mset[a-1];
 				mset[a-1] = temp;
 			}

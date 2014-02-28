@@ -1,4 +1,4 @@
-package chess.search.search34;
+package chess.search.search34.moveGen;
 
 import chess.search.MoveSet;
 import chess.state4.BitUtil;
@@ -35,7 +35,7 @@ public final class MoveGen {
 	private final static long pawnRightShiftMask = Masks.colMaskExc[0];
 	
 	private static int recordMoves(final int player, final int pieceMovingType, final long pieceMask,
-			final long moves, final long enemyPawnAttacks, final long enemyPieces, final long upTakeMask, final MoveSet[] mset,
+			final long moves, final long enemyPawnAttacks, final long enemyPieces, final long upTakeMask, final RankedMoveSet[] mset,
 			final int msetIndex, final State4 s, final boolean quiesce, final FeatureSet f){
 		
 		int w = msetIndex;
@@ -48,7 +48,7 @@ public final class MoveGen {
 			for(long m = moves; m != 0; m &= m-1){
 				final long move = m&-m;
 				if(!quiesce || (move & enemyPieces) != 0){
-					final MoveSet temp = mset[w++];
+					final RankedMoveSet temp = mset[w++];
 					temp.piece = piece;
 					temp.moves = move;
 					
@@ -206,7 +206,7 @@ public final class MoveGen {
 	 * @return returns length of move set array after move generation
 	 */
 	public int genMoves(final int player, final State4 s, final boolean alliedKingAttacked,
-			final MoveSet[] mset, final int msetInitialIndex, final boolean quiesce, final int stackIndex){
+			final RankedMoveSet[] mset, final int msetInitialIndex, final boolean quiesce, final int stackIndex){
 		
 		final FeatureSet f = quiesce? null: this.f[player];
 		
@@ -279,7 +279,7 @@ public final class MoveGen {
 				final boolean promote = (m & promotionMask) != 0;
 				
 				if(!quiesce || take || promote){
-					final MoveSet temp = mset[w++];
+					final RankedMoveSet temp = mset[w++];
 					temp.piece = p;
 					temp.moves = m;
 					temp.promotionType = State4.PROMOTE_QUEEN;
@@ -298,7 +298,7 @@ public final class MoveGen {
 					temp.rank = rank;
 					
 					if(promote){
-						final MoveSet knightPromoteMove = mset[w++];
+						final RankedMoveSet knightPromoteMove = mset[w++];
 						knightPromoteMove.piece = p;
 						knightPromoteMove.moves = m;
 						knightPromoteMove.rank = take? 8: 9;

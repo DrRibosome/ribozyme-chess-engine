@@ -1,7 +1,13 @@
 package chess.search.search34.pipeline;
 
 import chess.search.MoveSet;
-import chess.search.search34.*;
+import chess.search.search34.Hash;
+import chess.search.search34.Search34;
+import chess.search.search34.StackFrame;
+import chess.search.search34.TTEntry;
+import chess.search.search34.moveGen.MoveGen;
+import chess.search.search34.moveGen.MoveList;
+import chess.search.search34.moveGen.RankedMoveSet;
 import chess.state4.Masks;
 import chess.state4.MoveEncoder;
 import chess.state4.State4;
@@ -74,7 +80,7 @@ public final class DescentStage implements MidStage{
 		final boolean threatMove = false;
 
 		StackFrame frame = stack[c.stackIndex];
-		MoveSet[] mset = frame.mlist.list;
+		RankedMoveSet[] mset = frame.mlist.list;
 
 		//move generation
 		if(props.hasTTMove){
@@ -250,7 +256,7 @@ public final class DescentStage implements MidStage{
 		final long l2killer1;
 		final long l2killer2;
 
-		final StackFrame.MoveList mlist = stack[c.stackIndex].mlist;
+		final MoveList mlist = stack[c.stackIndex].mlist;
 
 		if(c.stackIndex-1 >= 0 && !c.skipNullMove){
 			final StackFrame prev = stack[c.stackIndex-1];

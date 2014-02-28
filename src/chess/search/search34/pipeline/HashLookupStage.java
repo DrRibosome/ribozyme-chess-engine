@@ -1,12 +1,13 @@
 package chess.search.search34.pipeline;
 
 import chess.eval.Evaluator;
-import chess.eval.ScoreEncoder;
 import chess.eval.e9.pipeline.EvalResult;
-import chess.search.search34.*;
-import chess.state4.BitUtil;
+import chess.search.search34.Hash;
+import chess.search.search34.Search34;
+import chess.search.search34.StackFrame;
+import chess.search.search34.TTEntry;
+import chess.search.search34.moveGen.MoveList;
 import chess.state4.Masks;
-import chess.state4.MoveEncoder;
 import chess.state4.State4;
 
 public final class HashLookupStage implements EntryStage {
@@ -26,7 +27,7 @@ public final class HashLookupStage implements EntryStage {
 	@Override
 	public int eval(SearchContext c, State4 s) {
 		final StackFrame frame = stack[c.stackIndex];
-		final StackFrame.MoveList list = frame.mlist;
+		final MoveList list = frame.mlist;
 		list.clear();
 
 		frame.killer[0] = 0;
