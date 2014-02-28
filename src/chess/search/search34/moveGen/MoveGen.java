@@ -239,7 +239,6 @@ public final class MoveGen {
 		long quiesceMask = quiesce? enemy: ~0;
 		final long promotionMask = Masks.pawnPromotionMask[player];
 
-		final long kingUpTakes = s.pieces[1 - player];
 		if (alliedKingAttacked) {
 			long kingMoves = Masks.getRawKingMoves(s.kings[player]) & ~allied;
 			recordMoves(player, State4.PIECE_TYPE_KING, s.kings[player], kingMoves,
@@ -253,7 +252,6 @@ public final class MoveGen {
 					enemyPawnAttacks, enemy, promotionMask, mlist, s, f);
 		}
 
-		final long rookUpTakes = s.rooks[1 - player] | queenUpTakes;
 		for (long rooks = s.rooks[player]; rooks != 0; rooks &= rooks - 1) {
 			recordMoves(player, State4.PIECE_TYPE_ROOK, rooks,
 					Masks.getRawRookMoves(agg, rooks & -rooks) & ~allied & quiesceMask,
@@ -272,10 +270,7 @@ public final class MoveGen {
 					enemyPawnAttacks, enemy, promotionMask, mlist, s, f);
 		}
 
-
 		final long open = ~agg;
-		//final long[] passedPawnMasks = Masks.passedPawnMasks[player];
-		//final long enemyPawns = s.pawns[1-player];
 		final long enPassant = s.enPassante;
 		for (long pawns = s.pawns[player]; pawns != 0; pawns &= pawns - 1) {
 			final long p = pawns & -pawns;
@@ -291,7 +286,6 @@ public final class MoveGen {
 				l1move = (p >>> 8) & open;
 				l2move = ((((p & 0xFF000000000000L) >>> 8) & open) >>> 8) & open;
 			}
-
 
 			long moves = attacks | l1move | l2move;
 			recordMoves(player, State4.PIECE_TYPE_PAWN, p, moves & (quiesceMask | promotionMask), 0, enemy, promotionMask, mlist, s, f);
