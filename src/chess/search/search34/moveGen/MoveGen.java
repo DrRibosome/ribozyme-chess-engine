@@ -85,7 +85,7 @@ public final class MoveGen {
 
 				if(pieceMovingType == State4.PIECE_TYPE_PAWN && (move & promotionMask) != 0){
 					mlist.add(piece, move, baseRank + PieceWeights.queen, State4.PROMOTE_QUEEN);
-					mlist.add(piece, move, baseRank + PieceWeights.knight, State4.PIECE_TYPE_KNIGHT);
+					mlist.add(piece, move, baseRank + PieceWeights.knight, State4.PROMOTE_KNIGHT);
 				} else{
 					//non-pawn movement
 					mlist.add(piece, move, baseRank);
