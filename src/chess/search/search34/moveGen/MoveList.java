@@ -1,6 +1,5 @@
 package chess.search.search34.moveGen;
 
-import chess.search.MoveSet;
 import chess.state4.MoveEncoder;
 import chess.state4.State4;
 
@@ -35,5 +34,16 @@ public final class MoveList{
 	/** clear move list and ready list for reuse*/
 	public void clear(){
 		len = 0;
+	}
+
+	/** sorts list moves via insertion sort*/
+	public void isort(){
+		for(int i = 1; i < len; i++){
+			for(int a = i; a > 0 && list[a-1].rank > list[a].rank; a--){
+				final RankedMoveSet temp = list[a];
+				list[a] = list[a-1];
+				list[a-1] = temp;
+			}
+		}
 	}
 }

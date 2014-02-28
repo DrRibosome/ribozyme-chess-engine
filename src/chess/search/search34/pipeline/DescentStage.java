@@ -79,20 +79,24 @@ public final class DescentStage implements MidStage{
 		final int razorReduction = 0;
 		final boolean threatMove = false;
 
-		StackFrame frame = stack[c.stackIndex];
-		RankedMoveSet[] mset = frame.mlist.list;
+		final StackFrame frame = stack[c.stackIndex];
+		final MoveList mlist = frame.mlist;
 
 		//move generation
 		if(props.hasTTMove){
 			frame.mlist.add(props.tteMoveEncoding, MoveGen.tteMoveRank);
 		}
-		final int length = moveGen.genMoves(c.player, s, props.alliedKingAttacked, mset, frame.mlist.len, false, c.stackIndex);
+		moveGen.genMoves(c.player, s, props.alliedKingAttacked, mlist, false);
+		final int length = mlist.len;
 		if(length == 0){ //no moves, draw
 			fillEntry.fill(props.zkey, 0, 0, props.staticScore.toScoreEncoding(), c.depth, TTEntry.CUTOFF_TYPE_EXACT, searcher.getSeq());
 			m.put(props.zkey, fillEntry);
 			return 0;
 		}
-		Search34.isort(mset, length);
+		mlist.isort();
+
+
+		final RankedMoveSet[] mset = frame.mlist.list;
 
 		int g = alpha;
 		long bestMove = 0;

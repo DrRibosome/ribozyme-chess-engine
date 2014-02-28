@@ -33,11 +33,9 @@ public final class MoveGen {
 	private final static long pawnLeftShiftMask = Masks.colMaskExc[7];
 	private final static long pawnRightShiftMask = Masks.colMaskExc[0];
 	
-	private static int recordMoves(final int player, final int pieceMovingType, final long pieceMask,
-			final long moves, final long enemyPawnAttacks, final long enemyPieces, final long upTakeMask, final RankedMoveSet[] mset,
-			final int msetIndex, final State4 s, final boolean quiesce, final FeatureSet f){
-		
-		int w = msetIndex;
+	private static void recordMoves(final int player, final int pieceMovingType, final long pieceMask,
+			final long moves, final long enemyPawnAttacks, final long enemyPieces, final long upTakeMask, final MoveList mlist,
+			final State4 s, final boolean quiesce, final FeatureSet f){
 		
 		if(pieceMask != 0 && moves != 0){
 			final long piece = pieceMask&-pieceMask;
@@ -47,10 +45,6 @@ public final class MoveGen {
 			for(long m = moves; m != 0; m &= m-1){
 				final long move = m&-m;
 				if(!quiesce || (move & enemyPieces) != 0){
-					final RankedMoveSet temp = mset[w++];
-					temp.piece = piece;
-					temp.moves = move;
-					
 					final boolean upTake = (move & enemyPieces & upTakeMask) != 0;
 					final boolean downTake = (move & enemyPieces & ~upTakeMask) != 0;
 					//final boolean goodNonTake = (move & ~enemyPawnAttacks) != 0;
@@ -68,12 +62,11 @@ public final class MoveGen {
 					} else {
 						rank = maxWeight - getMoveWeight(player, pieceMovingType, piece, move, f, s);
 					}
-					temp.rank = rank;
+
+					mlist.add(piece, move, rank);
 				}
 			}
 		}
-		
-		return w;
 	}
 	
 	public void reset(){
@@ -199,13 +192,11 @@ public final class MoveGen {
 	 * @param player
 	 * @param s
 	 * @param alliedKingAttacked
-	 * @param mset
-	 * @param msetInitialIndex initial index to start recording moves at
+	 * @param mlist
 	 * @param quiesce
-	 * @return returns length of move set array after move generation
 	 */
-	public int genMoves(final int player, final State4 s, final boolean alliedKingAttacked,
-			final RankedMoveSet[] mset, final int msetInitialIndex, final boolean quiesce, final int stackIndex){
+	public void genMoves(final int player, final State4 s, final boolean alliedKingAttacked,
+			final MoveList mlist, final boolean quiesce){
 		
 		final FeatureSet f = quiesce? null: this.f[player];
 		
@@ -215,40 +206,39 @@ public final class MoveGen {
 		final long enemy = s.pieces[1-player];
 		//final long enemyKing = s.kings[1-player];
 		final long agg = allied | enemy;
-		int w = msetInitialIndex;
 		
 		final long kingUpTakes = s.pieces[1-player];
 		if(alliedKingAttacked){
 			long kingMoves = Masks.getRawKingMoves(s.kings[player]) & ~allied;
-			w = recordMoves(player, State4.PIECE_TYPE_KING, s.kings[player], kingMoves,
-					enemyPawnAttacks, enemy, kingUpTakes, mset, w, s, false, f);
+			recordMoves(player, State4.PIECE_TYPE_KING, s.kings[player], kingMoves,
+					enemyPawnAttacks, enemy, kingUpTakes, mlist, s, false, f);
 		}
 		
 		final long queenUpTakes = s.queens[1-player];
 		for(long queens = s.queens[player]; queens != 0; queens &= queens-1){
-			w = recordMoves(player, State4.PIECE_TYPE_QUEEN, queens,
-					Masks.getRawQueenMoves(agg, queens&-queens) & ~allied,
-					enemyPawnAttacks, enemy, queenUpTakes, mset, w, s, quiesce, f);
+			recordMoves(player, State4.PIECE_TYPE_QUEEN, queens,
+					Masks.getRawQueenMoves(agg, queens & -queens) & ~allied,
+					enemyPawnAttacks, enemy, queenUpTakes, mlist, s, quiesce, f);
 		}
 
 		final long rookUpTakes = s.rooks[1-player] | queenUpTakes;
 		for(long rooks = s.rooks[player]; rooks != 0; rooks &= rooks-1){
-			w = recordMoves(player, State4.PIECE_TYPE_ROOK, rooks,
-					Masks.getRawRookMoves(agg, rooks&-rooks) & ~allied,
-					enemyPawnAttacks, enemy, rookUpTakes, mset, w, s, quiesce, f);
+			recordMoves(player, State4.PIECE_TYPE_ROOK, rooks,
+					Masks.getRawRookMoves(agg, rooks & -rooks) & ~allied,
+					enemyPawnAttacks, enemy, rookUpTakes, mlist, s, quiesce, f);
 		}
 		
 		final long minorPieceUpTakes = s.bishops[1-player] | s.knights[1-player] | rookUpTakes;
 		for(long knights = s.knights[player]; knights != 0; knights &= knights-1){
-			w = recordMoves(player, State4.PIECE_TYPE_KNIGHT, knights,
-					Masks.getRawKnightMoves(knights&-knights) & ~allied,
-					enemyPawnAttacks, enemy, minorPieceUpTakes, mset, w, s, quiesce, f);
+			recordMoves(player, State4.PIECE_TYPE_KNIGHT, knights,
+					Masks.getRawKnightMoves(knights & -knights) & ~allied,
+					enemyPawnAttacks, enemy, minorPieceUpTakes, mlist, s, quiesce, f);
 		}
 		
 		for(long bishops = s.bishops[player]; bishops != 0; bishops &= bishops-1){
-			w = recordMoves(player, State4.PIECE_TYPE_BISHOP, bishops,
-					Masks.getRawBishopMoves(agg, bishops&-bishops) & ~allied,
-					enemyPawnAttacks, enemy, minorPieceUpTakes, mset, w, s, quiesce, f);
+			recordMoves(player, State4.PIECE_TYPE_BISHOP, bishops,
+					Masks.getRawBishopMoves(agg, bishops & -bishops) & ~allied,
+					enemyPawnAttacks, enemy, minorPieceUpTakes, mlist, s, quiesce, f);
 		}
 
 		
@@ -278,11 +268,6 @@ public final class MoveGen {
 				final boolean promote = (m & promotionMask) != 0;
 				
 				if(!quiesce || take || promote){
-					final RankedMoveSet temp = mset[w++];
-					temp.piece = p;
-					temp.moves = m;
-					temp.promotionType = State4.PROMOTE_QUEEN;
-					
 					final int rank;
 					if(take && promote){
 						rank = promoteTakeRank;
@@ -293,15 +278,11 @@ public final class MoveGen {
 					} else{
 						rank = maxWeight - getMoveWeight(player, State4.PIECE_TYPE_PAWN, p, m, f, s);
 					}
-					
-					temp.rank = rank;
+
+					mlist.add(p, m, rank, State4.PROMOTE_QUEEN);
 					
 					if(promote){
-						final RankedMoveSet knightPromoteMove = mset[w++];
-						knightPromoteMove.piece = p;
-						knightPromoteMove.moves = m;
-						knightPromoteMove.rank = take? 8: 9;
-						knightPromoteMove.promotionType = State4.PROMOTE_KNIGHT;
+						mlist.add(p, m, take? 8: 9, State4.PROMOTE_KNIGHT);
 					}
 				}
 			}
@@ -310,10 +291,8 @@ public final class MoveGen {
 		if(!alliedKingAttacked){
 			long kingMoves = (Masks.getRawKingMoves(s.kings[player]) & ~allied)
 					| State4.getCastleMoves(player, s);
-			w = recordMoves(player, State4.PIECE_TYPE_KING, s.kings[player], kingMoves,
-					enemyPawnAttacks, enemy, kingUpTakes, mset, w, s, quiesce, f);
+			recordMoves(player, State4.PIECE_TYPE_KING, s.kings[player], kingMoves,
+					enemyPawnAttacks, enemy, kingUpTakes, mlist, s, quiesce, f);
 		}
-
-		return w;
 	}
 }
