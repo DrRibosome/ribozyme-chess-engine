@@ -38,8 +38,9 @@ public final class MoveList{
 
 	/** sorts list moves via insertion sort*/
 	public void isort(){
+		//sort ascending order
 		for(int i = 1; i < len; i++){
-			for(int a = i; a > 0 && list[a-1].rank > list[a].rank; a--){
+			for(int a = i; a > 0 && list[a-1].rank < list[a].rank; a--){
 				final RankedMoveSet temp = list[a];
 				list[a] = list[a-1];
 				list[a-1] = temp;
