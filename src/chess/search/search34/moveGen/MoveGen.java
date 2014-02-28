@@ -245,7 +245,6 @@ public final class MoveGen {
 					enemyPawnAttacks, enemy, promotionMask, mlist, s, f);
 		}
 
-		final long queenUpTakes = s.queens[1 - player];
 		for (long queens = s.queens[player]; queens != 0; queens &= queens - 1) {
 			recordMoves(player, State4.PIECE_TYPE_QUEEN, queens,
 					Masks.getRawQueenMoves(agg, queens & -queens) & ~allied & quiesceMask,
@@ -266,7 +265,7 @@ public final class MoveGen {
 
 		for (long bishops = s.bishops[player]; bishops != 0; bishops &= bishops - 1) {
 			recordMoves(player, State4.PIECE_TYPE_BISHOP, bishops,
-					Masks.getRawBishopMoves(agg, bishops & -bishops) & ~allied,
+					Masks.getRawBishopMoves(agg, bishops & -bishops) & ~allied & quiesceMask,
 					enemyPawnAttacks, enemy, promotionMask, mlist, s, f);
 		}
 
