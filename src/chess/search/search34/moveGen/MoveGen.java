@@ -83,11 +83,9 @@ public final class MoveGen {
 
 				int baseRank = gain + defendedPenalty + historyWeight;
 
-				if(pieceMovingType == State4.PIECE_TYPE_PAWN){
-					if((move & promotionMask) != 0){
-						mlist.add(piece, move, baseRank + PieceWeights.queen, State4.PROMOTE_QUEEN);
-						mlist.add(piece, move, baseRank + PieceWeights.knight, State4.PIECE_TYPE_KNIGHT);
-					}
+				if(pieceMovingType == State4.PIECE_TYPE_PAWN && (move & promotionMask) != 0){
+					mlist.add(piece, move, baseRank + PieceWeights.queen, State4.PROMOTE_QUEEN);
+					mlist.add(piece, move, baseRank + PieceWeights.knight, State4.PIECE_TYPE_KNIGHT);
 				} else{
 					//non-pawn movement
 					mlist.add(piece, move, baseRank);
