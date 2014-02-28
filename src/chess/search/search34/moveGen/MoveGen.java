@@ -78,7 +78,7 @@ public final class MoveGen {
 				//penalty if position defended by lesser value piece
 				int defendedPenalty = 0;//(enemyAttacks & move) != 0?  -30: 0;
 
-				int historyWeight = f != null? getMoveWeight(player, pieceMovingType, piece, move, f, s) * 20 / maxWeight: 0;
+				int historyWeight = f != null? getMoveWeight(player, pieceMovingType, piece, move, f, s) * 50 / maxWeight: 0;
 
 				int baseRank = gain + defendedPenalty + historyWeight;
 
