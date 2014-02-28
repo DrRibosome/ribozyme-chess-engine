@@ -115,12 +115,18 @@ public final class DescentStage implements MidStage{
 				nt = SearchContext.NODE_TYPE_ALL;
 			}
 
-			final MoveSet set = mset[i];
+			final RankedMoveSet set = mset[i];
 			final long pieceMask = set.piece;
 			final int promotionType = set.promotionType;
 			final long move = set.moves;
 			long encoding = s.executeMove(c.player, pieceMask, move, promotionType);
 			boolean isDrawable = s.isDrawable(); //player can take a draw
+
+			final boolean isTTEMove = props.hasTTMove && encoding == props.tteMoveEncoding;
+			if((isTTEMove && set.rank != MoveGen.tteMoveRank)){
+				s.undoMove();
+				continue;
+			}
 
 			if(State4.posIsAttacked(s.kings[c.player], 1 - c.player, s)){
 				//king in check after move
@@ -134,23 +140,13 @@ public final class DescentStage implements MidStage{
 				final boolean isPawnPromotion = MoveEncoder.isPawnPromotion(encoding);
 				final boolean isPassedPawnPush = isPawnPromotion || (MoveEncoder.getMovePieceType(encoding) == State4.PIECE_TYPE_PAWN &&
 						(Masks.passedPawnMasks[c.player][MoveEncoder.getPos1(encoding)] & s.pawns[1-c.player]) == 0);
-				final boolean isTTEMove = props.hasTTMove && encoding == props.tteMoveEncoding;
-				if(isTTEMove && i != 0){
-					s.undoMove();
-					continue;
-				}
 				final boolean isKillerMove = kms.contains(encoding);
 
 				final boolean isDangerous = givesCheck ||
 						MoveEncoder.isCastle(encoding) != 0 ||
 						isPassedPawnPush;
 
-				//stack[c.stackIndex+1].futilityPrune = !isDangerous && !isCapture && !isPawnPromotion;
-
-				final int ext = (isDangerous && nt == SearchContext.NODE_TYPE_PV? Search34.ONE_PLY: 0) +
-						(threatMove && nt == SearchContext.NODE_TYPE_PV? 0: 0) + razorReduction;
-				//(!pv && depth > 7? -depth/10: 0);
-				//(!pv && depth > 7 && !isDangerous && !isCapture? -depth/10: 0);
+				final int ext = isDangerous && nt == SearchContext.NODE_TYPE_PV? Search34.ONE_PLY: 0;
 
 				final int nextDepth = c.depth - Search34.ONE_PLY + ext;
 
