@@ -9,7 +9,7 @@ public final class MoveGen {
 
 	public final static int tteMoveRank = 9999;
 	/** rank set to the first of the non takes */
-	public final static int killerMoveRank = 100;
+	public final static int killerMoveRank = 90;
 
 	private final static int maxWeight = 1 << 10;
 
@@ -46,7 +46,7 @@ public final class MoveGen {
 	 * @param pieceMovingType
 	 * @param pieceMask
 	 * @param moves
-	 * @param enemyDefendedPos positions defended by enemy pieces of lesser value
+	 * @param enemyAttacks positions defended by enemy pieces of lesser value
 	 * @param enemyPieces
 	 * @param mlist
 	 * @param promotionMask promotion mask for pawns
@@ -55,29 +55,28 @@ public final class MoveGen {
 	 */
 	private static void recordMoves(final int player, final int pieceMovingType,
 									final long pieceMask, final long moves,
-									final long enemyDefendedPos, final long enemyPieces,
+									final long enemyAttacks, final long enemyPieces,
 									final long promotionMask,
 									final MoveList mlist, final State4 s, final FeatureSet f) {
 
 		if (pieceMask != 0 && moves != 0) {
 
 			final int[] mailbox = s.mailbox;
-
 			final long piece = pieceMask & -pieceMask;
 
 			for (long m = moves; m != 0; m &= m - 1) {
 				final long move = m & -m;
 				final int moveIndex = BitUtil.lsbIndex(move);
 
-				final int gain;
+				int gain;
 				if((move & enemyPieces) != 0){
-					gain = pieceValue[mailbox[moveIndex]];
+					gain = pieceValue[mailbox[moveIndex]] - pieceValue[pieceMovingType]/10;
 				} else{
 					gain = 0;
 				}
 
 				//penalty if position defended by lesser value piece
-				int defendedPenalty = (enemyDefendedPos & move) != 0? -10: 0;
+				int defendedPenalty = 0;//(enemyAttacks & move) != 0?  -30: 0;
 
 				int historyWeight = f != null? getMoveWeight(player, pieceMovingType, piece, move, f, s) * 20 / maxWeight: 0;
 
@@ -227,44 +226,43 @@ public final class MoveGen {
 
 		final FeatureSet f = quiesce ? null : this.f[player];
 
-		final long enemyPawnAttacks = Masks.getRawPawnAttacks(1 - player, s.pawns[1 - player]) & ~s.pieces[1 - player];
-
 		final long allied = s.pieces[player];
 		final long enemy = s.pieces[1 - player];
-		//final long enemyKing = s.kings[1-player];
 		final long agg = allied | enemy;
 
-		long quiesceMask = quiesce? enemy: ~0;
+		final long enemyAttacks = genAttacks(1-player, s);
+
+		final long quiesceMask = quiesce? enemy: ~0;
 		final long promotionMask = Masks.pawnPromotionMask[player];
 
 		if (alliedKingAttacked) {
 			long kingMoves = Masks.getRawKingMoves(s.kings[player]) & ~allied;
 			recordMoves(player, State4.PIECE_TYPE_KING, s.kings[player], kingMoves,
-					enemyPawnAttacks, enemy, promotionMask, mlist, s, f);
+					0, enemy, promotionMask, mlist, s, f);
 		}
 
 		for (long queens = s.queens[player]; queens != 0; queens &= queens - 1) {
 			recordMoves(player, State4.PIECE_TYPE_QUEEN, queens,
 					Masks.getRawQueenMoves(agg, queens & -queens) & ~allied & quiesceMask,
-					enemyPawnAttacks, enemy, promotionMask, mlist, s, f);
+					enemyAttacks, enemy, promotionMask, mlist, s, f);
 		}
 
 		for (long rooks = s.rooks[player]; rooks != 0; rooks &= rooks - 1) {
 			recordMoves(player, State4.PIECE_TYPE_ROOK, rooks,
 					Masks.getRawRookMoves(agg, rooks & -rooks) & ~allied & quiesceMask,
-					enemyPawnAttacks, enemy, promotionMask, mlist, s, f);
+					enemyAttacks, enemy, promotionMask, mlist, s, f);
 		}
 
 		for (long knights = s.knights[player]; knights != 0; knights &= knights - 1) {
 			recordMoves(player, State4.PIECE_TYPE_KNIGHT, knights,
 					Masks.getRawKnightMoves(knights & -knights) & ~allied & quiesceMask,
-					enemyPawnAttacks, enemy, promotionMask, mlist, s, f);
+					enemyAttacks, enemy, promotionMask, mlist, s, f);
 		}
 
 		for (long bishops = s.bishops[player]; bishops != 0; bishops &= bishops - 1) {
 			recordMoves(player, State4.PIECE_TYPE_BISHOP, bishops,
 					Masks.getRawBishopMoves(agg, bishops & -bishops) & ~allied & quiesceMask,
-					enemyPawnAttacks, enemy, promotionMask, mlist, s, f);
+					enemyAttacks, enemy, promotionMask, mlist, s, f);
 		}
 
 		final long open = ~agg;
@@ -285,14 +283,52 @@ public final class MoveGen {
 			}
 
 			long moves = attacks | l1move | l2move;
-			recordMoves(player, State4.PIECE_TYPE_PAWN, p, moves & (quiesceMask | promotionMask), 0, enemy, promotionMask, mlist, s, f);
+			recordMoves(player, State4.PIECE_TYPE_PAWN, p, moves & (quiesceMask | promotionMask), enemyAttacks, enemy, promotionMask, mlist, s, f);
 		}
 
 		if (!alliedKingAttacked) {
 			long kingMoves = ((Masks.getRawKingMoves(s.kings[player]) & ~allied) | State4.getCastleMoves(player, s)) & quiesceMask;
 			recordMoves(player, State4.PIECE_TYPE_KING, s.kings[player],
 					kingMoves,
-					enemyPawnAttacks, enemy, promotionMask, mlist, s, f);
+					enemyAttacks, enemy, promotionMask, mlist, s, f);
 		}
+	}
+
+	private static long genAttacks(final int player, final State4 s) {
+		final long allied = s.pieces[player];
+		final long enemy = s.pieces[1 - player];
+		final long agg = allied | enemy;
+
+		final long kingAttacks = Masks.getRawKingMoves(s.kings[player]);
+
+		long queenAttacks = 0;
+		for (long queens = s.queens[player]; queens != 0; queens &= queens - 1) {
+			queenAttacks |= Masks.getRawQueenMoves(agg, queens & -queens);
+		}
+
+		long rookAttacks = 0;
+		for (long rooks = s.rooks[player]; rooks != 0; rooks &= rooks - 1) {
+			rookAttacks |= Masks.getRawRookMoves(agg, rooks & -rooks);
+		}
+
+		long knightAttacks = 0;
+		for (long knights = s.knights[player]; knights != 0; knights &= knights - 1) {
+			knightAttacks |= Masks.getRawKnightMoves(knights & -knights);
+		}
+
+		long bishopAttacks = 0;
+		for (long bishops = s.bishops[player]; bishops != 0; bishops &= bishops - 1) {
+			bishopAttacks |= Masks.getRawBishopMoves(agg, bishops & -bishops);
+		}
+
+		final long pawnAttacks;
+		final long pawns = s.pawns[player];
+		if (player == 0) {
+			pawnAttacks = (((pawns << 7) & pawnLeftShiftMask) | ((pawns << 9) & pawnRightShiftMask));
+		} else {
+			pawnAttacks = (((pawns >>> 9) & pawnLeftShiftMask) | ((pawns >>> 7) & pawnRightShiftMask));
+		}
+
+		return pawnAttacks | knightAttacks | bishopAttacks | rookAttacks | queenAttacks | kingAttacks;
 	}
 }
