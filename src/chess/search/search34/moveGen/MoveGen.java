@@ -294,35 +294,39 @@ public final class MoveGen {
 		}
 	}
 
-	private static long genAttacks(final int player, final State4 s) {
-		final long allied = s.pieces[player];
-		final long enemy = s.pieces[1 - player];
-		final long agg = allied | enemy;
+	private static long genAttacks(final int player, final State4 s){
+		return genAttacks(player, s.pieces[0]|s.pieces[1],
+				s.pawns[player], s.knights[player], s.bishops[player],
+				s.rooks[player], s.queens[player], s.kings[player]);
+	}
 
-		final long kingAttacks = Masks.getRawKingMoves(s.kings[player]);
+	private static long genAttacks(final int player, final long agg,
+								   final long pawns, final long knights, final long bishops,
+								   final long rooks, final long queens, final long king) {
+		
+		final long kingAttacks = Masks.getRawKingMoves(king);
 
 		long queenAttacks = 0;
-		for (long queens = s.queens[player]; queens != 0; queens &= queens - 1) {
-			queenAttacks |= Masks.getRawQueenMoves(agg, queens & -queens);
+		for (long q = queens; q != 0; q &= q - 1) {
+			queenAttacks |= Masks.getRawQueenMoves(agg, q & -q);
 		}
 
 		long rookAttacks = 0;
-		for (long rooks = s.rooks[player]; rooks != 0; rooks &= rooks - 1) {
-			rookAttacks |= Masks.getRawRookMoves(agg, rooks & -rooks);
+		for (long r = rooks; r != 0; r &= r - 1) {
+			rookAttacks |= Masks.getRawRookMoves(agg, r & -r);
 		}
 
 		long knightAttacks = 0;
-		for (long knights = s.knights[player]; knights != 0; knights &= knights - 1) {
-			knightAttacks |= Masks.getRawKnightMoves(knights & -knights);
+		for (long k = knights; k != 0; k &= k - 1) {
+			knightAttacks |= Masks.getRawKnightMoves(k & -k);
 		}
 
 		long bishopAttacks = 0;
-		for (long bishops = s.bishops[player]; bishops != 0; bishops &= bishops - 1) {
-			bishopAttacks |= Masks.getRawBishopMoves(agg, bishops & -bishops);
+		for (long b = bishops; b != 0; b &= b - 1) {
+			bishopAttacks |= Masks.getRawBishopMoves(agg, b & -b);
 		}
 
 		final long pawnAttacks;
-		final long pawns = s.pawns[player];
 		if (player == 0) {
 			pawnAttacks = (((pawns << 7) & pawnLeftShiftMask) | ((pawns << 9) & pawnRightShiftMask));
 		} else {
