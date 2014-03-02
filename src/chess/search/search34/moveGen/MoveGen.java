@@ -68,12 +68,17 @@ public final class MoveGen {
 				final long move = m & -m;
 				final int moveIndex = BitUtil.lsbIndex(move);
 
+				//bonus for direct material gain from the move
 				int gain;
 				if((move & enemyPieces) != 0){
 					final int takenValue = pieceValue[mailbox[moveIndex]];
 					final int movingPieceValue = pieceValue[pieceMovingType];
+
 					gain = takenValue - movingPieceValue/10;
+
 					if(takenValue < movingPieceValue && (enemyAttacks & move) != 0){
+						//apply penalty because in the short term there is possibility
+						//of retaking the piece on opp. next turn for opp. material gain
 						gain -= 50;
 					}
 				} else{
