@@ -80,12 +80,9 @@ public final class MoveGen {
 					gain = 0;
 				}
 
-				//penalty if position defended by lesser value piece
-				int defendedPenalty = 0;//(enemyAttacks & move) != 0?  -30: 0;
-
 				int historyWeight = f != null? getMoveWeight(player, pieceMovingType, piece, move, f, s) * 50 / maxWeight: 0;
 
-				int baseRank = gain + defendedPenalty + historyWeight;
+				int baseRank = gain + historyWeight;
 
 				if(pieceMovingType == State4.PIECE_TYPE_PAWN && (move & promotionMask) != 0){
 					mlist.add(piece, move, baseRank + PieceWeights.queen, State4.PROMOTE_QUEEN);
