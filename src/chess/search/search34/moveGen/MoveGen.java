@@ -70,7 +70,12 @@ public final class MoveGen {
 
 				int gain;
 				if((move & enemyPieces) != 0){
-					gain = pieceValue[mailbox[moveIndex]] - pieceValue[pieceMovingType]/10;
+					final int takenValue = pieceValue[mailbox[moveIndex]];
+					final int movingPieceValue = pieceValue[pieceMovingType];
+					gain = takenValue - movingPieceValue/10;
+					if(takenValue < movingPieceValue && (enemyAttacks & move) != 0){
+						gain -= 50;
+					}
 				} else{
 					gain = 0;
 				}
@@ -230,7 +235,7 @@ public final class MoveGen {
 		final long enemy = s.pieces[1 - player];
 		final long agg = allied | enemy;
 
-		final long enemyAttacks = 0;//genAttacks(1-player, s);
+		final long enemyAttacks = genAttacks(1-player, s);
 
 		final long quiesceMask = quiesce? enemy: ~0;
 		final long promotionMask = Masks.pawnPromotionMask[player];
@@ -238,7 +243,7 @@ public final class MoveGen {
 		if (alliedKingAttacked) {
 			long kingMoves = Masks.getRawKingMoves(s.kings[player]) & ~allied;
 			recordMoves(player, State4.PIECE_TYPE_KING, s.kings[player], kingMoves,
-					0, enemy, promotionMask, mlist, s, f);
+					enemyAttacks, enemy, promotionMask, mlist, s, f);
 		}
 
 		for (long queens = s.queens[player]; queens != 0; queens &= queens - 1) {
@@ -303,7 +308,7 @@ public final class MoveGen {
 	private static long genAttacks(final int player, final long agg,
 								   final long pawns, final long knights, final long bishops,
 								   final long rooks, final long queens, final long king) {
-		
+
 		final long kingAttacks = Masks.getRawKingMoves(king);
 
 		long queenAttacks = 0;
