@@ -22,7 +22,6 @@ public class PrintPositionExt implements ControlExtension {
 			if(s.kingMoved[1] && s.rookMoved[1][1]) castleInfo += "K";
 			System.out.println("castle rights: "+castleInfo);
 
-
 			System.out.println("\n"+pos.s);
 		}
 	}
