@@ -75,10 +75,6 @@ public final class DescentStage implements MidStage{
 		int alpha = c.alpha;
 		int nt = c.nt;
 
-		//unimplemented misc from previous search
-		final int razorReduction = 0;
-		final boolean threatMove = false;
-
 		final StackFrame frame = stack[c.stackIndex];
 		final MoveList mlist = frame.mlist;
 
