@@ -20,6 +20,9 @@ public final class InternalIterativeDeepeningStage implements MidStage {
 
 	@Override
 	public int eval(SearchContext c, NodeProps props, State4 s) {
+
+		//note: probably should do this for all nodes
+
 		if(!props.hasTTMove && c.depth >= (c.nt == SearchContext.NODE_TYPE_PV? 5: 8)*Search34.ONE_PLY && props.nonMateScore &&
 				(c.nt == SearchContext.NODE_TYPE_PV || (!props.alliedKingAttacked && props.eval+256 >= c.beta))){
 			final int d = c.nt == SearchContext.NODE_TYPE_PV? c.depth-2*Search34.ONE_PLY: c.depth/2;
