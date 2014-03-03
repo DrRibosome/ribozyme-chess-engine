@@ -149,8 +149,8 @@ public final class DescentStage implements MidStage{
 				//LMR
 				final boolean fullSearch;
 				//final int reduction;
-				if(c.depth > Search34.ONE_PLY && !pvMove && !isCapture && !inCheck && !isPawnPromotion &&
-						nt != SearchContext.NODE_TYPE_CUT &&
+				if(c.depth > Search34.ONE_PLY && !isCapture && !inCheck && !isPawnPromotion &&
+						nt == SearchContext.NODE_TYPE_ALL &&
 						!isDangerous &&
 						!isKillerMove &&
 						!isTTEMove){
