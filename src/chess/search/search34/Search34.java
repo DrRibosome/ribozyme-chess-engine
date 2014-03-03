@@ -39,7 +39,7 @@ public final class Search34 implements Search{
 	private final StackFrame[] stack;
 	private final SearchStat32k stats = new SearchStat32k();
 	private final Evaluator e;
-	private final int qply = 12;
+	private final int qply = 99;
 	private final Hash m;
 	private SearchListener2 l;
 	private final static int stackSize = 256;
