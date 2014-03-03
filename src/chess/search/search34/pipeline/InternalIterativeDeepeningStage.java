@@ -21,12 +21,10 @@ public final class InternalIterativeDeepeningStage implements MidStage {
 	@Override
 	public int eval(SearchContext c, NodeProps props, State4 s) {
 
-		//note: probably should do this for all nodes
-
-		if(!props.hasTTMove && c.depth >= (c.nt == SearchContext.NODE_TYPE_PV? 5: 8)*Search34.ONE_PLY && props.nonMateScore &&
-				(c.nt == SearchContext.NODE_TYPE_PV || (!props.alliedKingAttacked && props.eval+256 >= c.beta))){
-			final int d = c.nt == SearchContext.NODE_TYPE_PV? c.depth-2*Search34.ONE_PLY: c.depth/2;
-			//stack[stackIndex+1].futilityPrune = false; //would never have arrived here if futility pruned above, set false
+		if(!props.hasTTMove && props.nonMateScore &&
+				c.depth > 6*Search34.ONE_PLY &&
+				c.nt == SearchContext.NODE_TYPE_PV){
+			final int d = c.depth/2;
 			searcher.recurse(new SearchContext(c.player, c.alpha, c.beta, d, c.nt, c.stackIndex + 1, true), s);
 			final TTEntry temp = m.get(props.zkey);
 			if(temp != null && temp.move != 0){
