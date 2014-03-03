@@ -50,7 +50,7 @@ public final class DescentStage implements MidStage{
 				if(d != 0 && mc != 0){
 					final double pvRed = Math.log(d) * Math.log(mc) / 3.0;
 					//double nonPVRed = 0.33 + log(double(hd)) * log(double(mc)) / 2.25;
-					lmrReduction[d][mc] = (int)(pvRed >= 1.0 ? Math.floor(pvRed*Search34.ONE_PLY*3/4) : 0);
+					lmrReduction[d][mc] = (int)(pvRed >= 1.0 ? Math.floor(pvRed*Search34.ONE_PLY) : 0);
 					//Reductions[0][hd][mc] = (int8_t) (nonPVRed >= 1.0 ? floor(nonPVRed * int(ONE_PLY)) : 0);
 				} else{
 					lmrReduction[d][mc] = 0;
@@ -79,20 +79,24 @@ public final class DescentStage implements MidStage{
 		final int razorReduction = 0;
 		final boolean threatMove = false;
 
-		StackFrame frame = stack[c.stackIndex];
-		RankedMoveSet[] mset = frame.mlist.list;
+		final StackFrame frame = stack[c.stackIndex];
+		final MoveList mlist = frame.mlist;
 
 		//move generation
 		if(props.hasTTMove){
 			frame.mlist.add(props.tteMoveEncoding, MoveGen.tteMoveRank);
 		}
-		final int length = moveGen.genMoves(c.player, s, props.alliedKingAttacked, mset, frame.mlist.len, false, c.stackIndex);
+		moveGen.genMoves(c.player, s, props.alliedKingAttacked, mlist, false);
+		final int length = mlist.len;
 		if(length == 0){ //no moves, draw
 			fillEntry.fill(props.zkey, 0, 0, props.staticScore.toScoreEncoding(), c.depth, TTEntry.CUTOFF_TYPE_EXACT, searcher.getSeq());
 			m.put(props.zkey, fillEntry);
 			return 0;
 		}
-		Search34.isort(mset, length);
+		mlist.isort();
+
+
+		final RankedMoveSet[] mset = frame.mlist.list;
 
 		int g = alpha;
 		long bestMove = 0;
@@ -111,12 +115,18 @@ public final class DescentStage implements MidStage{
 				nt = SearchContext.NODE_TYPE_ALL;
 			}
 
-			final MoveSet set = mset[i];
+			final RankedMoveSet set = mset[i];
 			final long pieceMask = set.piece;
 			final int promotionType = set.promotionType;
 			final long move = set.moves;
 			long encoding = s.executeMove(c.player, pieceMask, move, promotionType);
 			boolean isDrawable = s.isDrawable(); //player can take a draw
+
+			final boolean isTTEMove = props.hasTTMove && encoding == props.tteMoveEncoding;
+			if((isTTEMove && set.rank != MoveGen.tteMoveRank)){
+				s.undoMove();
+				continue;
+			}
 
 			if(State4.posIsAttacked(s.kings[c.player], 1 - c.player, s)){
 				//king in check after move
@@ -130,27 +140,21 @@ public final class DescentStage implements MidStage{
 				final boolean isPawnPromotion = MoveEncoder.isPawnPromotion(encoding);
 				final boolean isPassedPawnPush = isPawnPromotion || (MoveEncoder.getMovePieceType(encoding) == State4.PIECE_TYPE_PAWN &&
 						(Masks.passedPawnMasks[c.player][MoveEncoder.getPos1(encoding)] & s.pawns[1-c.player]) == 0);
-				final boolean isTTEMove = props.hasTTMove && encoding == props.tteMoveEncoding;
 				final boolean isKillerMove = kms.contains(encoding);
 
 				final boolean isDangerous = givesCheck ||
 						MoveEncoder.isCastle(encoding) != 0 ||
 						isPassedPawnPush;
 
-				//stack[c.stackIndex+1].futilityPrune = !isDangerous && !isCapture && !isPawnPromotion;
-
-				final int ext = (isDangerous && nt == SearchContext.NODE_TYPE_PV? Search34.ONE_PLY: 0) +
-						(threatMove && nt == SearchContext.NODE_TYPE_PV? 0: 0) + razorReduction;
-				//(!pv && depth > 7? -depth/10: 0);
-				//(!pv && depth > 7 && !isDangerous && !isCapture? -depth/10: 0);
+				final int ext = isDangerous && nt == SearchContext.NODE_TYPE_PV? Search34.ONE_PLY: 0;
 
 				final int nextDepth = c.depth - Search34.ONE_PLY + ext;
 
 				//LMR
 				final boolean fullSearch;
 				//final int reduction;
-				if(c.depth > Search34.ONE_PLY && !pvMove && !isCapture && !inCheck && !isPawnPromotion &&
-						nt != SearchContext.NODE_TYPE_CUT &&
+				if(c.depth > Search34.ONE_PLY && !isCapture && !inCheck && !isPawnPromotion &&
+						nt == SearchContext.NODE_TYPE_ALL &&
 						!isDangerous &&
 						!isKillerMove &&
 						!isTTEMove){

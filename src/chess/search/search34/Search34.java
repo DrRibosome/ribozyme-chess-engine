@@ -7,6 +7,7 @@ import chess.search.Search;
 import chess.search.SearchListener2;
 import chess.search.SearchStat;
 import chess.search.search34.moveGen.MoveGen;
+import chess.search.search34.moveGen.MoveList;
 import chess.search.search34.moveGen.RankedMoveSet;
 import chess.search.search34.pipeline.*;
 import chess.state4.BitUtil;
@@ -38,7 +39,7 @@ public final class Search34 implements Search{
 	private final StackFrame[] stack;
 	private final SearchStat32k stats = new SearchStat32k();
 	private final Evaluator e;
-	private final int qply = 12;
+	private final int qply = 99;
 	private final Hash m;
 	private SearchListener2 l;
 	private final static int stackSize = 256;
@@ -257,8 +258,9 @@ public final class Search34 implements Search{
 		}
 
 		
-		int w = 0;
-		final RankedMoveSet[] mset = stack[stackIndex].mlist.list;
+		StackFrame frame = stack[stackIndex];
+		final MoveList mlist = frame.mlist;
+		mlist.clear();
 
 		final long zkey = s.zkey();
 		final TTEntry e = m.get(zkey);
@@ -276,10 +278,8 @@ public final class Search34 implements Search{
 			}
 			if(e.move != 0){
 				final long encoding = e.move;
-				final RankedMoveSet temp = mset[w++];
-				temp.piece = 1L<<MoveEncoder.getPos1(encoding);
-				temp.moves = 1L<<MoveEncoder.getPos2(encoding);
-				temp.rank = MoveGen.tteMoveRank;
+				mlist.add(encoding, MoveGen.tteMoveRank);
+
 				hasTTMove = true;
 				ttMove = encoding;
 			} else{
@@ -308,9 +308,10 @@ public final class Search34 implements Search{
 			}
 		}
 		
-		final int length = moveGen.genMoves(player, s, alliedKingAttacked, mset, w, true, stackIndex);
-		isort(mset, length);
-
+		moveGen.genMoves(player, s, alliedKingAttacked, mlist, true);
+		mlist.isort();
+		final int length = mlist.len;
+		final RankedMoveSet[] mset = mlist.list;
 
 		int cutoffFlag = TTEntry.CUTOFF_TYPE_UPPER;
 		long bestMove = 0;
@@ -321,6 +322,12 @@ public final class Search34 implements Search{
 			final int promotionType = set.promotionType;
 			final long move = set.moves;
 			long encoding = s.executeMove(player, pieceMask, move, promotionType);
+
+			if(hasTTMove && encoding == ttMove && i != 0){
+				s.undoMove();
+				continue;
+			}
+
 			final boolean isDrawable = s.isDrawable();
 
 			final int moveScore;
@@ -398,21 +405,6 @@ public final class Search34 implements Search{
 			} else{
 				prev.killer[0] = prev.killer[1];
 				prev.killer[1] = move & 0xFFF;
-			}
-		}
-	}
-	
-	/**
-	 * insertion sort (lowest rank first)
-	 * @param mset move set for sorting
-	 * @param length length of move set
-	 */
-	public static void isort(final RankedMoveSet[] mset, final int length){
-		for(int i = 1; i < length; i++){
-			for(int a = i; a > 0 && mset[a-1].rank > mset[a].rank; a--){
-				final RankedMoveSet temp = mset[a];
-				mset[a] = mset[a-1];
-				mset[a-1] = temp;
 			}
 		}
 	}
