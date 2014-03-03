@@ -322,6 +322,12 @@ public final class Search34 implements Search{
 			final int promotionType = set.promotionType;
 			final long move = set.moves;
 			long encoding = s.executeMove(player, pieceMask, move, promotionType);
+
+			if(hasTTMove && encoding == ttMove && i != 0){
+				s.undoMove();
+				continue;
+			}
+
 			final boolean isDrawable = s.isDrawable();
 
 			final int moveScore;
