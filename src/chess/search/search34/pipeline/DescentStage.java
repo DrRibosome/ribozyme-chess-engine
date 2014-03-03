@@ -50,7 +50,7 @@ public final class DescentStage implements MidStage{
 				if(d != 0 && mc != 0){
 					final double pvRed = Math.log(d) * Math.log(mc) / 3.0;
 					//double nonPVRed = 0.33 + log(double(hd)) * log(double(mc)) / 2.25;
-					lmrReduction[d][mc] = (int)(pvRed >= 1.0 ? Math.floor(pvRed*Search34.ONE_PLY*3/4) : 0);
+					lmrReduction[d][mc] = (int)(pvRed >= 1.0 ? Math.floor(pvRed*Search34.ONE_PLY) : 0);
 					//Reductions[0][hd][mc] = (int8_t) (nonPVRed >= 1.0 ? floor(nonPVRed * int(ONE_PLY)) : 0);
 				} else{
 					lmrReduction[d][mc] = 0;
