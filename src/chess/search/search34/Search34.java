@@ -365,11 +365,8 @@ public final class Search34 implements Search{
 				bestMove = encoding;
 
 				if(bestScore >= beta){
-					if(!cutoffSearch){
-						fillEntry.fill(zkey, encoding, bestScore, staticEval.toScoreEncoding(), depth, TTEntry.CUTOFF_TYPE_LOWER, seq);
-						m.put(zkey, fillEntry);
-					}
-					return bestScore;
+					cutoffFlag = TTEntry.CUTOFF_TYPE_LOWER;
+					break;
 				} else if(bestScore > alpha){
 					alpha = bestScore;
 					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
@@ -379,7 +376,7 @@ public final class Search34 implements Search{
 
 		if(!cutoffSearch){
 			fillEntry.fill(zkey, bestMove, bestScore, staticEval.toScoreEncoding(),
-					depth, nt == SearchContext.NODE_TYPE_PV? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, seq);
+					depth, cutoffFlag, seq);
 			m.put(zkey, fillEntry);
 		}
 		return bestScore;
