@@ -98,7 +98,7 @@ public final class DescentStage implements MidStage{
 		long bestMove = 0;
 		final int initialBestScore = -99999;
 		int bestScore = initialBestScore;
-		int cutoffFlag = TTEntry.CUTOFF_TYPE_UPPER;
+		int cutoffFlag = TTEntry.CUTOFF_TYPE_LOWER;
 		int moveCount = 0;
 
 		final int drawCount = s.drawCount; //stored for error checking
@@ -182,40 +182,38 @@ public final class DescentStage implements MidStage{
 			assert drawCount == s.drawCount;
 			assert pawnZkey == s.pawnZkey();
 
+			final int score;
 			if(isDrawable && 0 > g){ //can take a draw instead of making the move
-				g = 0;
+				score = 0;
 				//encoding = 0;
+			} else{
+				score = g;
 			}
 
-			if(g > bestScore){
-				bestScore = g;
+			if(score > bestScore){
+				bestScore = score;
 				bestMove = encoding;
 
-				if(g > alpha){
-					alpha = g;
-					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
-					if(alpha >= c.beta){
-						if(!searcher.isCutoffSearch()){
-							fillEntry.fill(props.zkey, encoding, alpha, props.staticScore.toScoreEncoding(), c.depth, TTEntry.CUTOFF_TYPE_LOWER, searcher.getSeq());
-							m.put(props.zkey, fillEntry);
-						}
+				if(score >= c.beta){
+					cutoffFlag = TTEntry.CUTOFF_TYPE_UPPER;
 
-						//check to see if killer move can be stored
-						//if used on null moves, need to have a separate killer array
-						if(c.stackIndex-1 >= 0){
-							Search34.attemptKillerStore(bestMove, c.skipNullMove, stack[c.stackIndex - 1]);
-						}
-
-						moveGen.betaCutoff(c.player, MoveEncoder.getMovePieceType(encoding),
-								MoveEncoder.getPos1(encoding),
-								MoveEncoder.getPos2(encoding), s, c.depth/Search34.ONE_PLY);
-
-						return g;
-					} else{
-						moveGen.alphaRaised(c.player, MoveEncoder.getMovePieceType(encoding),
-								MoveEncoder.getPos1(encoding),
-								MoveEncoder.getPos2(encoding), s, c.depth/Search34.ONE_PLY);
+					//check to see if killer move can be stored
+					//if used on null moves, need to have a separate killer array
+					if(c.stackIndex-1 >= 0){
+						Search34.attemptKillerStore(bestMove, c.skipNullMove, stack[c.stackIndex - 1]);
 					}
+
+					moveGen.betaCutoff(c.player, MoveEncoder.getMovePieceType(encoding),
+							MoveEncoder.getPos1(encoding),
+							MoveEncoder.getPos2(encoding), s, c.depth/Search34.ONE_PLY);
+
+					break;
+				} else if(score > alpha){
+					alpha = score;
+					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
+					moveGen.alphaRaised(c.player, MoveEncoder.getMovePieceType(encoding),
+							MoveEncoder.getPos1(encoding),
+							MoveEncoder.getPos2(encoding), s, c.depth/Search34.ONE_PLY);
 				}
 			}
 		}
@@ -229,7 +227,7 @@ public final class DescentStage implements MidStage{
 
 		if(!searcher.isCutoffSearch()){
 			fillEntry.fill(props.zkey, bestMove, bestScore, props.staticScore.toScoreEncoding(),
-					c.depth, nt == SearchContext.NODE_TYPE_PV? cutoffFlag: TTEntry.CUTOFF_TYPE_UPPER, searcher.getSeq());
+					c.depth, cutoffFlag, searcher.getSeq());
 			m.put(props.zkey, fillEntry);
 		}
 
