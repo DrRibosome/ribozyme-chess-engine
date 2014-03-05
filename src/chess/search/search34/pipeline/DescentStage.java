@@ -98,7 +98,7 @@ public final class DescentStage implements MidStage{
 		long bestMove = 0;
 		final int initialBestScore = -99999;
 		int bestScore = initialBestScore;
-		int cutoffFlag = TTEntry.CUTOFF_TYPE_LOWER;
+		int cutoffFlag = TTEntry.CUTOFF_TYPE_UPPER;
 		int moveCount = 0;
 
 		final int drawCount = s.drawCount; //stored for error checking
@@ -195,7 +195,7 @@ public final class DescentStage implements MidStage{
 				bestMove = encoding;
 
 				if(score >= c.beta){
-					cutoffFlag = TTEntry.CUTOFF_TYPE_UPPER;
+					cutoffFlag = TTEntry.CUTOFF_TYPE_LOWER;
 
 					//check to see if killer move can be stored
 					//if used on null moves, need to have a separate killer array
