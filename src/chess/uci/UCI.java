@@ -7,6 +7,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import chess.eval.e9.E9;
 import chess.state4.MoveEncoder;
 import chess.state4.State4;
 import chess.uci.UCIMove.MoveType;
@@ -17,6 +18,7 @@ import chess.uci.controlExtension.PrintPositionExt;
 import chess.util.FenParser;
 
 public final class UCI {
+	private final E9.EvalWeights evalWeights = new E9.EvalWeights();
 	private final UCIEngine engine;
 	private final Position pos = new Position();
 	private final static Pattern fenSel = Pattern.compile("fen ((.*?\\s+){5}.*?)(\\s+|$)");
@@ -58,11 +60,11 @@ public final class UCI {
 
 		if(!p.profile){
 			//prepare and start engine for normal operation
-			engine = new RibozymeEngine(p.hashSize, p.pawnHashSize, p.printInfo, p.warmUp);
+			engine = new RibozymeEngine(evalWeights, p.hashSize, p.pawnHashSize, p.printInfo, p.warmUp);
 			t.start();
 		} else{
 			//profile engine on passed fen file
-			engine = new RibozymeEngine(p.hashSize, p.pawnHashSize, false, p.warmUp);
+			engine = new RibozymeEngine(evalWeights, p.hashSize, p.pawnHashSize, false, p.warmUp);
 			engine.profile(new File(p.profileFen));
 		}
 	}

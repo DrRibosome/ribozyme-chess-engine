@@ -23,9 +23,9 @@ public final class RibozymeEngine implements UCIEngine{
 	private final TimerThread timerThread;
 	private final SearchThread searchThread;
 	
-	public RibozymeEngine(final int hashSize, final int pawnHashSize, boolean printInfo, boolean warmUp){
+	public RibozymeEngine(E9.EvalWeights weights, final int hashSize, final int pawnHashSize, boolean printInfo, boolean warmUp){
 		
-		this.e = new E9(pawnHashSize, new E9.EvalWeights());
+		this.e = new E9(pawnHashSize, weights);
 		
 		s = new Search34(e, hashSize, printInfo);
 
