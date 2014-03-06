@@ -1,6 +1,5 @@
 package chess.search.search34.moveGen;
 
-import chess.eval.e9.pipeline.PieceWeights;
 import chess.state4.BitUtil;
 import chess.state4.Masks;
 import chess.state4.State4;
