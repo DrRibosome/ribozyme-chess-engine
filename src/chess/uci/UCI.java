@@ -20,7 +20,7 @@ import chess.util.FenParser;
 public final class UCI {
 	private final static Pattern fenSel = Pattern.compile("fen ((.*?\\s+){5}.*?)(\\s+|$)");
 	private final static Pattern moveSel = Pattern.compile("moves\\s+(.*)");
-	private final static Map<String, ControlExtension> controllerExtMap = new HashMap<>();
+	private final Map<String, ControlExtension> controllerExtMap = new HashMap<>();
 
 	private final E9.EvalWeights evalWeights = new E9.EvalWeights();
 	private UCIEngine engine;
@@ -50,17 +50,15 @@ public final class UCI {
 		String profileFen;
 	}
 
-	static{
-		controllerExtMap.put("print", new PrintPositionExt());
-		controllerExtMap.put("eval", new EvalPositionExt());
-		controllerExtMap.put("weights", new PrintEvalWeightsExt());
-	}
-
 	public UCI(UCIParams p){
 
 		this.p = p;
 		this.ignoreQuit = p.ignoreQuit;
 		this.controllerExtras = p.controllerExtras;
+
+		controllerExtMap.put("print", new PrintPositionExt());
+		controllerExtMap.put("eval", new EvalPositionExt());
+		controllerExtMap.put("weights", new PrintEvalWeightsExt(evalWeights));
 
 		if(!p.profile){
 			//prepare and start engine for normal operation
