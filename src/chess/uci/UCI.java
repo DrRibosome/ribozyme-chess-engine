@@ -18,12 +18,15 @@ import chess.uci.controlExtension.PrintPositionExt;
 import chess.util.FenParser;
 
 public final class UCI {
-	private final E9.EvalWeights evalWeights = new E9.EvalWeights();
-	private final UCIEngine engine;
-	private final Position pos = new Position();
 	private final static Pattern fenSel = Pattern.compile("fen ((.*?\\s+){5}.*?)(\\s+|$)");
 	private final static Pattern moveSel = Pattern.compile("moves\\s+(.*)");
 	private final static Map<String, ControlExtension> controllerExtMap = new HashMap<>();
+
+	private final E9.EvalWeights evalWeights = new E9.EvalWeights();
+	private UCIEngine engine;
+	private final Position pos = new Position();
+	/** uci params used to start the engine*/
+	private final UCIParams p;
 
 	/** if true ignores uci quit command*/
 	private final boolean ignoreQuit;
@@ -55,6 +58,7 @@ public final class UCI {
 
 	public UCI(UCIParams p){
 
+		this.p = p;
 		this.ignoreQuit = p.ignoreQuit;
 		this.controllerExtras = p.controllerExtras;
 
@@ -126,6 +130,10 @@ public final class UCI {
 					engine.go(params, pos);
 				} else if(!ignoreQuit && s[0].equalsIgnoreCase("quit")){
 					break;
+				} else if(s[0].equalsIgnoreCase("reload")){
+					//reload engine and eval
+					engine.stop();
+					engine = new RibozymeEngine(evalWeights, p.hashSize, p.pawnHashSize, p.printInfo, p.warmUp);
 				} else if(controllerExtras){
 					ControlExtension ext = controllerExtMap.get(s[0]);
 					if(ext != null){
