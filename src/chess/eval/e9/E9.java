@@ -16,8 +16,8 @@ import chess.eval.e9.pawnEval.PawnEval;
 public final class E9 implements Evaluator{
 
 	public final static class EvalWeights{
-		public PieceWeights pieceWeights = new PieceWeights();
-		public MobilityEval.MobilityWeights mobWeights = new MobilityEval.MobilityWeights();
+		public final PieceWeights pieceWeights = new PieceWeights();
+		public final MobilityEval.MobilityWeights mobWeights = new MobilityEval.MobilityWeights();
 	}
 
 	/** evaluation pipeline*/

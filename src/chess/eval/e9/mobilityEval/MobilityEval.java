@@ -44,10 +44,10 @@ public final class MobilityEval {
 	}
 
 	public final static class MobilityWeights{
-		public int[] knightWeights = new int[]{-2, -2, -2, -2, 20, 60};
-		public int[] bishopWeights = new int[]{0, -3, -4, -2, 60, 45};
-		public int[] rookWeights = new int[]{-3,-3, -4,-7, 30,70};
-		public int[] queenWeights = new int[]{-3,-2, -4,-20, 20,60};
+		public final int[] knightWeights = new int[]{-2, -2, -2, -2, 20, 60};
+		public final int[] bishopWeights = new int[]{0, -3, -4, -2, 60, 45};
+		public final int[] rookWeights = new int[]{-3,-3, -4,-7, 30,70};
+		public final int[] queenWeights = new int[]{-3,-2, -4,-20, 20,60};
 	}
 
 	public MobilityEval(MobilityWeights weights) {

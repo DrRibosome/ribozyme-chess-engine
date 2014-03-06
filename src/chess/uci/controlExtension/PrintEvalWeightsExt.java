@@ -29,7 +29,10 @@ public final class PrintEvalWeightsExt implements ControlExtension {
 					int length = Array.getLength(array);
 					for(int q = 0; q < length; q++){
 						int value = (int)Array.get(array, q);
-						System.out.print(value+", ");
+						System.out.print(value);
+						if(q+1 != length){
+							System.out.print(", ");
+						}
 					}
 					System.out.println(")");
 				} else{
