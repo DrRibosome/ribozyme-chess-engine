@@ -10,10 +10,14 @@ import java.lang.reflect.Field;
 /** extension for printing the eval weights*/
 public final class PrintEvalWeightsExt implements ControlExtension {
 	@Override
-	public void execute(String command, Position pos, UCIEngine engine) {
+	public void execute(String[] args, Position pos, UCIEngine engine) {
 		E9.EvalWeights weights = new E9.EvalWeights();
 
-		recurse(weights);
+		if(args.length > 0){
+			if(args[0].equals("list")){
+				recurse(weights);
+			}
+		}
 	}
 
 	private static <T> void recurse(T t){

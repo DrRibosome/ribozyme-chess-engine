@@ -137,7 +137,9 @@ public final class UCI {
 				} else if(controllerExtras){
 					ControlExtension ext = controllerExtMap.get(s[0]);
 					if(ext != null){
-						ext.execute(interfaceCommand, pos, engine);
+						String[] args = new String[s.length-1];
+						System.arraycopy(s, 1, args, 0, s.length-1);
+						ext.execute(args, pos, engine);
 					}
 				}
 			}

@@ -5,5 +5,5 @@ import chess.uci.UCIEngine;
 
 /** defines a means of easily extending the chess.uci console*/
 public interface ControlExtension {
-	public abstract void execute(String command, Position pos, UCIEngine engine);
+	public abstract void execute(String[] args, Position pos, UCIEngine engine);
 }

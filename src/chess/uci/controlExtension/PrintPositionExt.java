@@ -8,7 +8,7 @@ import chess.uci.UCIEngine;
 public class PrintPositionExt implements ControlExtension {
 
 	@Override
-	public void execute(String command, Position pos, UCIEngine engine) {
+	public void execute(String[] args, Position pos, UCIEngine engine) {
 		if(pos == null){
 			System.out.println("no state information");
 		} else{
