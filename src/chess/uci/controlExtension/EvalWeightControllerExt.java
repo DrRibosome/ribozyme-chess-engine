@@ -56,7 +56,8 @@ public final class EvalWeightControllerExt implements ControlExtension {
 						String[] s = weightValue.split("=");
 						int index = Integer.parseInt(s[0]);
 						int value = Integer.parseInt(s[1]);
-						Array.set(t, index, value);
+						Object array = f[a].get(t);
+						Array.set(array, index, value);
 					}
 					return;
 				}
