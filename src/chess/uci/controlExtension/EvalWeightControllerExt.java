@@ -10,14 +10,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * extension for printing the eval weights
+ * extension for interacting with eval weights dynamically
+ * <p>
+ *     builds mapping of eval weight classes through reflection
+ *     to allow automatic list and functionality for setting dynamic
+ *     eval weights
+ * </p>
+ * <p>
+ *     note, in order for new weights to take effect the engine
+ *     must be reloaded with UCI command 'reload'
+ * </p>
  */
 public final class EvalWeightControllerExt implements ControlExtension {
-	private final E9.EvalWeights weights;
 	private final Map<String, Object> m = new HashMap<>();
 
 	public EvalWeightControllerExt(E9.EvalWeights weights){
-		this.weights = weights;
 		recurse(weights, m);
 	}
 
