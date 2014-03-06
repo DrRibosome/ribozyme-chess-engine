@@ -25,7 +25,7 @@ public final class RibozymeEngine implements UCIEngine{
 	
 	public RibozymeEngine(final int hashSize, final int pawnHashSize, boolean printInfo, boolean warmUp){
 		
-		this.e = new E9(pawnHashSize);
+		this.e = new E9(pawnHashSize, new E9.EvalWeights());
 		
 		s = new Search34(e, hashSize, printInfo);
 

@@ -20,6 +20,7 @@ public class MobilityProvider implements MidStage{
 	private final static double[] clutterIndex;
 
 	private final LateStage next;
+	private final MobilityEval mobEval;
 
 	static{
 		//clutterIndex calculated by linear interpolation
@@ -32,8 +33,9 @@ public class MobilityProvider implements MidStage{
 		}
 	}
 
-	public MobilityProvider(LateStage next) {
+	public MobilityProvider(MobilityEval.MobilityWeights mobWeights, LateStage next) {
 		this.next = next;
+		this.mobEval = new MobilityEval(mobWeights);
 	}
 
 	@Override
@@ -43,8 +45,8 @@ public class MobilityProvider implements MidStage{
 		final long pawnAttacks = whitePawnAttacks | blackPawnAttacks;
 		final double clutterMult = clutterIndex[(int) BitUtil.getSetBits(pawnAttacks)];
 
-		MobilityEval.MobilityResult alliedMobility = MobilityEval.scoreMobility(c.player, s, clutterMult);
-		MobilityEval.MobilityResult enemyMobility = MobilityEval.scoreMobility(1-c.player, s, clutterMult);
+		MobilityEval.MobilityResult alliedMobility = mobEval.scoreMobility(c.player, s, clutterMult);
+		MobilityEval.MobilityResult enemyMobility = mobEval.scoreMobility(1-c.player, s, clutterMult);
 
 		AdvancedAttributes adv = new AdvancedAttributes(basics, alliedMobility, enemyMobility);
 		return next.eval(allied, enemy, adv, c, s, previousScore);

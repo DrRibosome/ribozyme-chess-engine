@@ -15,21 +15,25 @@ import chess.eval.e9.pawnEval.PawnEval;
  * and correctly routing evaluation calss*/
 public final class E9 implements Evaluator{
 
+	public final static class EvalWeights{
+		MobilityEval.MobilityWeights mobWeights = new MobilityEval.MobilityWeights();
+	}
+
 	/** evaluation pipeline*/
 	private final EntryStage pipeline;
 	private final PawnHash pawnHash;
 	
 	public E9(){
-		this(16);
+		this(16, new EvalWeights());
 	}
 	
-	public E9(int pawnHashSize){
+	public E9(int pawnHashSize, EvalWeights weights){
 		pawnHash = new PawnHash(pawnHashSize, 16);
 
 
 		LateStage stage3 = new Stage3(2);
 		LateStage stage2 = new Stage2(stage3, 1);
-		MidStage mobilityProvider = new MobilityProvider(stage2);
+		MidStage mobilityProvider = new MobilityProvider(weights.mobWeights, stage2);
 		MidStage stage1 = new Stage1(pawnHash, mobilityProvider, 0);
 		EntryStage pipeline = new EvalInitializer(stage1);
 

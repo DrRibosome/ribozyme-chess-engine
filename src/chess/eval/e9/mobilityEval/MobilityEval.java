@@ -19,10 +19,10 @@ public final class MobilityEval {
 		}
 	}
 
-	private static final int[] knightMobilityWeights;
-	private static final int[] bishopMobilityWeights;
-	private static final int[] rookMobilityWeights;
-	private static final int[] queenMobilityWeights;
+	private final int[] knightMobilityWeights;
+	private final int[] bishopMobilityWeights;
+	private final int[] rookMobilityWeights;
+	private final int[] queenMobilityWeights;
 	
 	/** compute logistic (sigmoid) function centered around 0*/
 	private static double logistic(double x){
@@ -31,54 +31,37 @@ public final class MobilityEval {
 	
 	/**
 	 * fill passed result store with values from parameterized centered logistic function
-	 * @param center x offset
-	 * @param yoffset y offset
-	 * @param range range of the logistic function, scales the results linearly
+	 * @param params parameters as [x offset, y offset, range], where each value is a tuple (x,y)
 	 * @param store result store
 	 * @see #logistic(double)
 	 */
-	private static void interpolate(int[] center, double[] yoffset, double[] range, int[] store){
+	private static void interpolate(int[] params, int[] store){
 		for(int a = 0; a < store.length; a++){
 			store[a] = Weight.encode(
-					(int)(range[0]*logistic(a+center[0])+yoffset[0]+.5),
-					(int)(range[1]*logistic(a+center[1])+yoffset[1]+.5));
+					(int)(params[4]*logistic(a+params[0])+params[2]+.5),
+					(int)(params[5]*logistic(a+params[1])+params[3]+.5));
 		}
 	}
-	
-	static{
+
+	public final static class MobilityWeights{
+		public int[] knightWeights = new int[]{-2, -2, -2, -2, 20, 60};
+		public int[] bishopWeights = new int[]{0, -3, -4, -2, 60, 45};
+		public int[] rookWeights = new int[]{-3,-3, -4,-7, 30,70};
+		public int[] queenWeights = new int[]{-3,-2, -4,-20, 20,60};
+	}
+
+	public MobilityEval(MobilityWeights weights) {
 		knightMobilityWeights = new int[9];
-		interpolate(new int[]{-2,-2}, new double[]{-2,-2}, new double[]{20,60}, knightMobilityWeights);
-		/*knightMobilityWeights = new int[]{
-				S(-19,-49), S(-13,-40), S(-6,-27), S(-1,0), S(7,2),
-				S(12,10), S(14,28), S(16,44), S(17,48)
-		}*/;
+		interpolate(weights.knightWeights, knightMobilityWeights);
 		
 		bishopMobilityWeights = new int[16];
-		interpolate(new int[]{0,-3}, new double[]{-4,-2}, new double[]{60,45}, bishopMobilityWeights);
-		/*bishopMobilityWeights = new int[]{
-				S(-13,-30), S(-6,-20), S(1,-18), S(7,-10), S(15,-1),
-				S(24,8), S(28,14), S(24,18), S(30,20), S(34,23),
-				S(38,25), S(43,31), S(49,32), S(55,37), S(55,38), S(55,38)
-		};*/
-		
+		interpolate(weights.bishopWeights, bishopMobilityWeights);
 
 		rookMobilityWeights = new int[16];
-		interpolate(new int[]{-3,-3}, new double[]{-4,-7}, new double[]{30,70}, rookMobilityWeights);
-		/*rookMobilityWeights = new int[]{
-				S(-10,-69), S(-7,-47), S(-4,-43), S(-1,-10), S(2,13), S(5,26),
-				S(7,35), S(10,43), S(11,50), S(12,56), S(12,60), S(13,63),
-				S(14,66), S(15,69), S(15,74), S(17,74)
-		};*/
+		interpolate(weights.rookWeights, rookMobilityWeights);
 		
 		queenMobilityWeights = new int[32];
-		interpolate(new int[]{-3,-2}, new double[]{-4,-20}, new double[]{20,60}, queenMobilityWeights);
-		/*queenMobilityWeights = new int[]{
-				S(-6,-69), S(-4,-49), S(-2,-45), S(-2,-28), S(-1,-9), S(0,10),
-				S(1,15), S(2,20), S(4,25), S(5,30), S(6,30), S(7,30), S(8,30),
-				S(8,30), S(9,30), S(10,35), S(12,35), S(14,35), S(15,35), S(15,35),
-				S(15,35), S(15,35), S(15,35), S(15,35), S(15,35), S(15,35), S(15,35),
-				S(15,35), S(15,35), S(15,35), S(15,35), S(15,35)
-		};*/
+		interpolate(weights.queenWeights, queenMobilityWeights);
 	}
 	
 	/** build a weight scaling from passed start,end values*/
@@ -87,8 +70,7 @@ public final class MobilityEval {
 	}
 
 	/** calculates mobility and danger to enemy king from mobility*/
-	public static MobilityResult scoreMobility(final int player, final State4 s,
-			final double clutterMult){
+	public MobilityResult scoreMobility(final int player, final State4 s, final double clutterMult){
 		int mobScore = 0;
 		
 		final long alliedPawns = s.pawns[player];
