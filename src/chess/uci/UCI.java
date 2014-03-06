@@ -12,6 +12,7 @@ import chess.state4.State4;
 import chess.uci.UCIMove.MoveType;
 import chess.uci.controlExtension.ControlExtension;
 import chess.uci.controlExtension.EvalPositionExt;
+import chess.uci.controlExtension.PrintEvalWeightsExt;
 import chess.uci.controlExtension.PrintPositionExt;
 import chess.util.FenParser;
 
@@ -47,6 +48,7 @@ public final class UCI {
 	static{
 		controllerExtMap.put("print", new PrintPositionExt());
 		controllerExtMap.put("eval", new EvalPositionExt());
+		controllerExtMap.put("weights", new PrintEvalWeightsExt());
 	}
 
 	public UCI(UCIParams p){
