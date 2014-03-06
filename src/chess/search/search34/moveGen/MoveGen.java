@@ -21,11 +21,14 @@ public final class MoveGen {
 		f = new FeatureSet[2];
 		for (int a = 0; a < f.length; a++) f[a] = new FeatureSet();
 
-		pieceValue[State4.PIECE_TYPE_PAWN] = PieceWeights.pawn;
-		pieceValue[State4.PIECE_TYPE_BISHOP] = PieceWeights.bishop;
-		pieceValue[State4.PIECE_TYPE_KNIGHT] = PieceWeights.knight;
-		pieceValue[State4.PIECE_TYPE_ROOK] = PieceWeights.rook;
-		pieceValue[State4.PIECE_TYPE_QUEEN] = PieceWeights.queen;
+		//note, piece values below don't necessarily correspond exactly to
+		//piece values used in eval, and are instead only used to roughly
+		//gauge the value of a move for move ordering purposes
+		pieceValue[State4.PIECE_TYPE_PAWN] = 100;
+		pieceValue[State4.PIECE_TYPE_BISHOP] = 300;
+		pieceValue[State4.PIECE_TYPE_KNIGHT] = 300;
+		pieceValue[State4.PIECE_TYPE_ROOK] = 470;
+		pieceValue[State4.PIECE_TYPE_QUEEN] = 900;
 	}
 
 	private final static class FeatureSet {
@@ -90,8 +93,8 @@ public final class MoveGen {
 				int baseRank = gain + historyWeight;
 
 				if(pieceMovingType == State4.PIECE_TYPE_PAWN && (move & promotionMask) != 0){
-					mlist.add(piece, move, baseRank + PieceWeights.queen, State4.PROMOTE_QUEEN);
-					mlist.add(piece, move, baseRank + PieceWeights.knight, State4.PROMOTE_KNIGHT);
+					mlist.add(piece, move, baseRank + 900, State4.PROMOTE_QUEEN);
+					mlist.add(piece, move, baseRank + 300, State4.PROMOTE_KNIGHT);
 				} else{
 					//non-pawn movement
 					mlist.add(piece, move, baseRank);

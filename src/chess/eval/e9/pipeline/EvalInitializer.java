@@ -5,25 +5,35 @@ import chess.state4.State4;
 
 public class EvalInitializer implements EntryStage{
 
-	private final static int endMaterial;
-	private final static int scaleMargin;
+	private final int endMaterial;
+	private final int scaleMargin;
 
 	private final MidStage next;
 
-	static{
-		int startMaterial = (PieceWeights.pawn * 8 +
-				PieceWeights.knight * 2 +
-				PieceWeights.bishop * 2 +
-				PieceWeights.rook * 2 +
-				PieceWeights.queen
+	private final int pawnWeight;
+	private final int bishopWeight;
+	private final int knightWeight;
+	private final int rookWeight;
+	private final int queenWeight;
+
+	public EvalInitializer(PieceWeights pieceWeights, MidStage next){
+		this.next = next;
+
+		this.pawnWeight = pieceWeights.pawn;
+		this.knightWeight = pieceWeights.knight;
+		this.bishopWeight = pieceWeights.bishop;
+		this.rookWeight = pieceWeights.rook;
+		this.queenWeight = pieceWeights.queen;
+
+		int startMaterial = (pawnWeight * 8 +
+				knightWeight* 2 +
+				bishopWeight * 2 +
+				rookWeight * 2 +
+				queenWeight
 		) * 2;
-		endMaterial = (PieceWeights.rook + PieceWeights.queen) * 2;
+		endMaterial = (rookWeight + queenWeight) * 2;
 
 		scaleMargin = scaleMargin(startMaterial, endMaterial);
-	}
-
-	public EvalInitializer(MidStage next){
-		this.next = next;
 	}
 
 	@Override
@@ -49,23 +59,23 @@ public class EvalInitializer implements EntryStage{
 		return endMaterial-startMaterial;
 	}
 
-	private static BasicAttributes scoreMaterial(TeamCount allied, TeamCount enemy){
+	private BasicAttributes scoreMaterial(TeamCount allied, TeamCount enemy){
 		int alliedMaterialScore = 0;
-		alliedMaterialScore += allied.bishopCount * PieceWeights.bishop;
-		alliedMaterialScore += allied.knightCount * PieceWeights.knight;
-		alliedMaterialScore += allied.rookCount * PieceWeights.rook;
-		alliedMaterialScore += allied.queenCount * PieceWeights.queen;
+		alliedMaterialScore += allied.bishopCount * bishopWeight;
+		alliedMaterialScore += allied.knightCount * knightWeight;
+		alliedMaterialScore += allied.rookCount * rookWeight;
+		alliedMaterialScore += allied.queenCount * queenWeight;
 
 		int enemyMaterialScore = 0;
-		enemyMaterialScore += enemy.bishopCount * PieceWeights.bishop;
-		enemyMaterialScore += enemy.knightCount * PieceWeights.knight;
-		enemyMaterialScore += enemy.rookCount * PieceWeights.rook;
-		enemyMaterialScore += enemy.queenCount * PieceWeights.queen;
+		enemyMaterialScore += enemy.bishopCount * bishopWeight;
+		enemyMaterialScore += enemy.knightCount * knightWeight;
+		enemyMaterialScore += enemy.rookCount * rookWeight;
+		enemyMaterialScore += enemy.queenCount * queenWeight;
 
 		int nonPawnScore = alliedMaterialScore - enemyMaterialScore;
 
-		alliedMaterialScore += allied.pawnCount * PieceWeights.pawn;
-		enemyMaterialScore += enemy.pawnCount * PieceWeights.pawn;
+		alliedMaterialScore += allied.pawnCount * pawnWeight;
+		enemyMaterialScore += enemy.pawnCount * pawnWeight;
 
 		int materialScore = alliedMaterialScore - enemyMaterialScore;
 		int totalMaterialScore = alliedMaterialScore + enemyMaterialScore;

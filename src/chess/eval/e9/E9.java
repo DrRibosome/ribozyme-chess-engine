@@ -16,6 +16,7 @@ import chess.eval.e9.pawnEval.PawnEval;
 public final class E9 implements Evaluator{
 
 	public final static class EvalWeights{
+		PieceWeights pieceWeights = new PieceWeights();
 		MobilityEval.MobilityWeights mobWeights = new MobilityEval.MobilityWeights();
 	}
 
@@ -35,7 +36,7 @@ public final class E9 implements Evaluator{
 		LateStage stage2 = new Stage2(stage3, 1);
 		MidStage mobilityProvider = new MobilityProvider(weights.mobWeights, stage2);
 		MidStage stage1 = new Stage1(pawnHash, mobilityProvider, 0);
-		EntryStage pipeline = new EvalInitializer(stage1);
+		EntryStage pipeline = new EvalInitializer(weights.pieceWeights, stage1);
 
 		this.pipeline = pipeline;
 	}
