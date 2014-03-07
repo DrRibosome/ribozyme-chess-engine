@@ -73,8 +73,18 @@ public final class EvalWeightControllerExt implements ControlExtension {
 			for(Map.Entry<String, Object> e: m.entrySet()){
 				Object t = e.getValue();
 
-				System.out.println(t.getClass().getName());
 				Field[] f = t.getClass().getFields();
+
+				//count number of relevant fields
+				int count = 0;
+				for(int a = 0; a < f.length; a++){
+					if(f[a].getType().isPrimitive() || f[a].getType().isArray()){
+						count++;
+					}
+				}
+
+				System.out.println(t.getClass().getName()+":"+count);
+
 				for(int a = 0; a < f.length; a++){
 					if(f[a].getType().isPrimitive()){
 						System.out.println(f[a].getName()+"="+f[a].getInt(t));
