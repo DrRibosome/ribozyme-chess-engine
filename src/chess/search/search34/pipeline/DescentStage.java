@@ -308,7 +308,7 @@ public final class DescentStage implements MidStage{
 
 	/**
 	 * checks too see if a move is legal, assumming we do not start in check,
-	 * moving does not yield self check, we are not castling, and if moving a pawn
+	 * moving does not yield self check, and if moving a pawn
 	 * we have chosen a non take move that could be legal if no piece is
 	 * blocking the target square
 	 *
