@@ -21,10 +21,6 @@ public final class InternalIterativeDeepeningStage implements MidStage {
 	@Override
 	public int eval(SearchContext c, NodeProps props, State4 s) {
 
-		//NOTE:
-		//THERE SHOULD BE A CHECK TO PREVENT CONTINUOUS CALLING OF IID
-		//probably a variable in the stack frame
-		
 		if(!props.hasTTMove && props.nonMateScore &&
 				c.depth > 6*Search34.ONE_PLY &&
 				c.nt == SearchContext.NODE_TYPE_PV){
