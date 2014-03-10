@@ -390,12 +390,9 @@ public final class Search34 implements Search{
 	 */
 	public static void attemptKillerStore(final long move, final boolean skipNullMove, final StackFrame prev){
 		assert prev != null;
-		if(move != 0 &&
+		if(killerConditionsSatisfied(move) &&
 				(move&0xFFF) != prev.killer[0] &&
-				(move&0xFFF) != prev.killer[1] &&
-				MoveEncoder.getTakenType(move) == State4.PIECE_TYPE_EMPTY &&
-				MoveEncoder.isEnPassanteTake(move) == 0 &&
-				!MoveEncoder.isPawnPromotion(move)){
+				(move&0xFFF) != prev.killer[1]){
 			if(prev.killer[0] != move){
 				prev.killer[1] = prev.killer[0];
 				prev.killer[0] = move & 0xFFF;
@@ -404,6 +401,13 @@ public final class Search34 implements Search{
 				prev.killer[1] = move & 0xFFF;
 			}
 		}
+	}
+
+	public static boolean killerConditionsSatisfied(final long move){
+		return move != 0 &&
+				MoveEncoder.getTakenType(move) == State4.PIECE_TYPE_EMPTY &&
+				MoveEncoder.isEnPassanteTake(move) == 0 &&
+				!MoveEncoder.isPawnPromotion(move);
 	}
 
 	@Override
