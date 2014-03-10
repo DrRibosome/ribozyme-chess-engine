@@ -52,9 +52,7 @@ public final class NullMoveStage implements MidStage {
 				}
 
 				//verification search
-				stack[stackIndex+1].skipNullMove = true;
-				int v = searcher.recurse(player, alpha, beta, depth - r, nt, stackIndex + 1, s);
-				stack[stackIndex+1].skipNullMove = false;
+				int v = next.eval(player, alpha, beta, depth - r, nt, stackIndex, s);
 
 				if(v >= beta){
 					return n;
