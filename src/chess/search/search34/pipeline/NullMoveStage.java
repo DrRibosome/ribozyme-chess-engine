@@ -51,11 +51,11 @@ public final class NullMoveStage implements MidStage {
 					return n;
 				}
 
-				//verification chess.search
-				//stack[stackIndex+1].futilityPrune = false;
+				//verification search
 				stack[stackIndex+1].skipNullMove = true;
-				double v = searcher.recurse(player, alpha, beta, depth - r, nt, stackIndex + 1, s);
+				int v = searcher.recurse(player, alpha, beta, depth - r, nt, stackIndex + 1, s);
 				stack[stackIndex+1].skipNullMove = false;
+
 				if(v >= beta){
 					return n;
 				}
