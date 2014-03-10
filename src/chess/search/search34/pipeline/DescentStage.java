@@ -243,8 +243,10 @@ public final class DescentStage implements MidStage{
 
 	/**
 	 * builds killer move set
-	 * @param c search context to
+	 * @param player player to move
 	 * @param s state to use in testing killer moves for legality
+	 * @param skipNullMove
+	 * @param stackIndex
 	 * @return returns killer move set
 	 */
 	private KillerMoveSet buildKMS(int player, State4 s, boolean skipNullMove, int stackIndex) {
