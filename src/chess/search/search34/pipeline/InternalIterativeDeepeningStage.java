@@ -22,21 +22,25 @@ public final class InternalIterativeDeepeningStage implements MidStage {
 	}
 
 	@Override
-	public int eval(SearchContext c, NodeProps props, State4 s) {
+	public int eval(int player, int alpha, int beta, int depth, int nt, int stackIndex, State4 s) {
 
-		if(!props.hasTTMove && props.nonMateScore &&
-				c.depth > 6*Search34.ONE_PLY &&
-				c.nt == SearchContext.NODE_TYPE_PV){
-			final int d = c.depth/2;
-			stack[c.stackIndex+1].skipNullMove = true;
-			searcher.recurse(new SearchContext(c.player, c.alpha, c.beta, d, c.nt, c.stackIndex + 1), s);
-			stack[c.stackIndex+1].skipNullMove = false;
-			final TTEntry temp = m.get(props.zkey);
+		StackFrame frame = stack[stackIndex];
+
+		if(!frame.hasTTMove && frame.nonMateScore &&
+				depth > 6*Search34.ONE_PLY &&
+				nt == SearchContext.NODE_TYPE_PV){
+			final int d = depth/2;
+			stack[stackIndex+1].skipNullMove = true;
+			searcher.recurse(player, alpha, beta, d, nt, stackIndex + 1, s);
+			stack[stackIndex+1].skipNullMove = false;
+
+			final TTEntry temp = m.get(frame.zkey);
 			if(temp != null && temp.move != 0){
-				return next.eval(c, props.addTTEMove(temp.move), s);
+				frame.hasTTMove = true;
+				frame.tteMoveEncoding = temp.move;
 			}
 		}
 
-		return next.eval(c, props, s);
+		return next.eval(player, alpha, beta, depth, nt, stackIndex, s);
 	}
 }

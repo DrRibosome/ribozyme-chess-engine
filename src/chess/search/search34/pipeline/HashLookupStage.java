@@ -25,8 +25,8 @@ public final class HashLookupStage implements EntryStage {
 	}
 
 	@Override
-	public int eval(SearchContext c, State4 s) {
-		final StackFrame frame = stack[c.stackIndex];
+	public int eval(int player, int alpha, int beta, int depth, int nt, int stackIndex, State4 s) {
+		final StackFrame frame = stack[stackIndex];
 		final MoveList list = frame.mlist;
 		list.clear();
 
@@ -41,16 +41,16 @@ public final class HashLookupStage implements EntryStage {
 		//query hash for stored node results
 		final EvalResult staticScore;
 		if(hashEntry != null){
-			if(hashEntry.depth >= c.depth){
+			if(hashEntry.depth >= depth){
 				final int cutoffType = hashEntry.cutoffType;
-				if(c.nt == SearchContext.NODE_TYPE_PV? cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (hashEntry.score >= c.beta?
+				if(nt == SearchContext.NODE_TYPE_PV? cutoffType == TTEntry.CUTOFF_TYPE_EXACT: (hashEntry.score >= beta?
 						cutoffType == TTEntry.CUTOFF_TYPE_LOWER: cutoffType == TTEntry.CUTOFF_TYPE_UPPER)){
 
-					if(c.stackIndex-1 >= 0 && hashEntry.score >= c.beta){
-						Search34.attemptKillerStore(hashEntry.move, frame.skipNullMove, stack[c.stackIndex-1]);
+					if(stackIndex-1 >= 0 && hashEntry.score >= beta){
+						Search34.attemptKillerStore(hashEntry.move, frame.skipNullMove, stack[stackIndex-1]);
 					}
 
-					if(c.nt != SearchContext.NODE_TYPE_PV){
+					if(nt != SearchContext.NODE_TYPE_PV){
 						return hashEntry.score;
 					}
 				}
@@ -62,9 +62,9 @@ public final class HashLookupStage implements EntryStage {
 				tteMove = true;
 			}
 
-			staticScore = evaluator.refine(c.player, s, c.alpha, c.beta, hashEntry.staticEval);
+			staticScore = evaluator.refine(player, s, alpha, beta, hashEntry.staticEval);
 		} else{
-			staticScore = evaluator.eval(c.player, s, c.alpha, c.beta);
+			staticScore = evaluator.eval(player, s, alpha, beta);
 		}
 
 		//construct node static eval score
@@ -79,15 +79,21 @@ public final class HashLookupStage implements EntryStage {
 		}
 
 		//calculate node properties for reuse in later sections
-		final boolean alliedKingAttacked = Search34.isChecked(c.player, s);
-		final boolean pawnPrePromotion = (s.pawns[c.player] & Masks.pawnPrePromote[c.player]) != 0;
-		final boolean hasNonPawnMaterial = s.pieceCounts[c.player][0]-s.pieceCounts[c.player][State4.PIECE_TYPE_PAWN] > 1;
-		final boolean nonMateScore = Math.abs(c.beta) < 70000 && Math.abs(c.alpha) < 70000;
+		final boolean alliedKingAttacked = Search34.isChecked(player, s);
+		final boolean pawnPrePromotion = (s.pawns[player] & Masks.pawnPrePromote[player]) != 0;
+		final boolean hasNonPawnMaterial = s.pieceCounts[player][0]-s.pieceCounts[player][State4.PIECE_TYPE_PAWN] > 1;
+		final boolean nonMateScore = Math.abs(beta) < 70000 && Math.abs(alpha) < 70000;
 
-		return next.eval(c,
-				new NodeProps(zkey, eval, staticScore, alliedKingAttacked,
-						pawnPrePromotion, hasNonPawnMaterial, nonMateScore,
-						tteMove, tteMoveEncoding),
-				s);
+		frame.zkey = zkey;
+		frame.eval = eval;
+		frame.staticScore = staticScore;
+		frame.alliedKingAttacked = alliedKingAttacked;
+		frame.pawnPrePromotion = pawnPrePromotion;
+		frame.hasNonPawnMaterial = hasNonPawnMaterial;
+		frame.nonMateScore = nonMateScore;
+		frame.hasTTMove = tteMove;
+		frame.tteMoveEncoding = tteMoveEncoding;
+
+		return next.eval(player, alpha, beta, depth, nt, stackIndex, s);
 	}
 }

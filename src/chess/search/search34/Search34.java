@@ -70,8 +70,8 @@ public final class Search34 implements Search{
 		MidStage descent = new DescentStage(moveGen, stack, m, pvStore, this);
 		MidStage internalIterativeDeepening = new InternalIterativeDeepeningStage(m, stack, this, descent);
 		MidStage nullMovePruning = new NullMoveStage(stack, m, this, internalIterativeDeepening);
-		MidStage razoring = new RazoringStage(this, nullMovePruning);
-		MidStage futilityPruning = new FutilityPruningStage(razoring);
+		MidStage razoring = new RazoringStage(stack, this, nullMovePruning);
+		MidStage futilityPruning = new FutilityPruningStage(stack, razoring);
 		EntryStage entry = new HashLookupStage(stack, m, e, futilityPruning);
 		this.searchPipeline = entry;
 
@@ -135,7 +135,7 @@ public final class Search34 implements Search{
 			int k = 0;
 			while(research && !cutoffSearch){
 				research = false;
-				score = recurse(new SearchContext(player, alpha, beta, i*ONE_PLY, SearchContext.NODE_TYPE_PV, 0), s);
+				score = recurse(player, alpha, beta, i*ONE_PLY, SearchContext.NODE_TYPE_PV, 0, s);
 
 				if(score <= alpha || score >= beta){
 					if(i >= minRestartDepth){
@@ -223,19 +223,19 @@ public final class Search34 implements Search{
 		return State4.posIsAttacked(BitUtil.lsbIndex(s.kings[player]), 1 - player, s);
 	}
 	
-	public int recurse(SearchContext c, final State4 s){
+	public int recurse(int player, int alpha, int beta, int depth, int nt, int stackIndex, State4 s){
 		stats.nodesSearched++;
 
-		assert c.alpha < c.beta;
+		assert alpha < beta;
 		
 		if(s.isForcedDraw()){
 			return 0;
-		} else if(c.depth <= 0){
-			final int q = qsearch(c.player, c.alpha, c.beta, 0, c.stackIndex, c.nt, s);
-			if(q > 70000 && c.nt == SearchContext.NODE_TYPE_PV){ //false mate for enemy king
-				return recurse(new SearchContext(c.player, q, maxScore, ONE_PLY, c.nt, c.stackIndex), s);
-			} else if(q < -70000 && c.nt == SearchContext.NODE_TYPE_PV){ //false mate for allied king
-				return recurse(new SearchContext(c.player, minScore, q, ONE_PLY, c.nt, c.stackIndex), s);
+		} else if(depth <= 0){
+			final int q = qsearch(player, alpha, beta, 0, stackIndex, nt, s);
+			if(q > 70000 && nt == SearchContext.NODE_TYPE_PV){ //false mate for enemy king
+				return recurse(player, q, maxScore, ONE_PLY, nt, stackIndex, s);
+			} else if(q < -70000 && nt == SearchContext.NODE_TYPE_PV){ //false mate for allied king
+				return recurse(player, minScore, q, ONE_PLY, nt, stackIndex, s);
 			} else{
 				return q;
 			}
@@ -243,7 +243,7 @@ public final class Search34 implements Search{
 			return 0;
 		}
 
-		return searchPipeline.eval(c, s);
+		return searchPipeline.eval(player, alpha, beta, depth, nt, stackIndex, s);
 	}
 	
 	public int qsearch(final int player, int alpha, int beta, final int depth,

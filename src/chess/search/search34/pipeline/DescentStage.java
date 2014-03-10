@@ -68,26 +68,23 @@ public final class DescentStage implements MidStage{
 	}
 
 	@Override
-	public int eval(SearchContext c, NodeProps props, State4 s) {
+	public int eval(int player, int alpha, int beta, int depth, int nt, int stackIndex, State4 s) {
 
-		final StackFrame frame = stack[c.stackIndex];
+		final StackFrame frame = stack[stackIndex];
 
-		final KillerMoveSet kms = buildKMS(c, s, frame.skipNullMove);
-
-		int alpha = c.alpha;
-		int nt = c.nt;
+		final KillerMoveSet kms = buildKMS(player, s, frame.skipNullMove, stackIndex);
 
 		final MoveList mlist = frame.mlist;
 
 		//move generation
-		if(props.hasTTMove){
-			frame.mlist.add(props.tteMoveEncoding, MoveGen.tteMoveRank);
+		if(frame.hasTTMove){
+			frame.mlist.add(frame.tteMoveEncoding, MoveGen.tteMoveRank);
 		}
-		moveGen.genMoves(c.player, s, props.alliedKingAttacked, mlist, false);
+		moveGen.genMoves(player, s, frame.alliedKingAttacked, mlist, false);
 		final int length = mlist.len;
 		if(length == 0){ //no moves, draw
-			fillEntry.fill(props.zkey, 0, 0, props.staticScore.toScoreEncoding(), c.depth, TTEntry.CUTOFF_TYPE_EXACT, searcher.getSeq());
-			m.put(props.zkey, fillEntry);
+			fillEntry.fill(frame.zkey, 0, 0, frame.staticScore.toScoreEncoding(), depth, TTEntry.CUTOFF_TYPE_EXACT, searcher.getSeq());
+			m.put(frame.zkey, fillEntry);
 			return 0;
 		}
 		mlist.isort();
@@ -105,8 +102,8 @@ public final class DescentStage implements MidStage{
 		final int drawCount = s.drawCount; //stored for error checking
 		final long pawnZkey = s.pawnZkey(); //stored for error checking
 
-		boolean hasMove = props.alliedKingAttacked;
-		final boolean inCheck = props.alliedKingAttacked;
+		boolean hasMove = frame.alliedKingAttacked;
+		final boolean inCheck = frame.alliedKingAttacked;
 		for(int i = 0; i < length; i++){
 			if(i >= 5 && nt == SearchContext.NODE_TYPE_CUT){
 				nt = SearchContext.NODE_TYPE_ALL;
@@ -116,27 +113,27 @@ public final class DescentStage implements MidStage{
 			final long pieceMask = set.piece;
 			final int promotionType = set.promotionType;
 			final long move = set.moves;
-			long encoding = s.executeMove(c.player, pieceMask, move, promotionType);
+			long encoding = s.executeMove(player, pieceMask, move, promotionType);
 			boolean isDrawable = s.isDrawable(); //player can take a draw
 
-			final boolean isTTEMove = props.hasTTMove && encoding == props.tteMoveEncoding;
+			final boolean isTTEMove = frame.hasTTMove && encoding == frame.tteMoveEncoding;
 			if((isTTEMove && set.rank != MoveGen.tteMoveRank)){
 				s.undoMove();
 				continue;
 			}
 
-			if(State4.posIsAttacked(s.kings[c.player], 1 - c.player, s)){
+			if(State4.posIsAttacked(s.kings[player], 1 - player, s)){
 				//king in check after move
-				g = -88888+c.stackIndex+1;
+				g = -88888+stackIndex+1;
 			} else{
 				hasMove = true;
 
 				final boolean pvMove = nt == SearchContext.NODE_TYPE_PV && i==0;
 				final boolean isCapture = MoveEncoder.getTakenType(encoding) != State4.PIECE_TYPE_EMPTY;
-				final boolean givesCheck = Search34.isChecked(1 - c.player, s);
+				final boolean givesCheck = Search34.isChecked(1 - player, s);
 				final boolean isPawnPromotion = MoveEncoder.isPawnPromotion(encoding);
 				final boolean isPassedPawnPush = isPawnPromotion || (MoveEncoder.getMovePieceType(encoding) == State4.PIECE_TYPE_PAWN &&
-						(Masks.passedPawnMasks[c.player][MoveEncoder.getPos1(encoding)] & s.pawns[1-c.player]) == 0);
+						(Masks.passedPawnMasks[player][MoveEncoder.getPos1(encoding)] & s.pawns[1-player]) == 0);
 				final boolean isKillerMove = kms.contains(encoding);
 
 				final boolean isDangerous = givesCheck ||
@@ -145,22 +142,22 @@ public final class DescentStage implements MidStage{
 
 				final int ext = isDangerous && nt == SearchContext.NODE_TYPE_PV? Search34.ONE_PLY: 0;
 
-				final int nextDepth = c.depth - Search34.ONE_PLY + ext;
+				final int nextDepth = depth - Search34.ONE_PLY + ext;
 
 				//LMR
 				final boolean fullSearch;
 				//final int reduction;
-				if(c.depth > Search34.ONE_PLY && !isCapture && !inCheck && !isPawnPromotion &&
+				if(depth > Search34.ONE_PLY && !isCapture && !inCheck && !isPawnPromotion &&
 						nt == SearchContext.NODE_TYPE_ALL &&
 						!isDangerous &&
 						!isKillerMove &&
 						!isTTEMove){
 
 					moveCount++;
-					final int lmrReduction = lmrReduction(c.depth/Search34.ONE_PLY, moveCount) + (nt == SearchContext.NODE_TYPE_PV? 0: Search34.ONE_PLY);
+					final int lmrReduction = lmrReduction(depth/Search34.ONE_PLY, moveCount) + (nt == SearchContext.NODE_TYPE_PV? 0: Search34.ONE_PLY);
 					final int reducedDepth = nextDepth - lmrReduction;
 
-					g = -searcher.recurse(new SearchContext(1 - c.player, -alpha - 1, -alpha, reducedDepth, SearchContext.nextNodeType(nt), c.stackIndex + 1), s);
+					g = -searcher.recurse(1 - player, -alpha - 1, -alpha, reducedDepth, SearchContext.nextNodeType(nt), stackIndex + 1, s);
 					fullSearch = g > alpha && lmrReduction != 0;
 				} else{
 					fullSearch = true;
@@ -169,17 +166,17 @@ public final class DescentStage implements MidStage{
 				if(fullSearch){
 					//descend negascout style
 					if(!pvMove){
-						g = -searcher.recurse(new SearchContext(1 - c.player, -alpha - 1, -alpha, nextDepth, SearchContext.nextNodeType(nt), c.stackIndex + 1), s);
-						if(alpha < g && g < c.beta && nt == SearchContext.NODE_TYPE_PV){
-							g = -searcher.recurse(new SearchContext(1 - c.player, -c.beta, -alpha, nextDepth, SearchContext.NODE_TYPE_PV, c.stackIndex + 1), s);
+						g = -searcher.recurse(1 - player, -alpha - 1, -alpha, nextDepth, SearchContext.nextNodeType(nt), stackIndex + 1, s);
+						if(alpha < g && g < beta && nt == SearchContext.NODE_TYPE_PV){
+							g = -searcher.recurse(1 - player, -beta, -alpha, nextDepth, SearchContext.NODE_TYPE_PV, stackIndex + 1, s);
 						}
 					} else{
-						g = -searcher.recurse(new SearchContext(1 - c.player, -c.beta, -alpha, nextDepth, SearchContext.NODE_TYPE_PV, c.stackIndex + 1), s);
+						g = -searcher.recurse(1 - player, -beta, -alpha, nextDepth, SearchContext.NODE_TYPE_PV, stackIndex + 1, s);
 					}
 				}
 			}
 			s.undoMove();
-			assert props.zkey == s.zkey(); //keys should be unchanged after undo
+			assert frame.zkey == s.zkey(); //keys should be unchanged after undo
 			assert drawCount == s.drawCount;
 			assert pawnZkey == s.pawnZkey();
 
@@ -195,26 +192,26 @@ public final class DescentStage implements MidStage{
 				bestScore = score;
 				bestMove = encoding;
 
-				if(score >= c.beta){
+				if(score >= beta){
 					cutoffFlag = TTEntry.CUTOFF_TYPE_LOWER;
 
 					//check to see if killer move can be stored
 					//if used on null moves, need to have a separate killer array
-					if(c.stackIndex-1 >= 0){
-						Search34.attemptKillerStore(bestMove, frame.skipNullMove, stack[c.stackIndex - 1]);
+					if(stackIndex-1 >= 0){
+						Search34.attemptKillerStore(bestMove, frame.skipNullMove, stack[stackIndex - 1]);
 					}
 
-					moveGen.betaCutoff(c.player, MoveEncoder.getMovePieceType(encoding),
+					moveGen.betaCutoff(player, MoveEncoder.getMovePieceType(encoding),
 							MoveEncoder.getPos1(encoding),
-							MoveEncoder.getPos2(encoding), s, c.depth/Search34.ONE_PLY);
+							MoveEncoder.getPos2(encoding), s, depth/Search34.ONE_PLY);
 
 					break;
 				} else if(score > alpha){
 					alpha = score;
 					cutoffFlag = TTEntry.CUTOFF_TYPE_EXACT;
-					moveGen.alphaRaised(c.player, MoveEncoder.getMovePieceType(encoding),
+					moveGen.alphaRaised(player, MoveEncoder.getMovePieceType(encoding),
 							MoveEncoder.getPos1(encoding),
-							MoveEncoder.getPos2(encoding), s, c.depth/Search34.ONE_PLY);
+							MoveEncoder.getPos2(encoding), s, depth/Search34.ONE_PLY);
 				}
 			}
 		}
@@ -227,13 +224,13 @@ public final class DescentStage implements MidStage{
 		}
 
 		if(!searcher.isCutoffSearch()){
-			fillEntry.fill(props.zkey, bestMove, bestScore, props.staticScore.toScoreEncoding(),
-					c.depth, cutoffFlag, searcher.getSeq());
-			m.put(props.zkey, fillEntry);
+			fillEntry.fill(frame.zkey, bestMove, bestScore, frame.staticScore.toScoreEncoding(),
+					depth, cutoffFlag, searcher.getSeq());
+			m.put(frame.zkey, fillEntry);
 		}
 
 		if(nt == SearchContext.NODE_TYPE_PV){
-			pvStore[c.stackIndex] = bestMove;
+			pvStore[stackIndex] = bestMove;
 		}
 
 		return bestScore;
@@ -249,18 +246,18 @@ public final class DescentStage implements MidStage{
 	 * @param s state to use in testing killer moves for legality
 	 * @return returns killer move set
 	 */
-	private KillerMoveSet buildKMS(SearchContext c, State4 s, boolean skipNullMove) {
+	private KillerMoveSet buildKMS(int player, State4 s, boolean skipNullMove, int stackIndex) {
 		final long l1killer1;
 		final long l1killer2;
 		final long l2killer1;
 		final long l2killer2;
 
-		final MoveList mlist = stack[c.stackIndex].mlist;
+		final MoveList mlist = stack[stackIndex].mlist;
 
-		if(c.stackIndex-1 >= 0 && !skipNullMove){
-			final StackFrame prev = stack[c.stackIndex-1];
+		if(stackIndex-1 >= 0 && !skipNullMove){
+			final StackFrame prev = stack[stackIndex-1];
 			final long l1killer1Temp = prev.killer[0];
-			if(l1killer1Temp != 0 && isPseudoLegal(c.player, l1killer1Temp, s)){
+			if(l1killer1Temp != 0 && isPseudoLegal(player, l1killer1Temp, s)){
 				l1killer1 = l1killer1Temp & 0xFFFL;
 				mlist.add(l1killer1, MoveGen.killerMoveRank);
 			} else{
@@ -268,17 +265,17 @@ public final class DescentStage implements MidStage{
 			}
 
 			final long l1killer2Temp = prev.killer[1];
-			if(l1killer2Temp != 0 && isPseudoLegal(c.player, l1killer2Temp, s)){
+			if(l1killer2Temp != 0 && isPseudoLegal(player, l1killer2Temp, s)){
 				l1killer2 = l1killer2Temp & 0xFFFL;
 				mlist.add(l1killer2, MoveGen.killerMoveRank);
 			} else{
 				l1killer2 = 0;
 			}
 
-			if(c.stackIndex-3 >= 0){
-				final StackFrame prev2 = stack[c.stackIndex-3];
+			if(stackIndex-3 >= 0){
+				final StackFrame prev2 = stack[stackIndex-3];
 				final long l2killer1Temp = prev2.killer[0];
-				if(l2killer1Temp != 0 && isPseudoLegal(c.player, l2killer1Temp, s)){
+				if(l2killer1Temp != 0 && isPseudoLegal(player, l2killer1Temp, s)){
 					l2killer1 = l2killer1Temp & 0xFFFL;
 					mlist.add(l2killer1, MoveGen.killerMoveRank);
 				} else{
@@ -286,7 +283,7 @@ public final class DescentStage implements MidStage{
 				}
 
 				final long l2killer2Temp = prev2.killer[1];
-				if(l2killer2Temp != 0 && isPseudoLegal(c.player, l2killer2Temp, s)){
+				if(l2killer2Temp != 0 && isPseudoLegal(player, l2killer2Temp, s)){
 					l2killer2 = l2killer2Temp & 0xFFFL;
 					mlist.add(l2killer2, MoveGen.killerMoveRank);
 				} else{
