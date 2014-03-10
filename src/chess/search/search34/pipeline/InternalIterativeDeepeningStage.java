@@ -34,10 +34,10 @@ public final class InternalIterativeDeepeningStage implements MidStage {
 			searcher.recurse(player, alpha, beta, d, nt, stackIndex + 1, s);
 			stack[stackIndex+1].skipNullMove = false;
 
-			final TTEntry temp = m.get(frame.zkey);
-			if(temp != null && temp.move != 0){
+			long move = stack[stackIndex+1].bestMove;
+			if(move != 0){
 				frame.hasTTMove = true;
-				frame.tteMoveEncoding = temp.move;
+				frame.tteMoveEncoding = move;
 			}
 		}
 

@@ -233,6 +233,7 @@ public final class DescentStage implements MidStage{
 			pvStore[stackIndex] = bestMove;
 		}
 
+		frame.bestMove = bestMove;
 		return bestScore;
 	}
 

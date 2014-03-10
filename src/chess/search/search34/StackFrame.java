@@ -24,4 +24,7 @@ public class StackFrame {
 	public boolean hasTTMove;
 	/** encoding of move retrieved from transposition table*/
 	public long tteMoveEncoding;
+
+	/** chosen move for searched node, store at the end of descent phase*/
+	public long bestMove;
 }
