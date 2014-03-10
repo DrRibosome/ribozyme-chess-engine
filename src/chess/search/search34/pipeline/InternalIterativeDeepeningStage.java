@@ -21,6 +21,9 @@ public final class InternalIterativeDeepeningStage implements MidStage {
 	@Override
 	public int eval(SearchContext c, NodeProps props, State4 s) {
 
+		//note, setting new stack index at 'c.stackIndex + 1' probably yields erroneous
+		//killer move information for immediately following nodes
+
 		if(!props.hasTTMove && props.nonMateScore &&
 				c.depth > 6*Search34.ONE_PLY &&
 				c.nt == SearchContext.NODE_TYPE_PV){
