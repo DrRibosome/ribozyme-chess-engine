@@ -68,7 +68,7 @@ public final class Search34 implements Search{
 
 		//construct search pipeline
 		MidStage descent = new DescentStage(moveGen, stack, m, pvStore, this);
-		MidStage internalIterativeDeepening = new InternalIterativeDeepeningStage(m, this, descent);
+		MidStage internalIterativeDeepening = new InternalIterativeDeepeningStage(m, stack, this, descent);
 		MidStage nullMovePruning = new NullMoveStage(stack, m, this, internalIterativeDeepening);
 		MidStage razoring = new RazoringStage(this, nullMovePruning);
 		MidStage futilityPruning = new FutilityPruningStage(razoring);

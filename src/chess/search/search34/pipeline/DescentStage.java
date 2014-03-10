@@ -70,12 +70,13 @@ public final class DescentStage implements MidStage{
 	@Override
 	public int eval(SearchContext c, NodeProps props, State4 s) {
 
-		final KillerMoveSet kms = buildKMS(c, s);
+		final StackFrame frame = stack[c.stackIndex];
+
+		final KillerMoveSet kms = buildKMS(c, s, frame.skipNullMove);
 
 		int alpha = c.alpha;
 		int nt = c.nt;
 
-		final StackFrame frame = stack[c.stackIndex];
 		final MoveList mlist = frame.mlist;
 
 		//move generation
@@ -200,7 +201,7 @@ public final class DescentStage implements MidStage{
 					//check to see if killer move can be stored
 					//if used on null moves, need to have a separate killer array
 					if(c.stackIndex-1 >= 0){
-						Search34.attemptKillerStore(bestMove, c.skipNullMove, stack[c.stackIndex - 1]);
+						Search34.attemptKillerStore(bestMove, frame.skipNullMove, stack[c.stackIndex - 1]);
 					}
 
 					moveGen.betaCutoff(c.player, MoveEncoder.getMovePieceType(encoding),
@@ -248,7 +249,7 @@ public final class DescentStage implements MidStage{
 	 * @param s state to use in testing killer moves for legality
 	 * @return returns killer move set
 	 */
-	private KillerMoveSet buildKMS(SearchContext c, State4 s) {
+	private KillerMoveSet buildKMS(SearchContext c, State4 s, boolean skipNullMove) {
 		final long l1killer1;
 		final long l1killer2;
 		final long l2killer1;
@@ -256,7 +257,7 @@ public final class DescentStage implements MidStage{
 
 		final MoveList mlist = stack[c.stackIndex].mlist;
 
-		if(c.stackIndex-1 >= 0 && !c.skipNullMove){
+		if(c.stackIndex-1 >= 0 && !skipNullMove){
 			final StackFrame prev = stack[c.stackIndex-1];
 			final long l1killer1Temp = prev.killer[0];
 			if(l1killer1Temp != 0 && isPseudoLegal(c.player, l1killer1Temp, s)){

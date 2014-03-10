@@ -47,7 +47,7 @@ public final class HashLookupStage implements EntryStage {
 						cutoffType == TTEntry.CUTOFF_TYPE_LOWER: cutoffType == TTEntry.CUTOFF_TYPE_UPPER)){
 
 					if(c.stackIndex-1 >= 0 && hashEntry.score >= c.beta){
-						Search34.attemptKillerStore(hashEntry.move, c.skipNullMove, stack[c.stackIndex-1]);
+						Search34.attemptKillerStore(hashEntry.move, frame.skipNullMove, stack[c.stackIndex-1]);
 					}
 
 					if(c.nt != SearchContext.NODE_TYPE_PV){

@@ -25,8 +25,10 @@ public final class NullMoveStage implements MidStage {
 	public int eval(SearchContext c, NodeProps props, State4 s) {
 		final boolean threatMove; //true if opponent can make a move that causes null-move fail low
 
+		StackFrame frame = stack[c.stackIndex];
+
 		if(c.nt != SearchContext.NODE_TYPE_PV &&
-				!c.skipNullMove &&
+				!frame.skipNullMove &&
 				c.depth > 3 * Search34.ONE_PLY &&
 				!props.alliedKingAttacked &&
 				props.hasNonPawnMaterial &&
@@ -38,7 +40,9 @@ public final class NullMoveStage implements MidStage {
 			//stack[c.stackIndex+1].futilityPrune = true;
 			s.nullMove();
 			final long nullzkey = s.zkey();
-			int n = -searcher.recurse(new SearchContext(1 - c.player, -c.beta, -c.alpha, c.depth - r, c.nt, c.stackIndex + 1, true), s);
+			stack[c.stackIndex+1].skipNullMove = true;
+			int n = -searcher.recurse(new SearchContext(1 - c.player, -c.beta, -c.alpha, c.depth - r, c.nt, c.stackIndex + 1), s);
+			stack[c.stackIndex+1].skipNullMove = false;
 			s.undoNullMove();
 
 			threatMove = n < c.alpha;
@@ -53,7 +57,9 @@ public final class NullMoveStage implements MidStage {
 
 				//verification chess.search
 				//stack[stackIndex+1].futilityPrune = false;
-				double v = searcher.recurse(new SearchContext(c.player, c.alpha, c.beta, c.depth - r, c.nt, c.stackIndex + 1, true), s);
+				stack[c.stackIndex+1].skipNullMove = true;
+				double v = searcher.recurse(new SearchContext(c.player, c.alpha, c.beta, c.depth - r, c.nt, c.stackIndex + 1), s);
+				stack[c.stackIndex+1].skipNullMove = false;
 				if(v >= c.beta){
 					return n;
 				}
