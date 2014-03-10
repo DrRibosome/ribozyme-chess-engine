@@ -29,12 +29,14 @@ public final class InternalIterativeDeepeningStage implements MidStage {
 		if(!frame.hasTTMove && frame.nonMateScore &&
 				depth > 6*Search34.ONE_PLY &&
 				nt == SearchContext.NODE_TYPE_PV){
-			final int d = depth/2;
-			stack[stackIndex+1].skipNullMove = true;
-			searcher.recurse(player, alpha, beta, d, nt, stackIndex + 1, s);
-			stack[stackIndex+1].skipNullMove = false;
 
-			long move = stack[stackIndex+1].bestMove;
+			final int d = depth/2;
+
+			//use same stack index to prevent killer moves
+			//from getting overwritten badly
+			next.eval(player, alpha, beta, d, nt, stackIndex, s);
+
+			long move = stack[stackIndex].bestMove;
 			if(move != 0){
 				frame.hasTTMove = true;
 				frame.tteMoveEncoding = move;
