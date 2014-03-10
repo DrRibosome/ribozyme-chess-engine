@@ -4,6 +4,7 @@ import chess.search.search34.Hash;
 import chess.search.search34.Search34;
 import chess.search.search34.StackFrame;
 import chess.search.search34.TTEntry;
+import chess.state4.MoveEncoder;
 import chess.state4.State4;
 
 /** null move pruning */
@@ -60,7 +61,10 @@ public final class NullMoveStage implements MidStage {
 			} else if(n < alpha){
 				//store the threat move as killer for opp
 				long move = stack[stackIndex+1].bestMove;
-				if(move != 0){
+				if(move != 0 &&
+						MoveEncoder.getTakenType(move) == State4.PIECE_TYPE_EMPTY &&
+						MoveEncoder.isEnPassanteTake(move) == 0 &&
+						!MoveEncoder.isPawnPromotion(move)){
 					//doesnt matter which we store to, no killers stored at this point in execution
 					stack[stackIndex].killer[0] = move & 0xFFFL;
 				}

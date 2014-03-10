@@ -390,7 +390,7 @@ public final class Search34 implements Search{
 	 */
 	public static void attemptKillerStore(final long move, final boolean skipNullMove, final StackFrame prev){
 		assert prev != null;
-		if(move != 0 && !skipNullMove &&
+		if(move != 0 &&
 				(move&0xFFF) != prev.killer[0] &&
 				(move&0xFFF) != prev.killer[1] &&
 				MoveEncoder.getTakenType(move) == State4.PIECE_TYPE_EMPTY &&
