@@ -2,6 +2,7 @@ package chess.search.search34.pipeline;
 
 import chess.search.search34.Hash;
 import chess.search.search34.Search34;
+import chess.search.search34.StackFrame;
 import chess.search.search34.TTEntry;
 import chess.state4.State4;
 
@@ -11,27 +12,37 @@ public final class InternalIterativeDeepeningStage implements MidStage {
 	private final Hash m;
 	private final Search34 searcher;
 	private final MidStage next;
+	private final StackFrame[] stack;
 
-	public InternalIterativeDeepeningStage(Hash m, Search34 searcher, MidStage next){
+	public InternalIterativeDeepeningStage(Hash m, StackFrame[] stack, Search34 searcher, MidStage next){
 		this.m = m;
 		this.searcher = searcher;
 		this.next = next;
+		this.stack = stack;
 	}
 
 	@Override
-	public int eval(SearchContext c, NodeProps props, State4 s) {
+	public int eval(int player, int alpha, int beta, int depth, int nt, int stackIndex, State4 s) {
 
-		if(!props.hasTTMove && props.nonMateScore &&
-				c.depth > 6*Search34.ONE_PLY &&
-				c.nt == SearchContext.NODE_TYPE_PV){
-			final int d = c.depth/2;
-			searcher.recurse(new SearchContext(c.player, c.alpha, c.beta, d, c.nt, c.stackIndex + 1, true), s);
-			final TTEntry temp = m.get(props.zkey);
-			if(temp != null && temp.move != 0){
-				return next.eval(c, props.addTTEMove(temp.move), s);
+		StackFrame frame = stack[stackIndex];
+
+		if(!frame.hasTTMove && frame.nonMateScore &&
+				depth > 6*Search34.ONE_PLY &&
+				nt == SearchContext.NODE_TYPE_PV){
+
+			final int d = depth/2;
+
+			//use same stack index to prevent killer moves
+			//from getting overwritten badly
+			next.eval(player, alpha, beta, d, nt, stackIndex, s);
+
+			long move = stack[stackIndex].bestMove;
+			if(move != 0){
+				frame.hasTTMove = true;
+				frame.tteMoveEncoding = move;
 			}
 		}
 
-		return next.eval(c, props, s);
+		return next.eval(player, alpha, beta, depth, nt, stackIndex, s);
 	}
 }
