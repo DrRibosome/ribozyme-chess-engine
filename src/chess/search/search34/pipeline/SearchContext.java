@@ -8,20 +8,14 @@ public final class SearchContext{
 
 	public final int player, alpha, beta, depth, stackIndex;
 	public final int nt;
-	public final boolean skipNullMove;
 
-	public SearchContext(int player, int alpha, int beta, int depth, int nt, int stackIndex, boolean skipNullMove){
+	public SearchContext(int player, int alpha, int beta, int depth, int nt, int stackIndex){
 		this.player = player;
 		this.alpha = alpha;
 		this.beta = beta;
 		this.depth = depth;
 		this.nt = nt;
 		this.stackIndex = stackIndex;
-		this.skipNullMove = skipNullMove;
-	}
-
-	public SearchContext(int player, int alpha, int beta, int depth, int nt, int stackIndex){
-		this(player, alpha, beta, depth, nt, stackIndex, false);
 	}
 
 	public static int nextNodeType(final int nodeType){
