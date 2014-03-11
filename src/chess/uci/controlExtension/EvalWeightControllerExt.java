@@ -83,13 +83,13 @@ public final class EvalWeightControllerExt implements ControlExtension {
 					}
 				}
 
-				System.out.println(t.getClass().getName()+":"+count);
+				System.out.println("class "+t.getClass().getName()+":"+count);
 
 				for(int a = 0; a < f.length; a++){
 					if(f[a].getType().isPrimitive()){
-						System.out.println(f[a].getName()+"="+f[a].getInt(t));
+						System.out.println("weight "+f[a].getName()+"="+f[a].getInt(t));
 					} else if(f[a].getType().isArray()){
-						System.out.print(f[a].getName()+"=(");
+						System.out.print("weight "+f[a].getName()+"=(");
 						Object array = f[a].get(t);
 						int length = Array.getLength(array);
 						for(int q = 0; q < length; q++){
