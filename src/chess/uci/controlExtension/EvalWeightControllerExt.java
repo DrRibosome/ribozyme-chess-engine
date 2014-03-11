@@ -8,6 +8,8 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * extension for interacting with eval weights dynamically
@@ -50,7 +52,12 @@ public final class EvalWeightControllerExt implements ControlExtension {
 			for(int a = 0; a < f.length; a++){
 				if(f[a].getName().equals(weightName)){
 					if(f[a].getType().isPrimitive()){
-						f[a].set(t, Integer.parseInt(weightValue));
+						//match a field value as [0=]<int>
+						Pattern fieldMatcher = Pattern.compile("(?:0=)?([-\\d]+)");
+						Matcher matcher = fieldMatcher.matcher(weightValue);
+						if(matcher.find()){
+							f[a].set(t, Integer.parseInt(matcher.group(1)));
+						}
 					} else if(f[a].getType().isArray()){
 						//expects weight value of form 'index=value'
 						String[] s = weightValue.split("=");
