@@ -44,7 +44,19 @@ public final class EvalWeightControllerExt implements ControlExtension {
 		}
 	}
 
-	/** look up corresponding weight class, set passed weight to target value*/
+	/**
+	 * look up corresponding weight class, set passed weight to target value
+	 * <p>
+	 *     weights are set as follows: 'class-name' 'weight-name' 'index:value'.
+	 *     Here index in the final term refers to the index in the weight array
+	 *     that the value holds. For field weights, this is always 0 and may
+	 *     be dropped
+	 * </p>
+	 * @param weightClass
+	 * @param weightName
+	 * @param weightValue
+	 * @param m
+	 */
 	private static void set(String weightClass, String weightName, String weightValue, Map<String, Object> m){
 		try{
 			Object t = m.get(weightClass);
