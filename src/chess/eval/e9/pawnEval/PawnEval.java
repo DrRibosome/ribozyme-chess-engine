@@ -18,9 +18,7 @@ public final class PawnEval {
 	/** isolated pawn weights, indexed [opposedFlag][column]*/
 	private final int[][] isolatedPawns = new int[2][8];
 
-	private final static int[] pawnChain = new int[]{
-		S(13,0), S(15,0), S(18,1), S(22,5), S(22,5), S(18,1), S(15,0), S(13,0)
-	};
+	private final int[] pawnChain = new int[8];
 
 	private final static int[][] doubledPawns = new int[][]{
 		{S(-9,-18), S(-12,-19), S(-13,-19), S(-13,-19), S(-13,-19), S(-13,-19), S(-12,-19), S(-12,-18)},
@@ -82,10 +80,35 @@ public final class PawnEval {
 	};
 
 	public static class PawnWeights{
-		/** isolated pawn weights, given only for left half board, indexed [pos*2+startValue?0:1]*/
+		/** isolated pawn weights, load via {@linkplain PawnWeights#loadColumnBased}*/
 		public final int[] isolatedPawns = new int[]{-15, -10, -18, -15, -20, -19, -22, -20};
-		/** opposed (by opp. pawn) isolated pawn weights, given only for left half board, indexed [pos*2+startValue?0:1]*/
+		/** opposed (by opp. pawn) isolated pawn weights, load via {@linkplain PawnWeights#loadColumnBased}*/
 		public final int[] opposedIsolatedPawns = new int[]{-10, -14, -17, -17, -17, -17, -17, -17};
+
+		/** pawn chain weights, load via {@linkplain PawnWeights#loadColumnBased}*/
+		public final int[] pawnChain = new int[]{13, 0, 15, 0, 18, 1, 22, 5};
+
+		/**
+		 * loads column based weights
+		 * <p>
+		 *     column based weights given for left board half only,
+		 *     indexed: [pos*2+startValue?0:1]
+		 * </p>
+		 * @param weights
+		 * @param store
+		 */
+		private static void loadColumnBased(int[] weights, int[] store){
+			for(int x = 0; x < 4; x++){
+				int start = weights[x*2];
+				int end = weights[x*2+1];
+				store[x] = S(start, end);
+			}
+
+			//reflect loads from left half to right half
+			for(int a = 0; a < store.length/2; a++){
+				store[store.length-1-a] = store[a];
+			}
+		}
 	}
 	
 	static{
@@ -102,28 +125,10 @@ public final class PawnEval {
 		return Weight.encode(v);
 	}
 
-	private static void reflect(int[] l){
-		for(int a = 0; a < l.length/2; a++){
-			l[l.length-1-a] = l[a];
-		}
-	}
-
 	public PawnEval(PawnWeights w){
-		//load unblocked isolated pawns
-		for(int x = 0; x < 4; x++){
-			int start = w.isolatedPawns[x*2];
-			int end = w.isolatedPawns[x*2+1];
-			isolatedPawns[0][x] = S(start, end);
-		}
-		reflect(isolatedPawns[0]);
-
-		//load blocked isolated pawns
-		for(int x = 0; x < 4; x++){
-			int start = w.opposedIsolatedPawns[x*2];
-			int end = w.opposedIsolatedPawns[x*2+1];
-			isolatedPawns[1][x] = S(start, end);
-		}
-		reflect(isolatedPawns[1]);
+		PawnWeights.loadColumnBased(w.isolatedPawns, isolatedPawns[0]);
+		PawnWeights.loadColumnBased(w.opposedIsolatedPawns, isolatedPawns[1]);
+		PawnWeights.loadColumnBased(w.pawnChain, pawnChain);
 	}
 	
 	/** scores pawn structure*/
