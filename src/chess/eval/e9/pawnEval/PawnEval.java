@@ -20,15 +20,9 @@ public final class PawnEval {
 
 	private final int[] pawnChain = new int[8];
 
-	private final static int[][] doubledPawns = new int[][]{
-		{S(-9,-18), S(-12,-19), S(-13,-19), S(-13,-19), S(-13,-19), S(-13,-19), S(-12,-19), S(-12,-18)},
-		{S(-6,-13), S(-8,-16), S(-9,-17), S(-9,-17), S(-9,-17), S(-9,-17), S(-8,-16), S(-6,-13)},
-	};
+	private final static int[][] doubledPawns = new int[2][8];
 
-	private final static int[][] backwardPawns = new int[][]{
-		{S(-10,-20),S(-10,-20),S(-10,-20),S(-10,-20),S(-10,-20),S(-10,-20),S(-10,-20),S(-10,-20),},
-		{S(-6,-13),S(-6,-13),S(-6,-13),S(-6,-13),S(-6,-13),S(-6,-13),S(-6,-13),S(-6,-13),},
-	};
+	private final static int[][] backwardPawns = new int[2][8];
 	
 	private final static int[][] pawnShelter = new int[][]{ //only need 7 indeces, pawn cant be on last row
 			{0, 30, 20, 8, 2, 0, 0},
@@ -84,9 +78,16 @@ public final class PawnEval {
 		public final int[] isolatedPawns = new int[]{-15, -10, -18, -15, -20, -19, -22, -20};
 		/** opposed (by opp. pawn) isolated pawn weights, load via {@linkplain PawnWeights#loadColumnBased}*/
 		public final int[] opposedIsolatedPawns = new int[]{-10, -14, -17, -17, -17, -17, -17, -17};
-
 		/** pawn chain weights, load via {@linkplain PawnWeights#loadColumnBased}*/
 		public final int[] pawnChain = new int[]{13, 0, 15, 0, 18, 1, 22, 5};
+		/** doubled pawn weights, load via {@linkplain PawnWeights#loadColumnBased}*/
+		public final int[] doubledPawns = new int[]{-9, -18, -12, -19, -13, -19, -13, -19};
+		/** opposed doubled pawn weights, load via {@linkplain PawnWeights#loadColumnBased}*/
+		public final int[] opposedDoubledPawns = new int[]{-6, -13, -8, -16, -9, -17, -9, -17};
+		/** backward pawn weights, load via {@linkplain PawnWeights#loadColumnBased}*/
+		public final int[] backwardPawns = new int[]{-10, -20, -10, -20, -10, -20, -10, -20};
+		/** opposed backward pawn weights, load via {@linkplain PawnWeights#loadColumnBased}*/
+		public final int[] opposedBackwardPawns = new int[]{-6, -13, -6, -13, -6, -13, -6, -13};
 
 		/**
 		 * loads column based weights
@@ -129,6 +130,10 @@ public final class PawnEval {
 		PawnWeights.loadColumnBased(w.isolatedPawns, isolatedPawns[0]);
 		PawnWeights.loadColumnBased(w.opposedIsolatedPawns, isolatedPawns[1]);
 		PawnWeights.loadColumnBased(w.pawnChain, pawnChain);
+		PawnWeights.loadColumnBased(w.doubledPawns, doubledPawns[0]);
+		PawnWeights.loadColumnBased(w.opposedDoubledPawns, doubledPawns[1]);
+		PawnWeights.loadColumnBased(w.backwardPawns, backwardPawns[0]);
+		PawnWeights.loadColumnBased(w.opposedBackwardPawns, backwardPawns[1]);
 	}
 	
 	/** scores pawn structure*/
