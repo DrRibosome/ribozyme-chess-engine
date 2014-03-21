@@ -1,6 +1,7 @@
 package chess.eval.e9.pipeline;
 
 
+import chess.eval.e9.E9;
 import chess.state4.State4;
 
 public class EvalInitializer implements EntryStage{
@@ -16,14 +17,15 @@ public class EvalInitializer implements EntryStage{
 	private final int rookWeight;
 	private final int queenWeight;
 
-	public EvalInitializer(PieceWeights pieceWeights, MidStage next){
+	public EvalInitializer(E9.EvalWeights weights, MidStage next){
 		this.next = next;
 
-		this.pawnWeight = pieceWeights.pawn;
-		this.knightWeight = pieceWeights.knight;
-		this.bishopWeight = pieceWeights.bishop;
-		this.rookWeight = pieceWeights.rook;
-		this.queenWeight = pieceWeights.queen;
+		PieceWeights pw = weights.pieceWeights;
+		this.pawnWeight = pw.pawn;
+		this.knightWeight = pw.knight;
+		this.bishopWeight = pw.bishop;
+		this.rookWeight = pw.rook;
+		this.queenWeight = pw.queen;
 
 		int startMaterial = (pawnWeight * 8 +
 				knightWeight* 2 +

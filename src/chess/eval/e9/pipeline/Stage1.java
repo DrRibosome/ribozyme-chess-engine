@@ -1,5 +1,6 @@
 package chess.eval.e9.pipeline;
 
+import chess.eval.e9.E9;
 import chess.eval.e9.PawnHash;
 import chess.eval.e9.PawnHashEntry;
 import chess.eval.e9.Weight;
@@ -59,10 +60,12 @@ public final class Stage1 implements MidStage {
 	private final MidStage cutoffChecker;
 	private final PawnHash pawnHash;
 	private final PawnHashEntry filler = new PawnHashEntry();
+	private final PawnEval pawnEval;
 
-	public Stage1(PawnHash pawnHash, MidStage next, int stage){
+	public Stage1(E9.EvalWeights weights, PawnHash pawnHash, MidStage next, int stage){
 		this.pawnHash = pawnHash;
 		this.cutoffChecker = new CutoffCheck(next, stage);
+		pawnEval = new PawnEval(weights.pawnWeights);
 	}
 
 	@Override
@@ -92,8 +95,8 @@ public final class Stage1 implements MidStage {
 			stage1Score += -bishopPairWeight;
 		}
 
-		stage1Score += PawnEval.scorePawns(player, s, loader, enemy.queens, basics.nonPawnMaterialScore) -
-				PawnEval.scorePawns(1-player, s, loader, allied.queens, -basics.nonPawnMaterialScore);
+		stage1Score += pawnEval.scorePawns(player, s, loader, enemy.queens, basics.nonPawnMaterialScore) -
+				pawnEval.scorePawns(1-player, s, loader, allied.queens, -basics.nonPawnMaterialScore);
 
 		int score = prevScore +
 				Weight.interpolate(stage1Score, c.scale) +

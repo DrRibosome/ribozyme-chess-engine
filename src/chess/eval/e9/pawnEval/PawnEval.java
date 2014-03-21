@@ -15,10 +15,8 @@ import chess.eval.e9.Weight;
  */
 public final class PawnEval {
 
-	private final static int[][] isolatedPawns = new int[][]{{
-		S(-15,-10), S(-18,-15), S(-20,-19), S(-22,-20), S(-22,-20), S(-20,-19), S(-18,-15), S(-15,-10)},
-		{S(-10, -14), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-17, -17), S(-10, -14)},
-	};
+	/** isolated pawn weights, indexed [opposedFlag][column]*/
+	private final int[][] isolatedPawns = new int[2][8];
 
 	private final static int[] pawnChain = new int[]{
 		S(13,0), S(15,0), S(18,1), S(22,5), S(22,5), S(18,1), S(15,0), S(13,0)
@@ -82,6 +80,13 @@ public final class PawnEval {
 				15, 15, 15, 15, 15, 15, 15, 15
 			}, new int[64]
 	};
+
+	public static class PawnWeights{
+		/** isolated pawn weights, given only for left half board, indexed [pos*2+startValue?0:1]*/
+		public final int[] isolatedPawns = new int[]{-15, -10, -18, -15, -20, -19, -22, -20};
+		/** opposed (by opp. pawn) isolated pawn weights, given only for left half board, indexed [pos*2+startValue?0:1]*/
+		public final int[] opposedIsolatedPawns = new int[]{-10, -14, -17, -17, -17, -17, -17, -17};
+	}
 	
 	static{
 		for(int a = 0; a < 64; a++) kingDangerSquares[1][a] = kingDangerSquares[0][63-a];
@@ -96,9 +101,33 @@ public final class PawnEval {
 	private static int S(final int v){
 		return Weight.encode(v);
 	}
+
+	private static void reflect(int[] l){
+		for(int a = 0; a < l.length/2; a++){
+			l[l.length-1-a] = l[a];
+		}
+	}
+
+	public PawnEval(PawnWeights w){
+		//load unblocked isolated pawns
+		for(int x = 0; x < 4; x++){
+			int start = w.isolatedPawns[x*2];
+			int end = w.isolatedPawns[x*2+1];
+			isolatedPawns[0][x] = S(start, end);
+		}
+		reflect(isolatedPawns[0]);
+
+		//load blocked isolated pawns
+		for(int x = 0; x < 4; x++){
+			int start = w.opposedIsolatedPawns[x*2];
+			int end = w.opposedIsolatedPawns[x*2+1];
+			isolatedPawns[1][x] = S(start, end);
+		}
+		reflect(isolatedPawns[1]);
+	}
 	
 	/** scores pawn structure*/
-	public static int scorePawns(final int player, final State4 s,
+	public int scorePawns(final int player, final State4 s,
 			final PawnHashEntry entry, final long enemyQueens, final int nonPawnMaterialScore){
 		int score = 0;
 		
@@ -276,7 +305,7 @@ public final class PawnEval {
 	 * @param phEntry
 	 * @return returns raw score for pawns
 	 */
-	public static int analyzePawns(final int player, final State4 s, final PawnHashEntry phEntry){
+	public int analyzePawns(final int player, final State4 s, final PawnHashEntry phEntry){
 		int pawnScore = 0;
 		long passedPawns = 0;
 		int isolatedPawnsCount = 0;

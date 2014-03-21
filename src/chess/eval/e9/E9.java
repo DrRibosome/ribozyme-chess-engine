@@ -18,6 +18,7 @@ public final class E9 implements Evaluator{
 	public final static class EvalWeights{
 		public final PieceWeights pieceWeights = new PieceWeights();
 		public final MobilityEval.MobilityWeights mobWeights = new MobilityEval.MobilityWeights();
+		public final PawnEval.PawnWeights pawnWeights = new PawnEval.PawnWeights();
 	}
 
 	/** evaluation pipeline*/
@@ -35,8 +36,8 @@ public final class E9 implements Evaluator{
 		LateStage stage3 = new Stage3(2);
 		LateStage stage2 = new Stage2(stage3, 1);
 		MidStage mobilityProvider = new MobilityProvider(weights.mobWeights, stage2);
-		MidStage stage1 = new Stage1(pawnHash, mobilityProvider, 0);
-		EntryStage pipeline = new EvalInitializer(weights.pieceWeights, stage1);
+		MidStage stage1 = new Stage1(weights, pawnHash, mobilityProvider, 0);
+		EntryStage pipeline = new EvalInitializer(weights, stage1);
 
 		this.pipeline = pipeline;
 	}
