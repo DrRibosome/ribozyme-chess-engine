@@ -166,7 +166,6 @@ public final class MobilityEval {
 							mobScore += S(-20, -50); //trapped, but can castle right
 						} else{
 							mobScore += S(-50, -120); //trapped, cannot castle
-							//old, 80, 150
 						}
 					}
 					if(alliedKingCol <= 3 && col < alliedKingCol){
