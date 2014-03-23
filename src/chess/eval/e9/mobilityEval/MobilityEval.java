@@ -206,7 +206,8 @@ public final class MobilityEval {
 
 	
 	/**
-	 * 
+	 * tests to see if column is half open (ie, if column contains either no pieces,
+	 * or one enemy pawn)
 	 * @param col
 	 * @param enemyPawns
 	 * @param pieces pieces excluding the rook to be tested
