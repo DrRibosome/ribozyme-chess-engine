@@ -23,6 +23,9 @@ public final class MobilityEval {
 	private final int[] bishopMobilityWeights;
 	private final int[] rookMobilityWeights;
 	private final int[] queenMobilityWeights;
+
+	private final int rookColHalfOpen;
+	private final int rookColOpen;
 	
 	/** compute logistic (sigmoid) function centered around 0*/
 	private static double logistic(double x){
@@ -48,6 +51,11 @@ public final class MobilityEval {
 		public final int[] bishopWeights = new int[]{0, -3, -4, -2, 60, 45};
 		public final int[] rookWeights = new int[]{-3,-3, -4,-7, 30,70};
 		public final int[] queenWeights = new int[]{-3,-2, -4,-20, 20,60};
+
+		/** weight for rook in half open column*/
+		public final int[] rookColHalfOpen = new int[]{6, 15};
+		/** weight for rook in fully open column*/
+		public final int[] rookColOpen = new int[]{12, 30};
 	}
 
 	public MobilityEval(MobilityWeights weights) {
@@ -62,6 +70,9 @@ public final class MobilityEval {
 		
 		queenMobilityWeights = new int[32];
 		interpolate(weights.queenWeights, queenMobilityWeights);
+
+		rookColHalfOpen = S(weights.rookColHalfOpen[0], weights.rookColHalfOpen[1]);
+		rookColOpen = S(weights.rookColOpen[0], weights.rookColOpen[1]);
 	}
 	
 	/** build a weight scaling from passed start,end values*/
@@ -140,11 +151,10 @@ public final class MobilityEval {
 			
 			final int rindex = BitUtil.lsbIndex(r);
 			final int col = rindex%8;
-			if(isHalfOpen(col, enemyPawns, allPieces & ~r)){ //tests file half open
-				mobScore += S(6, 15);
-				if(((allPieces & ~r) & Masks.colMask[col]) == 0){ //tests file open
-					mobScore += S(6, 15);
-				}
+			if(((allPieces & ~r) & Masks.colMask[col]) == 0){ //tests file open
+				mobScore += rookColOpen;
+			} else if(isHalfOpen(col, enemyPawns, allPieces & ~r)){ //tests file half open
+				mobScore += rookColHalfOpen;
 			}
 
 			final int row = rindex >>> 3;
