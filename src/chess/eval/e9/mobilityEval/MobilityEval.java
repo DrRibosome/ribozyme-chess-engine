@@ -26,6 +26,8 @@ public final class MobilityEval {
 
 	private final int rookColHalfOpen;
 	private final int rookColOpen;
+	private final int trappedRookWithCastle;
+	private final int trappedRookWithoutCastle;
 	
 	/** compute logistic (sigmoid) function centered around 0*/
 	private static double logistic(double x){
@@ -56,6 +58,10 @@ public final class MobilityEval {
 		public final int[] rookColHalfOpen = new int[]{6, 15};
 		/** weight for rook in fully open column*/
 		public final int[] rookColOpen = new int[]{12, 30};
+		/** rook is trapped, but can castle still*/
+		public final int[] trappedRookWithCastle = new int[]{-20, -50};
+		/** rook is trapped, cannot castle*/
+		public final int[] trappedRookWithoutCastle = new int[]{-50, -120};
 	}
 
 	public MobilityEval(MobilityWeights weights) {
@@ -73,6 +79,8 @@ public final class MobilityEval {
 
 		rookColHalfOpen = S(weights.rookColHalfOpen[0], weights.rookColHalfOpen[1]);
 		rookColOpen = S(weights.rookColOpen[0], weights.rookColOpen[1]);
+		trappedRookWithCastle = S(weights.trappedRookWithCastle[0], weights.trappedRookWithCastle[1]);
+		trappedRookWithoutCastle = S(weights.trappedRookWithoutCastle[0], weights.trappedRookWithoutCastle[1]);
 	}
 	
 	/** build a weight scaling from passed start,end values*/
@@ -163,16 +171,16 @@ public final class MobilityEval {
 				if(alliedKingRow == backRank && moveCount <= 4){
 					if(alliedKingCol >= 4 && col > alliedKingCol){
 						if(!s.kingMoved[player] && !s.rookMoved[player][1]){
-							mobScore += S(-20, -50); //trapped, but can castle right
+							mobScore += trappedRookWithCastle; //trapped, but can castle right
 						} else{
-							mobScore += S(-50, -120); //trapped, cannot castle
+							mobScore += trappedRookWithoutCastle; //trapped, cannot castle
 						}
 					}
 					if(alliedKingCol <= 3 && col < alliedKingCol){
 						if(!s.kingMoved[player] && !s.rookMoved[player][0]){
-							mobScore += S(-20, -50); //trapped, but can castle left
+							mobScore += trappedRookWithCastle; //trapped, but can castle left
 						} else{
-							mobScore += S(-50, -120); //trapped, cannot castle
+							mobScore += trappedRookWithoutCastle; //trapped, cannot castle
 						}
 					}
 				}
